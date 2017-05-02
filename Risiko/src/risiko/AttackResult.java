@@ -1,5 +1,7 @@
 package risiko;
 
+import java.util.Observable;
+
 /**
  *
  * salva il risultato dell'attacco e ridà le cose
@@ -54,7 +56,7 @@ public class AttackResult {
     }
 
     /**
-     * Ritorna la stringa da stampare nel textarea
+     * Ritorna la stringa da stampare nel textarea.
      *
      * @author alessandro
      * @return

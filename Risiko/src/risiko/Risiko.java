@@ -18,8 +18,8 @@ public class Risiko {
      */
     public static void main(String[] args) throws Exception {
 
-        GUI interfaccia = new GUI();
-        interfaccia.setVisible(true);
+        GUI gui = new GUI();
+        gui.setVisible(true);
     }
 
 }

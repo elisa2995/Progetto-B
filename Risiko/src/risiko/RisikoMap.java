@@ -41,7 +41,7 @@ public class RisikoMap {
 
     /**
      * Inizializza la mappa leggendo il file specificato in urlCountries (in
-     * countryPlayer il player è inizializzato a null)
+     * countryPlayer il player è inizializzato a null).
      *
      * @throws qualche eccezione relativa alla lettura del file
      */
@@ -243,38 +243,7 @@ public class RisikoMap {
         }
         return false;
     }
-
-    /**
-     * Sceglie il territorio attaccante e attaccato dal giocatore. (Idealmente :
-     * continua a tirare a caso coppie di countries (e a chiamare verifyAttack
-     * per ognuna di loro, finché verify attack non restituisce true)
-     *
-     * @param player il giocatore di turno.
-     * @return un array di territori, Country[0] quello attaccante, Country[1]
-     * quella attaccato
-     * @author Alessandro
-     */
-//    public Country[] getFightingCountries(Player player) {
-//        int attackIndex, defenseIndex;
-//        Country[] selected = new Country[2];
-//
-//        List<Country> attack = this.getMyCountries(player);
-//        Collections.shuffle(attack);
-//        for (Country a : attack) {
-//            List<Country> defense = this.getNeighbors(a);
-//
-//            Collections.shuffle(defense);
-//
-//            for (Country d : defense) {
-//                selected[0] = a;
-//                selected[1] = d;
-//                if (verifyAttack(selected, player)) {
-//                    return selected;
-//                }
-//            }
-//        }
-//        return null;
-//    }
+    
     /**
      * Controlla che l'attacco sia valido. return true se Country[0] è del
      * giocatore di turno e ha di un'armata, Country[1] è di un altro giocatore,

@@ -31,14 +31,14 @@ import risiko.Player;
 /**
  * @author andrea
  */
-public class GUI extends JFrame implements Observer{
+public class GUI extends JFrame /*implements Observer*/{
     private Game game;
     private final Map<Color, String>  colorCountryNameMap;
     private final int N_GIOCATORI=2;
 
     public GUI() throws Exception {
         initComponents();
-        game = new Game(N_GIOCATORI);
+        game = new Game(N_GIOCATORI/*, this*/);
         colorCountryNameMap=readColorTextMap("src/gui/color.txt");
         LabelMapListener labelMapListener = new LabelMapListener(convertToBufferedImage(labelMap), colorCountryNameMap, game);
         labelMap.addMouseListener(labelMapListener);
@@ -252,9 +252,4 @@ public class GUI extends JFrame implements Observer{
     private javax.swing.JLabel labelPlayerPhase;
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

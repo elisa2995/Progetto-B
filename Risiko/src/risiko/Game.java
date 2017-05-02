@@ -10,12 +10,9 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFrame;
 
 public class Game extends Observable {
-    
+
     private Country attackerCountry;
     private Country defenderCountry;
     private RisikoMap map;
@@ -24,8 +21,8 @@ public class Game extends Observable {
     private Player winner;
     private Phase phase;
     private AttackResult attackResult;
-    
-    public Game(int nrPlayers/*, Observer gui*/) throws Exception {
+
+    public Game(int nrPlayers/*, Observer observer*/) throws Exception {
         this.players = new ArrayList<>();
         this.activePlayer = null;
         this.winner = null;
@@ -59,44 +56,68 @@ public class Game extends Observable {
         this.phase = Phase.REINFORCE;
     }
 
-    //Aggiungere nomi diversi per i giocatori
+    /**
+     * Costruisce nrPlayer giocatori (nome di default "Giocatore-i"), e li
+     * aggiunge alla lista {@code List<Player> this.players}.
+     *
+     * @param nrPlayers
+     */
     private void buildPlayers(int nrPlayers) {
-        for (int i = 0; i < nrPlayers; i++) 
-            this.players.add(new Player("Giocatore-"+i));
+        for (int i = 0; i < nrPlayers; i++) {
+            this.players.add(new Player("Giocatore-" + i));
+        }
     }
 
-    public void attack(/*String countryAttackerName,  String countryDefenderName,*/ int nrA, int nrD) {
-        
-        Player  defenderPlayer = map.getPlayerFromCountry(defenderCountry);
-        Player  attackerPlayer = map.getPlayerFromCountry(defenderCountry);
-        int     armiesLost[]   = fight(attackerCountry, defenderCountry, nrA, nrD);
-        boolean conquered      = map.isConquered(defenderCountry);
+    //------------------------  Attacco  ------------------------------------//
+    /**
+     * Simula l'attacco tra {@code this.attackerCountry} e
+     * {@code this.defenderCountry}, con rispettivamente nrA e nrD armate.
+     * Gestisce anche la conquista del territorio, chiamando i metodi appositi.
+     * genera un nuovo oggetto {@code AttackResult}.
+     *
+     * @param nrA
+     * @param nrD
+     */
+    public void attack(int nrA, int nrD) {
+
+        Player defenderPlayer = map.getPlayerFromCountry(defenderCountry);
+        Player attackerPlayer = map.getPlayerFromCountry(attackerCountry);
+        int armiesLost[] = fight(attackerCountry, defenderCountry, nrA, nrD);
+        boolean conquered = map.isConquered(defenderCountry);
+
         if (conquered) {
             map.updateOnConquer(attackerCountry, defenderCountry, nrA);
-            if (map.hasLost(defenderPlayer))     players.remove(defenderPlayer);
+            if (map.hasLost(defenderPlayer)) {
+                players.remove(defenderPlayer);
+            }
         }
-        attackResult=new AttackResult(attackerPlayer,
-                                      defenderPlayer, nrA, nrD, 
-                                      armiesLost[0],   armiesLost[1], conquered);
+
+        this.attackResult = new AttackResult(attackerPlayer,
+                defenderPlayer, nrA, nrD,
+                armiesLost[0], armiesLost[1], conquered);
     }
 
     /**
-     * Simula lo scontro tra due armate, eliminado quelle perse per ogni country.
+     * Simula lo scontro tra due eserciti, eliminado le armate quelle perse da
+     * ogni Country.
+     *
      * @param countries
      * @param nrA
      * @param nrD
-     * @return armiesLost necessario per istanziare attackResult nel metodo attack
+     * @return armiesLost necessario per istanziare attackResult nel metodo
+     * attack
      * @author Andrea
      */
     private int[] fight(Country countryAttacker, Country countryDefender, int nrA, int nrD) {
-       	int armiesLost[] = computeArmiesLost(nrA, nrD);
+        int armiesLost[] = computeArmiesLost(nrA, nrD);
         map.removeArmies(countryAttacker, armiesLost[0]);
         map.removeArmies(countryDefender, armiesLost[1]);
         return armiesLost;
     }
-    
+
     /**
-     * Genera il numero di armate perse per giocatore durante uno scontro. 
+     * Genera il numero di armate perse per giocatore durante uno scontro.
+     *
      * @return array da 2 elementi, il primo valore è il numero di armate perse
      * dall'attaccante, il secondo il numero di armate perse dal difensore.
      * @author Andrea
@@ -107,26 +128,30 @@ public class Game extends Observable {
         int armiesLost[] = new int[2];
         int min = (nrA > nrD) ? nrD : nrA;
         for (int i = 0; i < min; i++) {
-            if (resultsDiceAttack[i] > resultsDiceDefens[i]) 
+            if (resultsDiceAttack[i] > resultsDiceDefens[i]) {
                 armiesLost[1]++;
-            else 
+            } else {
                 armiesLost[0]++;
+            }
         }
         return armiesLost;
     }
 
     /**
-     * Lancia una serie di dadi e restituisce i loro valori in ordine decrescente!
+     * Lancia una serie di dadi e restituisce i loro valori in ordine
+     * decrescente.
+     *
      * @param nrDice numero di dadi da tirare
-     * @return un array[nrDadi]con i risultati del lancio in ordine decrescente!
+     * @return un array[nrDadi]con i risultati del lancio in ordine decrescente
      * @author Andrea
      */
     private int[] rollDice(int nrDice) {
         int dices[] = new int[nrDice];
         int tmp;
-        for (int i = 0; i < nrDice; i++)
+        for (int i = 0; i < nrDice; i++) {
             dices[i] = rollDice();
-        Arrays.sort(dices);            
+        }
+        Arrays.sort(dices);
         if (nrDice > 1) {
             tmp = dices[0];
             dices[0] = dices[nrDice - 1];
@@ -134,35 +159,40 @@ public class Game extends Observable {
         }
         return dices;
     }
-    
+
     /**
      * Lancia il dado e ritorna il suo risultato.
+     *
      * @return un numero random da 1 a 6
      * @author Andrea
      */
     private int rollDice() {
         return (int) (Math.random() * 6) + 1;
-    }    
+    }
 
     /**
-     *  ridà il risultato
-     *  @author Andrea
+     * Ridà il risultato.
+     *
+     * @author Andrea
+     * @return AttackResult l'oggetto che rappresenta il risultato dell'attacco.
      */
     public AttackResult getAttackResult() {
         return attackResult;
     }
 
     /**
-     *  Controlla se il difensore deve essere eliminato dal gioco.
+     * Controlla se il difensore deve essere eliminato dal gioco.
      */
     private void hasLost(Player defenderPlayer) {
-        if (map.hasLost(defenderPlayer))
+        if (map.hasLost(defenderPlayer)) {
             players.remove(defenderPlayer);
+        }
     }
 
+    // ----------------------- Rinforzo ------------------------------------
     /**
-     * controlla e aggiunge le armate al territorio, queste vengono prese dal
-     * campo bonusArmies del giocatore fino ad esaurimento
+     * Controlla e aggiunge le armate al territorio. Queste vengono prese dal
+     * campo bonusArmies del giocatore fino ad esaurimento.
      *
      * @param player giocatore che vuole eseguire azione
      * @param nArmies numero di armate da aggiungere
@@ -170,39 +200,49 @@ public class Game extends Observable {
      * @return
      */
     public void reinforce(String countryName, int nArmies) {
-        
+
         Country country = map.getCountryByName(countryName);
         if (activePlayer.getBonusArmies() - nArmies >= 0) { //cancellare if in futuro
             activePlayer.decrementBonusArmies(nArmies);
             map.addArmies(country, nArmies);
-            
+
             //notify(); passa alla gui la string country e quante armate bonus ha ancora
         }
     }
-    
-    public boolean canReinforce(String countryName, int nArmies){
+
+    /**
+     * Controlla se il giocatore può rinforzare del numero di armate
+     * selezionato. CONTROLLARE!!! a cosa serve countryName? dovremmo
+     * controllare anche quello?
+     *
+     * @param countryName
+     * @param nArmies
+     * @return
+     */
+    public boolean canReinforce(String countryName, int nArmies) {
         return activePlayer.getBonusArmies() - nArmies >= 0;
     }
+
+    //--------------------- Gestione fasi / turni --------------------------//
     /**
-     * Cambia la fase.
-     * - 1 Controlla che non ci siano operazioni in sospeso relative alla corrente
-     * fase del gioco:
-     *   > REINFORCE : activePlayer non deve avere bonus armies
-     * 
+     * Cambia la fase. - 1 Controlla che non ci siano operazioni in sospeso
+     * relative alla corrente fase del gioco: > REINFORCE : activePlayer non
+     * deve avere bonus armies
+     *
      * - 2 SE è l'ultima fase chiama passTurn()
      *
      * @throws PendingOperationsException se non è possibile passare alla fase
      * successiva perché ci sono operazioni in sospeso.
      * @author Carolina
      */
-    public void nextPhase() /*throws PendingOperationsException */{
+    public void nextPhase() /*throws PendingOperationsException */ {
 
-        // #1 (switch?)
-        if (phase == Phase.REINFORCE && activePlayer.getBonusArmies() != 0) 
-             //throw new PendingOperationsException();
-            return;  
-        
-        // #2
+        if (phase == Phase.REINFORCE && activePlayer.getBonusArmies() != 0) // switch per il futuro?
+        //throw new PendingOperationsException();
+        {
+            return;
+        }
+
         try {
             this.phase = phase.next();
         } catch (LastPhaseException ex) {
@@ -211,23 +251,15 @@ public class Game extends Observable {
     }
 
     /**
-     * Passa il turno al giocatore successivo.
-     * Ovvero 
-     * 1 - Setta come active player il successivo nel giro
-     * 2 - Setta come fase la prima del turno
-     * 3 - Assegna all'active player le armate bonus
-     * 
+     * Passa il turno al giocatore successivo. Ovvero 1 - Setta come active
+     * player il successivo nel giro 2 - Setta come fase la prima del turno 3 -
+     * Assegna all'active player le armate bonus
+     *
      * @author Carolina
      */
     public void passTurn() {
-        
-        // #1
         nextTurn();
-        
-        // #2
         this.phase = Phase.values()[0];
-        
-        // #3
         map.computeBonusArmies(activePlayer);
     }
 
@@ -245,9 +277,8 @@ public class Game extends Observable {
             activePlayer = players.get(0);
         }
     }
-   
-    //  M E T O D I   R I P R E S I   D A   M A P
 
+    //  M E T O D I   R I P R E S I   D A   M A P
     /**
      * Controlla se il giocatore ha vinto
      *
@@ -260,14 +291,14 @@ public class Game extends Observable {
     }
 
     /**
-     *  Controlla che country sia dell'activePlayer e che si legale attaccare.
+     * Controlla che country sia dell'activePlayer e che si legale attaccare.
      */
     public boolean controlAttacker(String countryName) {
-        
+
         Country country = map.getCountryByName(countryName);
         return map.controlAttacker(country, activePlayer);
     }
-    
+
     /**
      * Controlla che country sia di player.
      */
@@ -285,43 +316,40 @@ public class Game extends Observable {
     }
 
     /**
-     *  Ridà il max numero di armate per lo spinner rispetto al tipo di country.
+     * Ridà il max numero di armate per lo spinner rispetto al tipo di country.
      */
     public int getMaxArmies(String countryName, boolean isAttacker) {
-        
+
         Country country = map.getCountryByName(countryName);
         return map.getMaxArmies(country, isAttacker);
     }
 
-    
     //  M E T O D I   P E R   D A R E   I N F O
-     
     /**
-     *  Ridà i country per i combo.
-     *  ANDREA: genera un'eccezione
+     * Ridà i country per i combo. ANDREA: genera un'eccezione
      */
     public Country[] getCountryList() {
-        Country[] cl = new Country[map.getCountriesList().size()]; 
+        Country[] cl = new Country[map.getCountriesList().size()];
         map.getCountriesList().toArray(cl);
         return cl;
         //return (Country[]) map.getCountriesList().toArray();
     }
-    
+
     // TMP
-    public String[] getCountryNameList(){
+    public String[] getCountryNameList() {
         Country[] countries = getCountryList();
         String[] names = new String[countries.length];
-        
-        for(int i =0; i< countries.length; i++){
-            names[i]=countries[i].getName();
+
+        for (int i = 0; i < countries.length; i++) {
+            names[i] = countries[i].getName();
         }
-        
+
         return names;
-        
+
     }
 
     /**
-     *  ridà le info da metter nel text area.
+     * ridà le info da metter nel text area.
      */
     public Map<Country, Player> getCountryPlayer() {
         return map.getCountryPlayer();
@@ -329,6 +357,7 @@ public class Game extends Observable {
 
     /**
      * Restituisce l'active player e la fase del gioco in cui ci si trova
+     *
      * @author Federico
      */
     public String getInfo() {
@@ -336,13 +365,13 @@ public class Game extends Observable {
     }
 
     public boolean canAttackFromCountry(String attackerCountryName) {
-        
+
         Country attackerCountry = map.getCountryByName(attackerCountryName);
         return map.canAttackFromCountry(attackerCountry);
     }
 
     public String getAttackerCountryName() {
-        return (attackerCountry==null) ? null : attackerCountry.getName();
+        return (attackerCountry == null) ? null : attackerCountry.getName();
     }
 
     public void setAttackerCountry(String attackerCountryName) {
@@ -358,11 +387,14 @@ public class Game extends Observable {
         this.defenderCountry = map.getCountryByName(defenderCountryName);
         // notify
     }
-    
-    public void resetFightingCountries (){
+
+    public void resetFightingCountries() {
         this.defenderCountry = null;
         this.attackerCountry = null;
     }
-    
-    
+
+    public String getPlayerPhase() {
+        return "Non ho ben capito cosa dovrei ritornare";
+    }
+
 }

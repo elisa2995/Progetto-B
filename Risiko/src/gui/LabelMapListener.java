@@ -28,7 +28,12 @@ public class LabelMapListener extends MouseInputAdapter {
         this.bufferedImage = bufferedImage;
         this.ColorNameCountry = ColorNameCountry;
     }
-
+    
+    /**
+     * Decide se scatenare o meno l'evento relativo alla corrente fase del gioco,
+     * a seconda che il punto cliccato sia valido o meno.
+     * @param e 
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         String countryName = getCountryFromClick(e);
@@ -63,6 +68,12 @@ public class LabelMapListener extends MouseInputAdapter {
         // se ultimo reinforce metti nella textArea
     }
 
+    /**
+     * Setta il cursore a "manina" nel caso in cui il territorio su cui esso si
+     * trova è valido nel contesto dell'attuale fase di gioco, a "freccina" se
+     * non lo è.
+     * @param e 
+     */
     @Override
     public void mouseMoved(MouseEvent e) {
         String countryName = getCountryFromClick(e);
@@ -99,8 +110,14 @@ public class LabelMapListener extends MouseInputAdapter {
         }
     }
 
-    /*Prende le coordinate del click, trova il Color di quel pixel, lo cerca nella Map_ColorCountry
-     *restiuisce la Country relativa al quel Color.
+    /**
+     * Ritirna il nome della Country a cui appartiene il pixel su cui si è cliccato.
+     * (null se il pixel non appartiene a nessuna Country). 
+     * In particolare: Prende le coordinate del click, trova il Color
+     * di quel pixel dall'immagine, e restituisce la stringa che corrisponde
+     * al nome della Country corrispondente mappata in ColorNameCountry.
+     * @param e
+     * @return 
      */
     public String getCountryFromClick(MouseEvent e) {
         int x = e.getPoint().x;
