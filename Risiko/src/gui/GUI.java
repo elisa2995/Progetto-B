@@ -1,5 +1,6 @@
 package gui;
 
+import exceptions.PendingOperationsException;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -14,6 +15,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -31,25 +34,21 @@ import risiko.Player;
 /**
  * @author andrea
  */
-public class GUI extends JFrame /*implements Observer*/{
+public class GUI extends JFrame implements GameObserver {
+
     private Game game;
-    private final Map<Color, String>  colorCountryNameMap;
-    private final int N_GIOCATORI=2;
+    private final Map<Color, String> colorCountryNameMap;
+    private AttackDialog inputArmies;
+    private final int N_GIOCATORI = 2;
 
     public GUI() throws Exception {
         initComponents();
-        game = new Game(N_GIOCATORI/*, this*/);
-        colorCountryNameMap=readColorTextMap("src/gui/color.txt");
+        game = new Game(N_GIOCATORI, this);
+        colorCountryNameMap = readColorTextMap("src/gui/color.txt");
         LabelMapListener labelMapListener = new LabelMapListener(convertToBufferedImage(labelMap), colorCountryNameMap, game);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
-        labelPlayerPhase.setText(game.getPlayerPhase());
-    }
-    
-    private void update() {
-        this.labelPlayerPhase.setText(game.getPlayerPhase());
-        if (game.getPhase().equals(Phase.REINFORCE)){
-        }
+        inputArmies = new AttackDialog(game);
     }
 
     /**
@@ -143,106 +142,127 @@ public class GUI extends JFrame /*implements Observer*/{
 
     private void buttonMoreInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMoreInfoActionPerformed
         String format = "%-30s %-15s %s";
-        String info=String.format(format, "territorio", "proprietario", "numero armate") + "\n";
-        for (Map.Entry<Country, Player> e : game.getCountryPlayer().entrySet()) 
-            info+=String.format(format, e.getKey().getName(), e.getValue().getName(), e.getKey().getArmies()) + "\n";
-        JOptionPane.showMessageDialog(null,info);
+        String info = String.format(format, "territorio", "proprietario", "numero armate") + "\n";
+        for (Map.Entry<Country, Player> e : game.getCountryPlayer().entrySet()) {
+            info += String.format(format, e.getKey().getName(), e.getValue().getName(), e.getKey().getArmies()) + "\n";
+        }
+        JOptionPane.showMessageDialog(null, info);
     }//GEN-LAST:event_buttonMoreInfoActionPerformed
 
     private void buttonNextPhaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextPhaseActionPerformed
-        game.nextPhase();
-        update();
+        try {
+            game.nextPhase();
+        } catch (PendingOperationsException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
     }//GEN-LAST:event_buttonNextPhaseActionPerformed
 
     private void buttonAttackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAttackActionPerformed
         if (game.getPhase().equals(Phase.FIGHT)) {
-            //I controlli sulla validità di AttackerCountryName e DefenderCountryName sono già stati fatti nel metodo mouseClicked di LabelMapListener
-            if (game.getAttackerCountryName()!=null && game.getDefenderCountryName()!=null) {
-                JDialog inputArmies = new JDialog();
-                JPanel dialogPanel = new JPanel(new GridLayout(0, 2));
-                JLabel attackText = new JLabel(" n armate attaccco");
-                JLabel defenseText = new JLabel(" n armate difesa");
-                SpinnerNumberModel attackerModel = new SpinnerNumberModel(1, 1, game.getMaxArmies(game.getAttackerCountryName(), true), 1);
-                SpinnerNumberModel defenserModel = new SpinnerNumberModel(1, 1, game.getMaxArmies(game.getDefenderCountryName(), false), 1);
-                JSpinner attackerArmies = new JSpinner(attackerModel);
-                JSpinner defenserArmies = new JSpinner(defenserModel);
-                JButton execute = new JButton("Esegui");
-                execute.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent ae) {
-                        game.attack((int) attackerArmies.getValue(), (int) defenserArmies.getValue());
-                        textAreaInfo.setText(game.getAttackResult().toString());
-                        if (game.getAttackResult().isIsConquered()) {
-                            JOptionPane.showMessageDialog(null, "Complimenti, il terriotorio in difesa è stato conquistato.");
-                            inputArmies.dispose();
-                            return;
-                        }
-                        if (!game.canAttackFromCountry(game.getAttackerCountryName())) {
-                            JOptionPane.showMessageDialog(null, "Non è più possibile effettuare attacchi da questo territorio.");
-                            inputArmies.dispose();
-                            return;
-                        }
-                        attackerArmies.setModel(new SpinnerNumberModel(1, 1, game.getMaxArmies(game.getAttackerCountryName(),  true), 1));
-                        defenserArmies.setModel(new SpinnerNumberModel(1, 1, game.getMaxArmies(game.getDefenderCountryName(), false), 1));
-                    }
-                });
-                dialogPanel.add(attackText);
-                dialogPanel.add(defenseText);
-                dialogPanel.add(attackerArmies);
-                dialogPanel.add(defenserArmies);
-                dialogPanel.add(execute);
-                inputArmies.add(dialogPanel);
-                inputArmies.setModal(true);
-                inputArmies.setSize(600, 300);
+            if (game.getAttackerCountryName() != null && game.getDefenderCountryName() != null) {
                 inputArmies.setVisible(true);
             }
-            game.setAttackerCountry(null);
-            game.setDefenderCountry(null);
+            game.resetFightingCountries();
         }
     }//GEN-LAST:event_buttonAttackActionPerformed
-    
+
     /**
-     * Procedurone per la creazione di una map<Color,String> a partire da un file di testo 
-     * contenente un numero a piacere di linee, dove ogni linea contiene un [token] avente la forma:
-     * [token]   -> [Country] = [RGB]
-     * [Country] -> qualsiasi sequenza di caratteri ASCII diversi dal carattere = e interruzioni di linea 
-     * [RGB]     -> [R],[G],[B]
-     * [R]       -> un numerCountryo intero da 0 a 255
-     * [G]       -> un numero intero da 0 a 255
-     * [B]       -> un numero intero da 0 a 255.
+     * Procedurone per la creazione di una map<Color,String> a partire da un
+     * file di testo contenente un numero a piacere di linee, dove ogni linea
+     * contiene un [token] avente la forma: [token] -> [Country] = [RGB]
+     * [Country] -> qualsiasi sequenza di caratteri ASCII diversi dal carattere
+     * = e interruzioni di linea [RGB] -> [R],[G],[B] [R] -> un numerCountryo
+     * intero da 0 a 255 [G] -> un numero intero da 0 a 255 [B] -> un numero
+     * intero da 0 a 255.
      */
-    private static Map<Color,String> readColorTextMap(String relativeURL) throws FileNotFoundException{
+    private static Map<Color, String> readColorTextMap(String relativeURL) throws FileNotFoundException {
         Map<Color, String> map = new HashMap<>();
-        try (Scanner scanner   = new Scanner(new FileReader(relativeURL))) {
-            while(scanner.hasNextLine()) {
-                String[] tokens  = scanner.nextLine().split("=");
-                String[] RGB     = tokens[1].split(",");
-                String   country = tokens[0].trim();
-                int      R       = Integer.parseInt(RGB[0].trim());
-                int      G       = Integer.parseInt(RGB[1].trim());
-                int      B       = Integer.parseInt(RGB[2].trim());             
-                Color    color   = new Color( R,G,B);
-                map.put( color, country);
+        try (Scanner scanner = new Scanner(new FileReader(relativeURL))) {
+            while (scanner.hasNextLine()) {
+                String[] tokens = scanner.nextLine().split("=");
+                String[] RGB = tokens[1].split(",");
+                String country = tokens[0].trim();
+                int R = Integer.parseInt(RGB[0].trim());
+                int G = Integer.parseInt(RGB[1].trim());
+                int B = Integer.parseInt(RGB[2].trim());
+                Color color = new Color(R, G, B);
+                map.put(color, country);
             }
         }
         return map;
     }
-    
+
     /**
-     * Metodo necessario per convertire la labelMap in una bufferedMap a causa della GUI che è stata creata con DESIGN
+     * Metodo necessario per convertire la labelMap in una bufferedMap a causa
+     * della GUI che è stata creata con DESIGN
+     *
      * @param labelMap
-     * @return 
+     * @return
      */
-    private static BufferedImage convertToBufferedImage(JLabel labelMap){
+    private static BufferedImage convertToBufferedImage(JLabel labelMap) {
         ImageIcon imgIcon = ((ImageIcon) labelMap.getIcon());
-        Image     image   = imgIcon.getImage();
-        BufferedImage  newImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Image image = imgIcon.getImage();
+        BufferedImage newImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = newImage.createGraphics();
         g.drawImage(image, 0, 0, null);
         g.dispose();
         return newImage;
-    }   
-    
+    }
+
+    @Override
+    public void updateOnReinforce(String countryName, int bonusArmies) {
+
+        String s;
+        s = "Hai rinforzato " + countryName + ".\n ";
+        if (bonusArmies == 0) {
+            s += "Fase di rinforzo conlusa. Clicca nextPhase.\n";
+        } else {
+            s += "Ti rimangono " + bonusArmies + " armate.\n";
+        }
+        this.textAreaInfo.setText(s);
+    }
+
+    @Override
+    public void updateOnPhaseChange(String player, String phase) {
+        this.labelPlayerPhase.setText(player + " " + phase);
+        this.textAreaInfo.setText("");
+    }
+
+    @Override
+    public void updateOnSetAttacker(String countryName) {
+
+        if (countryName != null) {
+            this.textAreaInfo.setText("Attaccante : " + countryName);
+        } else {
+            this.textAreaInfo.setText("");
+        }
+    }
+
+    @Override
+    public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender) {
+
+        if (countryDefenderName != null) {
+            String s = "Attaccante : " + countryAttackerName + "\n";
+            s += "Difensore : " + countryDefenderName + " ( " + defenderPlayer + " ).\n";
+            this.textAreaInfo.setText(s);
+        } else {
+            this.textAreaInfo.setText("");
+        }
+        this.inputArmies.setMaxArmies(maxArmiesAttacker, maxArmiesDefender);
+    }
+
+    @Override
+    public void updateOnAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender) {
+        textAreaInfo.setText(attackResultInfo);
+        this.inputArmies.setMaxArmiesAttacker(maxArmiesAttacker);
+        this.inputArmies.setMaxArmiesDefender(maxArmiesDefender);
+        this.inputArmies.setIsConquered(isConquered);
+        this.inputArmies.setCanAttackFromCountry(canAttackFromCountry);
+        if (isConquered) {
+            (new JOptionPane()).showMessageDialog(null, "Complimenti, hai conquistato " +game.getDefenderCountryName());
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
     private javax.swing.JButton buttonMoreInfo;
@@ -252,4 +272,5 @@ public class GUI extends JFrame /*implements Observer*/{
     private javax.swing.JLabel labelPlayerPhase;
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables
+
 }

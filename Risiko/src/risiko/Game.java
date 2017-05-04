@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+import gui.Observable;
+import gui.GameObserver;
 import java.util.Random;
 
 public class Game extends Observable {
@@ -20,15 +20,15 @@ public class Game extends Observable {
     private Player activePlayer;
     private Player winner;
     private Phase phase;
-    private AttackResult attackResult;
 
-    public Game(int nrPlayers/*, Observer observer*/) throws Exception {
+    public Game(int nrPlayers, GameObserver observer) throws Exception {
         this.players = new ArrayList<>();
         this.activePlayer = null;
         this.winner = null;
         this.map = new RisikoMap();
+        this.addObserver(observer);
         init(nrPlayers);
-        //this.addObserver(gui);
+
     }
 
     public Phase getPhase() {
@@ -54,6 +54,10 @@ public class Game extends Observable {
         activePlayer = players.get(randomIndex);
         map.computeBonusArmies(activePlayer);
         this.phase = Phase.REINFORCE;
+
+        setChanged();
+        notifyPhaseChange(activePlayer.getName(), phase.name());
+
     }
 
     /**
@@ -85,6 +89,10 @@ public class Game extends Observable {
         int armiesLost[] = fight(attackerCountry, defenderCountry, nrA, nrD);
         boolean conquered = map.isConquered(defenderCountry);
 
+        AttackResult attackResult = new AttackResult(attackerPlayer,
+                defenderPlayer, nrA, nrD,
+                armiesLost[0], armiesLost[1], conquered);
+
         if (conquered) {
             map.updateOnConquer(attackerCountry, defenderCountry, nrA);
             if (map.hasLost(defenderPlayer)) {
@@ -92,9 +100,9 @@ public class Game extends Observable {
             }
         }
 
-        this.attackResult = new AttackResult(attackerPlayer,
-                defenderPlayer, nrA, nrD,
-                armiesLost[0], armiesLost[1], conquered);
+        setChanged();
+        notifyAttackResult(attackResult.toString(), conquered, map.canAttackFromCountry(attackerCountry), this.getMaxArmies(attackerCountry, true), this.getMaxArmies(defenderCountry, false));
+
     }
 
     /**
@@ -171,16 +179,6 @@ public class Game extends Observable {
     }
 
     /**
-     * Ridà il risultato.
-     *
-     * @author Andrea
-     * @return AttackResult l'oggetto che rappresenta il risultato dell'attacco.
-     */
-    public AttackResult getAttackResult() {
-        return attackResult;
-    }
-
-    /**
      * Controlla se il difensore deve essere eliminato dal gioco.
      */
     private void hasLost(Player defenderPlayer) {
@@ -206,6 +204,8 @@ public class Game extends Observable {
             activePlayer.decrementBonusArmies(nArmies);
             map.addArmies(country, nArmies);
 
+            setChanged();
+            notifyReinforce(countryName, activePlayer.getBonusArmies());
             //notify(); passa alla gui la string country e quante armate bonus ha ancora
         }
     }
@@ -235,12 +235,10 @@ public class Game extends Observable {
      * successiva perché ci sono operazioni in sospeso.
      * @author Carolina
      */
-    public void nextPhase() /*throws PendingOperationsException */ {
+    public void nextPhase() throws PendingOperationsException {
 
-        if (phase == Phase.REINFORCE && activePlayer.getBonusArmies() != 0) // switch per il futuro?
-        //throw new PendingOperationsException();
-        {
-            return;
+        if (phase == Phase.REINFORCE && activePlayer.getBonusArmies() != 0) {
+            throw new PendingOperationsException("Hai ancora armate da posizionare!");
         }
 
         try {
@@ -248,6 +246,8 @@ public class Game extends Observable {
         } catch (LastPhaseException ex) {
             passTurn();
         }
+        setChanged();
+        notifyPhaseChange(activePlayer.getName(), phase.name());
     }
 
     /**
@@ -318,9 +318,7 @@ public class Game extends Observable {
     /**
      * Ridà il max numero di armate per lo spinner rispetto al tipo di country.
      */
-    public int getMaxArmies(String countryName, boolean isAttacker) {
-
-        Country country = map.getCountryByName(countryName);
+    public int getMaxArmies(Country country, boolean isAttacker) {
         return map.getMaxArmies(country, isAttacker);
     }
 
@@ -376,7 +374,8 @@ public class Game extends Observable {
 
     public void setAttackerCountry(String attackerCountryName) {
         this.attackerCountry = map.getCountryByName(attackerCountryName);
-        // notify
+        setChanged();
+        notifySetAttacker(attackerCountryName);
     }
 
     public String getDefenderCountryName() {
@@ -385,16 +384,15 @@ public class Game extends Observable {
 
     public void setDefenderCountry(String defenderCountryName) {
         this.defenderCountry = map.getCountryByName(defenderCountryName);
-        // notify
+        setChanged();
+        notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerFromCountry(defenderCountry).getName(), getMaxArmies(attackerCountry, true), getMaxArmies(defenderCountry, false));
     }
 
     public void resetFightingCountries() {
         this.defenderCountry = null;
         this.attackerCountry = null;
-    }
-
-    public String getPlayerPhase() {
-        return "Non ho ben capito cosa dovrei ritornare";
+        setChanged();
+        notifySetAttacker(null);
     }
 
 }
