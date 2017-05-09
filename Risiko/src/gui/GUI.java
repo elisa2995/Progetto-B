@@ -44,7 +44,7 @@ public class GUI extends JFrame implements GameObserver {
     public GUI() throws Exception {
         initComponents();
         game = new Game(N_GIOCATORI, this);
-        colorCountryNameMap = readColorTextMap("src/gui/color.txt");
+        colorCountryNameMap = readColorTextMap("src/gui/ColorCountry.txt");
         LabelMapListener labelMapListener = new LabelMapListener(convertToBufferedImage(labelMap), colorCountryNameMap, game);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
@@ -70,7 +70,7 @@ public class GUI extends JFrame implements GameObserver {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        labelMap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/cartina_italia.png"))); // NOI18N
+        labelMap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/mapparisiko.png"))); // NOI18N
 
         labelPlayerPhase.setBackground(new java.awt.Color(225, 207, 218));
         labelPlayerPhase.setForeground(new java.awt.Color(1, 1, 1));
@@ -181,7 +181,7 @@ public class GUI extends JFrame implements GameObserver {
             while (scanner.hasNextLine()) {
                 String[] tokens = scanner.nextLine().split("=");
                 String[] RGB = tokens[1].split(",");
-                String country = tokens[0].trim();
+                String country = tokens[0];
                 int R = Integer.parseInt(RGB[0].trim());
                 int G = Integer.parseInt(RGB[1].trim());
                 int B = Integer.parseInt(RGB[2].trim());
