@@ -8,8 +8,10 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -39,17 +41,47 @@ public class GUI extends JFrame implements GameObserver {
     private Game game;
     private final Map<Color, String> colorCountryNameMap;
     private AttackDialog inputArmies;
-    private final int N_GIOCATORI = 2;
+    private final int N_HUMAN_PLAYERS = 2;
+    private final int N_ARTIFICIAL_PLAYERS = 0;
 
     public GUI() throws Exception {
         initComponents();
-        game = new Game(N_GIOCATORI, this);
+        game = new Game(N_HUMAN_PLAYERS, N_ARTIFICIAL_PLAYERS, this);
         colorCountryNameMap = readColorTextMap("src/gui/ColorCountry.txt");
         LabelMapListener labelMapListener = new LabelMapListener(convertToBufferedImage(labelMap), colorCountryNameMap, game);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
         inputArmies = new AttackDialog(game);
+        //initLabels("files/provaLabels.txt");
+        //this.setComponentZOrder(labelMap, getComponentCount() - 1);
     }
+
+    /*private void initLabels(String src) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(src))) {
+            System.out.println(getComponentCount());
+            String line;
+            String[] tokens;
+            int x, y;
+            while ((line = br.readLine()) != null) {
+                tokens = line.split("\t");
+                x = Integer.parseInt(tokens[0].split(",")[0]);
+                y = Integer.parseInt(tokens[0].split(",")[1]);
+                createLabel(tokens[1], x, y);
+            }
+
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found");
+        }
+    }
+
+    private void createLabel(String countryName, int x, int y) {
+        int xOffset = 10;
+        int yOffset = 75;
+        JLabel label = new JLabel(countryName);
+        label.setBounds(x + xOffset, y + yOffset, 100, 10);
+        getContentPane().add(label);
+        setComponentZOrder(label, 1);
+    }*/
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -259,8 +291,14 @@ public class GUI extends JFrame implements GameObserver {
         this.inputArmies.setIsConquered(isConquered);
         this.inputArmies.setCanAttackFromCountry(canAttackFromCountry);
         if (isConquered) {
-            (new JOptionPane()).showMessageDialog(null, "Complimenti, hai conquistato " +game.getDefenderCountryName());
+            (new JOptionPane()).showMessageDialog(null, "Complimenti, hai conquistato " + game.getDefenderCountryName());
         }
+    }
+
+    @Override
+    public void updateOnVictory(String winner) {
+        JOptionPane.showMessageDialog(null, "Complimenti " + winner + " hai vinto!");
+        // etc
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

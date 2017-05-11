@@ -16,14 +16,14 @@ public class AttackResult {
     private int lostDefender;
     private boolean isConquered;
 
-    public AttackResult(Player attackerPlayer, Player defenderPlayer, int armiesAttacker, int armiesDefender, int lostAttacker, int lostDefender, boolean isConquered) {
+    public AttackResult(Player attackerPlayer, Player defenderPlayer, int armiesAttacker, int armiesDefender, int [] lost, boolean isConquered) {
 
         this.attackerPlayer = attackerPlayer;
         this.defenderPlayer = defenderPlayer;
         this.armiesAttacker = armiesAttacker;
         this.armiesDefender = armiesDefender;
-        this.lostAttacker = lostAttacker;
-        this.lostDefender = lostDefender;
+        this.lostAttacker = lost[0];
+        this.lostDefender = lost[1];
         this.isConquered = isConquered;
     }
 

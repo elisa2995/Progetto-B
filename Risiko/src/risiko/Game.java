@@ -18,21 +18,21 @@ public class Game extends Observable {
     private RisikoMap map;
     private List<Player> players;
     private Player activePlayer;
-    private Player winner;
+    //private Player winner; serve??
     private Phase phase;
 
-    public Game(int nrPlayers, GameObserver observer) throws Exception {
+    public Game(int humanPlayers, int artificialPlayers, GameObserver observer) throws Exception {
         this.players = new ArrayList<>();
         this.activePlayer = null;
-        this.winner = null;
+        //this.winner = null;
         this.map = new RisikoMap();
         this.addObserver(observer);
-        init(nrPlayers);
+        init(humanPlayers, artificialPlayers);
 
     }
 
     public Phase getPhase() {
-        return phase;
+        return this.phase;
     }
 
     /**
@@ -45,19 +45,16 @@ public class Game extends Observable {
      * @throws rilancia l'eccezione che potrebbe lanciare la mappa nel caso in
      * cui l'url del file dei territori fosse sbagliato.
      */
-    private void init(int nrPlayers) throws Exception {
-        buildPlayers(nrPlayers);
-        map.assignCountriesToPlayers(players);
+    private void init(int humanPlayers, int artificialPlayers) throws Exception {
 
-        Random randomGenerator = new Random();
-        int randomIndex = randomGenerator.nextInt(players.size());
-        activePlayer = players.get(randomIndex);
+        buildPlayers(humanPlayers, artificialPlayers);
+        map.assignCountriesToPlayers(players);
+        activePlayer = players.get(new Random().nextInt(players.size()));
         map.computeBonusArmies(activePlayer);
-        this.phase = Phase.REINFORCE;
+        phase = Phase.REINFORCE;
 
         setChanged();
         notifyPhaseChange(activePlayer.getName(), phase.name());
-
     }
 
     /**
@@ -66,9 +63,14 @@ public class Game extends Observable {
      *
      * @param nrPlayers
      */
-    private void buildPlayers(int nrPlayers) {
-        for (int i = 0; i < nrPlayers; i++) {
+    private void buildPlayers(int humanPlayers, int artificialPlayers) {
+        for (int i = 0; i < humanPlayers; i++) {
             this.players.add(new Player("Giocatore-" + i));
+        }
+        for (int i = 0; i < artificialPlayers; i++) {
+            this.players.add(new Player("FintoGiocatoreArtificiale - " + i));
+            //this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i));
+
         }
     }
 
@@ -76,38 +78,49 @@ public class Game extends Observable {
     /**
      * Simula l'attacco tra {@code this.attackerCountry} e
      * {@code this.defenderCountry}, con rispettivamente nrA e nrD armate.
-     * Gestisce anche la conquista del territorio, chiamando i metodi appositi.
-     * genera un nuovo oggetto {@code AttackResult}.
+     * (Previo controllo sul caller del metodo). Gestisce anche la conquista del
+     * territorio, chiamando i metodi appositi. genera un nuovo oggetto
+     * {@code AttackResult}.
      *
      * @param nrA
      * @param nrD
+     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
-    public void attack(int nrA, int nrD) {
+    public void attack(int nrA, int nrD, ArtificialPlayer... aiCaller) {
+
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
 
         Player defenderPlayer = map.getPlayerFromCountry(defenderCountry);
         Player attackerPlayer = map.getPlayerFromCountry(attackerCountry);
-        int armiesLost[] = fight(attackerCountry, defenderCountry, nrA, nrD);
+        int lostArmies[] = fight(attackerCountry, defenderCountry, nrA, nrD);
         boolean conquered = map.isConquered(defenderCountry);
 
-        AttackResult attackResult = new AttackResult(attackerPlayer,
+        String attackResult = (new AttackResult(attackerPlayer,
                 defenderPlayer, nrA, nrD,
-                armiesLost[0], armiesLost[1], conquered);
+                lostArmies, conquered)).toString();
 
         if (conquered) {
             map.updateOnConquer(attackerCountry, defenderCountry, nrA);
-            if (map.hasLost(defenderPlayer)) {
+            if (hasLost(defenderPlayer)) {
                 players.remove(defenderPlayer);
+            }
+            if (hasWon()) {
+                setChanged();
+                notifyVictory(activePlayer.getName());
+                return;
             }
         }
 
         setChanged();
-        notifyAttackResult(attackResult.toString(), conquered, map.canAttackFromCountry(attackerCountry), this.getMaxArmies(attackerCountry, true), this.getMaxArmies(defenderCountry, false));
+        notifyAttackResult(attackResult, conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
 
     }
 
     /**
-     * Simula lo scontro tra due eserciti, eliminado le armate quelle perse da
-     * ogni Country.
+     * Simula lo scontro tra due eserciti, eliminado le armate perse da ogni
+     * Country.
      *
      * @param countries
      * @param nrA
@@ -117,10 +130,10 @@ public class Game extends Observable {
      * @author Andrea
      */
     private int[] fight(Country countryAttacker, Country countryDefender, int nrA, int nrD) {
-        int armiesLost[] = computeArmiesLost(nrA, nrD);
-        map.removeArmies(countryAttacker, armiesLost[0]);
-        map.removeArmies(countryDefender, armiesLost[1]);
-        return armiesLost;
+        int lostArmies[] = computeLostArmies(nrA, nrD);
+        map.removeArmies(countryAttacker, lostArmies[0]);
+        map.removeArmies(countryDefender, lostArmies[1]);
+        return lostArmies;
     }
 
     /**
@@ -130,7 +143,7 @@ public class Game extends Observable {
      * dall'attaccante, il secondo il numero di armate perse dal difensore.
      * @author Andrea
      */
-    private int[] computeArmiesLost(int nrA, int nrD) {
+    private int[] computeLostArmies(int nrA, int nrD) {
         int resultsDiceAttack[] = rollDice(nrA);
         int resultsDiceDefens[] = rollDice(nrD);
         int armiesLost[] = new int[2];
@@ -178,64 +191,62 @@ public class Game extends Observable {
         return (int) (Math.random() * 6) + 1;
     }
 
-    /**
-     * Controlla se il difensore deve essere eliminato dal gioco.
-     */
-    private void hasLost(Player defenderPlayer) {
-        if (map.hasLost(defenderPlayer)) {
-            players.remove(defenderPlayer);
-        }
-    }
-
     // ----------------------- Rinforzo ------------------------------------
     /**
      * Controlla e aggiunge le armate al territorio. Queste vengono prese dal
      * campo bonusArmies del giocatore fino ad esaurimento.
      *
-     * @param player giocatore che vuole eseguire azione
+     * @param countryName
      * @param nArmies numero di armate da aggiungere
-     * @param country territorio sul quale aggiungerle
+     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      * @return
      */
-    public void reinforce(String countryName, int nArmies) {
+    public void reinforce(String countryName, int nArmies, ArtificialPlayer... aiCaller) {
 
-        Country country = map.getCountryByName(countryName);
-        if (activePlayer.getBonusArmies() - nArmies >= 0) { //cancellare if in futuro
-            activePlayer.decrementBonusArmies(nArmies);
-            map.addArmies(country, nArmies);
-
-            setChanged();
-            notifyReinforce(countryName, activePlayer.getBonusArmies());
-            //notify(); passa alla gui la string country e quante armate bonus ha ancora
+        // La seconda condizione sarà da cancellare in futuro perché in teoria sempre vera
+        if (!checkCallerIdentity(aiCaller) || activePlayer.getBonusArmies() - nArmies < 0) {
+            return;
         }
+
+        activePlayer.decrementBonusArmies(nArmies);
+        map.addArmies(map.getCountryByName(countryName), nArmies);
+
+        setChanged();
+        notifyReinforce(countryName, activePlayer.getBonusArmies());
+
     }
 
     /**
      * Controlla se il giocatore può rinforzare del numero di armate
-     * selezionato. CONTROLLARE!!! a cosa serve countryName? dovremmo
-     * controllare anche quello?
+     * selezionato. (Previo controllo sul caller del metodo). (prima ci facevamo
+     * passare CountryName, perché??)
      *
-     * @param countryName
      * @param nArmies
+     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo
      * @return
      */
-    public boolean canReinforce(String countryName, int nArmies) {
-        return activePlayer.getBonusArmies() - nArmies >= 0;
+    public boolean canReinforce(int nArmies, ArtificialPlayer... aiCaller) {
+        return checkCallerIdentity(aiCaller) && activePlayer.getBonusArmies() - nArmies >= 0;
     }
 
     //--------------------- Gestione fasi / turni --------------------------//
     /**
-     * Cambia la fase. - 1 Controlla che non ci siano operazioni in sospeso
-     * relative alla corrente fase del gioco: > REINFORCE : activePlayer non
-     * deve avere bonus armies
+     * Cambia la fase. (Previo controllo sul caller del metodo) - 1 Controlla
+     * che non ci siano operazioni in sospeso relative alla corrente fase del
+     * gioco: > REINFORCE : activePlayer non deve avere bonus armies
      *
      * - 2 SE è l'ultima fase chiama passTurn()
      *
+     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      * @throws PendingOperationsException se non è possibile passare alla fase
      * successiva perché ci sono operazioni in sospeso.
      * @author Carolina
      */
-    public void nextPhase() throws PendingOperationsException {
+    public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
+
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
 
         if (phase == Phase.REINFORCE && activePlayer.getBonusArmies() != 0) {
             throw new PendingOperationsException("Hai ancora armate da posizionare!");
@@ -257,7 +268,7 @@ public class Game extends Observable {
      *
      * @author Carolina
      */
-    public void passTurn() {
+    private void passTurn() {
         nextTurn();
         this.phase = Phase.values()[0];
         map.computeBonusArmies(activePlayer);
@@ -280,119 +291,179 @@ public class Game extends Observable {
 
     //  M E T O D I   R I P R E S I   D A   M A P
     /**
-     * Controlla se il giocatore ha vinto
+     * Controlla se l'active player ha vinto.
      *
-     * @param player l'active player
      * @return true se il giocatore ha vinto, false altrimenti
      * @author Carolina
      */
-    public boolean hasWon(Player player) {
-        return map.checkIfWinner(player);
+    private boolean hasWon() {
+        return map.checkIfWinner(activePlayer);
+    }
+
+    /**
+     * Chiede a map se il <code>player</code> ha perso.
+     *
+     * @param player
+     * @return
+     */
+    private boolean hasLost(Player player) {
+        return map.hasLost(player);
     }
 
     /**
      * Controlla che country sia dell'activePlayer e che si legale attaccare.
+     * (Previo controllo sul caller del metodo).
+     *
+     * @param countryName
+     * @param aiCaller l'eventuale ArtificialPlayer che chiama il metodo
+     * @return true se l'attacco è legale, false altrimenti.
      */
-    public boolean controlAttacker(String countryName) {
-
-        Country country = map.getCountryByName(countryName);
-        return map.controlAttacker(country, activePlayer);
+    public boolean controlAttacker(String countryName, ArtificialPlayer... aiCaller) {
+        return checkCallerIdentity(aiCaller) && map.controlAttacker(map.getCountryByName(countryName), activePlayer);
     }
 
     /**
-     * Controlla che country sia di player.
+     * Controlla che country sia dell'activePlayer. (Previo controllo sul caller
+     * del metodo). // mmh
+     *
+     * @param country
+     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
+     * @return true se la country è dell'active player, false altrimenti.
      */
-    public boolean controlPlayer(Country country) {
-        return map.controlPlayer(country, activePlayer);
+    public boolean controlPlayer(Country country, ArtificialPlayer... aiCaller) {
+        return checkCallerIdentity(aiCaller) && map.controlPlayer(country, activePlayer);
     }
 
     /**
      * Controlla che il territorio non sia dell'active player e che sia un
      * confinante dell'attacker.
+     *
+     * @param defenderCountryName
+     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
+     * @return
      */
-    public boolean controlDefender(String defenderCountryName) {
-        Country defenderCountry = map.getCountryByName(defenderCountryName);
-        return map.controlDefender(attackerCountry, defenderCountry, activePlayer);
+    public boolean controlDefender(String defenderCountryName, ArtificialPlayer... aiCaller) {
+        return checkCallerIdentity(aiCaller) && map.controlDefender(attackerCountry, map.getCountryByName(defenderCountryName), activePlayer);
     }
 
     /**
-     * Ridà il max numero di armate per lo spinner rispetto al tipo di country.
+     * Setta l'attacker.
+     *
+     * @param attackerCountryName
+     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
      */
-    public int getMaxArmies(Country country, boolean isAttacker) {
-        return map.getMaxArmies(country, isAttacker);
+    public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+        this.attackerCountry = map.getCountryByName(attackerCountryName);
+        setChanged();
+        notifySetAttacker(attackerCountryName);
+    }
+
+    /**
+     * Setta il defender.
+     *
+     * @param defenderCountryName
+     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
+     */
+    public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+        this.defenderCountry = map.getCountryByName(defenderCountryName);
+        setChanged();
+        notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerFromCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
+    }
+
+    /**
+     * Resetta le countries dell'attacco. (Previo controllo sul caller del
+     * metodo).
+     *
+     * @param aiCaller
+     */
+    public void resetFightingCountries(ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+        this.defenderCountry = null;
+        this.attackerCountry = null;
+        setChanged();
+        notifySetAttacker(null);
     }
 
     //  M E T O D I   P E R   D A R E   I N F O
     /**
-     * Ridà i country per i combo. ANDREA: genera un'eccezione
+     * Ritorna l'array di countries. Utile per l'artificial player??
+     *
+     * @return
      */
     public Country[] getCountryList() {
-        Country[] cl = new Country[map.getCountriesList().size()];
-        map.getCountriesList().toArray(cl);
-        return cl;
-        //return (Country[]) map.getCountriesList().toArray();
-    }
-
-    // TMP
-    public String[] getCountryNameList() {
-        Country[] countries = getCountryList();
-        String[] names = new String[countries.length];
-
-        for (int i = 0; i < countries.length; i++) {
-            names[i] = countries[i].getName();
-        }
-
-        return names;
-
+        return (Country[]) map.getCountriesList().toArray();
     }
 
     /**
-     * ridà le info da metter nel text area.
+     * Ritorna la Map<Country,Player>. Utile per l'artificial player??
+     *
+     * @return
      */
     public Map<Country, Player> getCountryPlayer() {
         return map.getCountryPlayer();
     }
 
     /**
-     * Restituisce l'active player e la fase del gioco in cui ci si trova
+     * Controlla se la Country ha armate sufficienti per attaccare (>=2).
      *
-     * @author Federico
+     * @param attackerCountryName
+     * @param aiCaller
+     * @return
      */
-    public String getInfo() {
-        return "Turno di: " + activePlayer.getName() + "\nFase corrente: " + phase.name();
+    public boolean canAttackFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
+        return checkCallerIdentity(aiCaller) && map.canAttackFromCountry(map.getCountryByName(attackerCountryName));
     }
 
-    public boolean canAttackFromCountry(String attackerCountryName) {
-
-        Country attackerCountry = map.getCountryByName(attackerCountryName);
-        return map.canAttackFromCountry(attackerCountry);
-    }
-
+    /**
+     * Ritorna il nome della Country che sta attaccando.
+     *
+     * @return
+     */
     public String getAttackerCountryName() {
         return (attackerCountry == null) ? null : attackerCountry.getName();
     }
 
-    public void setAttackerCountry(String attackerCountryName) {
-        this.attackerCountry = map.getCountryByName(attackerCountryName);
-        setChanged();
-        notifySetAttacker(attackerCountryName);
-    }
-
+    /**
+     * Ritorna il nome della Country in difesa.
+     *
+     * @return
+     */
     public String getDefenderCountryName() {
         return (defenderCountry == null) ? null : defenderCountry.getName();
     }
 
-    public void setDefenderCountry(String defenderCountryName) {
-        this.defenderCountry = map.getCountryByName(defenderCountryName);
-        setChanged();
-        notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerFromCountry(defenderCountry).getName(), getMaxArmies(attackerCountry, true), getMaxArmies(defenderCountry, false));
+    /**
+     * Controlla che chi chiama il metodo sia il giocatore di turno. Se aiCaller
+     * è vuoto, il metodo è stato chiamato dalla GUI cioè da un humanPlayer
+     * (<code>!(instanceof ArtificialPlayer)</code>). In caso contrario , il
+     * metodo è stato chiamato da un giocatore artificiale, che quindi deve
+     * coincidere con l'activePlayer.
+     *
+     * @param callerAI l'eventuale <code>ArtificialPlayer</code> caller del
+     * metodo.
+     * @return
+     * @author Carolina
+     */
+    private boolean checkCallerIdentity(ArtificialPlayer[] aiCaller) {
+        return (aiCaller.length == 0) ? !(activePlayer instanceof ArtificialPlayer): aiCaller[0].equals(activePlayer) ;
     }
 
-    public void resetFightingCountries() {
-        this.defenderCountry = null;
-        this.attackerCountry = null;
-        setChanged();
-        notifySetAttacker(null);
+    /**
+     * Dice se game ha i parametri settati per fare un combattimento.
+     *
+     * @return true se sono stati settati tutti i parametri, false altrimenti.
+     * @author Carolina
+     */
+    public boolean isReadyToFight() {
+        return phase.equals(Phase.FIGHT) && attackerCountry != null && defenderCountry != null;
     }
 
 }

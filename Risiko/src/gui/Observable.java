@@ -94,7 +94,19 @@ public class Observable {
         for (GameObserver ob : this.obs) {
             ob.updateOnPhaseChange(player, phase);
         }
+    }
+    
+    public void notifyVictory(String winner) {
+        synchronized (this) {
+            if (!changed) {
+                return;
+            }
+            clearChanged();
+        }
 
+        for (GameObserver ob : this.obs) {
+            ob.updateOnVictory(winner);
+        }
     }
 
     /**
