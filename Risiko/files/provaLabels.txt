@@ -1,0 +1,13 @@
+61,59	Alaska
+139,59	Territori dei Nord Ovest
+333,25	Groenlandia
+124,95	Alberta
+174,103	Ontario
+234,100	Quebec
+85,143	Stati Uniti Occidentali
+162,157	Stati Uniti Orientali
+103,217	America Centrale
+198,275	Venezuela
+194,351	Peru'
+271,337	Brasile
+230,427	Argentina	

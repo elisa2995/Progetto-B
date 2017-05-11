@@ -56,6 +56,7 @@ public class StartGameGUI extends javax.swing.JFrame {
         this.ai4.setVisible(false);
         this.ai5.setVisible(false);
         this.ai6.setVisible(false);
+
         nPlayers = 2;
 
     }
@@ -240,9 +241,10 @@ public class StartGameGUI extends javax.swing.JFrame {
 
         if (valid) {
             GUI gui;
-            Map<String, Boolean> players=new HashMap<>();
-            for(int i=0; i<list.size(); i++){
-                players.put(list.get(i).getText(), aiChecks[i].isEnabled());
+            Map<String, Boolean> players = new HashMap<>();
+            for (int i = 0; i < list.size(); i++) {
+                players.put(list.get(i).getText(), aiChecks[i].isSelected());
+                System.out.println(aiChecks[i].isSelected());
             }
             try {
                 gui = new GUI(players);
@@ -251,7 +253,7 @@ public class StartGameGUI extends javax.swing.JFrame {
             } catch (Exception ex) {
                 Logger.getLogger(StartGameGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
     }//GEN-LAST:event_startButtonActionPerformed
 
