@@ -2,6 +2,7 @@ package risiko;
 
 import gui.GUI;
 import exceptions.LastPhaseException;
+import gui.StartGameGUI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +19,10 @@ public class Risiko {
      */
     public static void main(String[] args) throws Exception {
 
-        GUI gui = new GUI();
-        gui.setVisible(true);
+        StartGameGUI start=new StartGameGUI();
+        start.setVisible(true);
+       /* GUI gui = new GUI();
+        gui.setVisible(true);*/
     }
 
 }

@@ -34,16 +34,16 @@ import risiko.Player;
 /**
  * @author andrea
  */
-public class GUI extends JFrame implements GameObserver {
+public class GUI extends JFrame implements GameObserver {    
 
     private Game game;
     private final Map<Color, String> colorCountryNameMap;
     private AttackDialog inputArmies;
     private final int N_GIOCATORI = 2;
 
-    public GUI() throws Exception {
+    public GUI(Map<String, Boolean> players) throws Exception {
         initComponents();
-        game = new Game(N_GIOCATORI, this);
+        game = new Game(players.size(), this);
         colorCountryNameMap = readColorTextMap("src/gui/ColorCountry.txt");
         LabelMapListener labelMapListener = new LabelMapListener(convertToBufferedImage(labelMap), colorCountryNameMap, game);
         labelMap.addMouseListener(labelMapListener);
