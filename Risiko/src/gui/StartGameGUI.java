@@ -244,7 +244,6 @@ public class StartGameGUI extends javax.swing.JFrame {
             Map<String, Boolean> players = new HashMap<>();
             for (int i = 0; i < list.size(); i++) {
                 players.put(list.get(i).getText(), aiChecks[i].isSelected());
-                System.out.println(aiChecks[i].isSelected());
             }
             try {
                 gui = new GUI(players);
