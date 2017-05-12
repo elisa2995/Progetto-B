@@ -50,7 +50,7 @@ public class GUI extends JFrame implements GameObserver {
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
         inputArmies = new AttackDialog(game);
-        labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
+        //labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
         //initLabels("files/provaLabels.txt");
         //this.setComponentZOrder(labelMap, getComponentCount() - 1);
     }
@@ -97,7 +97,6 @@ public class GUI extends JFrame implements GameObserver {
         buttonAttack = new javax.swing.JButton();
         buttonNextPhase = new javax.swing.JButton();
         buttonMoreInfo = new javax.swing.JButton();
-        labelAdvice = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -147,8 +146,7 @@ public class GUI extends JFrame implements GameObserver {
                             .addComponent(buttonNextPhase, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                             .addComponent(buttonMoreInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane1))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(labelAdvice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -156,9 +154,7 @@ public class GUI extends JFrame implements GameObserver {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(labelPlayerPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelAdvice, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(labelMap)
                     .addGroup(layout.createSequentialGroup()
@@ -252,7 +248,7 @@ public class GUI extends JFrame implements GameObserver {
         if (bonusArmies == 0) {
             s += "Fase di rinforzo conlusa.\n";
             String s1 = "Clicca nextPhase per continuare il tuo turno";
-            this.labelAdvice.setText(s1);
+            //this.labelAdvice.setText(s1);
         } else {
             s += "Ti rimangono " + bonusArmies + " armate.\n";
         }
@@ -265,10 +261,10 @@ public class GUI extends JFrame implements GameObserver {
         this.textAreaInfo.setText("");
         switch (phase) {
             case "REINFORCE":
-                labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
+                //labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
                 break;
             case "FIGHT":
-                labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
+                //labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
                 break;
         }
     }
@@ -278,7 +274,7 @@ public class GUI extends JFrame implements GameObserver {
 
         if (countryName != null) {
             this.textAreaInfo.setText("Attaccante : " + countryName);
-            labelAdvice.setText("Clicca su un territorio confinante per sceglierlo come difensore");
+            //labelAdvice.setText("Clicca su un territorio confinante per sceglierlo come difensore");
         } else {
             this.textAreaInfo.setText("");
         }
@@ -291,10 +287,10 @@ public class GUI extends JFrame implements GameObserver {
             String s = "Attaccante : " + countryAttackerName + "\n";
             s += "Difensore : " + countryDefenderName + " ( " + defenderPlayer + " ).\n";
             this.textAreaInfo.setText(s);
-            labelAdvice.setText("Clicca su attack per iniziare l'attacco(oppure clicca un territorio confinate per cambiare il territorio in difesa)");
+            //labelAdvice.setText("Clicca su attack per iniziare l'attacco(oppure clicca un territorio confinate per cambiare il territorio in difesa)");
         } else {
             this.textAreaInfo.setText("");
-            labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
+            //labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
         this.inputArmies.setMaxArmies(maxArmiesAttacker, maxArmiesDefender);
     }
@@ -309,7 +305,7 @@ public class GUI extends JFrame implements GameObserver {
         if (isConquered) {
             (new JOptionPane()).showMessageDialog(null, "Complimenti, hai conquistato " + game.getDefenderCountryName());
         }
-        labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante"); 
+        //labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante"); 
     }
 
     @Override
@@ -324,7 +320,6 @@ public class GUI extends JFrame implements GameObserver {
     private javax.swing.JButton buttonMoreInfo;
     private javax.swing.JButton buttonNextPhase;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel labelAdvice;
     private javax.swing.JLabel labelMap;
     private javax.swing.JLabel labelPlayerPhase;
     private javax.swing.JTextArea textAreaInfo;
