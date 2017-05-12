@@ -5,14 +5,16 @@
  */
 package risiko;
 
+import java.awt.Color;
+
 /**
  *
  * @author emanuela
  */
 public class ArtificialPlayer extends Player{
     
-    public ArtificialPlayer(String name) {
-        super(name);
+    public ArtificialPlayer(String name, Color color) {
+        super(name, color);
     }
     
 }

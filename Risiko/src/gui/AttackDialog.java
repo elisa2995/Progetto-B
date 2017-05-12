@@ -96,3 +96,4 @@ public class AttackDialog extends JDialog {
         this.canAttackFromCountry = canAttackFromCountry;
     }
 }
+// NEW

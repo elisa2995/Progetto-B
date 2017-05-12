@@ -1,6 +1,8 @@
 
 package gui;
 
+import java.awt.Color;
+
 /**
  * A class can implement the <code>Observer</code> interface when it
  * wants to be informed of changes in observable objects.
@@ -32,4 +34,8 @@ public interface GameObserver {
     public void updateOnAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender);
     
     public void updateOnVictory(String winner);
+
+    public void updateOnCountryAssignment(String[] countries, int[] armies, Color[] colors);
+    
+    public void updateOnArmiesChange(String country, int armies, Color color);
 }

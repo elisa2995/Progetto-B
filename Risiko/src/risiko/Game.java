@@ -9,6 +9,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import gui.Observable;
 import gui.GameObserver;
+import java.awt.Color;
 import java.util.Random;
 
 public class Game extends Observable {
@@ -49,10 +50,12 @@ public class Game extends Observable {
 
         buildPlayers(playersMap);
         map.assignCountriesToPlayers(players);
+        setChanged();
+        notifyCountryAssignment(getCountriesNames(), getCountriesArmies(), getCountriesColors());
         activePlayer = players.get(new Random().nextInt(players.size()));
         map.computeBonusArmies(activePlayer);
         phase = Phase.REINFORCE;
-
+        System.out.println(phase);
         setChanged();
         notifyPhaseChange(activePlayer.getName(), phase.name());
     }
@@ -64,14 +67,22 @@ public class Game extends Observable {
      * @param nrPlayers
      */
     private void buildPlayers(Map<String, Boolean> playersMap) {
+        
+        Color[] defaultColors = {new Color(255,0,0), new Color(0,232,0), new Color(0,0,255), 
+        new Color(255,255,0), new Color(255,0,255), new Color(0,0,0)};
+        
+        
+        Random random = new Random();
+        int i = 0;
 
         for (Map.Entry<String, Boolean> entry : playersMap.entrySet()) {
             if (entry.getValue()) {
-                this.players.add(new Player("fintoAI_"+entry.getKey()));
+                this.players.add(new Player("fintoAI_"+entry.getKey(), defaultColors[i]));
                 //this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i));
             }else{
-                this.players.add(new Player(entry.getKey()));
+                this.players.add(new Player(entry.getKey(), defaultColors[i]));
             }
+            i++;
         }
     }
 
@@ -93,17 +104,17 @@ public class Game extends Observable {
             return;
         }
 
-        Player defenderPlayer = map.getPlayerFromCountry(defenderCountry);
-        Player attackerPlayer = map.getPlayerFromCountry(attackerCountry);
+        Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
+        Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
         int lostArmies[] = fight(attackerCountry, defenderCountry, nrA, nrD);
         boolean conquered = map.isConquered(defenderCountry);
-
         String attackResult = (new AttackResult(attackerPlayer,
                 defenderPlayer, nrA, nrD,
                 lostArmies, conquered)).toString();
 
         if (conquered) {
             map.updateOnConquer(attackerCountry, defenderCountry, nrA);
+            notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
             if (hasLost(defenderPlayer)) {
                 players.remove(defenderPlayer);
             }
@@ -130,10 +141,12 @@ public class Game extends Observable {
      * attack
      * @author Andrea
      */
-    private int[] fight(Country countryAttacker, Country countryDefender, int nrA, int nrD) {
+    private int[] fight(Country attackerCountry, Country defenderCountry, int nrA, int nrD) {
         int lostArmies[] = computeLostArmies(nrA, nrD);
-        map.removeArmies(countryAttacker, lostArmies[0]);
-        map.removeArmies(countryDefender, lostArmies[1]);
+        map.removeArmies(attackerCountry, lostArmies[0]);
+        map.removeArmies(defenderCountry, lostArmies[1]);
+
+        notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
         return lostArmies;
     }
 
@@ -208,13 +221,14 @@ public class Game extends Observable {
         if (!checkCallerIdentity(aiCaller) || activePlayer.getBonusArmies() - nArmies < 0) {
             return;
         }
-
+        Country country = map.getCountryByName(countryName);
         activePlayer.decrementBonusArmies(nArmies);
-        map.addArmies(map.getCountryByName(countryName), nArmies);
+        map.addArmies(country, nArmies);
 
         setChanged();
         notifyReinforce(countryName, activePlayer.getBonusArmies());
-
+        setChanged();
+        notifyArmiesChange(countryName, country.getArmies(), map.getColorByCountry(country));
     }
 
     /**
@@ -374,7 +388,7 @@ public class Game extends Observable {
         }
         this.defenderCountry = map.getCountryByName(defenderCountryName);
         setChanged();
-        notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerFromCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
+        notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
     }
 
     /**
@@ -467,4 +481,36 @@ public class Game extends Observable {
         return phase.equals(Phase.FIGHT) && attackerCountry != null && defenderCountry != null;
     }
 
+    public String[] getCountriesNames() {
+
+        String[] countriesName = new String[map.getCountriesList().size()];
+        int i = 0;
+        for (Country country : map.getCountriesList()) {
+            countriesName[i] = country.getName();
+            i++;
+        }
+        return countriesName;
+    }
+
+    public int[] getCountriesArmies() {
+        int[] countriesArmies = new int[map.getCountriesList().size()];
+        int i = 0;
+        for (Country country : map.getCountriesList()) {
+            countriesArmies[i] = country.getArmies();
+            i++;
+        }
+        return countriesArmies;
+    }
+
+    public Color[] getCountriesColors() {
+        return map.getCountriesColors();
+
+    }
+
+    public void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
+        setChanged();
+        notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getColorByCountry(defenderCountry));
+        setChanged();
+        notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getColorByCountry(attackerCountry));
+    }
 }

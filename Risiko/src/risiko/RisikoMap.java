@@ -1,5 +1,6 @@
 package risiko;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -186,10 +187,9 @@ public class RisikoMap {
      * @param country
      * @return
      */
-    public Player getPlayerFromCountry(Country country) {
+    public Player getPlayerByCountry(Country country) {
         return countryPlayer.get(country);
     }
-
 
     /**
      * Esegue la fase di rinforzo di inizio turno. Nr armate bonus =
@@ -243,7 +243,7 @@ public class RisikoMap {
         }
         return false;
     }
-    
+
     /**
      * Controlla che l'attacco sia valido. return true se Country[0] è del
      * giocatore di turno e ha di un'armata, Country[1] è di un altro giocatore,
@@ -268,7 +268,6 @@ public class RisikoMap {
         return this.countryPlayer.get(country).equals(player) && country.getArmies() > 1;
 
     }
-
 
     public boolean controlPlayer(Country country, Player player) {
         return this.countryPlayer.get(country).equals(player);
@@ -310,7 +309,6 @@ public class RisikoMap {
      * @author Alessandro
      */
     public void updateOnConquer(Country attackerCountry, Country defenderCountry, int armies) {
-
 
         Player attack = this.countryPlayer.get(attackerCountry);
         this.countryPlayer.put(defenderCountry, attack);
@@ -368,5 +366,20 @@ public class RisikoMap {
 
     public Country getCountryByName(String countryName) {
         return nameCountry.get(countryName);
+    }
+
+    public Color[] getCountriesColors() {
+        
+        Color[] colors = new Color[getCountriesList().size()];
+        int i = 0;
+        for (Country country : getCountriesList()) {
+            colors[i] = getColorByCountry(country);
+            i++;
+        }
+        return colors;
+    }
+    
+    public Color getColorByCountry(Country country){
+        return getPlayerByCountry(country).getColor();
     }
 }

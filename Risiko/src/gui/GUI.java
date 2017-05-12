@@ -2,11 +2,9 @@ package gui;
 
 import exceptions.PendingOperationsException;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -14,20 +12,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.border.LineBorder;
 import risiko.Country;
 import risiko.Phase;
 import risiko.Game;
@@ -40,24 +30,42 @@ public class GUI extends JFrame implements GameObserver {
 
     private Game game;
     private final Map<Color, String> colorCountryNameMap;
+    private final Map<String, JLabel> countryLabelMap;
     private AttackDialog inputArmies;
 
     public GUI(Map<String, Boolean> players) throws Exception {
         initComponents();
-        game = new Game(players, this);
+        countryLabelMap = new HashMap<>();
         colorCountryNameMap = readColorTextMap("src/gui/ColorCountry.txt");
-        LabelMapListener labelMapListener = new LabelMapListener(convertToBufferedImage(labelMap), colorCountryNameMap, game);
+        init(players);
+    }
+
+    /**
+     * Inizializza la gui e il game.
+     *
+     * @throws IOException
+     * @throws Exception
+     */
+    private void init(Map<String, Boolean> players) throws IOException, Exception {
+        initLabels("files/provaLabels.txt");
+        mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
+        game = new Game(players, this);
+        LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
         inputArmies = new AttackDialog(game);
-        //labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
-        //initLabels("files/provaLabels.txt");
-        //this.setComponentZOrder(labelMap, getComponentCount() - 1);
+        labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
+        labelAdvice.setFont(new Font("Serif", Font.PLAIN, 13));
     }
 
-    /*private void initLabels(String src) throws IOException {
+    /**
+     * Inizializza i labels
+     *
+     * @param src
+     * @throws IOException
+     */
+    private void initLabels(String src) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(src))) {
-            System.out.println(getComponentCount());
             String line;
             String[] tokens;
             int x, y;
@@ -73,14 +81,24 @@ public class GUI extends JFrame implements GameObserver {
         }
     }
 
+    /**
+     * Crea un label e lo aggiunge a <code>countryLabelMap</code>
+     *
+     * @param countryName
+     * @param x
+     * @param y
+     */
     private void createLabel(String countryName, int x, int y) {
-        int xOffset = 10;
-        int yOffset = 75;
-        JLabel label = new JLabel(countryName);
-        label.setBounds(x + xOffset, y + yOffset, 100, 10);
-        getContentPane().add(label);
-        setComponentZOrder(label, 1);
-    }*/
+        JLabel label = new JLabel("0");
+        label.setFont(new Font("Serif", Font.BOLD, 16));
+        label.setBounds(x, y, 8, 16);
+        //label.setOpaque(true);
+        //label.setBackground(new Color(255, 255, 255, 100));
+        mapLayeredPane.add(label);
+        mapLayeredPane.setComponentZOrder(label, 1);
+        countryLabelMap.put(countryName, label);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -90,17 +108,17 @@ public class GUI extends JFrame implements GameObserver {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        labelMap = new javax.swing.JLabel();
         labelPlayerPhase = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textAreaInfo = new javax.swing.JTextArea();
         buttonAttack = new javax.swing.JButton();
         buttonNextPhase = new javax.swing.JButton();
         buttonMoreInfo = new javax.swing.JButton();
+        mapLayeredPane = new javax.swing.JLayeredPane();
+        labelMap = new javax.swing.JLabel();
+        labelAdvice = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        labelMap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/mapparisiko.png"))); // NOI18N
 
         labelPlayerPhase.setBackground(new java.awt.Color(225, 207, 218));
         labelPlayerPhase.setForeground(new java.awt.Color(1, 1, 1));
@@ -130,6 +148,23 @@ public class GUI extends JFrame implements GameObserver {
             }
         });
 
+        mapLayeredPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        labelMap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/mapparisiko.png"))); // NOI18N
+
+        mapLayeredPane.setLayer(labelMap, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout mapLayeredPaneLayout = new javax.swing.GroupLayout(mapLayeredPane);
+        mapLayeredPane.setLayout(mapLayeredPaneLayout);
+        mapLayeredPaneLayout.setHorizontalGroup(
+            mapLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(labelMap)
+        );
+        mapLayeredPaneLayout.setVerticalGroup(
+            mapLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(labelMap)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -139,33 +174,37 @@ public class GUI extends JFrame implements GameObserver {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelPlayerPhase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(labelMap)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(mapLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(buttonAttack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(buttonNextPhase, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                             .addComponent(buttonMoreInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane1))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(labelAdvice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(labelPlayerPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(labelMap)
+                .addComponent(labelPlayerPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelAdvice, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(buttonMoreInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(buttonNextPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(buttonAttack, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(buttonAttack, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(mapLayeredPane))
+                .addContainerGap())
         );
 
         pack();
@@ -223,23 +262,6 @@ public class GUI extends JFrame implements GameObserver {
         return map;
     }
 
-    /**
-     * Metodo necessario per convertire la labelMap in una bufferedMap a causa
-     * della GUI che è stata creata con DESIGN
-     *
-     * @param labelMap
-     * @return
-     */
-    private static BufferedImage convertToBufferedImage(JLabel labelMap) {
-        ImageIcon imgIcon = ((ImageIcon) labelMap.getIcon());
-        Image image = imgIcon.getImage();
-        BufferedImage newImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = newImage.createGraphics();
-        g.drawImage(image, 0, 0, null);
-        g.dispose();
-        return newImage;
-    }
-
     @Override
     public void updateOnReinforce(String countryName, int bonusArmies) {
 
@@ -248,7 +270,7 @@ public class GUI extends JFrame implements GameObserver {
         if (bonusArmies == 0) {
             s += "Fase di rinforzo conlusa.\n";
             String s1 = "Clicca nextPhase per continuare il tuo turno";
-            //this.labelAdvice.setText(s1);
+            this.labelAdvice.setText(s1);
         } else {
             s += "Ti rimangono " + bonusArmies + " armate.\n";
         }
@@ -261,10 +283,10 @@ public class GUI extends JFrame implements GameObserver {
         this.textAreaInfo.setText("");
         switch (phase) {
             case "REINFORCE":
-                //labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
+                labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
                 break;
             case "FIGHT":
-                //labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
+                labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
                 break;
         }
     }
@@ -274,7 +296,7 @@ public class GUI extends JFrame implements GameObserver {
 
         if (countryName != null) {
             this.textAreaInfo.setText("Attaccante : " + countryName);
-            //labelAdvice.setText("Clicca su un territorio confinante per sceglierlo come difensore");
+            labelAdvice.setText("Clicca su un territorio confinante per sceglierlo come difensore");
         } else {
             this.textAreaInfo.setText("");
         }
@@ -287,10 +309,10 @@ public class GUI extends JFrame implements GameObserver {
             String s = "Attaccante : " + countryAttackerName + "\n";
             s += "Difensore : " + countryDefenderName + " ( " + defenderPlayer + " ).\n";
             this.textAreaInfo.setText(s);
-            //labelAdvice.setText("Clicca su attack per iniziare l'attacco(oppure clicca un territorio confinate per cambiare il territorio in difesa)");
+            labelAdvice.setText("Clicca su attack per iniziare l'attacco(oppure clicca un territorio confinate per cambiare il territorio in difesa)");
         } else {
             this.textAreaInfo.setText("");
-            //labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
+            labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
         this.inputArmies.setMaxArmies(maxArmiesAttacker, maxArmiesDefender);
     }
@@ -305,7 +327,7 @@ public class GUI extends JFrame implements GameObserver {
         if (isConquered) {
             (new JOptionPane()).showMessageDialog(null, "Complimenti, hai conquistato " + game.getDefenderCountryName());
         }
-        //labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante"); 
+       labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante"); 
     }
 
     @Override
@@ -315,13 +337,37 @@ public class GUI extends JFrame implements GameObserver {
         // etc
     }
 
+    @Override
+    public void updateOnCountryAssignment(String[] countries, int[] armies, Color[] colors) {
+        //label.setForeground(Color.RED);
+        int i = 0;
+        for (String country : countries) {
+            updateOnArmiesChange(country, armies[i], colors[i]);
+            i++;
+        }
+    }
+
+    @Override
+    public void updateOnArmiesChange(String country, int armies, Color color) {
+        JLabel label = countryLabelMap.get(country);
+        int width = (armies > 9) ? 16 : 8;
+        label.setBounds((int) label.getBounds().getX(), (int) label.getBounds().getY(), width, 13);
+        label.setForeground(color);
+        label.setText(Integer.toString(armies));
+        /*label.setOpaque(true);
+        label.setBackground(new Color(255, 255, 255, 80));*/
+        repaint();
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
     private javax.swing.JButton buttonMoreInfo;
     private javax.swing.JButton buttonNextPhase;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelAdvice;
     private javax.swing.JLabel labelMap;
     private javax.swing.JLabel labelPlayerPhase;
+    private javax.swing.JLayeredPane mapLayeredPane;
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables
 

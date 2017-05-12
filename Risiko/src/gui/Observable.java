@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,7 +96,7 @@ public class Observable {
             ob.updateOnPhaseChange(player, phase);
         }
     }
-    
+
     public void notifyVictory(String winner) {
         synchronized (this) {
             if (!changed) {
@@ -107,6 +108,34 @@ public class Observable {
         for (GameObserver ob : this.obs) {
             ob.updateOnVictory(winner);
         }
+    }
+
+    public void notifyCountryAssignment(String[] countries, int[] armies, Color[] colors) {
+        synchronized (this) {
+            if (!changed) {
+                return;
+            }
+            clearChanged();
+        }
+
+        for (GameObserver ob : this.obs) {
+            ob.updateOnCountryAssignment(countries, armies, colors);
+        }
+
+    }
+    
+    public void notifyArmiesChange(String country, int armies, Color color) {
+        synchronized (this) {
+            if (!changed) {
+                return;
+            }
+            clearChanged();
+        }
+
+        for (GameObserver ob : this.obs) {
+            ob.updateOnArmiesChange(country, armies, color);
+        }
+
     }
 
     /**
