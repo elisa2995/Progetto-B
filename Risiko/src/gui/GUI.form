@@ -151,6 +151,9 @@
               <Image iconType="2" name="C:\Users\emanuela\Documents\NetBeansProjects\Progetto-B2\Risiko\images\mapparisiko.png"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new GraphicsJLabel()"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
