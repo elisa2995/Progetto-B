@@ -33,11 +33,11 @@ public class GUI extends JFrame implements GameObserver {
     private final Map<String, JLabel> countryLabelMap;
     private AttackDialog inputArmies;
 
-    public GUI(Map<String, Boolean> players,String[] colors) throws Exception {
+    public GUI(Map<String, Boolean> players, String[] colors) throws Exception {
         initComponents();
         countryLabelMap = new HashMap<>();
         colorCountryNameMap = readColorTextMap("src/gui/ColorCountry.txt");
-        init(players,colors);
+        init(players, colors);
     }
 
     /**
@@ -46,10 +46,10 @@ public class GUI extends JFrame implements GameObserver {
      * @throws IOException
      * @throws Exception
      */
-    private void init(Map<String, Boolean> players,String[] colors) throws IOException, Exception {
+    private void init(Map<String, Boolean> players, String[] colors) throws IOException, Exception {
         initLabels("files/provaLabels.txt");
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
-        game = new Game(players, colors,this);
+        game = new Game(players, colors, this);
         LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
@@ -318,16 +318,19 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     @Override
-    public void updateOnAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender) {
+    public void updateOnAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice) {
         textAreaInfo.setText(attackResultInfo);
-        this.inputArmies.setMaxArmiesAttacker(maxArmiesAttacker);
-        this.inputArmies.setMaxArmiesDefender(maxArmiesDefender);
-        this.inputArmies.setIsConquered(isConquered);
-        this.inputArmies.setCanAttackFromCountry(canAttackFromCountry);
+        inputArmies.resetDiceLabels();
+        inputArmies.setMaxArmiesAttacker(maxArmiesAttacker);
+        inputArmies.setMaxArmiesDefender(maxArmiesDefender);
+        inputArmies.updateDice(attackerDice, defenderDice);
+        inputArmies.setIsConquered(isConquered);
+        inputArmies.setCanAttackFromCountry(canAttackFromCountry);
         if (isConquered) {
             (new JOptionPane()).showMessageDialog(null, "Complimenti, hai conquistato " + game.getDefenderCountryName());
         }
-       labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante"); 
+        labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
+
     }
 
     @Override

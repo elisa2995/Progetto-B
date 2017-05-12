@@ -72,7 +72,7 @@ public class Observable {
         }
     }
 
-    public void notifyAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender) {
+    public void notifyAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice) {
         synchronized (this) {
             if (!changed) {
                 return;
@@ -81,7 +81,7 @@ public class Observable {
         }
 
         for (GameObserver ob : this.obs) {
-            ob.updateOnAttackResult(attackResultInfo, isConquered, canAttackFromCountry, maxArmiesAttacker, maxArmiesDefender);
+            ob.updateOnAttackResult(attackResultInfo, isConquered, canAttackFromCountry, maxArmiesAttacker, maxArmiesDefender, attackerDice, defenderDice);
         }
     }
 

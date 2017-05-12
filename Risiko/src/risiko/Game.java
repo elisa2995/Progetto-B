@@ -22,6 +22,8 @@ public class Game extends Observable {
     private Player activePlayer;
     //private Player winner; serve??
     private Phase phase;
+    private int resultsDiceAttack[];
+    private int resultsDiceDefense[];
 
     public Game(Map<String, Boolean> playersMap,String[] colors, GameObserver observer) throws Exception {
         this.players = new ArrayList<>();
@@ -132,7 +134,7 @@ public class Game extends Observable {
         }
 
         setChanged();
-        notifyAttackResult(attackResult, conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
+        notifyAttackResult(attackResult, conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense());
 
     }
 
@@ -164,18 +166,27 @@ public class Game extends Observable {
      * @author Andrea
      */
     private int[] computeLostArmies(int nrA, int nrD) {
-        int resultsDiceAttack[] = rollDice(nrA);
-        int resultsDiceDefens[] = rollDice(nrD);
+        resultsDiceAttack = rollDice(nrA);
+        resultsDiceDefense= rollDice(nrD);
         int armiesLost[] = new int[2];
         int min = (nrA > nrD) ? nrD : nrA;
         for (int i = 0; i < min; i++) {
-            if (resultsDiceAttack[i] > resultsDiceDefens[i]) {
+            if (resultsDiceAttack[i] > resultsDiceDefense[i]) {
                 armiesLost[1]++;
             } else {
                 armiesLost[0]++;
             }
         }
         return armiesLost;
+    }
+    
+    
+    public int[] getResultsDiceAttack() {
+        return resultsDiceAttack;
+    }
+
+    public int[] getResultsDiceDefense() {
+        return resultsDiceDefense;
     }
 
     /**
