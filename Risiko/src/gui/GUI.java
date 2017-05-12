@@ -36,7 +36,7 @@ public class GUI extends JFrame implements GameObserver {
     public GUI(Map<String, Boolean> players) throws Exception {
         initComponents();
         countryLabelMap = new HashMap<>();
-        colorCountryNameMap = readColorTextMap("src/gui/ColorCountry.txt");
+        colorCountryNameMap = readColorTextMap("files/ColorCountry.txt");
         init(players);
     }
 
@@ -47,7 +47,7 @@ public class GUI extends JFrame implements GameObserver {
      * @throws Exception
      */
     private void init(Map<String, Boolean> players) throws IOException, Exception {
-        initLabels("files/provaLabels.txt");
+        initLabels("files/labelsTerritori.txt");
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
         game = new Game(players, this);
         LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game);
@@ -150,7 +150,7 @@ public class GUI extends JFrame implements GameObserver {
 
         mapLayeredPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        labelMap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/mapparisiko.png"))); // NOI18N
+        labelMap.setIcon(new javax.swing.ImageIcon("C:\\Users\\emanuela\\Documents\\NetBeansProjects\\Progetto-B2\\Risiko\\images\\mapparisiko.png")); // NOI18N
 
         mapLayeredPane.setLayer(labelMap, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
