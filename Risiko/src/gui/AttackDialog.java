@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import risiko.Game;
+import utils.PlayAudio;
 
 public class AttackDialog extends JDialog {
 
@@ -56,6 +57,7 @@ public class AttackDialog extends JDialog {
         execute.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                PlayAudio.play("sounds/tank.wav");
                 game.attack((int) attackerArmies.getValue(), (int) defenderArmies.getValue());
                 if (isConquered) {
                     inputArmies.setVisible(false);

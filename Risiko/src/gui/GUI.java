@@ -3,9 +3,6 @@ package gui;
 import exceptions.PendingOperationsException;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -13,21 +10,19 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import javax.swing.border.LineBorder;
 import risiko.Country;
 import risiko.Phase;
 import risiko.Game;
 import risiko.Player;
+import utils.PlayAudio;
 
 /**
  * @author andrea
  */
-public class GUI extends JFrame implements GameObserver {
+public class GUI extends JFrame implements GameObserver{
 
     private Game game;
     private final Map<Color, String> colorCountryNameMap;
@@ -151,7 +146,7 @@ public class GUI extends JFrame implements GameObserver {
 
         mapLayeredPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        labelMap.setIcon(new javax.swing.ImageIcon("C:\\Users\\emanuela\\Documents\\NetBeansProjects\\Progetto-B2\\Risiko\\images\\mapparisiko.png")); // NOI18N
+        labelMap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/mapparisiko.png"))); // NOI18N
 
         mapLayeredPane.setLayer(labelMap, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -368,6 +363,7 @@ public class GUI extends JFrame implements GameObserver {
         this.inputArmies.setIsConquered(isConquered);
         this.inputArmies.setCanAttackFromCountry(canAttackFromCountry);
         if (isConquered) {
+            PlayAudio.play("sounds/conquest.wav");
             JOptionPane.showMessageDialog(null, "Complimenti, hai conquistato " + game.getDefenderCountryName());
         }
         labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
