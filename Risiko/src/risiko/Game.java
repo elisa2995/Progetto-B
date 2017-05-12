@@ -10,6 +10,7 @@ import java.util.Map;
 import gui.Observable;
 import gui.GameObserver;
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Game extends Observable {
@@ -22,13 +23,13 @@ public class Game extends Observable {
     //private Player winner; serve??
     private Phase phase;
 
-    public Game(Map<String, Boolean> playersMap, GameObserver observer) throws Exception {
+    public Game(Map<String, Boolean> playersMap,String[] colors, GameObserver observer) throws Exception {
         this.players = new ArrayList<>();
         this.activePlayer = null;
         //this.winner = null;
         this.map = new RisikoMap();
         this.addObserver(observer);
-        init(playersMap);
+        init(playersMap,colors);
 
     }
 
@@ -46,16 +47,15 @@ public class Game extends Observable {
      * @throws rilancia l'eccezione che potrebbe lanciare la mappa nel caso in
      * cui l'url del file dei territori fosse sbagliato.
      */
-    private void init(Map<String, Boolean> playersMap) throws Exception {
+    private void init(Map<String, Boolean> playersMap,String[] colors) throws Exception {
 
-        buildPlayers(playersMap);
+        buildPlayers(playersMap,colors);
         map.assignCountriesToPlayers(players);
         setChanged();
         notifyCountryAssignment(getCountriesNames(), getCountriesArmies(), getCountriesColors());
         activePlayer = players.get(new Random().nextInt(players.size()));
         map.computeBonusArmies(activePlayer);
         phase = Phase.REINFORCE;
-        System.out.println(phase);
         setChanged();
         notifyPhaseChange(activePlayer.getName(), phase.name());
     }
@@ -66,24 +66,30 @@ public class Game extends Observable {
      *
      * @param nrPlayers
      */
-    private void buildPlayers(Map<String, Boolean> playersMap) {
+    private void buildPlayers(Map<String, Boolean> playersMap,String[] colors) {
         
-        Color[] defaultColors = {new Color(255,0,0), new Color(0,232,0), new Color(0,0,255), 
-        new Color(255,255,0), new Color(255,0,255), new Color(0,0,0)};
-        
-        
-        Random random = new Random();
+        Map<String,Color> colorMap=buildColorMap();       
         int i = 0;
-
         for (Map.Entry<String, Boolean> entry : playersMap.entrySet()) {
             if (entry.getValue()) {
-                this.players.add(new Player("fintoAI_"+entry.getKey(), defaultColors[i]));
+                this.players.add(new Player("fintoAI_"+entry.getKey(), colorMap.get(colors[i])));
                 //this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i));
             }else{
-                this.players.add(new Player(entry.getKey(), defaultColors[i]));
+                this.players.add(new Player(entry.getKey(), colorMap.get(colors[i])));
             }
             i++;
         }
+    }
+    
+    private Map<String,Color> buildColorMap(){
+        Map<String,Color> colorMap=new HashMap<>();
+        colorMap.put("Rosso",new Color(255,0,0));
+        colorMap.put("Verde",new Color(0,232,0));
+        colorMap.put("Blu",new Color(0,0,255));
+        colorMap.put("Giallo",new Color(255,255,0));
+        colorMap.put("Viola", new Color(255,0,255));
+        colorMap.put("Nero", new Color(0,0,0));
+        return colorMap;
     }
 
     //------------------------  Attacco  ------------------------------------//

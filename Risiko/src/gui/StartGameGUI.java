@@ -5,6 +5,8 @@
  */
 package gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +24,8 @@ public class StartGameGUI extends javax.swing.JFrame {
     private int nPlayers;
     private JTextField[] playerTexts;
     private JCheckBox[] aiChecks;
+    private JComboBox[] colorBoxs;
+    private ColorBoxListener cbListener;
 
     /**
      * Creates new form startGame
@@ -32,6 +36,9 @@ public class StartGameGUI extends javax.swing.JFrame {
     }
 
     private void init() {
+
+        nPlayers = 2;
+
         playerTexts = new JTextField[6];
         playerTexts[0] = this.playerText1;
         playerTexts[1] = this.playerText2;
@@ -57,7 +64,36 @@ public class StartGameGUI extends javax.swing.JFrame {
         this.ai5.setVisible(false);
         this.ai6.setVisible(false);
 
-        nPlayers = 2;
+        String[] colors = new String[]{"Rosso", "Blu", "Nero", "Viola", "Verde", "Giallo"};
+        colorBox1.setModel(new DefaultComboBoxModel(colors));
+        colorBox2.setModel(new DefaultComboBoxModel(colors));
+        colorBox3.setModel(new DefaultComboBoxModel(colors));
+        colorBox4.setModel(new DefaultComboBoxModel(colors));
+        colorBox5.setModel(new DefaultComboBoxModel(colors));
+        colorBox6.setModel(new DefaultComboBoxModel(colors));
+
+        colorBox1.setSelectedItem(colors[0]);
+        colorBox2.setSelectedItem(colors[1]);
+        colorBox3.setSelectedItem(colors[2]);
+        colorBox4.setSelectedItem(colors[3]);
+        colorBox5.setSelectedItem(colors[4]);
+        colorBox6.setSelectedItem(colors[5]);
+
+        colorBox3.setVisible(false);
+        colorBox4.setVisible(false);
+        colorBox5.setVisible(false);
+        colorBox6.setVisible(false);
+
+        colorBoxs = new JComboBox[]{colorBox1, colorBox2, colorBox3, colorBox4, colorBox5, colorBox6};
+        
+
+        cbListener=new ColorBoxListener(colorBoxs,colors.clone());
+        colorBox1.addActionListener(cbListener);
+        colorBox2.addActionListener(cbListener);
+        colorBox3.addActionListener(cbListener);
+        colorBox4.addActionListener(cbListener);
+        colorBox5.addActionListener(cbListener);
+        colorBox6.addActionListener(cbListener);
 
     }
 
@@ -86,6 +122,12 @@ public class StartGameGUI extends javax.swing.JFrame {
         startButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
         addButton = new javax.swing.JButton();
+        colorBox1 = new javax.swing.JComboBox<>();
+        colorBox2 = new javax.swing.JComboBox<>();
+        colorBox3 = new javax.swing.JComboBox<>();
+        colorBox4 = new javax.swing.JComboBox<>();
+        colorBox5 = new javax.swing.JComboBox<>();
+        colorBox6 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -136,28 +178,38 @@ public class StartGameGUI extends javax.swing.JFrame {
                         .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
+                        .addGap(15, 15, 15)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(playerText1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(playerText2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(playerText3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(playerText4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(playerText5, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(playerText6, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(31, 31, 31)
+                            .addComponent(playerText6, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(playerText1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ai4)
-                            .addComponent(ai3)
-                            .addComponent(ai1)
-                            .addComponent(ai5)
-                            .addComponent(ai6)
-                            .addComponent(ai2))
-                        .addGap(0, 84, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(colorBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(colorBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(colorBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(colorBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(colorBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(colorBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(ai3)
+                                        .addComponent(ai1)
+                                        .addComponent(ai2))
+                                    .addComponent(ai5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(ai4)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(removeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ai6, javax.swing.GroupLayout.Alignment.TRAILING))))))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(20, 20, 20)
@@ -172,37 +224,58 @@ public class StartGameGUI extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(playerText1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ai1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(playerText2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ai2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(playerText3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ai3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(playerText4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ai4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(playerText5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ai5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(playerText6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ai6))
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(colorBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(colorBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(colorBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(colorBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(colorBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(colorBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(playerText1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(11, 11, 11)
+                                        .addComponent(playerText2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(playerText3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(ai2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(ai3))))
+                            .addComponent(ai1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(playerText4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(playerText5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(7, 7, 7))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(ai4)
+                                .addGap(15, 15, 15)
+                                .addComponent(ai5)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(playerText6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ai6))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(53, 53, 53)
                     .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(222, Short.MAX_VALUE)))
+                    .addContainerGap(251, Short.MAX_VALUE)))
         );
 
         pack();
@@ -212,6 +285,7 @@ public class StartGameGUI extends javax.swing.JFrame {
         if (nPlayers > 2) {
             playerTexts[nPlayers - 1].setVisible(false);
             aiChecks[nPlayers - 1].setVisible(false);
+            colorBoxs[nPlayers - 1].setVisible(false);
             nPlayers--;
         }
     }//GEN-LAST:event_removeButtonActionPerformed
@@ -220,6 +294,7 @@ public class StartGameGUI extends javax.swing.JFrame {
         if (nPlayers < 6) {
             playerTexts[nPlayers].setVisible(true);
             aiChecks[nPlayers].setVisible(true);
+            colorBoxs[nPlayers].setVisible(true);
             nPlayers++;
         }
     }//GEN-LAST:event_addButtonActionPerformed
@@ -242,11 +317,12 @@ public class StartGameGUI extends javax.swing.JFrame {
         if (valid) {
             GUI gui;
             Map<String, Boolean> players = new HashMap<>();
+            String[] colors=cbListener.getUpdateColors(list.size());
             for (int i = 0; i < list.size(); i++) {
-                players.put(list.get(i).getText(), aiChecks[i].isSelected());
+                players.put(list.get(i).getText(), aiChecks[i].isSelected());                
             }
             try {
-                gui = new GUI(players);
+                gui = new GUI(players, colors);
                 gui.setVisible(true);
                 this.dispose();
             } catch (Exception ex) {
@@ -265,6 +341,12 @@ public class StartGameGUI extends javax.swing.JFrame {
     private javax.swing.JCheckBox ai4;
     private javax.swing.JCheckBox ai5;
     private javax.swing.JCheckBox ai6;
+    private javax.swing.JComboBox<String> colorBox1;
+    private javax.swing.JComboBox<String> colorBox2;
+    private javax.swing.JComboBox<String> colorBox3;
+    private javax.swing.JComboBox<String> colorBox4;
+    private javax.swing.JComboBox<String> colorBox5;
+    private javax.swing.JComboBox<String> colorBox6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField playerText1;
     private javax.swing.JTextField playerText2;

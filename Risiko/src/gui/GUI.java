@@ -33,11 +33,11 @@ public class GUI extends JFrame implements GameObserver {
     private final Map<String, JLabel> countryLabelMap;
     private AttackDialog inputArmies;
 
-    public GUI(Map<String, Boolean> players) throws Exception {
+    public GUI(Map<String, Boolean> players,String[] colors) throws Exception {
         initComponents();
         countryLabelMap = new HashMap<>();
         colorCountryNameMap = readColorTextMap("src/gui/ColorCountry.txt");
-        init(players);
+        init(players,colors);
     }
 
     /**
@@ -46,10 +46,10 @@ public class GUI extends JFrame implements GameObserver {
      * @throws IOException
      * @throws Exception
      */
-    private void init(Map<String, Boolean> players) throws IOException, Exception {
+    private void init(Map<String, Boolean> players,String[] colors) throws IOException, Exception {
         initLabels("files/provaLabels.txt");
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
-        game = new Game(players, this);
+        game = new Game(players, colors,this);
         LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
