@@ -63,6 +63,16 @@ public class StartGameGUI extends javax.swing.JFrame {
         this.ai4.setVisible(false);
         this.ai5.setVisible(false);
         this.ai6.setVisible(false);
+        
+        AIListener aiListener=new AIListener(playerTexts, aiChecks);
+        
+        this.ai1.addActionListener(aiListener);
+        this.ai2.addActionListener(aiListener);
+        this.ai3.addActionListener(aiListener);
+        this.ai4.addActionListener(aiListener);
+        this.ai5.addActionListener(aiListener);
+        this.ai6.addActionListener(aiListener);
+        
 
         String[] colors = new String[]{"Rosso", "Blu", "Nero", "Viola", "Verde", "Giallo"};
         colorBox1.setModel(new DefaultComboBoxModel(colors));
@@ -302,9 +312,9 @@ public class StartGameGUI extends javax.swing.JFrame {
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         List<JTextField> list = new ArrayList<>();
         boolean valid = true;
-        for (JTextField text : playerTexts) {
-            if (text.isVisible()) {
-                list.add(text);
+        for(int i=0; i<playerTexts.length; i++){
+            if(aiChecks[i].isSelected() || !aiChecks[i].isSelected() && playerTexts[i].isVisible()){
+                list.add(playerTexts[i]);
             }
         }
 

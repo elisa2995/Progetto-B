@@ -60,6 +60,10 @@ public class Game extends Observable {
         phase = Phase.REINFORCE;
         setChanged();
         notifyPhaseChange(activePlayer.getName(), phase.name());
+        
+        for(Map.Entry<String, Boolean> entry:playersMap.entrySet()){
+            System.out.println(entry.getKey()+" "+entry.getValue());
+        }
     }
 
     /**
@@ -72,9 +76,10 @@ public class Game extends Observable {
         
         Map<String,Color> colorMap=buildColorMap();       
         int i = 0;
+        int j=0;
         for (Map.Entry<String, Boolean> entry : playersMap.entrySet()) {
             if (entry.getValue()) {
-                this.players.add(new Player("fintoAI_"+entry.getKey(), colorMap.get(colors[i])));
+                this.players.add(new Player("ArticialPlayer"+j++, colorMap.get(colors[i])));
                 //this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i));
             }else{
                 this.players.add(new Player(entry.getKey(), colorMap.get(colors[i])));
