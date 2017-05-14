@@ -86,8 +86,8 @@ public class AttackDialog extends JDialog {
             public void actionPerformed(ActionEvent ae) {
 
                 String imagePath = "files/images/dice/";
-
                 PlayAudio.play("sounds/tank.wav");
+
 
                 game.attack((int) attackerArmies.getValue(), (int) defenderArmies.getValue());
                 for (int i = 0; i < diceR.length; i++) {
