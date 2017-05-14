@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputAdapter;
 import risiko.Game;
+import utils.PlayAudio;
 
 /**
  *
@@ -40,11 +41,12 @@ public class LabelMapListener extends MouseInputAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         String countryName = getCountryFromClick(e);
-
         if (countryName == null) {
+            PlayAudio.play("sounds/clickOffShort.wav");
             game.resetFightingCountries();
             return;
         }
+        PlayAudio.play("sounds/clickOnShort.wav");
         switch (game.getPhase()) {
             case REINFORCE:
                 if (game.controlAttacker(countryName) && game.canReinforce(1)) {

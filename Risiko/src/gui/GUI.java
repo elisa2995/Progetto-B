@@ -2,10 +2,8 @@ package gui;
 
 import exceptions.PendingOperationsException;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -13,7 +11,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,11 +20,12 @@ import risiko.Country;
 import risiko.Phase;
 import risiko.Game;
 import risiko.Player;
+import utils.PlayAudio;
 
 /**
  * @author andrea
  */
-public class GUI extends JFrame implements GameObserver {
+public class GUI extends JFrame implements GameObserver{
 
     private Game game;
     private final Map<Color, String> colorCountryNameMap;
@@ -55,6 +53,8 @@ public class GUI extends JFrame implements GameObserver {
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
         inputArmies = new AttackDialog(game);
+        inputArmies.setPreferredSize(new Dimension(500,600));
+        inputArmies.pack();
         labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
         labelAdvice.setFont(new Font("Serif", Font.PLAIN, 13));
     }
@@ -151,7 +151,7 @@ public class GUI extends JFrame implements GameObserver {
 
         mapLayeredPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        labelMap.setIcon(new javax.swing.ImageIcon("C:\\Users\\emanuela\\Documents\\NetBeansProjects\\Progetto-B2\\Risiko\\images\\mapparisiko.png")); // NOI18N
+        labelMap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/mapparisiko.png"))); // NOI18N
 
         mapLayeredPane.setLayer(labelMap, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -363,15 +363,12 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice) {
         textAreaInfo.setText(attackResultInfo);
-        inputArmies.resetDiceLabels();
         inputArmies.setMaxArmiesAttacker(maxArmiesAttacker);
         inputArmies.setMaxArmiesDefender(maxArmiesDefender);
         inputArmies.updateDice(attackerDice, defenderDice);
         inputArmies.setIsConquered(isConquered);
         inputArmies.setCanAttackFromCountry(canAttackFromCountry);
-        if (isConquered) {
-            JOptionPane.showMessageDialog(null, "Complimenti, hai conquistato " + game.getDefenderCountryName());
-        }
+        inputArmies.setDefenderCountryName(game.getDefenderCountryName());        
         labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
     }
     

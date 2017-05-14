@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import risiko.Game;
+import utils.PlayAudio;
 
 public class AttackDialog extends JDialog {
 
@@ -40,6 +42,7 @@ public class AttackDialog extends JDialog {
     private int maxArmiesAttacker;
     private int[] attackerDice;
     private int[] defenderDice;
+    private String defenderCountryName;
 
     public void setMaxArmiesAttacker(int maxArmiesAttacker) {
         this.maxArmiesAttacker = maxArmiesAttacker;
@@ -81,15 +84,18 @@ public class AttackDialog extends JDialog {
         execute.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+
                 String imagePath = "files/images/dice/";
+
+                PlayAudio.play("sounds/tank.wav");
+
                 game.attack((int) attackerArmies.getValue(), (int) defenderArmies.getValue());
                 for (int i = 0; i < diceR.length; i++) {
                     if (i < attackerDice.length) {
                         ImageIcon icon = new ImageIcon(imagePath + attackerDice[i] + "R.png");
                         diceR[i].setIcon(icon);
-                    }
-                    else {
-                        ImageIcon icon=null;
+                    } else {
+                        ImageIcon icon = null;
                         diceR[i].setIcon(icon);
                     }
                 }
@@ -98,16 +104,18 @@ public class AttackDialog extends JDialog {
                         ImageIcon icon = new ImageIcon(imagePath + defenderDice[i] + "B.png");
                         diceB[i].setIcon(icon);
                     } else {
-                        ImageIcon icon=null;
+                        ImageIcon icon = null;
                         diceB[i].setIcon(icon);
                     }
                 }
 
                 if (isConquered) {
+                    PlayAudio.play("sounds/conquest.wav");
+                    JOptionPane.showMessageDialog(null, "Complimenti, hai conquistato " + getDefenderCountryName());
                     inputArmies.setVisible(false);
                     for (int i = 0; i < diceR.length; i++) {
-                        diceR[i].setText("");
-                        diceB[i].setText("");
+                        diceR[i].setIcon(null);
+                        diceB[i].setIcon(null);
                     }
                     return;
                 }
@@ -115,8 +123,8 @@ public class AttackDialog extends JDialog {
                     JOptionPane.showMessageDialog(null, "Non è più possibile effettuare attacchi da questo territorio.");
                     inputArmies.setVisible(false);
                     for (int i = 0; i < diceR.length; i++) {
-                        diceR[i].setText("");
-                        diceB[i].setText("");
+                        diceR[i].setIcon(null);
+                        diceB[i].setIcon(null);
                     }
                     return;
                 }
@@ -163,12 +171,11 @@ public class AttackDialog extends JDialog {
         this.defenderDice = defenderDice;
     }
 
-    public void resetDiceLabels() {
-        dice1R.setText("");
-        dice2R.setText("");
-        dice3R.setText("");
-        dice1B.setText("");
-        dice2B.setText("");
-        dice3B.setText("");
+    public void setDefenderCountryName(String defenderCountryName) {
+        this.defenderCountryName = defenderCountryName;
+    }
+
+    private String getDefenderCountryName() {
+        return defenderCountryName;
     }
 }
