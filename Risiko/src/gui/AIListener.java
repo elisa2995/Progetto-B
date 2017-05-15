@@ -8,6 +8,7 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
@@ -19,10 +20,12 @@ public class AIListener implements ActionListener {
     
     private JTextField[] players;
     private JCheckBox[] aiChecks;
+    private JButton[] logins;
 
-    public AIListener(JTextField[] players, JCheckBox[] aiChecks) {
+    public AIListener(JTextField[] players, JCheckBox[] aiChecks,JButton[] logins) {
         this.players=players;
         this.aiChecks=aiChecks;
+        this.logins=logins;
     }
 
     @Override
@@ -31,10 +34,14 @@ public class AIListener implements ActionListener {
         JCheckBox checkBox=(JCheckBox)e.getSource();
         int index=Arrays.asList(aiChecks).indexOf(checkBox);
         if(checkBox.isSelected()){
-            players[index].setVisible(false);
-            players[index].setText(" ");
+            players[index].setText("GiocatoreArt");
+            players[index].setEditable(false);
+            logins[index].setText("Login");
+            logins[index].setVisible(false);
         }else{
-            players[index].setVisible(true);
+            logins[index].setVisible(true);   
+            players[index].setEditable(true);
+            players[index].setText("");
         }
     }
     

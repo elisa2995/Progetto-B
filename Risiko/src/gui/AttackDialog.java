@@ -43,14 +43,6 @@ public class AttackDialog extends JDialog {
     private int[] attackerDice;
     private int[] defenderDice;
     private String defenderCountryName;
-
-    public void setMaxArmiesAttacker(int maxArmiesAttacker) {
-        this.maxArmiesAttacker = maxArmiesAttacker;
-    }
-
-    public void setMaxArmiesDefender(int maxArmiesDefender) {
-        this.maxArmiesDefender = maxArmiesDefender;
-    }
     private int maxArmiesDefender;
 
     public AttackDialog(Game game) {
@@ -87,7 +79,6 @@ public class AttackDialog extends JDialog {
 
                 String imagePath = "files/images/dice/";
                 PlayAudio.play("sounds/tank.wav");
-
 
                 game.attack((int) attackerArmies.getValue(), (int) defenderArmies.getValue());
                 for (int i = 0; i < diceR.length; i++) {
@@ -153,10 +144,11 @@ public class AttackDialog extends JDialog {
     }
 
     /**
-     * Setta il massimo numero di armate che attaccante e difesore possono 
+     * Setta il massimo numero di armate che attaccante e difesore possono
      * scegliere
+     *
      * @param maxArmiesAttacker
-     * @param maxArmiesDefender 
+     * @param maxArmiesDefender
      */
     public void setMaxArmies(int maxArmiesAttacker, int maxArmiesDefender) {
 
@@ -164,18 +156,20 @@ public class AttackDialog extends JDialog {
         defenderArmies.setModel(new SpinnerNumberModel(maxArmiesDefender, 1, maxArmiesDefender, 1));
     }
 
-    /** 
+    /**
      * Setta se il territorio difensore è stato conquistato
-     * @param isConquered 
+     *
+     * @param isConquered
      */
     public void setIsConquered(boolean isConquered) {
         this.isConquered = isConquered;
     }
 
     /**
-     * Setta se l'attacante può continuare ad attaccare dal territorio 
-     * dal quale ha già attaccato
-     * @param canAttackFromCountry 
+     * Setta se l'attacante può continuare ad attaccare dal territorio dal quale
+     * ha già attaccato
+     *
+     * @param canAttackFromCountry
      */
     public void setCanAttackFromCountry(boolean canAttackFromCountry) {
         this.canAttackFromCountry = canAttackFromCountry;
@@ -183,8 +177,9 @@ public class AttackDialog extends JDialog {
 
     /**
      * Setta il risultato del lancio dei dadi
+     *
      * @param attackerDice
-     * @param defenderDice 
+     * @param defenderDice
      */
     public void updateDice(int[] attackerDice, int[] defenderDice) {
         this.attackerDice = attackerDice;
@@ -193,7 +188,8 @@ public class AttackDialog extends JDialog {
 
     /**
      * Setta il nome del territorio difensore
-     * @param defenderCountryName 
+     *
+     * @param defenderCountryName
      */
     public void setDefenderCountryName(String defenderCountryName) {
         this.defenderCountryName = defenderCountryName;
@@ -201,9 +197,18 @@ public class AttackDialog extends JDialog {
 
     /**
      * Ridà il nome del territorio difensore
-     * @return 
+     *
+     * @return
      */
     private String getDefenderCountryName() {
         return defenderCountryName;
+    }
+
+    public void setMaxArmiesAttacker(int maxArmiesAttacker) {
+        this.maxArmiesAttacker = maxArmiesAttacker;
+    }
+
+    public void setMaxArmiesDefender(int maxArmiesDefender) {
+        this.maxArmiesDefender = maxArmiesDefender;
     }
 }
