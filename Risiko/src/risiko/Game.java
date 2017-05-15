@@ -91,6 +91,7 @@ public class Game extends Observable {
         
         Map<String,Color> colorMap=buildColorMap();       
         int i = 0;
+        int j=0;
         for (Map.Entry<String, Boolean> entry : playersMap.entrySet()) {
             if (entry.getValue()) {
                 //this.players.add(new Player("fintoAI_"+entry.getKey(), colorMap.get(colors[i])));
