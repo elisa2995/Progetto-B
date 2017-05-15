@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -43,6 +44,7 @@ public class AttackDialog extends JDialog {
     private int[] attackerDice;
     private int[] defenderDice;
     private String defenderCountryName;
+    private int maxArmiesDefender;
 
     public void setMaxArmiesAttacker(int maxArmiesAttacker) {
         this.maxArmiesAttacker = maxArmiesAttacker;
@@ -51,7 +53,6 @@ public class AttackDialog extends JDialog {
     public void setMaxArmiesDefender(int maxArmiesDefender) {
         this.maxArmiesDefender = maxArmiesDefender;
     }
-    private int maxArmiesDefender;
 
     public AttackDialog(Game game) {
         this.game = game;
@@ -87,8 +88,12 @@ public class AttackDialog extends JDialog {
 
                 String imagePath = "files/images/dice/";
                 PlayAudio.play("sounds/tank.wav");
-
-
+                
+                //game.attack() potrebbe impostare a true il valore ritornante da game.haveJustDrowCard()
+                //quindi occorre salvare il valore ritornante da game.haveJustDrowCard() prima di invocare game.attack() 
+                //useremo la variabile haveJustDrowCard nel caso isConquered fosse true.
+                boolean haveJustDrowCard = game.haveJustDrowCard();
+                
                 game.attack((int) attackerArmies.getValue(), (int) defenderArmies.getValue());
                 for (int i = 0; i < diceR.length; i++) {
                     if (i < attackerDice.length) {
@@ -111,7 +116,17 @@ public class AttackDialog extends JDialog {
 
                 if (isConquered) {
                     PlayAudio.play("sounds/conquest.wav");
-                    JOptionPane.showMessageDialog(null, "Complimenti, hai conquistato " + getDefenderCountryName());
+                    
+                    //Informa il player della conquista del nuovo territorio, 
+                    //nel caso fosse la prima conquista del turno informa anche il player della cardBonus pescata
+                    if (haveJustDrowCard) {
+                        JOptionPane.showMessageDialog(null, "Complimenti, hai conquistato " + getDefenderCountryName());
+                    } else {
+                        Image imageDrowedCard = game.getLastCardBonusDrowed();
+                        JOptionPane.showMessageDialog(  null, "Complimenti,\nhai conquistato " + getDefenderCountryName()
+                                + ",\ne pescato questa carta.", "Conquered",
+                                JOptionPane.INFORMATION_MESSAGE, new ImageIcon(imageDrowedCard));
+                    }
                     inputArmies.setVisible(false);
                     for (int i = 0; i < diceR.length; i++) {
                         diceR[i].setIcon(null);
