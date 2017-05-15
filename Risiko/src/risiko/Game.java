@@ -63,9 +63,6 @@ public class Game extends Observable {
         setChanged();
         notifyPhaseChange(activePlayer.getName(), phase.name());
         
-        for(Map.Entry<String, Boolean> entry:playersMap.entrySet()){
-            System.out.println(entry.getKey()+" "+entry.getValue());
-        }
     }
 
     /**

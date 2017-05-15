@@ -5,9 +5,6 @@
  */
 package gui;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,12 +35,13 @@ public class StartGameGUI extends javax.swing.JFrame {
         init();
     }
 
+    /**
+     * Inizializzazione
+     */
     private void init() {
 
         nPlayers = 2;
         regDialog = new UserDialog(this);
-        //regDialog.setPreferredSize(new Dimension(700,300));
-        //regDialog.pack();
         regDialog.setVisible(false);
 
         playerTexts = new JTextField[]{this.playerText1, this.playerText2, this.playerText3, this.playerText4, this.playerText5, this.playerText6};
@@ -440,12 +438,24 @@ public class StartGameGUI extends javax.swing.JFrame {
         doLogin(5);
     }//GEN-LAST:event_login6ActionPerformed
 
+    /**
+     * Setta il nome del player nel input e lo rende non editabile; 
+     * cambia il bottone di login a logout
+     * @param username
+     * @param index 
+     */
     public void setPlayerName(String username, int index) {
         playerTexts[index].setText(username);
         playerTexts[index].setEditable(false);
         logins[index].setText("Logout");
     }
 
+    /**
+     * Consente di aprire il JDialog per effettuare la login se il 
+     * giocatore scelto non è loggato; se è già loggato consente di 
+     * effettuare il logout
+     * @param index 
+     */
     public void doLogin(int index) {        
         if (logins[index].getText().equals("Login")) {
             regDialog.setRegistrationMode(false);
@@ -460,6 +470,10 @@ public class StartGameGUI extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Ritorna la lista dei giocatori già loggati
+     * @return 
+     */
     private List getPlayers(){
         List<String> list=new ArrayList<>();
         for(int i=0; i<playerTexts.length; i++){

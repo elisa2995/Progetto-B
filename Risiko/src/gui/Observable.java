@@ -17,19 +17,11 @@ public class Observable {
     }
 
     //-------------------------- Notify-----------------------------------
+
     /**
-     * If this object has changed, as indicated by the <code>hasChanged</code>
-     * method, then notify all of its observers and then call the
-     * <code>clearChanged</code> method to indicate that this object has no
-     * longer changed.
-     * <p>
-     * Each observer has its <code>update</code> method called with two
-     * arguments: this observable object and the <code>arg</code> argument.
-     *
-     * @param arg any object.
-     * @see java.util.Observable#clearChanged()
-     * @see java.util.Observable#hasChanged()
-     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     * Notifica un cambiamento dopo la fase di rinforzo
+     * @param countryName
+     * @param bonusArmies 
      */
     public void notifyReinforce(String countryName, int bonusArmies) {
         synchronized (this) {
@@ -45,6 +37,10 @@ public class Observable {
 
     }
 
+    /**
+     * Notifica un cambiamento dopo che l'attaccante è stato settato
+     * @param countryName 
+     */
     public void notifySetAttacker(String countryName) {
         synchronized (this) {
             if (!changed) {
@@ -59,6 +55,14 @@ public class Observable {
 
     }
 
+    /**
+     * Notifica un cambiamento dopo che il difensore è stato settato
+     * @param countryAttackerName
+     * @param countryDefenderName
+     * @param defenderPlayer
+     * @param maxArmiesAttacker
+     * @param maxArmiesDefender 
+     */
     public void notifySetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender) {
         synchronized (this) {
             if (!changed) {
@@ -72,6 +76,16 @@ public class Observable {
         }
     }
 
+    /**
+     * Notifica un cambiamento dopo un attacco
+     * @param attackResultInfo
+     * @param isConquered
+     * @param canAttackFromCountry
+     * @param maxArmiesAttacker
+     * @param maxArmiesDefender
+     * @param attackerDice
+     * @param defenderDice 
+     */
     public void notifyAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice) {
         synchronized (this) {
             if (!changed) {
@@ -85,6 +99,11 @@ public class Observable {
         }
     }
 
+    /**
+     * Notifica quando cambia la fase del gioco
+     * @param player
+     * @param phase 
+     */
     public void notifyPhaseChange(String player, String phase) {
         synchronized (this) {
             if (!changed) {
@@ -97,6 +116,10 @@ public class Observable {
         }
     }
 
+    /**
+     * Notifica un cambiamento quando c'è la vittoria di un giocatore
+     * @param winner 
+     */
     public void notifyVictory(String winner) {
         synchronized (this) {
             if (!changed) {
@@ -110,6 +133,12 @@ public class Observable {
         }
     }
 
+    /**
+     * Notifica un cambiamento dopo l'asseganzione dei territori
+     * @param countries
+     * @param armies
+     * @param colors 
+     */
     public void notifyCountryAssignment(String[] countries, int[] armies, Color[] colors) {
         synchronized (this) {
             if (!changed) {
@@ -124,6 +153,12 @@ public class Observable {
 
     }
     
+    /**
+     * Notifica un cambiamento dopo uno spostamento
+     * @param country
+     * @param armies
+     * @param color 
+     */
     public void notifyArmiesChange(String country, int armies, Color color) {
         synchronized (this) {
             if (!changed) {
