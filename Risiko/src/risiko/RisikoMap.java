@@ -2,41 +2,37 @@ package risiko;
 
 import java.awt.Color;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Dividere verify attack in modo da avere un controllo sull'attaccante, uno sul
- * difensore (guarda gui) mettere metodo che mi ridà il massimo di armate con
- * cui posso attacare o difendere Cambiamo country[] in attacker, defender
- */
 public class RisikoMap {
 
     private final int DEFAULT_ARMIES = 3;
     private final String urlCountries = "files/territori.txt";
     //private final String urlCountries = "files/prova.txt";
-    private Map<Country, Player> countryPlayer;
+    private Map<String,  List<Country>> continentCountries;
     private Map<Country, List<Country>> countryNeighbors;
-    private Map<String, Country> nameCountry;
+    private Map<String,  Integer>       continentBonus;
+    private Map<Country, Player>        countryPlayer;
+    private Map<String,  Country>       nameCountry;
 
     public Map<Country, Player> getCountryPlayer() {
         return countryPlayer;
     }
 
-    public RisikoMap() throws Exception {
-
-        this.countryPlayer = new HashMap<>();
+    public RisikoMap() {
+        this.continentCountries = new HashMap<>();
         this.countryNeighbors = new HashMap<>();
+        this.continentBonus = new HashMap<>();
+        this.countryPlayer = new HashMap<>();
         this.nameCountry = new HashMap<>();
         init();
-
     }
 
     /**
@@ -45,46 +41,39 @@ public class RisikoMap {
      *
      * @throws qualche eccezione relativa alla lettura del file
      */
-    private void init() throws Exception {
-
+    private void init() {
         buildCountryPlayer();
+        buildCountryNeighbors();
+        buildContinentCountry();
     }
 
     /**
      * Legge il file specificato a urlCountries, di ogni riga letta prende solo
-     * il primo token e builda la Country relativa e la mette in CountryPlayer
+     * il primo token e builda la Country relativa e la mette in CountryPlayer,
+     * crea anche l'ashMap nameCountry.
      *
      * @author Elisa
      * @throws qualche eccezione legata alla lettura del file
      */
-    private void buildCountryPlayer() throws Exception {
-
+    private void buildCountryPlayer() {
         try (BufferedReader br = new BufferedReader(new FileReader(urlCountries))) {
-
             String line;
 
             while ((line = br.readLine()) != null) {
 
                 if (!line.startsWith("-")) {
 
-                    StringTokenizer st = new StringTokenizer(line, ",");
+                    String str[] = line.split(",");
 
-                    if (st.hasMoreTokens()) {
-
-                        Country country = new Country(st.nextToken());
-                        country.setArmies(DEFAULT_ARMIES);
-                        this.countryPlayer.put(country, null);
-                        this.nameCountry.put(country.getName(), country);
-                    }
+                    Country country = new Country(str[0]);
+                    country.setArmies(DEFAULT_ARMIES);
+                    countryPlayer.put(country, null);
+                    nameCountry.put(country.getName(), country);
                 }
             }
-
-            buildCountryNeighbors();
-
-        } catch (FileNotFoundException ex) {
-            System.out.println("File not found");
+        } catch (Exception ex) {
+            System.out.println("Error in buildCountryPlayer");
         }
-
     }
 
     /**
@@ -95,42 +84,47 @@ public class RisikoMap {
      * @throws qualche eccezione legata alla lettura del file
      * @author Elisa
      */
-    private void buildCountryNeighbors() throws Exception {
-
-        List<Country> neighbours = new ArrayList<>();
-        Country country = null;
-
+    private void buildCountryNeighbors() {
         try (BufferedReader br = new BufferedReader(new FileReader(urlCountries))) {
-
             String line;
-
             while ((line = br.readLine()) != null) {
+
                 if (!line.startsWith("-")) {
-                    StringTokenizer st = new StringTokenizer(line, ",");
-                    int i = 0;
+                    String str[] = line.split(",");
 
-                    while (st.hasMoreTokens()) {
-                        String token = st.nextToken();
-                        if (i == 0) {
-                            country = nameCountry.get(token);
-                        } else {
-                            Country neighbour = nameCountry.get(token);
-                            neighbours.add(neighbour);
-                        }
-
-                        i++;
-
+                    List<Country> neighbours = new ArrayList<>();
+                    for (int j = 1; j < str.length; j++) {
+                        neighbours.add(nameCountry.get(str[j]));
                     }
 
-                    this.countryNeighbors.put(country, neighbours);
-                    neighbours = new ArrayList<>();
+                    countryNeighbors.put(nameCountry.get(str[0]), neighbours);
                 }
             }
-
-        } catch (FileNotFoundException ex) {
-            System.out.println("File not found");
+        } catch (Exception ex) {
+            System.out.println("Error in buildCountryNeighbors");
         }
+    }
 
+    private void buildContinentCountry() {
+        try (BufferedReader br = new BufferedReader(new FileReader(urlCountries))) {
+            String line;
+            List<Country> countries = new ArrayList<>();
+            while ((line = br.readLine()) != null) {
+                
+                if (line.startsWith("-")) {
+                    String str[] = line.split("-");     //str[] sarà un'array di 3 stringhe, la prima sarà vuota, questo perchè line inizia con "-"
+                    continentCountries.put(str[1], countries);                    
+                    continentBonus.put(str[1],new Integer(str[2]));
+                    countries = new ArrayList<>();
+                }
+                if (!line.startsWith("-")) {
+                    String str[] = line.split(",");
+                    countries.add(getCountryByName(str[0]));
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("Error in buildContinentCountry");
+        }
     }
 
     /**
@@ -199,7 +193,16 @@ public class RisikoMap {
      * @author Elisa
      */
     void computeBonusArmies(Player player) {
-        int bonus = (int) Math.floor(getMyCountries(player).size() / 3);
+        int bonus = 0;
+        List<Country> countryOfThatPlayer = getMyCountries(player);
+        Set<String> continentSet = continentCountries.keySet();
+        for (String continent : continentSet) {
+            if (countryOfThatPlayer.containsAll(continentCountries.get(continent))) {
+                bonus=continentBonus.get(continent);
+                System.out.println(bonus);
+            }
+        }
+        bonus += (int) Math.floor(getMyCountries(player).size() / 3);
         player.setBonusArmies(bonus);
     }
 
@@ -226,7 +229,6 @@ public class RisikoMap {
     /**
      * Controlla se il giocatore può ancora attaccare da uno dei suoi territori.
      *
-     * @param activePlayer
      * @return true nel caso in cui almeno uno dei territori di ActivePlayer
      * abbia più di un'armata, false in caso contrario.
      * @author Alessandro QUESTIONE: forse dovremmo controllare che la country
@@ -375,8 +377,21 @@ public class RisikoMap {
         }
         return colors;
     }
-    
-    public Color getColorByCountry(Country country){
+
+    public Color getColorByCountry(Country country) {
         return getPlayerByCountry(country).getColor();
+    }
+
+    public Map<String, List<Country>> getContinentCountries() {
+        return continentCountries;
+    }
+
+    /**
+     * Ritorna la lista delle countries che compongono un continent.
+     *
+     * @param continent
+     */
+    public List<Country> getCountriesByContinet(String continent) {
+        return countryNeighbors.get(continent);
     }
 }
