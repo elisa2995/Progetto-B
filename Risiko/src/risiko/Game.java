@@ -2,6 +2,7 @@ package risiko;
 
 import exceptions.LastPhaseException;
 import exceptions.PendingOperationsException;
+import gui.CardBonusDialog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Map;
 import gui.Observable;
 import gui.GameObserver;
 import java.awt.Color;
+import java.awt.Image;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -324,6 +326,11 @@ public class Game extends Observable {
         } else {
             activePlayer = players.get(0);
         }
+        
+        //Devo resettare a false JustDrowCardBonus così che si possa pescare con map.updateOnConquer 
+        activePlayer.setJustDrowCard(false);
+        if(!activePlayer.getCardBonus().isEmpty())
+            new CardBonusDialog(activePlayer);
     }
 
     //  M E T O D I   R I P R E S I   D A   M A P
@@ -534,5 +541,14 @@ public class Game extends Observable {
         notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getColorByCountry(defenderCountry));
         setChanged();
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getColorByCountry(attackerCountry));
+    }
+    
+    public Image getLastCardBonusDrowed(){
+        ArrayList<CardBonus> cards = activePlayer.getAllBonusCard();
+        CardBonus lastCard = cards.get(cards.size() - 1);
+        return lastCard.getImage();
+    }
+    public boolean haveJustDrowCard(){
+        return activePlayer.havejustDrowCardBonus();
     }
 }

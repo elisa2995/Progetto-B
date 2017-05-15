@@ -1,4 +1,3 @@
--Nord America
 Alaska,Territori del Nord Ovest,Alberta,Kamchatka
 Territori del Nord Ovest,Alaska,Alberta,Ontario,Groenlandia
 Groenlandia,Territori del Nord Ovest,Ontario,Quebec,Islanda
@@ -8,12 +7,12 @@ Quebec,Groenlandia,Ontario,Stati Uniti Orientali
 Stati Uniti Occidentali,Alberta,America Centrale,Stati Uniti Orientali,Ontario
 Stati Uniti Orientali,Ontario,Quebec,Stati Uniti Occidentali,America Centrale
 America Centrale,Stati Uniti Occidentali,Stati Uniti Orientali,Venezuela
--Sud America
+-Nord America-9
 Venezuela,America Centrale,Peru',Brasile
 Peru',Venezuela,Brasile,Argentina
 Brasile,Venezuela,Peru',Argentina,Africa del Nord
 Argentina,Peru',Brasile
--Europa
+-Sud America-4
 Islanda,Groenlandia,Gran Bretagna,Scandinavia
 Scandinavia,Islanda,Gran Bretagna,Europa Settentrionale,Ucraina
 Gran Bretagna,Islanda,Scandinavia,Europa Settentrionale,Europa Occidentale
@@ -21,14 +20,14 @@ Europa Settentrionale,Gran Bretagna,Scandinavia,Europa Occidentale,Europa Meridi
 Europa Occidentale,Gran Bretagna,Europa Meridionale,Africa del Nord,Europa Settentrionale
 Europa Meridionale,Europa Settentrionale,Europa Occidentale,Egitto,Ucraina,Medio Oriente
 Ucraina,Scandinavia,Europa Settentrionale,Europa Meridionale,Urali,Afghanistan,Medio Oriente
--Africa
+-Europa-7
 Africa del Nord,Europa Occidentale,Egitto,Africa Orientale,Congo,Brasile
 Egitto,Europa Meridionale,Africa del Nord,Africa Orientale,Medio Oriente
 Congo,Africa del Nord,Africa Orientale,Africa del Sud
 Africa Orientale,Egitto,Africa del Nord,Congo,Africa del Sud,Madagascar
 Africa del Sud,Madagascar,Congo,Africa Orientale
 Madagascar,Africa Orientale,Africa del Sud
--Asia
+-Africa-6
 Urali,Ucraina,Afghanistan,Siberia,Cina
 Siberia,Urali,Cina,Mongolia,Cita,Jacuzia
 Jacuzia,Siberia,Cita,Kamchatka
@@ -41,8 +40,9 @@ Medio Oriente,Ucraina,Europa Meridionale,India,Egitto,Cina
 India,Cina,Medio Oriente,Siam
 Cina,Mongolia,Siberia,Urali,Afghanistan,Medio Oriente,India,Siam
 Siam,Cina,India,Indonesia
--Oceania
+-Asia-12
 Indonesia,Siam,Nuova Guinea,Australia Occidentale
 Nuova Guinea,Indonesia,Australia Orientale,Australia Occidentale
 Australia Orientale,Australia Occidentale,Nuova Guinea
 Australia Occidentale,Australia Orientale,Nuova Guinea,Indonesia
+-Oceania-4
