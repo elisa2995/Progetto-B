@@ -27,6 +27,14 @@ public class Game extends Observable {
     private int resultsDiceAttack[];
     private int resultsDiceDefense[];
 
+    public RisikoMap getMap() {
+        return map;
+    }
+
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
     public Game(Map<String, Boolean> playersMap,String[] colors, GameObserver observer) throws Exception {
         this.players = new ArrayList<>();
         this.activePlayer = null;
@@ -62,6 +70,15 @@ public class Game extends Observable {
         phase = Phase.REINFORCE;
         setChanged();
         notifyPhaseChange(activePlayer.getName(), phase.name());
+        startArtificialPlayerThreads();
+    }
+    
+    private void startArtificialPlayerThreads() {
+        for (Player playerThread : this.players) {
+            if (playerThread instanceof ArtificialPlayer) {
+                new Thread((ArtificialPlayer) playerThread).start();
+            }
+        }
     }
 
     /**
@@ -76,8 +93,8 @@ public class Game extends Observable {
         int i = 0;
         for (Map.Entry<String, Boolean> entry : playersMap.entrySet()) {
             if (entry.getValue()) {
-                this.players.add(new Player("fintoAI_"+entry.getKey(), colorMap.get(colors[i])));
-                //this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i));
+                //this.players.add(new Player("fintoAI_"+entry.getKey(), colorMap.get(colors[i])));
+                this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i,colorMap.get(colors[i]),this));
             }else{
                 this.players.add(new Player(entry.getKey(), colorMap.get(colors[i])));
             }
