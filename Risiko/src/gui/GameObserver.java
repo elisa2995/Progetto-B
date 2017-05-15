@@ -12,30 +12,68 @@ import java.awt.Color;
  * @since   JDK1.0
  */
 public interface GameObserver {
-    /**
-     * This method is called whenever the observed object is changed. An
-     * application calls an <tt>Observable</tt> object's
-     * <code>notifyObservers</code> method to have all the object's
-     * observers notified of the change.
-     *
-     * @param   o     the observable object.
-     * @param   arg   an argument passed to the <code>notifyObservers</code>
-     *                 method.
-     */
 
+    /**
+     * Metodo chiamato dopo la fase di rinforzo
+     * @param countryName
+     * @param bonusArmies 
+     */
     public void updateOnReinforce(String countryName, int bonusArmies);
 
+    /**
+     * Metodo chiamato al cambiamento della fase di gioco
+     * @param player
+     * @param phase 
+     */
     public void updateOnPhaseChange(String player, String phase);
 
+    /**
+     * Metodo chiamato quando viene settato l'attaccante
+     * @param countryName 
+     */
     public void updateOnSetAttacker(String countryName);
 
+    /**
+     * Metodo chiamato quando viene settato il difensore
+     * @param countryAttackerName
+     * @param countryDefenderName
+     * @param defenderPlayer
+     * @param maxArmiesAttacker
+     * @param maxArmiesDefender 
+     */
     public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender);
 
+    /**
+     * Metodo chiamato dopo un attacco
+     * @param attackResultInfo
+     * @param isConquered
+     * @param canAttackFromCountry
+     * @param maxArmiesAttacker
+     * @param maxArmiesDefender
+     * @param attackerDice
+     * @param defenderDice 
+     */
     public void updateOnAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice);
     
+    /**
+     * Metodo chiamato in caso di vittoria
+     * @param winner 
+     */
     public void updateOnVictory(String winner);
 
+    /**
+     * Metodo chiamato dopo l'assegnazione delle country
+     * @param countries
+     * @param armies
+     * @param colors 
+     */
     public void updateOnCountryAssignment(String[] countries, int[] armies, Color[] colors);
     
+    /**
+     * Metodo chiamato dopo uno spostamento di armate
+     * @param country
+     * @param armies
+     * @param color 
+     */
     public void updateOnArmiesChange(String country, int armies, Color color);
 }

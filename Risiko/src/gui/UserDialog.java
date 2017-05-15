@@ -42,8 +42,6 @@ public class UserDialog extends javax.swing.JDialog {
     public UserDialog(StartGameGUI gui) {
         this.gui = gui;
         initComponents();
-        //passwordText = new JPasswordField(8);
-        //password2Text = new JPasswordField(8);
         commentsText.setEditable(false);
         commentsText.setBackground(new Color(240, 240, 240));
         this.addWindowListener(new WindowListener() {
@@ -187,12 +185,21 @@ public class UserDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Bottone per salvare il nuovo utente
+     * @param evt 
+     */
     private void saveUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveUserButtonActionPerformed
         if (usernameText.getText().length() == 0 || passwordText.getText().length() == 0 || password2Text.getText().length() == 0) {
             commentsText.setText("Per registrare il giocatore è necessario\ncompilare tutti i campi");
-        } else if (!passwordText.getText().equals(password2Text.getText())) {
+            return;
+        } 
+        if (!passwordText.getText().equals(password2Text.getText())) {
             commentsText.setText("Le password inserite non coincidono");
-        } else if (checkUsernameInFile(usernameText.getText())) {
+            return;
+        } 
+        
+        if (checkUsernameInFile(usernameText.getText())) {
             try {
                 registerUser(usernameText.getText(), passwordText.getText());
             } catch (IOException ex) {
@@ -208,6 +215,10 @@ public class UserDialog extends javax.swing.JDialog {
 
     }//GEN-LAST:event_saveUserButtonActionPerformed
 
+    /**
+     * Bottone per fare la login
+     * @param evt 
+     */
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         String url = "files/players.txt";
         String username = usernameText.getText();
@@ -221,7 +232,6 @@ public class UserDialog extends javax.swing.JDialog {
                     byte[] encryptedBytes = tmp[1].getBytes();
                     byte[] decryptedBytes = Base64.getDecoder().decode(encryptedBytes);
                     String decryptedString = new String(decryptedBytes, "UTF-8");
-                    System.out.println("Dec  >>>  " + decryptedString);
                     if (tmp[0].equals(username) && decryptedString.equals(password)) {
                         this.setVisible(false);
                         gui.setPlayerName(username, getIndex());
@@ -244,6 +254,12 @@ public class UserDialog extends javax.swing.JDialog {
 
     }//GEN-LAST:event_loginButtonActionPerformed
 
+    /**
+     * Salva nel file players.txt lo username e la password criptata 
+     * @param username
+     * @param password
+     * @throws IOException 
+     */
     private void registerUser(String username, String password) throws IOException {
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encryptedBytes = encoder.encode(password.getBytes());
@@ -255,6 +271,11 @@ public class UserDialog extends javax.swing.JDialog {
 
     }
 
+    /**
+     * Imposta il JDialog in modo che si vedano le informazioni relative alla 
+     * registrazione o alla login
+     * @param isRegistration 
+     */
     public void setRegistrationMode(boolean isRegistration) {
         if (isRegistration) {
             password2Text.setVisible(true);
@@ -275,18 +296,36 @@ public class UserDialog extends javax.swing.JDialog {
         usernameText.setText("");
     }
 
+    /**
+     * Setta l'indice del player da cui è stata richiesta la login
+     * @param index 
+     */
     public void setIndex(int index) {
         this.index = index;
     }
 
+    /**
+     * Ritorna l'indice del player che ha richiesto la login
+     * @return 
+     */
     private int getIndex() {
         return index;
     }
 
+    /**
+     * Setta la lista dei players già loggati nel gioco
+     * @param list 
+     */
     public void setPlayers(List<String> list) {
         this.players = list;
     }
 
+    /**
+     * Controlla se lo username inserito è già presente tra quelli degli utenti
+     * loggati; se si ritorna false
+     * @param username
+     * @return 
+     */
     private boolean checkUsername(String username) {
         for (String s : players) {
             if (s.equals(username)) {
@@ -296,6 +335,12 @@ public class UserDialog extends javax.swing.JDialog {
         return true;
     }
 
+    /**
+     * Controlla se lo username scelto per registrarsi è già stato inserito
+     * nel file dei players
+     * @param username
+     * @return 
+     */
     private boolean checkUsernameInFile(String username) {
         String url = "files/players.txt";
         try (BufferedReader br = new BufferedReader(new FileReader(url))) {

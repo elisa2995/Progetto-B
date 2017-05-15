@@ -50,6 +50,9 @@ public class AttackDialog extends JDialog {
         init();
     }
 
+    /**
+     * Inizializzazione
+     */
     private void init() {
 
         JDialog inputArmies = this;
@@ -204,10 +207,18 @@ public class AttackDialog extends JDialog {
         return defenderCountryName;
     }
 
+    /**
+     * Setta il massimo numero di armate che può scegliere l'attaccante
+     * @param maxArmiesAttacker 
+     */
     public void setMaxArmiesAttacker(int maxArmiesAttacker) {
         this.maxArmiesAttacker = maxArmiesAttacker;
     }
 
+    /**
+     * Setta il massimo numero di armate che può scegliere il difensore
+     * @param maxArmiesDefender 
+     */
     public void setMaxArmiesDefender(int maxArmiesDefender) {
         this.maxArmiesDefender = maxArmiesDefender;
     }
