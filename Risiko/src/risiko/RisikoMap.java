@@ -197,10 +197,8 @@ public class RisikoMap {
         List<Country> countryOfThatPlayer = getMyCountries(player);
         Set<String> continentSet = continentCountries.keySet();
         for (String continent : continentSet) {
-            if (countryOfThatPlayer.containsAll(continentCountries.get(continent))) {
-                bonus=continentBonus.get(continent);
-                System.out.println(bonus);
-            }
+            if (countryOfThatPlayer.containsAll(continentCountries.get(continent)))
+                bonus+=continentBonus.get(continent);
         }
         bonus += (int) Math.floor(getMyCountries(player).size() / 3);
         player.setBonusArmies(bonus);
