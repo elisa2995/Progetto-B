@@ -28,15 +28,13 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="password2Text" min="-2" pref="121" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="password2Label" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="usernameText" alignment="0" pref="121" max="32767" attributes="0"/>
-                              <Component id="passwordText" alignment="0" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="usernameText" alignment="0" pref="121" max="32767" attributes="0"/>
+                          <Component id="password2Text" alignment="0" max="32767" attributes="0"/>
+                          <Component id="passwordText" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -82,7 +80,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                       <Component id="password2Label" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="password2Text" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -104,14 +102,10 @@
         <Property name="text" type="java.lang.String" value="Password"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="passwordText">
-    </Component>
     <Component class="javax.swing.JLabel" name="password2Label">
       <Properties>
         <Property name="text" type="java.lang.String" value="Ripeti la password"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="password2Text">
     </Component>
     <Component class="javax.swing.JLabel" name="titleLabel">
       <Properties>
@@ -148,6 +142,10 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loginButtonActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JPasswordField" name="passwordText">
+    </Component>
+    <Component class="javax.swing.JPasswordField" name="password2Text">
     </Component>
   </SubComponents>
 </Form>
