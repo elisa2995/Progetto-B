@@ -455,9 +455,9 @@ public class Game extends Observable {
         this.defenderCountry = null;
         this.attackerCountry = null;
         setChanged();
-        notifySetAttacker(null);
+        notifySetAttacker(null);        
     }
-
+    
     //  M E T O D I   P E R   D A R E   I N F O
     /**
      * Ritorna l'array di countries. Utile per l'artificial player??

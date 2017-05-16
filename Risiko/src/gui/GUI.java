@@ -340,6 +340,7 @@ public class GUI extends JFrame implements GameObserver{
             labelAdvice.setText("Clicca su un territorio confinante per sceglierlo come difensore");
         } else {
             this.textAreaInfo.setText("");
+            labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
     }
     
@@ -363,7 +364,7 @@ public class GUI extends JFrame implements GameObserver{
             s += "Difensore : " + countryDefenderName + " ( " + defenderPlayer + " ).\n";
             this.textAreaInfo.setText(s);
             labelAdvice.setText("Clicca su attack per iniziare l'attacco(oppure clicca un territorio confinate per cambiare il territorio in difesa)");
-        } else {
+        } else { //non viene chiamata da resetFightingCountries, non gli passiamo mai null
             this.textAreaInfo.setText("");
             labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }

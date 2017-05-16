@@ -41,14 +41,14 @@ public class LabelMapListener extends MouseInputAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         String countryName = getCountryFromClick(e);
-        if (countryName == null) {
-            PlayAudio.play("sounds/clickOffShort.wav");
-            game.resetFightingCountries();
-            return;
-        }
-        PlayAudio.play("sounds/clickOnShort.wav");
+
         switch (game.getPhase()) {
             case REINFORCE:
+                if (countryName == null) {
+                    PlayAudio.play("sounds/clickOffShort.wav");
+                    return;
+                }
+                PlayAudio.play("sounds/clickOnShort.wav");
                 if (game.controlPlayer(countryName) && game.canReinforce(1)) {
                     //Ho ancora bonus armies e sono su un mio territorio
                     game.reinforce(countryName, 1);
@@ -56,6 +56,11 @@ public class LabelMapListener extends MouseInputAdapter {
                 }
                 break;
             case FIGHT:
+                if (countryName == null) {
+                    PlayAudio.play("sounds/clickOffShort.wav");
+                    game.resetFightingCountries();
+                    return;
+                }
                 if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
                     game.setAttackerCountry(countryName);
