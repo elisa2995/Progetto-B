@@ -5,12 +5,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -35,6 +37,7 @@ public class GUI extends JFrame implements GameObserver{
 
     public GUI(Map<String, Boolean> players, String[] colors) throws Exception {
         initComponents();
+        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko7.png"))));
         countryLabelMap = new HashMap<>();
         colorCountryNameMap = readColorTextMap("files/ColorCountry.txt");
         init(players, colors);
@@ -122,6 +125,8 @@ public class GUI extends JFrame implements GameObserver{
         buttonShowMission = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(1400, 650));
+        setPreferredSize(new java.awt.Dimension(1400, 650));
 
         labelPlayerPhase.setBackground(new java.awt.Color(225, 207, 218));
         labelPlayerPhase.setForeground(new java.awt.Color(1, 1, 1));
@@ -153,7 +158,7 @@ public class GUI extends JFrame implements GameObserver{
 
         mapLayeredPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        labelMap.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/mapparisiko.png"))); // NOI18N
+        labelMap.setMaximumSize(new java.awt.Dimension(0, 0));
 
         mapLayeredPane.setLayer(labelMap, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -161,11 +166,11 @@ public class GUI extends JFrame implements GameObserver{
         mapLayeredPane.setLayout(mapLayeredPaneLayout);
         mapLayeredPaneLayout.setHorizontalGroup(
             mapLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(labelMap)
+            .addComponent(labelMap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         mapLayeredPaneLayout.setVerticalGroup(
             mapLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(labelMap)
+            .addComponent(labelMap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         buttonShowMission.setText("ShowMission");
@@ -192,7 +197,7 @@ public class GUI extends JFrame implements GameObserver{
                             .addComponent(buttonMoreInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane1)
                             .addComponent(buttonShowMission, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1012, Short.MAX_VALUE))
                     .addComponent(labelAdvice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -254,8 +259,8 @@ public class GUI extends JFrame implements GameObserver{
     }//GEN-LAST:event_buttonAttackActionPerformed
 
     private void buttonShowMissionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonShowMissionActionPerformed
-        String mission= game.getActivePlayer().getMission().getDescription();
-        JOptionPane.showMessageDialog(null, mission);
+       
+        JOptionPane.showMessageDialog(null, game.getActivePlayerMission());
     }//GEN-LAST:event_buttonShowMissionActionPerformed
 
     /**

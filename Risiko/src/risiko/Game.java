@@ -34,7 +34,11 @@ public class Game extends Observable {
     public Player getActivePlayer() {
         return activePlayer;
     }
-
+    
+    public String getActivePlayerMission(){
+        return activePlayer.getMissionDescription();
+    }
+    
     public Game(Map<String, Boolean> playersMap,String[] colors, GameObserver observer) throws Exception {
         this.players = new ArrayList<>();
         this.activePlayer = null;

@@ -117,4 +117,8 @@ public class Player {
     public void setJustDrowCard(boolean justDrowCard) {
         this.justDrowCard = justDrowCard;
     }
+
+    public String getMissionDescription() {
+        return mission.getDescription();
+    }
 }
