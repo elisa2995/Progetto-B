@@ -2,6 +2,7 @@
 package gui;
 
 import java.awt.Color;
+import risiko.Player;
 
 /**
  * A class can implement the <code>Observer</code> interface when it
@@ -76,4 +77,6 @@ public interface GameObserver {
      * @param color 
      */
     public void updateOnArmiesChange(String country, int armies, Color color);
+
+    public void updateOnNextTurn(Player activePlayer);
 }

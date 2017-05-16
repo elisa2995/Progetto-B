@@ -116,5 +116,10 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver{
     public void updateOnArmiesChange(String country, int armies, Color color) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void updateOnNextTurn(Player activePlayer) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

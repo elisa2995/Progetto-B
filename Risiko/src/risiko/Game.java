@@ -2,7 +2,6 @@ package risiko;
 
 import exceptions.LastPhaseException;
 import exceptions.PendingOperationsException;
-import gui.CardBonusDialog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,13 +34,13 @@ public class Game extends Observable {
         return activePlayer;
     }
 
-    public Game(Map<String, Boolean> playersMap,String[] colors, GameObserver observer) throws Exception {
+    public Game(Map<String, Boolean> playersMap, String[] colors, GameObserver observer) throws Exception {
         this.players = new ArrayList<>();
         this.activePlayer = null;
         //this.winner = null;
         this.map = new RisikoMap();
         this.addObserver(observer);
-        init(playersMap,colors);
+        init(playersMap, colors);
 
     }
 
@@ -59,9 +58,9 @@ public class Game extends Observable {
      * @throws rilancia l'eccezione che potrebbe lanciare la mappa nel caso in
      * cui l'url del file dei territori fosse sbagliato.
      */
-    private void init(Map<String, Boolean> playersMap,String[] colors) throws Exception {
+    private void init(Map<String, Boolean> playersMap, String[] colors) throws Exception {
 
-        buildPlayers(playersMap,colors);
+        buildPlayers(playersMap, colors);
         map.assignCountriesToPlayers(players);
         setChanged();
         notifyCountryAssignment(getCountriesNames(), getCountriesArmies(), getCountriesColors());
@@ -72,7 +71,7 @@ public class Game extends Observable {
         notifyPhaseChange(activePlayer.getName(), phase.name());
         startArtificialPlayerThreads();
     }
-    
+
     private void startArtificialPlayerThreads() {
         for (Player playerThread : this.players) {
             if (playerThread instanceof ArtificialPlayer) {
@@ -87,30 +86,30 @@ public class Game extends Observable {
      *
      * @param nrPlayers
      */
-    private void buildPlayers(Map<String, Boolean> playersMap,String[] colors) {
-        
-        Map<String,Color> colorMap=buildColorMap();       
+    private void buildPlayers(Map<String, Boolean> playersMap, String[] colors) {
+
+        Map<String, Color> colorMap = buildColorMap();
         int i = 0;
-        int j=0;
+        int j = 0;
         for (Map.Entry<String, Boolean> entry : playersMap.entrySet()) {
             if (entry.getValue()) {
                 //this.players.add(new Player("fintoAI_"+entry.getKey(), colorMap.get(colors[i])));
-                this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i,colorMap.get(colors[i]),this));
-            }else{
+                this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i, colorMap.get(colors[i]), this));
+            } else {
                 this.players.add(new Player(entry.getKey(), colorMap.get(colors[i])));
             }
             i++;
         }
     }
-    
-    private Map<String,Color> buildColorMap(){
-        Map<String,Color> colorMap=new HashMap<>();
-        colorMap.put("Rosso",new Color(255,0,0));
-        colorMap.put("Verde",new Color(0,232,0));
-        colorMap.put("Blu",new Color(0,0,255));
-        colorMap.put("Giallo",new Color(255,255,0));
-        colorMap.put("Viola", new Color(255,0,255));
-        colorMap.put("Nero", new Color(0,0,0));
+
+    private Map<String, Color> buildColorMap() {
+        Map<String, Color> colorMap = new HashMap<>();
+        colorMap.put("Rosso", new Color(255, 0, 0));
+        colorMap.put("Verde", new Color(0, 232, 0));
+        colorMap.put("Blu", new Color(0, 0, 255));
+        colorMap.put("Giallo", new Color(255, 255, 0));
+        colorMap.put("Viola", new Color(255, 0, 255));
+        colorMap.put("Nero", new Color(0, 0, 0));
         return colorMap;
     }
 
@@ -187,7 +186,7 @@ public class Game extends Observable {
      */
     private int[] computeLostArmies(int nrA, int nrD) {
         resultsDiceAttack = rollDice(nrA);
-        resultsDiceDefense= rollDice(nrD);
+        resultsDiceDefense = rollDice(nrD);
         int armiesLost[] = new int[2];
         int min = (nrA > nrD) ? nrD : nrA;
         for (int i = 0; i < min; i++) {
@@ -199,8 +198,7 @@ public class Game extends Observable {
         }
         return armiesLost;
     }
-    
-    
+
     public int[] getResultsDiceAttack() {
         return resultsDiceAttack;
     }
@@ -339,11 +337,13 @@ public class Game extends Observable {
         } else {
             activePlayer = players.get(0);
         }
-        
+
         //Devo resettare a false JustDrowCardBonus così che si possa pescare con map.updateOnConquer 
         activePlayer.setJustDrowCard(false);
-        if(!activePlayer.getCardBonus().isEmpty())
-            new CardBonusDialog(activePlayer);
+        if (!activePlayer.getCardBonus().isEmpty()) {
+            setChanged();
+            notifyNextTurn(activePlayer);
+        }
     }
 
     //  M E T O D I   R I P R E S I   D A   M A P
@@ -555,13 +555,14 @@ public class Game extends Observable {
         setChanged();
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getColorByCountry(attackerCountry));
     }
-    
-    public Image getLastCardBonusDrowed(){
+
+    public Image getLastCardBonusDrowed() {
         ArrayList<CardBonus> cards = activePlayer.getAllBonusCard();
         CardBonus lastCard = cards.get(cards.size() - 1);
         return lastCard.getImage();
     }
-    public boolean haveJustDrowCard(){
+
+    public boolean haveJustDrowCard() {
         return activePlayer.havejustDrowCardBonus();
     }
 }
