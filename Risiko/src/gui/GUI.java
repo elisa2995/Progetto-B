@@ -158,19 +158,17 @@ public class GUI extends JFrame implements GameObserver{
 
         mapLayeredPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        labelMap.setMaximumSize(new java.awt.Dimension(0, 0));
-
         mapLayeredPane.setLayer(labelMap, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout mapLayeredPaneLayout = new javax.swing.GroupLayout(mapLayeredPane);
         mapLayeredPane.setLayout(mapLayeredPaneLayout);
         mapLayeredPaneLayout.setHorizontalGroup(
             mapLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(labelMap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(labelMap)
         );
         mapLayeredPaneLayout.setVerticalGroup(
             mapLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(labelMap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(labelMap)
         );
 
         buttonShowMission.setText("ShowMission");
