@@ -26,6 +26,11 @@ public class ColorBoxListener implements ActionListener {
         this.colorBoxs = colorBoxs;
     }
 
+    /**
+     * Se un giocatore cambia il suo colore di default, quel colore viene 
+     * assegnato al giocatore che possedev in precedenza il nuovo colore
+     * @param e 
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         JComboBox comboBox = (JComboBox) e.getSource();
@@ -48,6 +53,11 @@ public class ColorBoxListener implements ActionListener {
 
     }
 
+    /**
+     * Ridà la lista dei colori ordinata rispetto alle scelte dei giocatori
+     * @param length
+     * @return 
+     */
     public String[] getUpdateColors(int length) {
         return Arrays.copyOfRange(updateColors, 0, length);
     }

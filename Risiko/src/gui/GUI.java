@@ -31,6 +31,7 @@ public class GUI extends JFrame implements GameObserver{
     private final Map<Color, String> colorCountryNameMap;
     private final Map<String, JLabel> countryLabelMap;
     private AttackDialog inputArmies;
+    
 
     public GUI(Map<String, Boolean> players, String[] colors) throws Exception {
         initComponents();

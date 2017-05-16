@@ -46,19 +46,14 @@ public class AttackDialog extends JDialog {
     private String defenderCountryName;
     private int maxArmiesDefender;
 
-    public void setMaxArmiesAttacker(int maxArmiesAttacker) {
-        this.maxArmiesAttacker = maxArmiesAttacker;
-    }
-
-    public void setMaxArmiesDefender(int maxArmiesDefender) {
-        this.maxArmiesDefender = maxArmiesDefender;
-    }
-
     public AttackDialog(Game game) {
         this.game = game;
         init();
     }
 
+    /**
+     * Inizializzazione
+     */
     private void init() {
 
         JDialog inputArmies = this;
@@ -167,30 +162,80 @@ public class AttackDialog extends JDialog {
         inputArmies.setSize(600, 300);
     }
 
+    /**
+     * Setta il massimo numero di armate che attaccante e difesore possono
+     * scegliere
+     *
+     * @param maxArmiesAttacker
+     * @param maxArmiesDefender
+     */
     public void setMaxArmies(int maxArmiesAttacker, int maxArmiesDefender) {
 
         attackerArmies.setModel(new SpinnerNumberModel(maxArmiesAttacker, 1, maxArmiesAttacker, 1));
         defenderArmies.setModel(new SpinnerNumberModel(maxArmiesDefender, 1, maxArmiesDefender, 1));
     }
 
+    /**
+     * Setta se il territorio difensore è stato conquistato
+     *
+     * @param isConquered
+     */
     public void setIsConquered(boolean isConquered) {
         this.isConquered = isConquered;
     }
 
+    /**
+     * Setta se l'attacante può continuare ad attaccare dal territorio dal quale
+     * ha già attaccato
+     *
+     * @param canAttackFromCountry
+     */
     public void setCanAttackFromCountry(boolean canAttackFromCountry) {
         this.canAttackFromCountry = canAttackFromCountry;
     }
 
+    /**
+     * Setta il risultato del lancio dei dadi
+     *
+     * @param attackerDice
+     * @param defenderDice
+     */
     public void updateDice(int[] attackerDice, int[] defenderDice) {
         this.attackerDice = attackerDice;
         this.defenderDice = defenderDice;
     }
 
+    /**
+     * Setta il nome del territorio difensore
+     *
+     * @param defenderCountryName
+     */
     public void setDefenderCountryName(String defenderCountryName) {
         this.defenderCountryName = defenderCountryName;
     }
 
+    /**
+     * Ridà il nome del territorio difensore
+     *
+     * @return
+     */
     private String getDefenderCountryName() {
         return defenderCountryName;
+    }
+
+    /**
+     * Setta il massimo numero di armate che può scegliere l'attaccante
+     * @param maxArmiesAttacker 
+     */
+    public void setMaxArmiesAttacker(int maxArmiesAttacker) {
+        this.maxArmiesAttacker = maxArmiesAttacker;
+    }
+
+    /**
+     * Setta il massimo numero di armate che può scegliere il difensore
+     * @param maxArmiesDefender 
+     */
+    public void setMaxArmiesDefender(int maxArmiesDefender) {
+        this.maxArmiesDefender = maxArmiesDefender;
     }
 }
