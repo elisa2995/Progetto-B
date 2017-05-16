@@ -1,0 +1,7 @@
+1=Conquistare 24 territori
+2=Conquistare Nord America e Africa
+3=Conquistare Nord America e Oceania
+4=Conquistare Asia e Sud America
+5=Conquistare Asia e Africa
+6=Conquistare Europa e Sud America
+7=Conquistare Europa e Oceania

@@ -41,6 +41,9 @@ public class Game extends Observable {
         return this.phase;
     }
 
+    public Player getActivePlayer() {
+        return activePlayer;
+    }    
     /**
      * Inizializza il gioco. Ovvero chiama il metodo della mappa per
      * l'assegnazione iniziale dei territori ai giocatori -
@@ -55,6 +58,7 @@ public class Game extends Observable {
 
         buildPlayers(playersMap,colors);
         map.assignCountriesToPlayers(players);
+        map.assignMissionToPlayers(players);
         setChanged();
         notifyCountryAssignment(getCountriesNames(), getCountriesArmies(), getCountriesColors());
         activePlayer = players.get(new Random().nextInt(players.size()));
