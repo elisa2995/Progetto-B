@@ -47,12 +47,12 @@ public class LabelMapListener extends MouseInputAdapter {
                 if (countryName == null) {
                     PlayAudio.play("sounds/clickOffShort.wav");
                     return;
-                }
-                PlayAudio.play("sounds/clickOnShort.wav");
+                }               
                 if (game.controlPlayer(countryName) && game.canReinforce(1)) {
                     //Ho ancora bonus armies e sono su un mio territorio
                     game.reinforce(countryName, 1);
                     //reinforce chiama notify(), la gui si aggiorna
+                    PlayAudio.play("sounds/clickOnShort.wav");
                 }
                 break;
             case FIGHT:
@@ -61,6 +61,7 @@ public class LabelMapListener extends MouseInputAdapter {
                     game.resetFightingCountries();
                     return;
                 }
+                PlayAudio.play("sounds/clickOnShort.wav");
                 if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
                     game.setAttackerCountry(countryName);
