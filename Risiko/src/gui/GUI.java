@@ -119,6 +119,7 @@ public class GUI extends JFrame implements GameObserver{
         mapLayeredPane = new javax.swing.JLayeredPane();
         labelMap = new GraphicsJLabel();
         labelAdvice = new javax.swing.JLabel();
+        buttonShowMission = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -167,6 +168,13 @@ public class GUI extends JFrame implements GameObserver{
             .addComponent(labelMap)
         );
 
+        buttonShowMission.setText("ShowMission");
+        buttonShowMission.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonShowMissionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -182,7 +190,8 @@ public class GUI extends JFrame implements GameObserver{
                             .addComponent(buttonAttack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(buttonNextPhase, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                             .addComponent(buttonMoreInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1))
+                            .addComponent(jScrollPane1)
+                            .addComponent(buttonShowMission, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(labelAdvice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -197,8 +206,10 @@ public class GUI extends JFrame implements GameObserver{
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(buttonShowMission, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(buttonMoreInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(buttonNextPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -241,6 +252,11 @@ public class GUI extends JFrame implements GameObserver{
             game.resetFightingCountries();
         }
     }//GEN-LAST:event_buttonAttackActionPerformed
+
+    private void buttonShowMissionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonShowMissionActionPerformed
+        String mission= game.getActivePlayer().getMission().getDescription();
+        JOptionPane.showMessageDialog(null, mission);
+    }//GEN-LAST:event_buttonShowMissionActionPerformed
 
     /**
      * Procedurone per la creazione di una map<Color,String> a partire da un
@@ -420,6 +436,7 @@ public class GUI extends JFrame implements GameObserver{
     private javax.swing.JButton buttonAttack;
     private javax.swing.JButton buttonMoreInfo;
     private javax.swing.JButton buttonNextPhase;
+    private javax.swing.JButton buttonShowMission;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelAdvice;
     private javax.swing.JLabel labelMap;

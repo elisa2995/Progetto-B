@@ -16,12 +16,14 @@ public class RisikoMap {
     private final int DEFAULT_ARMIES = 3;
     private final String urlCountries = "files/territori.txt";
     //private final String urlCountries = "files/prova.txt";
+    private final String urlMissions = "files/missions.txt";
     private Map<String,  List<Country>> continentCountries;
     private Map<Country, List<Country>> countryNeighbors;
+    private List<Mission> missions;
     private Map<String,  Integer>       continentBonus;
     private Map<Country, Player>        countryPlayer;
     private Map<String,  Country>       nameCountry;
-
+    
     public Map<Country, Player> getCountryPlayer() {
         return countryPlayer;
     }
@@ -32,6 +34,7 @@ public class RisikoMap {
         this.continentBonus = new HashMap<>();
         this.countryPlayer = new HashMap<>();
         this.nameCountry = new HashMap<>();
+        this.missions = new ArrayList<>();
         init();
     }
 
@@ -45,6 +48,7 @@ public class RisikoMap {
         buildCountryPlayer();
         buildCountryNeighbors();
         buildContinentCountry();
+        buildMissions();
     }
 
     /**
@@ -116,8 +120,7 @@ public class RisikoMap {
                     continentCountries.put(str[1], countries);                    
                     continentBonus.put(str[1],new Integer(str[2]));
                     countries = new ArrayList<>();
-                }
-                if (!line.startsWith("-")) {
+                } else {
                     String str[] = line.split(",");
                     countries.add(getCountryByName(str[0]));
                 }
@@ -126,7 +129,66 @@ public class RisikoMap {
             System.out.println("Error in buildContinentCountry");
         }
     }
+    
+    /**
+     * Legge il file specificato da urlMissions, da ogni riga estrae la description
+     * di un obiettivo e crea gli oggetti Mission
+     * 
+     * @throws qualche eccezione legata alla lettura del file
+     * @author Federico
+     */
+    private void buildMissions() {
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(urlMissions))) {
 
+            String line;
+            Mission mission;
+            while ((line = br.readLine()) != null) {
+                String[] tokens = line.split("=");
+                mission = new Mission(tokens[1]);
+                this.missions.add(mission);
+                buildTargetListForMission(mission);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("File not found");
+        }
+    }
+    
+    /**
+     * Costruisce la targetList (contenente i country da conquistare) di una mission
+     * 
+     * @param mission
+     * @author Federico
+     * 
+     */
+    private void buildTargetListForMission(Mission mission){
+        
+        String description = mission.getDescription();
+        List<String> continents = new ArrayList<> (continentCountries.keySet());
+        for (int i=0 ; i<continents.size() ; i++){
+            if(description.contains(continents.get(i))){
+            	mission.setTargetList(continentCountries.get(continents.get(i)));            
+            }
+        }
+        if(mission.getTargetList().isEmpty()){
+            mission.setNrCountryToConquer(24);
+        }
+    }
+    
+    /**
+     * Effettua l'assegnazione degli obiettivi ai giocatori.
+     * 
+     * @param players
+     * @author Federico
+     */
+    public void assignMissionToPlayers(List<Player> players) {
+        Collections.shuffle(this.missions);
+        for(int i=0;i<players.size();i++){
+            players.get(i).setMission(missions.get(i));
+        }
+    }
+    
     /**
      * Effettua l'assegnazione iniziale dei territori ai giocatori (random).
      *
@@ -316,18 +378,30 @@ public class RisikoMap {
 
     /**
      * Metodo chiamato nel caso in cui un giocatore abbia conquistato un
-     * territorio. La mappa controlla se ha raggiunto il suo obbiettivo (in
-     * questa prima versione del gioco conquistare il mondo).
+     * territorio. La mappa controlla se ha raggiunto il suo obbiettivo.
      *
      * @param player il giocatore di turno
      * @return true se il giocatore ha vinto, false altrimenti.
      * @author Federico
      */
     public boolean checkIfWinner(Player player) {
-
-        List<Country> countryList = getCountriesList();
-
-        return getMyCountries(player).containsAll(countryList);
+        
+        boolean result = false;
+        
+        if ( !player.getMission().getTargetList().isEmpty() ) {
+            
+            if ( getMyCountries(player).containsAll(player.getMission().getTargetList()) ) {
+                result = true;
+            }
+            
+        } else {
+            
+            if ( getMyCountries(player).size() == player.getMission().getNrCountryToConquer()){
+                result = true;
+            }
+        }
+        
+        return result;
     }
 
     /**

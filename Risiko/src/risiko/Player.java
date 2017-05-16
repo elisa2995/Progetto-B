@@ -4,7 +4,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class Player {
-    private ArrayList<CardBonus> cardBonus;
+    private Mission mission;
+    private ArrayList<CardBonus> cardBonus;    
     private String  name;
     private Color   color;
     private int     contaCarte[];
@@ -14,6 +15,7 @@ public class Player {
     public Player(String name, Color color) {
         this.justDrowCard=false;
         this.bonusArmies = 0;
+        this.mission = null;
         this.contaCarte  = new int[4];
         this.cardBonus   = new ArrayList<>();
         this.color       = color;
@@ -44,6 +46,15 @@ public class Player {
         return this.color;
     }
 
+
+    public Mission getMission() {
+        return mission;
+    }
+
+    public void setMission(Mission mission) {
+        this.mission = mission;
+    }
+    
     public ArrayList<CardBonus> getCardBonus() {
         return cardBonus;
     }
