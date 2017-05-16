@@ -450,4 +450,9 @@ public class GUI extends JFrame implements GameObserver{
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables
 
+    @Override
+    public void updateOnNextTurn(Player activePlayer) {
+        CardBonusDialog cardBonusDialog=new CardBonusDialog(activePlayer);
+    }
+
 }

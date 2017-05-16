@@ -3,6 +3,7 @@ package gui;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import risiko.Player;
 
 public class Observable {
 
@@ -169,6 +170,26 @@ public class Observable {
 
         for (GameObserver ob : this.obs) {
             ob.updateOnArmiesChange(country, armies, color);
+        }
+
+    }
+
+        /**
+     * Notifica un cambiamento dopo uno spostamento
+     * @param country
+     * @param armies
+     * @param color 
+     */
+    public void notifyNextTurn(Player activePlayer) {
+        synchronized (this) {
+            if (!changed) {
+                return;
+            }
+            clearChanged();
+        }
+
+        for (GameObserver ob : this.obs) {
+            ob.updateOnNextTurn(activePlayer);
         }
 
     }
