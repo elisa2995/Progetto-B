@@ -48,10 +48,7 @@ public class Game extends Observable {
     public Phase getPhase() {
         return this.phase;
     }
-
-    public Player getActivePlayer() {
-        return activePlayer;
-    }    
+    
     /**
      * Inizializza il gioco. Ovvero chiama il metodo della mappa per
      * l'assegnazione iniziale dei territori ai giocatori -
