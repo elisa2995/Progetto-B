@@ -1,0 +1,24 @@
+ELISA
+-colori invertiti se li cambio
+-metti che non si pox mettere utenti con lo stesso nome
+-dopo attacco non c'è più manima ma cursore (?)
+-puntini al posto del numero delle armate(?)
+
+CAROLINA
+-quando metto ultima armata di rinforzo passo direttamente a attack
+-reinforce quando 1 armata non lo fa fare
+-dopo attacco non c'è più manima ma cursore (?)
+-puntini al posto del numero delle armate(?)
+
+FEDERICO
+-controlla confini
+-guarda il progetti di poker e sette e mezzo per come vedono le carte
+-dopo attacco non c'è più manima ma cursore (?)
+-puntini al posto del numero delle armate(?)
+
+ANDREA
+-carte bonus:
+	-togliere da game(observer)
+	-mostra la carta all'inizio dell a fase di spostamento
+-fase di spostamento
+
