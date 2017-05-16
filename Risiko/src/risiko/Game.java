@@ -392,12 +392,12 @@ public class Game extends Observable {
      * Controlla che country sia dell'activePlayer. (Previo controllo sul caller
      * del metodo). // mmh
      *
-     * @param country
+     * @param countryName
      * @param aiCaller l'eventuale artificialPlayer caller del metodo.
      * @return true se la country è dell'active player, false altrimenti.
      */
-    public boolean controlPlayer(Country country, ArtificialPlayer... aiCaller) {
-        return checkCallerIdentity(aiCaller) && map.controlPlayer(country, activePlayer);
+    public boolean controlPlayer(String countryName, ArtificialPlayer... aiCaller) {
+        return checkCallerIdentity(aiCaller) && map.controlPlayer(map.getCountryByName(countryName), activePlayer);
     }
 
     /**
