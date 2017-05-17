@@ -13,6 +13,8 @@ import java.awt.Color;
 import java.awt.Image;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Game extends Observable {
 
@@ -268,7 +270,14 @@ public class Game extends Observable {
         Country country = map.getCountryByName(countryName);
         activePlayer.decrementBonusArmies(nArmies);
         map.addArmies(country, nArmies);
-
+        
+        if(activePlayer.getBonusArmies()==0){
+            try {
+                nextPhase();
+            } catch (PendingOperationsException ex) {
+            }
+        }
+        
         setChanged();
         notifyReinforce(countryName, activePlayer.getBonusArmies());
         setChanged();

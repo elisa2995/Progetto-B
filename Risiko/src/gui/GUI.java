@@ -299,8 +299,6 @@ public class GUI extends JFrame implements GameObserver{
         s = "Hai rinforzato " + countryName + ".\n ";
         if (bonusArmies == 0) {
             s += "Fase di rinforzo conlusa.\n";
-            String s1 = "Clicca nextPhase per continuare il tuo turno";
-            this.labelAdvice.setText(s1);
         } else {
             s += "Ti rimangono " + bonusArmies + " armate.\n";
         }
