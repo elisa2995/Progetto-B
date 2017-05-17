@@ -36,12 +36,9 @@ public class Game extends Observable {
         return activePlayer;
     }
 
-    
-    public String getActivePlayerMission(){
+    public String getActivePlayerMission() {
         return activePlayer.getMissionDescription();
     }
-    
-    
 
     public Game(Map<String, Boolean> playersMap, String[] colors, GameObserver observer) throws Exception {
 
@@ -57,7 +54,7 @@ public class Game extends Observable {
     public Phase getPhase() {
         return this.phase;
     }
-    
+
     /**
      * Inizializza il gioco. Ovvero chiama il metodo della mappa per
      * l'assegnazione iniziale dei territori ai giocatori -
@@ -270,14 +267,14 @@ public class Game extends Observable {
         Country country = map.getCountryByName(countryName);
         activePlayer.decrementBonusArmies(nArmies);
         map.addArmies(country, nArmies);
-        
-        if(activePlayer.getBonusArmies()==0){
+
+        if (activePlayer.getBonusArmies() == 0) {
             try {
                 nextPhase();
             } catch (PendingOperationsException ex) {
             }
         }
-        
+
         setChanged();
         notifyReinforce(countryName, activePlayer.getBonusArmies());
         setChanged();
@@ -315,6 +312,7 @@ public class Game extends Observable {
         if (!checkCallerIdentity(aiCaller)) {
             return;
         }
+        resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
 
         if (phase == Phase.REINFORCE && activePlayer.getBonusArmies() != 0) {
             throw new PendingOperationsException("Hai ancora armate da posizionare!");
@@ -421,6 +419,11 @@ public class Game extends Observable {
         return checkCallerIdentity(aiCaller) && map.controlDefender(attackerCountry, map.getCountryByName(defenderCountryName), activePlayer);
     }
 
+    public boolean controlMovement(String toCountryName) {
+        return map.controlMovement(attackerCountry, map.getCountryByName(toCountryName), activePlayer);
+
+    }
+
     /**
      * Setta l'attacker.
      *
@@ -464,9 +467,9 @@ public class Game extends Observable {
         this.defenderCountry = null;
         this.attackerCountry = null;
         setChanged();
-        notifySetAttacker(null);        
+        notifySetAttacker(null);
     }
-    
+
     //  M E T O D I   P E R   D A R E   I N F O
     /**
      * Ritorna l'array di countries. Utile per l'artificial player??
@@ -575,7 +578,7 @@ public class Game extends Observable {
     }
 
     public Image getLastCardBonusDrowed() {
-        ArrayList<CardBonus> cards = activePlayer.getAllBonusCard();
+        ArrayList<CardBonus> cards = activePlayer.getCardBonus();
         CardBonus lastCard = cards.get(cards.size() - 1);
         return lastCard.getImage();
     }
@@ -583,4 +586,34 @@ public class Game extends Observable {
     public boolean haveJustDrowCard() {
         return activePlayer.havejustDrowCardBonus();
     }
+
+    public ArrayList<String> getCardBonusName() {
+        ArrayList<String> CardBonusName = new ArrayList<>();
+        ArrayList<CardBonus> CardBonus = activePlayer.getCardBonus();
+        for (CardBonus card : CardBonus) {
+            CardBonusName.add(card.name());
+        }
+        return CardBonusName;
+    }
+
+    public boolean canPlayThisTris(CardBonus cardBonus1, CardBonus cardBonus2, CardBonus cardBonus3) {
+        return activePlayer.canPlayThisTris(cardBonus1, cardBonus2, cardBonus3);
+    }
+
+    public void playTris(CardBonus cardBonus1, CardBonus cardBonus2, CardBonus cardBonus3, int bonusArmiesTris) {
+        activePlayer.playTris(cardBonus1, cardBonus2, cardBonus3, bonusArmiesTris);
+    }
+
+    public int getMaxArmiesForMovement() {
+        return attackerCountry.getArmies() - 1;
+    }
+
+    public void move(String toCountryName, int i) {
+        Country toCountry = map.getCountryByName(toCountryName);
+        map.move(attackerCountry, toCountry, i);
+        passTurn();
+        setChanged();
+        notifyPhaseChange(activePlayer.getName(), phase.name());
+    }
+
 }

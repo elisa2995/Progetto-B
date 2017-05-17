@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputAdapter;
 import risiko.Game;
 import utils.PlayAudio;
@@ -75,6 +74,27 @@ public class LabelMapListener extends MouseInputAdapter {
                 //Sono su un territorio non valido per attaccare nè per difendere
                 game.resetFightingCountries();
                 break;
+            case MOVE:
+                if (countryName == null) {
+                    PlayAudio.play("sounds/clickOffShort.wav");
+                    game.resetFightingCountries();
+                    return;
+                }
+                PlayAudio.play("sounds/clickOnShort.wav");
+                if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
+                    //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
+                    game.setAttackerCountry(countryName);
+                    break;
+                }
+                if (game.getAttackerCountryName() != null && game.controlMovement(countryName)) {
+                    //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
+                    new movementDialog(game, countryName);
+                    break;
+                }
+                //Sono su un territorio non valido per spostarmi
+                game.resetFightingCountries();
+                break;
+   
         }
         // se ultimo reinforce metti nella textArea
     }
@@ -117,6 +137,20 @@ public class LabelMapListener extends MouseInputAdapter {
                     break;
                 }
                 //Sono su un territorio non valido per attaccare nè per difendere
+                e.getComponent().setCursor(Cursor.getDefaultCursor());
+                break;
+            case MOVE:
+                if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
+                    //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
+                    e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    break;
+                }
+                if (game.getAttackerCountryName() != null && game.controlMovement(countryName)) {
+                    //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
+                    e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    break;
+                }
+                //Sono su un territorio non valido per spostarmi
                 e.getComponent().setCursor(Cursor.getDefaultCursor());
                 break;
         }

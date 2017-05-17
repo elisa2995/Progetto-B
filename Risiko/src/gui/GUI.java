@@ -27,13 +27,12 @@ import utils.PlayAudio;
 /**
  * @author andrea
  */
-public class GUI extends JFrame implements GameObserver{
+public class GUI extends JFrame implements GameObserver {
 
     private Game game;
     private final Map<Color, String> colorCountryNameMap;
     private final Map<String, JLabel> countryLabelMap;
     private AttackDialog inputArmies;
-    
 
     public GUI(Map<String, Boolean> players, String[] colors) throws Exception {
         initComponents();
@@ -57,7 +56,7 @@ public class GUI extends JFrame implements GameObserver{
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
         inputArmies = new AttackDialog(game);
-        inputArmies.setPreferredSize(new Dimension(500,600));
+        inputArmies.setPreferredSize(new Dimension(500, 600));
         inputArmies.pack();
         labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
         labelAdvice.setFont(new Font("Serif", Font.PLAIN, 13));
@@ -251,13 +250,14 @@ public class GUI extends JFrame implements GameObserver{
         if (game.getPhase().equals(Phase.FIGHT)) {
             if (game.getAttackerCountryName() != null && game.getDefenderCountryName() != null) {
                 inputArmies.setVisible(true);
+                game.resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
             }
             game.resetFightingCountries();
         }
     }//GEN-LAST:event_buttonAttackActionPerformed
 
     private void buttonShowMissionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonShowMissionActionPerformed
-       
+
         JOptionPane.showMessageDialog(null, game.getActivePlayerMission());
     }//GEN-LAST:event_buttonShowMissionActionPerformed
 
@@ -286,11 +286,13 @@ public class GUI extends JFrame implements GameObserver{
         }
         return map;
     }
+
     /**
-     * Aggiorna <code> textAreaInfo</code> e <code>labelAdvice</code> dopo 
-     * che la country <code>countryName</code> è stata rinforzata.
+     * Aggiorna <code> textAreaInfo</code> e <code>labelAdvice</code> dopo che
+     * la country <code>countryName</code> è stata rinforzata.
+     *
      * @param countryName
-     * @param bonusArmies 
+     * @param bonusArmies
      */
     @Override
     public void updateOnReinforce(String countryName, int bonusArmies) {
@@ -304,12 +306,13 @@ public class GUI extends JFrame implements GameObserver{
         }
         this.textAreaInfo.setText(s);
     }
-    
+
     /**
      * Aggiorna <code>textAreaInfo</code> e <code>labelAdvice</code> quando
      * cambia la fase del gioco.
+     *
      * @param player
-     * @param phase 
+     * @param phase
      */
     @Override
     public void updateOnPhaseChange(String player, String phase) {
@@ -324,15 +327,16 @@ public class GUI extends JFrame implements GameObserver{
                 break;
         }
     }
-    
+
     /**
      * Aggiorna <code>textAreaInfo</code> e <code>labelAdvice</code> quando è
      * stato scelto il territorio da cui attaccare.
-     * @param countryName 
+     *
+     * @param countryName
      */
     @Override
     public void updateOnSetAttacker(String countryName) {
-        ((GraphicsJLabel)labelMap).resetCone();
+        ((GraphicsJLabel) labelMap).resetCone();
         if (countryName != null) {
             this.textAreaInfo.setText("Attaccante : " + countryName);
             labelAdvice.setText("Clicca su un territorio confinante per sceglierlo come difensore");
@@ -341,17 +345,18 @@ public class GUI extends JFrame implements GameObserver{
             labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
     }
-    
+
     /**
      * Aggiorna  <code>textAreaInfo</code> e <code>labelAdvice</code> quando è
-     * stato scelto il territorio da attaccare.
-     * Aggiorna anche i valori di massimo numero di armate dell'attaccante/difensore
-     * per preparare il jspinner dell'AttackDialog.
+     * stato scelto il territorio da attaccare. Aggiorna anche i valori di
+     * massimo numero di armate dell'attaccante/difensore per preparare il
+     * jspinner dell'AttackDialog.
+     *
      * @param countryAttackerName
      * @param countryDefenderName
      * @param defenderPlayer
      * @param maxArmiesAttacker
-     * @param maxArmiesDefender 
+     * @param maxArmiesDefender
      */
     @Override
     public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender) {
@@ -369,15 +374,16 @@ public class GUI extends JFrame implements GameObserver{
         this.inputArmies.setMaxArmies(maxArmiesAttacker, maxArmiesDefender);
         repaint();
     }
-    
+
     /**
      * Aggiorna  <code>textAreaInfo</code> e <code>labelAdvice</code> una volta
      * concluso l'attacco.
+     *
      * @param attackResultInfo
      * @param isConquered
      * @param canAttackFromCountry
      * @param maxArmiesAttacker
-     * @param maxArmiesDefender 
+     * @param maxArmiesDefender
      */
     @Override
     public void updateOnAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice) {
@@ -387,13 +393,12 @@ public class GUI extends JFrame implements GameObserver{
         inputArmies.updateDice(attackerDice, defenderDice);
         inputArmies.setIsConquered(isConquered);
         inputArmies.setCanAttackFromCountry(canAttackFromCountry);
-        inputArmies.setDefenderCountryName(game.getDefenderCountryName());        
+        inputArmies.setDefenderCountryName(game.getDefenderCountryName());
         labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
     }
-    
+
     /**
-     * ...
-     * @param winner 
+     * ... @param winner
      */
     @Override
     public void updateOnVictory(String winner) {
@@ -401,12 +406,13 @@ public class GUI extends JFrame implements GameObserver{
         //this.dispose();
         // etc
     }
-    
+
     /**
      * Aggiorna le etichette dei dopo l'assegnazione iniziale delle armate.
+     *
      * @param countries
      * @param armies
-     * @param colors 
+     * @param colors
      */
     @Override
     public void updateOnCountryAssignment(String[] countries, int[] armies, Color[] colors) {
@@ -416,13 +422,14 @@ public class GUI extends JFrame implements GameObserver{
             i++;
         }
     }
-    
+
     /**
      * Aggiorna l'etichetta del territorio <code>country</code> quando cambia il
      * numero di armate.
+     *
      * @param country
      * @param armies
-     * @param color 
+     * @param color
      */
     @Override
     public void updateOnArmiesChange(String country, int armies, Color color) {
@@ -449,7 +456,7 @@ public class GUI extends JFrame implements GameObserver{
 
     @Override
     public void updateOnNextTurn(Player activePlayer) {
-        CardBonusDialog cardBonusDialog=new CardBonusDialog(activePlayer);
+        CardBonusDialog cardBonusDialog = new CardBonusDialog(game);
     }
 
 }

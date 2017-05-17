@@ -263,7 +263,7 @@ public class RisikoMap {
                 bonus+=continentBonus.get(continent);
         }
         bonus += (int) Math.floor(getMyCountries(player).size() / 3);
-        player.setBonusArmies(bonus);
+        player.addBonusArmies(bonus);
     }
 
     /**
@@ -342,6 +342,19 @@ public class RisikoMap {
     public boolean controlDefender(Country attacker, Country defender, Player player) {
 
         return !this.countryPlayer.get(defender).equals(player) && this.getNeighbors(attacker).contains(defender);
+    }
+    /**
+     * Controlla che toCountry  sia dell'active player e che sia un
+     * confinante dell'fromCountry
+     */
+    public boolean controlMovement(Country fromCountry, Country toCountry, Player player) {
+
+        return this.countryPlayer.get(toCountry).equals(player) && this.getNeighbors(fromCountry).contains(toCountry);
+    }
+    
+    public void move(Country fromCountry, Country toCountry, int nrArmies){
+        fromCountry.removeArmies(nrArmies);
+        toCountry.addArmies(nrArmies);
     }
 
     /*
