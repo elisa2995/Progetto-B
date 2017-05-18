@@ -324,6 +324,11 @@ public class Game extends Observable {
             throw new PendingOperationsException("Hai ancora armate da posizionare!");
         }
 
+        if (phase == Phase.MOVE && activePlayer.havejustDrowCardBonus()) {
+            setChanged();
+            notifyDrowCardBonus(activePlayer.getLastCardBonusDrowed());
+        }
+
         try {
             this.phase = phase.next();
         } catch (LastPhaseException ex) {
@@ -597,12 +602,6 @@ public class Game extends Observable {
         notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getColorByCountry(defenderCountry));
         setChanged();
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getColorByCountry(attackerCountry));
-    }
-
-    public Image getLastCardBonusDrowed() {
-        ArrayList<CardBonus> cards = activePlayer.getCardBonus();
-        CardBonus lastCard = cards.get(cards.size() - 1);
-        return lastCard.getImage();
     }
 
     public boolean haveJustDrowCard() {

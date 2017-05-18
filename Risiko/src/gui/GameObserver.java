@@ -2,6 +2,7 @@
 package gui;
 
 import java.awt.Color;
+import risiko.CardBonus;
 import risiko.Player;
 
 /**
@@ -81,4 +82,6 @@ public interface GameObserver {
     public void updateOnNextTurn(Player activePlayer);
 
     public void updateOnSetFromCountry(String countryName);
+
+    public void updateOnDrowCardBonus(CardBonus lastCardDrowed);
 }
