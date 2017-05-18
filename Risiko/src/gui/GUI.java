@@ -318,8 +318,9 @@ public class GUI extends JFrame implements GameObserver {
      * @param phase
      */
     @Override
-    public void updateOnPhaseChange(String player, String phase) {
+    public void updateOnPhaseChange(String player, String phase, Color color) {
         this.labelPlayerPhase.setText(player + " " + phase);
+        this.labelPlayerPhase.setForeground(color);
         this.textAreaInfo.setText("");
         switch (phase) {
             case "REINFORCE":
