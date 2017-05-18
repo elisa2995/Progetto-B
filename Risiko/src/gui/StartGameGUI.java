@@ -397,10 +397,10 @@ public class StartGameGUI extends javax.swing.JFrame {
             }
         }
 
-        /*if (!checkUsername(list)) {
+        if (!checkUsername(list)) {
             commentsLabel.setText("I nomi dei giocatori devono essere diversi tra loro");
             return;
-        }*/
+        }
 
         GUI gui;
         Map<String, Boolean> players = new HashMap<>();
@@ -501,13 +501,11 @@ public class StartGameGUI extends javax.swing.JFrame {
     }
 
     private boolean checkUsername(List<String> players) {
-        System.out.println("sono qui");
         Object[] players1=players.toArray();
         Object[] players2 =players1.clone();
-        for (Object s1 : players1) {
-            for (Object s2 : players2) {
-                System.out.println(s1+" "+s2);
-                if (((String)s1).equals((String)s2)) {
+        for (int i=0; i<players1.length;i++) {
+            for (int j=0; j<players2.length; j++) {
+                if (i!=j && players1[i].equals(players2[j])) {
                     return false;
                 }
             }
