@@ -397,10 +397,10 @@ public class StartGameGUI extends javax.swing.JFrame {
             }
         }
 
-        if (!checkUsername(list)) {
+        /*if (!checkUsername(list)) {
             commentsLabel.setText("I nomi dei giocatori devono essere diversi tra loro");
             return;
-        }
+        }*/
 
         GUI gui;
         Map<String, Boolean> players = new HashMap<>();
@@ -506,7 +506,8 @@ public class StartGameGUI extends javax.swing.JFrame {
         Object[] players2 =players1.clone();
         for (Object s1 : players1) {
             for (Object s2 : players2) {
-                if (s1.equals(s2)) {
+                System.out.println(s1+" "+s2);
+                if (((String)s1).equals((String)s2)) {
                     return false;
                 }
             }
