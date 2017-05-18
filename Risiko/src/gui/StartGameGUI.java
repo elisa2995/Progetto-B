@@ -393,12 +393,15 @@ public class StartGameGUI extends javax.swing.JFrame {
         if (valid) {
             GUI gui;
             Map<String, Boolean> players = new HashMap<>();
+            Map<String, String> playersColor = new HashMap<>();
             String[] colors = cbListener.getUpdateColors(list.size());
+            
             for (int i = 0; i < list.size(); i++) {                
                 players.put(list.get(i).getText(), aiChecks[i].isSelected());
+                playersColor.put(list.get(i).getText(),colors[i]);
             }
             try {
-                gui = new GUI(players, colors);
+                gui = new GUI(players, playersColor);
                 gui.setVisible(true);
                 this.dispose();
             } catch (Exception ex) {

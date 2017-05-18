@@ -40,14 +40,14 @@ public class Game extends Observable {
         return activePlayer.getMissionDescription();
     }
 
-    public Game(Map<String, Boolean> playersMap, String[] colors, GameObserver observer) throws Exception {
+    public Game(Map<String, Boolean> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
 
         this.players = new ArrayList<>();
         this.activePlayer = null;
         //this.winner = null;
         this.map = new RisikoMap();
         this.addObserver(observer);
-        init(playersMap, colors);
+        init(playersMap, playersColor);
 
     }
 
@@ -65,9 +65,9 @@ public class Game extends Observable {
      * @throws rilancia l'eccezione che potrebbe lanciare la mappa nel caso in
      * cui l'url del file dei territori fosse sbagliato.
      */
-    private void init(Map<String, Boolean> playersMap, String[] colors) throws Exception {
+    private void init(Map<String, Boolean> playersMap, Map<String, String> playersColor) throws Exception {
 
-        buildPlayers(playersMap, colors);
+        buildPlayers(playersMap, playersColor);
         map.assignCountriesToPlayers(players);
         map.assignMissionToPlayers(players);
         setChanged();
@@ -94,19 +94,25 @@ public class Game extends Observable {
      *
      * @param nrPlayers
      */
-    private void buildPlayers(Map<String, Boolean> playersMap, String[] colors) {
+    private void buildPlayers(Map<String, Boolean> playersMap, Map<String, String> playersColor) {
 
         Map<String, Color> colorMap = buildColorMap();
         int i = 0;
         int j = 0;
         for (Map.Entry<String, Boolean> entry : playersMap.entrySet()) {
-            if (entry.getValue()) {
-                //this.players.add(new Player("fintoAI_"+entry.getKey(), colorMap.get(colors[i])));
-                this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i, colorMap.get(colors[i]), this));
-            } else {
-                this.players.add(new Player(entry.getKey(), colorMap.get(colors[i])));
+
+            for (Map.Entry<String, String> entryColor : playersColor.entrySet()) {
+
+                if (entry.getKey().equals(entryColor.getKey())) {
+                    if (entry.getValue()) {
+                        this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i, colorMap.get(entryColor.getValue()), this));
+                    } else {
+                        this.players.add(new Player(entry.getKey(), colorMap.get(entryColor.getValue())));
+                    }
+                    i++;
+                }
             }
-            i++;
+
         }
     }
 
