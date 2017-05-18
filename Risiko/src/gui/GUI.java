@@ -13,11 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
+import risiko.CardBonus;
 import risiko.Country;
 import risiko.Phase;
 import risiko.Game;
@@ -94,8 +97,8 @@ public class GUI extends JFrame implements GameObserver {
      */
     private void createLabel(String countryName, int x, int y) {
         JLabel label = new JLabel("0");
-        label.setFont(new Font("Serif", Font.BOLD, 16));
-        label.setBounds(x, y, 8, 16);
+        label.setFont(new Font("Verdana", Font.BOLD, 16));
+        label.setBounds(x, y, 10, 16);
         //label.setOpaque(true);
         //label.setBackground(new Color(255, 255, 255, 100));
         mapLayeredPane.add(label);
@@ -457,7 +460,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnArmiesChange(String country, int armies, Color color) {
         JLabel label = countryLabelMap.get(country);
-        int width = (armies > 9) ? 16 : 8;
+        int width = (armies > 9) ? 30 : 15;
         label.setBounds((int) label.getBounds().getX(), (int) label.getBounds().getY(), width, 13);
         label.setForeground(color);
         label.setText(Integer.toString(armies));
@@ -480,6 +483,11 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnNextTurn(Player activePlayer) {
         CardBonusDialog cardBonusDialog = new CardBonusDialog(game);
+    }
+
+    @Override
+    public void updateOnDrowCardBonus(CardBonus lastCardDrowed) {
+        JOptionPane.showMessageDialog(null, "Termini il turno, pescando questa carta", "carta bonus pescata", 0, new ImageIcon(lastCardDrowed.getImage()));
     }
 
 }

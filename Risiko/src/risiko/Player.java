@@ -1,6 +1,7 @@
 package risiko;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.util.ArrayList;
 
 public class Player {
@@ -97,5 +98,9 @@ public class Player {
 
     public String getMissionDescription() {
         return mission.getDescription();
+    }
+     
+    public CardBonus getLastCardBonusDrowed() {
+        return cardBonus.get(cardBonus.size() - 1);
     }
 }

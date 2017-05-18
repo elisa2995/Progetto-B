@@ -3,6 +3,7 @@ package gui;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import risiko.CardBonus;
 import risiko.Player;
 
 public class Observable {
@@ -172,6 +173,7 @@ public class Observable {
 
     }
     
+    
     /**
      * Notifica un cambiamento dopo uno spostamento
      * @param country
@@ -192,7 +194,7 @@ public class Observable {
 
     }
 
-        /**
+    /**
      * Notifica un cambiamento dopo uno spostamento
      * @param country
      * @param armies
@@ -209,7 +211,22 @@ public class Observable {
         for (GameObserver ob : this.obs) {
             ob.updateOnNextTurn(activePlayer);
         }
+    }
+    
+    /**
+     * Notifica un cambiamento dopo uno spostamento
+     */
+    public void notifyDrowCardBonus(CardBonus lastCardDrowed) {
+        synchronized (this) {
+            if (!changed) {
+                return;
+            }
+            clearChanged();
+        }
 
+        for (GameObserver ob : this.obs) {
+            ob.updateOnDrowCardBonus(lastCardDrowed);
+        }
     }
 
     /**

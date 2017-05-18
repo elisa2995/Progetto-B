@@ -318,6 +318,11 @@ public class Game extends Observable {
             throw new PendingOperationsException("Hai ancora armate da posizionare!");
         }
 
+        if (phase == Phase.MOVE && activePlayer.havejustDrowCardBonus()) {
+            setChanged();
+            notifyDrowCardBonus(activePlayer.getLastCardBonusDrowed());
+        }
+
         try {
             this.phase = phase.next();
         } catch (LastPhaseException ex) {
@@ -462,6 +467,7 @@ public class Game extends Observable {
         setChanged();
         notifySetFromCountry(attackerCountryName);
     }
+
     /**
      * Resetta le countries dell'attacco. (Previo controllo sul caller del
      * metodo).
@@ -475,7 +481,7 @@ public class Game extends Observable {
         this.defenderCountry = null;
         this.attackerCountry = null;
         setChanged();
-        switch(getPhase()){
+        switch (getPhase()) {
             case FIGHT:
                 notifySetAttacker(null);
                 break;
@@ -592,12 +598,6 @@ public class Game extends Observable {
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getColorByCountry(attackerCountry));
     }
 
-    public Image getLastCardBonusDrowed() {
-        ArrayList<CardBonus> cards = activePlayer.getCardBonus();
-        CardBonus lastCard = cards.get(cards.size() - 1);
-        return lastCard.getImage();
-    }
-
     public boolean haveJustDrowCard() {
         return activePlayer.havejustDrowCardBonus();
     }
@@ -625,14 +625,14 @@ public class Game extends Observable {
 
     public void move(String toCountryName, int i) {
         Country toCountry = map.getCountryByName(toCountryName);
-        map.move(attackerCountry, toCountry, i);        
+        map.move(attackerCountry, toCountry, i);
         setChanged();
         notifyArmiesChange(toCountryName, toCountry.getArmies(), activePlayer.getColor());
         setChanged();
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), activePlayer.getColor());
         passTurn();
         setChanged();
-        notifyPhaseChange(activePlayer.getName(), phase.name());       
+        notifyPhaseChange(activePlayer.getName(), phase.name());
     }
 
 }
