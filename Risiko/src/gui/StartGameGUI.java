@@ -6,6 +6,8 @@
 package gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,12 +97,11 @@ public class StartGameGUI extends javax.swing.JFrame {
         colorBox4.addActionListener(cbListener);
         colorBox5.addActionListener(cbListener);
         colorBox6.addActionListener(cbListener);
-        
+
         login3.setVisible(false);
         login4.setVisible(false);
         login5.setVisible(false);
         login6.setVisible(false);
-       
 
     }
 
@@ -142,6 +143,7 @@ public class StartGameGUI extends javax.swing.JFrame {
         login4 = new javax.swing.JButton();
         login5 = new javax.swing.JButton();
         login6 = new javax.swing.JButton();
+        commentsLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -237,16 +239,14 @@ public class StartGameGUI extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(registrationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(23, 23, 23)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(registrationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(playerText2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -287,6 +287,10 @@ public class StartGameGUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(24, 24, 24))))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(commentsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(24, 24, 24))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -345,11 +349,13 @@ public class StartGameGUI extends javax.swing.JFrame {
                         .addComponent(colorBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(colorBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(36, 36, 36)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(startButton, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .addComponent(registrationButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(98, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(commentsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(registrationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(62, 62, 62))
         );
 
         pack();
@@ -360,7 +366,7 @@ public class StartGameGUI extends javax.swing.JFrame {
             playerTexts[nPlayers - 1].setVisible(false);
             aiChecks[nPlayers - 1].setVisible(false);
             colorBoxs[nPlayers - 1].setVisible(false);
-            logins[nPlayers -1].setVisible(false);
+            logins[nPlayers - 1].setVisible(false);
             nPlayers--;
         }
     }//GEN-LAST:event_removeButtonActionPerformed
@@ -376,39 +382,44 @@ public class StartGameGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        List<JTextField> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
         boolean valid = true;
         for (int i = 0; i < playerTexts.length; i++) {
             if (aiChecks[i].isSelected() || !aiChecks[i].isSelected() && playerTexts[i].isVisible()) {
-                list.add(playerTexts[i]);
+                list.add(playerTexts[i].getText());
             }
         }
 
-        for (JTextField text : list) {
-            if (text.getText().length() == 0) {
-                valid = false;
+        for (String text : list) {
+            if (text.length() == 0) {
+                commentsLabel.setText("Inserisci i nomi di tutti i giocatori per iniziare la partita");
+                return;
             }
         }
 
-        if (valid) {
-            GUI gui;
-            Map<String, Boolean> players = new HashMap<>();
-            Map<String, String> playersColor = new HashMap<>();
-            String[] colors = cbListener.getUpdateColors(list.size());
-            
-            for (int i = 0; i < list.size(); i++) {                
-                players.put(list.get(i).getText(), aiChecks[i].isSelected());
-                playersColor.put(list.get(i).getText(),colors[i]);
-            }
-            try {
-                gui = new GUI(players, playersColor);
-                gui.setVisible(true);
-                this.dispose();
-            } catch (Exception ex) {
-                Logger.getLogger(StartGameGUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+        if (!checkUsername(list)) {
+            commentsLabel.setText("I nomi dei giocatori devono essere diversi tra loro");
+            return;
         }
+
+        GUI gui;
+        Map<String, Boolean> players = new HashMap<>();
+        Map<String, String> playersColor = new HashMap<>();
+        String[] colors = cbListener.getUpdateColors(list.size());
+
+        for (int i = 0; i < list.size(); i++) {
+            players.put(list.get(i), aiChecks[i].isSelected());
+            playersColor.put(list.get(i), colors[i]);
+        }
+        try {
+            gui = new GUI(players, playersColor);
+            gui.setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(StartGameGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
     }//GEN-LAST:event_startButtonActionPerformed
 
     private void registrationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationButtonActionPerformed
@@ -442,10 +453,11 @@ public class StartGameGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_login6ActionPerformed
 
     /**
-     * Setta il nome del player nel input e lo rende non editabile; 
-     * cambia il bottone di login a logout
+     * Setta il nome del player nel input e lo rende non editabile; cambia il
+     * bottone di login a logout
+     *
      * @param username
-     * @param index 
+     * @param index
      */
     public void setPlayerName(String username, int index) {
         playerTexts[index].setText(username);
@@ -454,15 +466,15 @@ public class StartGameGUI extends javax.swing.JFrame {
     }
 
     /**
-     * Consente di aprire il JDialog per effettuare la login se il 
-     * giocatore scelto non è loggato; se è già loggato consente di 
-     * effettuare il logout
-     * @param index 
+     * Consente di aprire il JDialog per effettuare la login se il giocatore
+     * scelto non è loggato; se è già loggato consente di effettuare il logout
+     *
+     * @param index
      */
-    public void doLogin(int index) {        
+    public void doLogin(int index) {
         if (logins[index].getText().equals("Login")) {
             regDialog.setRegistrationMode(false);
-            regDialog.setIndex(index);            
+            regDialog.setIndex(index);
             regDialog.setPlayers(getPlayers());
             regDialog.setVisible(true);
             this.setVisible(false);
@@ -472,19 +484,34 @@ public class StartGameGUI extends javax.swing.JFrame {
             playerTexts[index].setText("");
         }
     }
-    
+
     /**
      * Ritorna la lista dei giocatori già loggati
-     * @return 
+     *
+     * @return
      */
-    private List getPlayers(){
-        List<String> list=new ArrayList<>();
-        for(int i=0; i<playerTexts.length; i++){
-            if(playerTexts[i].getText().length()!=0 && logins[i].getText().equals("Logout")){
+    private List getPlayers() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < playerTexts.length; i++) {
+            if (playerTexts[i].getText().length() != 0 && logins[i].getText().equals("Logout")) {
                 list.add(playerTexts[i].getText());
             }
         }
         return list;
+    }
+
+    private boolean checkUsername(List<String> players) {
+        System.out.println("sono qui");
+        Object[] players1=players.toArray();
+        Object[] players2 =players1.clone();
+        for (Object s1 : players1) {
+            for (Object s2 : players2) {
+                if (s1.equals(s2)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -501,6 +528,7 @@ public class StartGameGUI extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> colorBox4;
     private javax.swing.JComboBox<String> colorBox5;
     private javax.swing.JComboBox<String> colorBox6;
+    private javax.swing.JLabel commentsLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton login1;
     private javax.swing.JButton login2;
