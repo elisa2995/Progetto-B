@@ -36,7 +36,7 @@ public class GUI extends JFrame implements GameObserver {
 
     public GUI(Map<String, Boolean> players, String[] colors) throws Exception {
         initComponents();
-        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko7.png"))));
+        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko7b.png"))));
         countryLabelMap = new HashMap<>();
         colorCountryNameMap = readColorTextMap("files/ColorCountry.txt");
         init(players, colors);
