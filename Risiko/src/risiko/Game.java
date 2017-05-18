@@ -76,7 +76,7 @@ public class Game extends Observable {
         map.computeBonusArmies(activePlayer);
         phase = Phase.REINFORCE;
         setChanged();
-        notifyPhaseChange(activePlayer.getName(), phase.name());
+        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor() );
         startArtificialPlayerThreads();
     }
 
@@ -335,7 +335,7 @@ public class Game extends Observable {
             passTurn();
         }
         setChanged();
-        notifyPhaseChange(activePlayer.getName(), phase.name());
+        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
     }
 
     /**
@@ -638,7 +638,7 @@ public class Game extends Observable {
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), activePlayer.getColor());
         passTurn();
         setChanged();
-        notifyPhaseChange(activePlayer.getName(), phase.name());
+        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
     }
 
 }

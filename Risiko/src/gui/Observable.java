@@ -124,7 +124,7 @@ public class Observable {
      * @param player
      * @param phase 
      */
-    public void notifyPhaseChange(String player, String phase) {
+    public void notifyPhaseChange(String player, String phase, Color color) {
         synchronized (this) {
             if (!changed) {
                 return;
@@ -132,7 +132,7 @@ public class Observable {
             clearChanged();
         }
         for (GameObserver ob : this.obs) {
-            ob.updateOnPhaseChange(player, phase);
+            ob.updateOnPhaseChange(player, phase, color);
         }
     }
 

@@ -83,11 +83,6 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver{
     }
 
     @Override
-    public void updateOnPhaseChange(String player, String phase) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void updateOnSetAttacker(String countryName) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -129,6 +124,11 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver{
 
     @Override
     public void updateOnDrowCardBonus(CardBonus lastCardDrowed) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void updateOnPhaseChange(String player, String phase, Color color) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
