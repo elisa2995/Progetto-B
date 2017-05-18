@@ -83,7 +83,7 @@ public class LabelMapListener extends MouseInputAdapter {
                 PlayAudio.play("sounds/clickOnShort.wav");
                 if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
-                    game.setAttackerCountry(countryName);
+                    game.setFromCountry(countryName);
                     break;
                 }
                 if (game.getAttackerCountryName() != null && game.controlMovement(countryName)) {

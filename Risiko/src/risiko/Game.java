@@ -454,6 +454,14 @@ public class Game extends Observable {
         notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
     }
 
+    public void setFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+        this.attackerCountry = map.getCountryByName(attackerCountryName);
+        setChanged();
+        notifySetFromCountry(attackerCountryName);
+    }
     /**
      * Resetta le countries dell'attacco. (Previo controllo sul caller del
      * metodo).
@@ -467,7 +475,14 @@ public class Game extends Observable {
         this.defenderCountry = null;
         this.attackerCountry = null;
         setChanged();
-        notifySetAttacker(null);
+        switch(getPhase()){
+            case FIGHT:
+                notifySetAttacker(null);
+                break;
+            case MOVE:
+                notifySetFromCountry(null);
+                break;
+        }
     }
 
     //  M E T O D I   P E R   D A R E   I N F O
@@ -610,10 +625,14 @@ public class Game extends Observable {
 
     public void move(String toCountryName, int i) {
         Country toCountry = map.getCountryByName(toCountryName);
-        map.move(attackerCountry, toCountry, i);
+        map.move(attackerCountry, toCountry, i);        
+        setChanged();
+        notifyArmiesChange(toCountryName, toCountry.getArmies(), activePlayer.getColor());
+        setChanged();
+        notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), activePlayer.getColor());
         passTurn();
         setChanged();
-        notifyPhaseChange(activePlayer.getName(), phase.name());
+        notifyPhaseChange(activePlayer.getName(), phase.name());       
     }
 
 }

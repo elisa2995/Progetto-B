@@ -325,6 +325,9 @@ public class GUI extends JFrame implements GameObserver {
             case "FIGHT":
                 labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
                 break;
+            case "MOVE":
+                labelAdvice.setText("Scegli un tuo territorio da cui spostare una o più armate");
+                break;
         }
     }
 
@@ -374,6 +377,26 @@ public class GUI extends JFrame implements GameObserver {
         this.inputArmies.setMaxArmies(maxArmiesAttacker, maxArmiesDefender);
         repaint();
     }
+    
+    /**
+     * Aggiorna <code>textAreaInfo</code> e <code>labelAdvice</code> quando è
+     * stato scelto il territorio da cui attaccare.
+     *
+     * @param countryName
+     */
+    @Override
+    public void updateOnSetFromCountry(String countryName) {
+        ((GraphicsJLabel) labelMap).resetCone();
+        if (countryName != null) {
+            this.textAreaInfo.setText("Territorio di partenza : " + countryName);
+            labelAdvice.setText("Clicca su un territorio confinante per sceglierlo come destinazione");
+        } else {
+            this.textAreaInfo.setText("");
+            labelAdvice.setText("Scegli un tuo territorio da cui spostare una o più armate");
+        }
+    }
+    
+    
 
     /**
      * Aggiorna  <code>textAreaInfo</code> e <code>labelAdvice</code> una volta

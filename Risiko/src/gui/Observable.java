@@ -76,6 +76,24 @@ public class Observable {
             ob.updateOnSetDefender(countryAttackerName, countryDefenderName, defenderPlayer, maxArmiesAttacker, maxArmiesDefender);
         }
     }
+    
+    /**
+     * Notifica un cambiamento dopo che l'attaccante è stato settato
+     * @param countryName 
+     */
+    public void notifySetFromCountry(String countryName) {
+        synchronized (this) {
+            if (!changed) {
+                return;
+            }
+            clearChanged();
+        }
+
+        for (GameObserver ob : this.obs) {
+            ob.updateOnSetFromCountry(countryName);
+        }
+
+    }
 
     /**
      * Notifica un cambiamento dopo un attacco

@@ -79,4 +79,6 @@ public interface GameObserver {
     public void updateOnArmiesChange(String country, int armies, Color color);
 
     public void updateOnNextTurn(Player activePlayer);
+
+    public void updateOnSetFromCountry(String countryName);
 }
