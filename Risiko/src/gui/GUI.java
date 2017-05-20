@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -35,12 +37,12 @@ public class GUI extends JFrame implements GameObserver {
     private AttackDialog inputArmies;
     private CardBonusDialog cardBonusDialog;
 
-    public GUI(Map<String, Boolean> players, String[] colors) throws Exception {
+    public GUI(Map<String, Boolean> players, Map<String, String> playersColor) throws Exception {
         initComponents();
         labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko7b.png"))));
         countryLabelMap = new HashMap<>();
         colorCountryNameMap = readColorTextMap("files/ColorCountry.txt");
-        init(players, colors);
+        init(players, playersColor);
     }
 
     /**
@@ -49,10 +51,10 @@ public class GUI extends JFrame implements GameObserver {
      * @throws IOException
      * @throws Exception
      */
-    private void init(Map<String, Boolean> players, String[] colors) throws IOException, Exception {
+    private void init(Map<String, Boolean> players, Map<String, String> playersColor) throws IOException, Exception {
         initLabels("files/labelsTerritori.txt");
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
-        game = new Game(players, colors, this);
+        game = new Game(players, playersColor, this);
         LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
@@ -96,8 +98,8 @@ public class GUI extends JFrame implements GameObserver {
      */
     private void createLabel(String countryName, int x, int y) {
         JLabel label = new JLabel("0");
-        label.setFont(new Font("Serif", Font.BOLD, 16));
-        label.setBounds(x, y, 8, 16);
+        label.setFont(new Font("Verdana", Font.BOLD, 16));
+        label.setBounds(x, y, 10, 16);
         //label.setOpaque(true);
         //label.setBackground(new Color(255, 255, 255, 100));
         mapLayeredPane.add(label);
@@ -316,8 +318,9 @@ public class GUI extends JFrame implements GameObserver {
      * @param phase
      */
     @Override
-    public void updateOnPhaseChange(String player, String phase) {
+    public void updateOnPhaseChange(String player, String phase, Color color) {
         this.labelPlayerPhase.setText(player + " " + phase);
+        this.labelPlayerPhase.setForeground(color);
         this.textAreaInfo.setText("");
         switch (phase) {
             case "REINFORCE":
@@ -456,7 +459,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnArmiesChange(String country, int armies, Color color) {
         JLabel label = countryLabelMap.get(country);
-        int width = (armies > 9) ? 16 : 8;
+        int width = (armies > 9) ? 30 : 15;
         label.setBounds((int) label.getBounds().getX(), (int) label.getBounds().getY(), width, 13);
         label.setForeground(color);
         label.setText(Integer.toString(armies));

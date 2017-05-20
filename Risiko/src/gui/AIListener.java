@@ -33,8 +33,8 @@ public class AIListener implements ActionListener {
     
         JCheckBox checkBox=(JCheckBox)e.getSource();
         int index=Arrays.asList(aiChecks).indexOf(checkBox);
-        if(checkBox.isSelected()){
-            players[index].setText("GiocatoreArt");
+        if(checkBox.isSelected()){            
+            players[index].setText("GiocatoreArt"+(index+1));
             players[index].setEditable(false);
             logins[index].setText("Login");
             logins[index].setVisible(false);

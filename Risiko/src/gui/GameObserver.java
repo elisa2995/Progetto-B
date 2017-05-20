@@ -26,7 +26,7 @@ public interface GameObserver {
      * @param player
      * @param phase 
      */
-    public void updateOnPhaseChange(String player, String phase);
+    public void updateOnPhaseChange(String player, String phase, Color color);
 
     /**
      * Metodo chiamato quando viene settato l'attaccante

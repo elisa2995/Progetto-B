@@ -33,7 +33,7 @@ public class movementDialog extends JDialog {
         execute.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                game.move(countryName, (int)movementArmies.getValue());
+                game.move(countryName, (Integer)movementArmies.getValue());
                 movementDialog.this.dispose();
             }
         });

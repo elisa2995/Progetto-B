@@ -1,6 +1,7 @@
 ELISA
 -colori invertiti se li cambio
 -metti che non si pox mettere utenti con lo stesso nome
+-metti freccia per indicare il vincitore dei dadi 
 
 CAROLINA
 -quando metto ultima armata di rinforzo passo direttamente a attack

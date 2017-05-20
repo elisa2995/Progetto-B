@@ -195,7 +195,7 @@ public class UserDialog extends javax.swing.JDialog {
             return;
         } 
         
-        if (checkUsernameInFile(usernameText.getText())) {
+        if (checkUsername(usernameText.getText())) {
             try {
                 registerUser(usernameText.getText(), passwordText.getText());
             } catch (IOException ex) {
@@ -206,7 +206,7 @@ public class UserDialog extends javax.swing.JDialog {
                 gui.setVisible(true);
             }
         } else {
-            commentsText.setText("Username già utilizzato");
+            commentsText.setText("Username già presente nel gioco");
         }
 
     }//GEN-LAST:event_saveUserButtonActionPerformed
