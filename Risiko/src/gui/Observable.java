@@ -192,13 +192,11 @@ public class Observable {
 
     }
 
-        /**
-     * Notifica un cambiamento dopo uno spostamento
-     * @param country
-     * @param armies
-     * @param color 
+     /**
+     * Notifica all'observable che il giocatore del nuovo turno ha delle carte
+     * da giocare.
      */
-    public void notifyNextTurn(Player activePlayer) {
+    public void notifyNextTurn() {
         synchronized (this) {
             if (!changed) {
                 return;
@@ -207,9 +205,25 @@ public class Observable {
         }
 
         for (GameObserver ob : this.obs) {
-            ob.updateOnNextTurn(activePlayer);
+            ob.updateOnNextTurn();
         }
 
+    }
+    
+    /**
+     * Notifica il............... di una carta.
+     */
+    public void notifyDrawnCard(String cardName){
+        synchronized (this) {
+            if (!changed) {
+                return;
+            }
+            clearChanged();
+        }
+
+        for (GameObserver ob : this.obs) {
+            ob.updateOnDrawnCard(cardName);
+        }
     }
 
     /**

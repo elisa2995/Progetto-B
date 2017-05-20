@@ -118,12 +118,17 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver{
     }
 
     @Override
-    public void updateOnNextTurn(Player activePlayer) {
+    public void updateOnSetFromCountry(String countryName) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void updateOnSetFromCountry(String countryName) {
+    public void updateOnNextTurn() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void updateOnDrawnCard(String cardName) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

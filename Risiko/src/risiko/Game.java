@@ -10,17 +10,18 @@ import java.util.Map;
 import gui.Observable;
 import gui.GameObserver;
 import java.awt.Color;
-import java.awt.Image;
+//import java.awt.Image;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import risiko.BonusDeck;
+import risiko.BonusDeck.Card;
 
 public class Game extends Observable {
 
     private Country attackerCountry;
     private Country defenderCountry;
     private RisikoMap map;
+    private BonusDeck deck;
     private List<Player> players;
     private Player activePlayer;
     //private Player winner; serve??
@@ -44,7 +45,7 @@ public class Game extends Observable {
 
         this.players = new ArrayList<>();
         this.activePlayer = null;
-        //this.winner = null;
+        this.deck = new BonusDeck();
         this.map = new RisikoMap();
         this.addObserver(observer);
         init(playersMap, colors);
@@ -80,6 +81,9 @@ public class Game extends Observable {
         startArtificialPlayerThreads();
     }
 
+    /**
+     * Inizia i threads dei giocatori artificiali.
+     */
     private void startArtificialPlayerThreads() {
         for (Player playerThread : this.players) {
             if (playerThread instanceof ArtificialPlayer) {
@@ -92,13 +96,16 @@ public class Game extends Observable {
      * Costruisce nrPlayer giocatori (nome di default "Giocatore-i"), e li
      * aggiunge alla lista {@code List<Player> this.players}.
      *
-     * @param nrPlayers
+     */
+    /**
+     *
+     * @param playersMap
+     * @param colors
      */
     private void buildPlayers(Map<String, Boolean> playersMap, String[] colors) {
 
         Map<String, Color> colorMap = buildColorMap();
         int i = 0;
-        int j = 0;
         for (Map.Entry<String, Boolean> entry : playersMap.entrySet()) {
             if (entry.getValue()) {
                 //this.players.add(new Player("fintoAI_"+entry.getKey(), colorMap.get(colors[i])));
@@ -122,6 +129,59 @@ public class Game extends Observable {
     }
 
     //------------------------  Attacco  ------------------------------------//
+    /**
+     * Setta l'attacker.
+     *
+     * @param attackerCountryName
+     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
+     */
+    public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+        this.attackerCountry = map.getCountryByName(attackerCountryName);
+        setChanged();
+        notifySetAttacker(attackerCountryName);
+    }
+
+    /**
+     * Setta il defender.
+     *
+     * @param defenderCountryName
+     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
+     */
+    public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+        this.defenderCountry = map.getCountryByName(defenderCountryName);
+        setChanged();
+        notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
+    }
+
+    /**
+     * Resetta le countries dell'attacco. (Previo controllo sul caller del
+     * metodo).
+     *
+     * @param aiCaller
+     */
+    public void resetFightingCountries(ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+        this.defenderCountry = null;
+        this.attackerCountry = null;
+        setChanged();
+        switch (getPhase()) {
+            case FIGHT:
+                notifySetAttacker(null);
+                break;
+            case MOVE:
+                notifySetFromCountry(null);
+                break;
+        }
+    }
+
     /**
      * Simula l'attacco tra {@code this.attackerCountry} e
      * {@code this.defenderCountry}, con rispettivamente nrA e nrD armate.
@@ -149,6 +209,9 @@ public class Game extends Observable {
 
         if (conquered) {
             map.updateOnConquer(attackerCountry, defenderCountry, nrA);
+            if (!activePlayer.hasAlreadyDrawnCard()) {
+                drawBonusCard();
+            }
             notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
             if (hasLost(defenderPlayer)) {
                 players.remove(defenderPlayer);
@@ -227,7 +290,7 @@ public class Game extends Observable {
         int dices[] = new int[nrDice];
         int tmp;
         for (int i = 0; i < nrDice; i++) {
-            dices[i] = rollDice();
+            dices[i] = rollDie();
         }
         Arrays.sort(dices);
         if (nrDice > 1) {
@@ -244,7 +307,7 @@ public class Game extends Observable {
      * @return un numero random da 1 a 6
      * @author Andrea
      */
-    private int rollDice() {
+    private int rollDie() {
         return (int) (Math.random() * 6) + 1;
     }
 
@@ -256,7 +319,6 @@ public class Game extends Observable {
      * @param countryName
      * @param nArmies numero di armate da aggiungere
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
-     * @return
      */
     public void reinforce(String countryName, int nArmies, ArtificialPlayer... aiCaller) {
 
@@ -355,11 +417,145 @@ public class Game extends Observable {
         }
 
         //Devo resettare a false JustDrowCardBonus così che si possa pescare con map.updateOnConquer 
-        activePlayer.setJustDrowCard(false);
-        if (!activePlayer.getCardBonus().isEmpty()) {
+        activePlayer.setJustDrawnCard(false);
+        if (!activePlayer.getBonusCards().isEmpty()) {
             setChanged();
-            notifyNextTurn(activePlayer);
+            notifyNextTurn();
         }
+    }
+
+    //-------------------- Carte / spostamento finale ----------------//
+    /**
+     * Ritorna il nome dell'ultima carta pescata dal giocatore di turno.
+     *
+     * @return
+     */
+    public String getLastCardDrawn() {
+        return activePlayer.getLastDrawnCard().name();
+    }
+
+    /**
+     * Ritorna true se il giocatore di turno ha già pescato una carta.
+     *
+     * @return
+     */
+    public boolean hasAlreadyDrawnCard() {
+        return activePlayer.hasAlreadyDrawnCard();
+    }
+
+    /**
+     * Pesca una carta dal mazzo per l'active player.
+     *
+     * @param aiCaller
+     */
+    private void drawBonusCard(ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+        Card card = deck.drawCard();
+        activePlayer.addCard(card);
+        
+        setChanged();
+        notifyDrawnCard(card.name());
+    }
+
+    /**
+     * Ritorna un'arrayList contentente i nomi delle carte dell'active player.
+     *
+     * @return
+     */
+    public ArrayList<String> getCardsNames() {
+        ArrayList<String> bonusCardsNames = new ArrayList<>();
+        for (Card card : activePlayer.getBonusCards()) {
+            bonusCardsNames.add(card.name());
+        }
+        return bonusCardsNames;
+    }
+    
+    /**
+     * Ritorna una mappa che ha come key i nomi delle carte che compongono i tris
+     * giocabili dall'activePlayer, e come value le armate bonus corrisponenti.
+     * @return 
+     */
+    public Map<String[], Integer> getPlayableTris(){
+        Map<Card[], Integer> tris = activePlayer.getPlayableTris(deck.getTris());
+        Map<String[], Integer> playableTrisNames = new HashMap<>();
+        for(Map.Entry<Card[], Integer> entry : tris.entrySet()){
+            Card[] cards = entry.getKey();
+            String[] names = {cards[0].name(), cards[1].name(), cards[2].name()};
+            playableTrisNames.put(names, entry.getValue());
+        }
+        return playableTrisNames;
+    }
+
+    /**
+     * Ritorna true se il giocatore può giocare il tris selezionato.
+     *
+     * @param cards
+     * @return
+     */
+    public boolean canPlayThisTris(Card[] cards) {
+        return activePlayer.canPlayThisTris(cards);
+    }
+
+    /**
+     * Gioca il tris.
+     *
+     * @param cardsNames
+     * @param bonusArmiesTris
+     * @param aiCaller
+     */
+    public void playTris(String[] cardsNames, int bonusArmiesTris, ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller) || cardsNames == null) {
+            return;
+        }
+        activePlayer.playTris(deck.getCardsByNames(cardsNames), bonusArmiesTris);
+    }
+
+    /**
+     * Ritorna il massimo numero di armate per lo spostamento finale.
+     *
+     * @return
+     */
+    public int getMaxArmiesForMovement() {
+        return attackerCountry.getArmies() - 1;
+    }
+
+    /**
+     * Setta il territorio da cui effettuare lo spostamento.
+     *
+     * @param attackerCountryName
+     * @param aiCaller
+     */
+    public void setFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+        this.attackerCountry = map.getCountryByName(attackerCountryName);
+        setChanged();
+        notifySetFromCountry(attackerCountryName);
+    }
+
+    /**
+     * Sposta il numero di armate <code>i</code> da <code>attackerCountry</code>
+     * alla country con name <code>toCountryName</code>
+     *
+     * @param toCountryName
+     * @param i
+     */
+    public void move(String toCountryName, int i, ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+        Country toCountry = map.getCountryByName(toCountryName);
+        map.move(attackerCountry, toCountry, i);
+        setChanged();
+        notifyArmiesChange(toCountryName, toCountry.getArmies(), activePlayer.getColor());
+        setChanged();
+        notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), activePlayer.getColor());
+        passTurn();
+        setChanged();
+        notifyPhaseChange(activePlayer.getName(), phase.name());
     }
 
     //  M E T O D I   R I P R E S I   D A   M A P
@@ -419,70 +615,17 @@ public class Game extends Observable {
         return checkCallerIdentity(aiCaller) && map.controlDefender(attackerCountry, map.getCountryByName(defenderCountryName), activePlayer);
     }
 
+    /**
+     * Controlla che l'active player possa effettuare uno spostamento da
+     * <code> attackerCountry</code> al territorio con nome
+     * <code>toCountryName</code>
+     *
+     * @param toCountryName
+     * @return
+     */
     public boolean controlMovement(String toCountryName) {
         return map.controlMovement(attackerCountry, map.getCountryByName(toCountryName), activePlayer);
 
-    }
-
-    /**
-     * Setta l'attacker.
-     *
-     * @param attackerCountryName
-     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
-     */
-    public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
-        this.attackerCountry = map.getCountryByName(attackerCountryName);
-        setChanged();
-        notifySetAttacker(attackerCountryName);
-    }
-
-    /**
-     * Setta il defender.
-     *
-     * @param defenderCountryName
-     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
-     */
-    public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
-        this.defenderCountry = map.getCountryByName(defenderCountryName);
-        setChanged();
-        notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
-    }
-
-    public void setFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
-        this.attackerCountry = map.getCountryByName(attackerCountryName);
-        setChanged();
-        notifySetFromCountry(attackerCountryName);
-    }
-    /**
-     * Resetta le countries dell'attacco. (Previo controllo sul caller del
-     * metodo).
-     *
-     * @param aiCaller
-     */
-    public void resetFightingCountries(ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
-        this.defenderCountry = null;
-        this.attackerCountry = null;
-        setChanged();
-        switch(getPhase()){
-            case FIGHT:
-                notifySetAttacker(null);
-                break;
-            case MOVE:
-                notifySetFromCountry(null);
-                break;
-        }
     }
 
     //  M E T O D I   P E R   D A R E   I N F O
@@ -590,49 +733,6 @@ public class Game extends Observable {
         notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getColorByCountry(defenderCountry));
         setChanged();
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getColorByCountry(attackerCountry));
-    }
-
-    public Image getLastCardBonusDrowed() {
-        ArrayList<CardBonus> cards = activePlayer.getCardBonus();
-        CardBonus lastCard = cards.get(cards.size() - 1);
-        return lastCard.getImage();
-    }
-
-    public boolean haveJustDrowCard() {
-        return activePlayer.havejustDrowCardBonus();
-    }
-
-    public ArrayList<String> getCardBonusName() {
-        ArrayList<String> CardBonusName = new ArrayList<>();
-        ArrayList<CardBonus> CardBonus = activePlayer.getCardBonus();
-        for (CardBonus card : CardBonus) {
-            CardBonusName.add(card.name());
-        }
-        return CardBonusName;
-    }
-
-    public boolean canPlayThisTris(CardBonus cardBonus1, CardBonus cardBonus2, CardBonus cardBonus3) {
-        return activePlayer.canPlayThisTris(cardBonus1, cardBonus2, cardBonus3);
-    }
-
-    public void playTris(CardBonus cardBonus1, CardBonus cardBonus2, CardBonus cardBonus3, int bonusArmiesTris) {
-        activePlayer.playTris(cardBonus1, cardBonus2, cardBonus3, bonusArmiesTris);
-    }
-
-    public int getMaxArmiesForMovement() {
-        return attackerCountry.getArmies() - 1;
-    }
-
-    public void move(String toCountryName, int i) {
-        Country toCountry = map.getCountryByName(toCountryName);
-        map.move(attackerCountry, toCountry, i);        
-        setChanged();
-        notifyArmiesChange(toCountryName, toCountry.getArmies(), activePlayer.getColor());
-        setChanged();
-        notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), activePlayer.getColor());
-        passTurn();
-        setChanged();
-        notifyPhaseChange(activePlayer.getName(), phase.name());       
     }
 
 }
