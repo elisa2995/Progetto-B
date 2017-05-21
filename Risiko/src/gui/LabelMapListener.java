@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -23,9 +24,11 @@ public class LabelMapListener extends MouseInputAdapter {
     private final BufferedImage bufferedImage;
     private final Map<Color, String> ColorNameCountry;
     private JLabel mapLabel;
+    private GUI gui;
 
-    public LabelMapListener(JLabel mapLabel, Map<Color, String> ColorNameCountry, Game game) {
+    public LabelMapListener(JLabel mapLabel, Map<Color, String> ColorNameCountry, Game game, GUI gui) {
         this.game = game;
+        this.gui = gui;
         this.mapLabel = mapLabel;
         this.bufferedImage = convertToBufferedImage(mapLabel);
         this.ColorNameCountry = ColorNameCountry;
@@ -40,13 +43,12 @@ public class LabelMapListener extends MouseInputAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         String countryName = getCountryFromClick(e);
-
         switch (game.getPhase()) {
             case REINFORCE:
                 if (countryName == null) {
                     PlayAudio.play("sounds/clickOffShort.wav");
                     return;
-                }               
+                }
                 if (game.controlPlayer(countryName) && game.canReinforce(1)) {
                     //Ho ancora bonus armies e sono su un mio territorio
                     game.reinforce(countryName, 1);
@@ -94,7 +96,7 @@ public class LabelMapListener extends MouseInputAdapter {
                 //Sono su un territorio non valido per spostarmi
                 game.resetFightingCountries();
                 break;
-   
+
         }
         // se ultimo reinforce metti nella textArea
     }
@@ -114,44 +116,46 @@ public class LabelMapListener extends MouseInputAdapter {
             e.getComponent().setCursor(Cursor.getDefaultCursor());
             return;
         }
+        JLabel label = gui.getLabelByCountry(countryName);
         mapLabel.setToolTipText(countryName);
         switch (game.getPhase()) {
             case REINFORCE:
                 if (game.controlPlayer(countryName) && game.canReinforce(1)) {
                     //Ho ancora bonus armies e sono su un mio territorio
-                    e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    setHandCursor(e.getComponent(), label);
                 } else {
                     //Non ho più bonusArmies oppure non sono sul mio territorio
-                    e.getComponent().setCursor(Cursor.getDefaultCursor());
+                    setDefaultCursor(e.getComponent(), label);
+                    
                 }
                 break;
             case FIGHT:
                 if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
-                    e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    setHandCursor(e.getComponent(), label);
                     break;
                 }
                 if (game.getAttackerCountryName() != null && game.controlDefender(countryName)) {
                     //Devo scegliere il difensore, sono su un territorio confinante attaccabile
-                    e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    setHandCursor(e.getComponent(), label);
                     break;
                 }
                 //Sono su un territorio non valido per attaccare nè per difendere
-                e.getComponent().setCursor(Cursor.getDefaultCursor());
+                setDefaultCursor(e.getComponent(), label);
                 break;
             case MOVE:
                 if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
-                    e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    setHandCursor(e.getComponent(), label);
                     break;
                 }
                 if (game.getAttackerCountryName() != null && game.controlMovement(countryName)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
-                    e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    setHandCursor(e.getComponent(), label);
                     break;
                 }
                 //Sono su un territorio non valido per spostarmi
-                e.getComponent().setCursor(Cursor.getDefaultCursor());
+                setDefaultCursor(e.getComponent(), label);
                 break;
         }
     }
@@ -187,6 +191,25 @@ public class LabelMapListener extends MouseInputAdapter {
         g.drawImage(image, 0, 0, null);
         g.dispose();
         return newImage;
+    }
+    
+    /**
+     * Setta il cursore a "manina".
+     * @param component
+     * @param label 
+     */
+    private void setHandCursor(Component component, JLabel label) {
+        component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+    /**
+     * Setta il cursore a freccia.
+     * @param component
+     * @param label 
+     */
+    private void setDefaultCursor(Component component, JLabel label) {
+        component.setCursor(Cursor.getDefaultCursor());
+        label.setCursor(Cursor.getDefaultCursor());
     }
 
 }

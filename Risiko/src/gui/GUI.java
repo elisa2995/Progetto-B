@@ -2,6 +2,7 @@ package gui;
 
 import exceptions.PendingOperationsException;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.io.BufferedReader;
@@ -18,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import risiko.Country;
@@ -55,7 +57,7 @@ public class GUI extends JFrame implements GameObserver {
         initLabels("files/labelsTerritori.txt");
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
         game = new Game(players, playersColor, this);
-        LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game);
+        LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game, this);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
         inputArmies = new AttackDialog(game);
@@ -105,6 +107,17 @@ public class GUI extends JFrame implements GameObserver {
         mapLayeredPane.add(label);
         mapLayeredPane.setComponentZOrder(label, 1);
         countryLabelMap.put(countryName, label);
+    }
+
+    /**
+     * Ritorna la jlabel corrispondente al territorio di nome
+     * <code>country</code>.
+     *
+     * @param country
+     * @return
+     */
+    public JLabel getLabelByCountry(String country) {
+        return countryLabelMap.get(country);
     }
 
     /**
@@ -246,7 +259,7 @@ public class GUI extends JFrame implements GameObserver {
         } catch (PendingOperationsException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-        repaint();
+        //repaint();
     }//GEN-LAST:event_buttonNextPhaseActionPerformed
 
     private void buttonAttackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAttackActionPerformed
@@ -379,7 +392,8 @@ public class GUI extends JFrame implements GameObserver {
             labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
         this.inputArmies.setMaxArmies(maxArmiesAttacker, maxArmiesDefender);
-        repaint();
+        //repaint();
+        repaint(textAreaInfo, labelAdvice);
     }
 
     /**
@@ -463,7 +477,7 @@ public class GUI extends JFrame implements GameObserver {
         label.setBounds((int) label.getBounds().getX(), (int) label.getBounds().getY(), width, 13);
         label.setForeground(color);
         label.setText(Integer.toString(armies));
-        repaint();
+        repaint(label);
     }
 
     @Override
@@ -476,6 +490,16 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnDrawnCard(String cardName) {
         inputArmies.setDrawnCard(cardName);
+    }
+    
+    /**
+     * Chiama Component.repaint() sui components passati come parametro del metodo.
+     * @param components 
+     */
+    private void repaint(Component... components) {
+        for (Component c : components) {
+            c.repaint();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
