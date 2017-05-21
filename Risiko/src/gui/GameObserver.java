@@ -76,4 +76,12 @@ public interface GameObserver {
      * @param color 
      */
     public void updateOnArmiesChange(String country, int armies, Color color);
+    
+    /**
+     * metodo chiamato per richiedere al difensore con quante armate difendersi
+     * @param defender
+     * @param countryDefender
+     * @param nrA 
+     */
+    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA);
 }
