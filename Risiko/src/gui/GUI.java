@@ -428,4 +428,18 @@ public class GUI extends JFrame implements GameObserver{
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * se il giocatore è reale viene richiamata una dialog che chiede al difensore con quante armate difendersi
+     * e poi completa l'attacco
+     * @param defender
+     * @param countryDefender
+     * @param attacker
+     * @param countryAttacker
+     * @param nrA 
+     */
+    @Override
+    public void updateOnDefend(String defender, String countryDefender,String attacker, String countryAttacker, int nrA) {
+        
+    }
+
 }

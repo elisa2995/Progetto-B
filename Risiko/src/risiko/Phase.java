@@ -18,7 +18,7 @@ public enum Phase {
      * @throws LastPhaseException se è l'ultima fase del turno.
      */
     public Phase next() throws LastPhaseException {
-
+        
         try {
             return Phase.values()[this.value+1];
         } catch (ArrayIndexOutOfBoundsException e) {
