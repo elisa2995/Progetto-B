@@ -384,9 +384,6 @@ public class RisikoMap {
         this.countryPlayer.put(defenderCountry, attacker);
         attackerCountry.removeArmies(armies);
         defenderCountry.setArmies(armies);
-        if (!attacker.havejustDrowCardBonus()) {
-            attacker.drowBonusCard();
-        }
     }
 
     /**

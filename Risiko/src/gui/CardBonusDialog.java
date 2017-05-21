@@ -3,82 +3,122 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import risiko.CardBonus;
 import risiko.Game;
 
 /**
  * @author andrea
  */
 public class CardBonusDialog extends JDialog {
-    private final Game   game;
+
+    private final Game game;
     private final JPanel imagesPanel;
     private final JPanel buttonPanel;
+    private String drawnCard;
+    private final int WIDTH = 200;
+    private final int HEIGHT = 320;
 
-    public CardBonusDialog(Game game){
-        this.game        = game;
+    public CardBonusDialog(Game game) {
+        this.game = game;
         this.imagesPanel = new JPanel();
         this.buttonPanel = new JPanel();
 
         initImagesPanel();
         initButtonPanel();
         setLayout(new BorderLayout());
-        add(imagesPanel,  BorderLayout.WEST);
-        add(buttonPanel,  BorderLayout.EAST);
-        
+        add(imagesPanel, BorderLayout.WEST);
+        add(buttonPanel, BorderLayout.EAST);
+
         pack();
         setModalityType(DEFAULT_MODALITY_TYPE);
-        setVisible(true);
+        //setVisible(true);
     }
 
     //Creo un JPanel che mostra le immagini di tutte le bonusCard del player, 
     //Con questo panel non si può interagire, è a solo fini illustrativi.
-    private void initImagesPanel() {
-        int righe = game.getCardBonusName().size()/5+1;
-        imagesPanel.setLayout(new GridLayout(righe,5));
-        for (String card : game.getCardBonusName()) {
-            imagesPanel.add(new JLabel(new ImageIcon( CardBonus.valueOf(card).getImage())));
+    public void initImagesPanel() {
+        imagesPanel.removeAll();
+        String path;
+        int cards = game.getCardsNames().size();
+        int rows = cards / 5 + 1;
+        int cols = Math.min(cards, 5);
+        this.setSize(WIDTH*5, HEIGHT*rows);
+        imagesPanel.setLayout(new GridLayout(rows, 5));
+        for (String card : game.getCardsNames()) {
+            path = "images/" + card + ".png";
+            imagesPanel.add(new JLabel(new ImageIcon(path)));
         }
-    }   
+    }
 
     //Creo un JPanel nel quale ci sarà un bottone per ogni tris che le cardBonus del player gli permetteranno di giocare 
-    private void initButtonPanel() {
-        buttonPanel.setLayout(new GridLayout(5,1));
-        buttonPanel.add(createButtonTris("Giocherò il TRIS la prossima volta", null, null, null, 0));
-        
-        if(game.canPlayThisTris(CardBonus.FANTE,  CardBonus.FANTE,  CardBonus.FANTE)) 
-            buttonPanel.add(createButtonTris("Play TRIS: \"Fante-Fante-Fante\", gain  6 Armies",   CardBonus.FANTE,  CardBonus.FANTE,  CardBonus.FANTE,  6));
-        
-        if(game.canPlayThisTris(CardBonus.CANNON, CardBonus.CANNON, CardBonus.CANNON))
-            buttonPanel.add(createButtonTris("Play TRIS: \"Cannon-Cannon-Cannon\", gain  4 Armies",CardBonus.CANNON, CardBonus.CANNON, CardBonus.CANNON, 4));
-        
-        if(game.canPlayThisTris(CardBonus.KNIGHT, CardBonus.KNIGHT, CardBonus.KNIGHT))
-            buttonPanel.add(createButtonTris("Play TRIS: \"Knight-Knight-Knight\", gain  8 Armies",CardBonus.KNIGHT, CardBonus.KNIGHT, CardBonus.KNIGHT, 8));
-        
-        if(game.canPlayThisTris(CardBonus.FANTE,  CardBonus.KNIGHT, CardBonus.CANNON))
-            buttonPanel.add(createButtonTris("Play TRIS: \"Fante-Knight-Cannon\", gain 10 Armies", CardBonus.FANTE,  CardBonus.KNIGHT, CardBonus.CANNON, 10));
-       
-        if(game.canPlayThisTris(CardBonus.JOLLY,  CardBonus.FANTE,  CardBonus.FANTE))
-            buttonPanel.add(createButtonTris("Play TRIS: \"Jolly-Fante-Fante\", gain 12 Armies",   CardBonus.JOLLY,  CardBonus.FANTE,  CardBonus.FANTE,  12));
-       
-        if(game.canPlayThisTris(CardBonus.JOLLY,  CardBonus.CANNON, CardBonus.CANNON))
-            buttonPanel.add(createButtonTris("Play TRIS: \"Jolly-Cannon-Cannon\", gain 12 Armies", CardBonus.JOLLY,  CardBonus.CANNON, CardBonus.CANNON, 12));
-        
-        if(game.canPlayThisTris(CardBonus.JOLLY,  CardBonus.KNIGHT, CardBonus.KNIGHT))
-            buttonPanel.add(createButtonTris("Play TRIS: \"Jolly-Knight-Knight\", gain 12 Armies", CardBonus.JOLLY,  CardBonus.KNIGHT, CardBonus.KNIGHT, 12));
+    public void initButtonPanel() {
+        buttonPanel.removeAll();
+        buttonPanel.setLayout(new GridLayout(5, 1));
+        buttonPanel.add(createButtonTris("Giocherò il TRIS la prossima volta", null, 0));
+
+        Map<String[], Integer> playableTris = game.getPlayableTris();
+        for (Map.Entry<String[], Integer> entry : playableTris.entrySet()) {
+            String[] c = entry.getKey();
+            buttonPanel.add(createButtonTris("Gioca il tris: \"" + getFormattedString(c), c, entry.getValue()));
+        }
     }
-      
-    
-    private JButton createButtonTris(String text, CardBonus cardBonus1, CardBonus cardBonus2, CardBonus cardBonus3, int bonusArmiesTris){
-        JButton ButtonTris = new JButton(text);
-        ButtonTris.addActionListener((ActionEvent e) -> {
-            CardBonusDialog.this.game.playTris(cardBonus1, cardBonus2, cardBonus3, bonusArmiesTris);
-            CardBonusDialog.this.dispose();
+
+    private JButton createButtonTris(String text, String[] cards, int bonusArmiesTris) {
+        JButton buttonTris = new JButton(text);
+        CardBonusDialog dialog = this;
+        buttonTris.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                game.playTris(cards, bonusArmiesTris);
+                dialog.setVisible(false);
+            }
         });
-        return ButtonTris;
-    }  
+
+        /*buttonTris.addActionListener((ActionEvent e) -> {
+            game.playTris(cards, bonusArmiesTris);
+            this.setVisible(false);
+        });*/
+        return buttonTris;
+    }
+
+    /**
+     *
+     * @param c
+     * @return
+     */
+    private String getFormattedString(String[] c) {
+        return getFormattedName(c[0]) + "-" + getFormattedName(c[1]) + "-" + getFormattedName(c[2]);
+    }
+
+    /**
+     * Ritorna i nomi in italiano delle carte.
+     *
+     * @param c
+     * @return
+     */
+    private String getFormattedName(String c) {
+        switch (c) {
+            case "INFANTRY":
+                return "Fante";
+            case "CAVALRY":
+                return "Cavaliere"; // o cavallo??
+            case "ARTILLERY":
+                return "Cannone";
+            case "WILD":
+                return "Jolly";
+            default:
+                System.out.println("Errore in getFormattedName"); // temporaneo
+                return "";
+        }
+    }
+
+    public void setDrawnCard(String card) {
+        this.drawnCard = card;
+    }
 }

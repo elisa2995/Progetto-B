@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class TEST {
     public static void main(String[] args) throws Exception {
-        ArrayList<CardBonus> cards=new ArrayList<>();
+        /*ArrayList<CardBonus> cards=new ArrayList<>();
         cards.add(CardBonus.giveRandomCard());
         cards.add(CardBonus.giveRandomCard());
         cards.add(CardBonus.giveRandomCard());
@@ -29,6 +29,6 @@ public class TEST {
         tris.add(CardBonus.FANTE);
         tris.add(CardBonus.FANTE);
         tris.add(CardBonus.FANTE);
-       // System.out.println(cards.(tris));
+       // System.out.println(cards.(tris));*/
     }
 }

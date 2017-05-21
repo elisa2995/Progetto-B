@@ -20,7 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
-import risiko.CardBonus;
 import risiko.Country;
 import risiko.Phase;
 import risiko.Game;
@@ -36,6 +35,7 @@ public class GUI extends JFrame implements GameObserver {
     private final Map<Color, String> colorCountryNameMap;
     private final Map<String, JLabel> countryLabelMap;
     private AttackDialog inputArmies;
+    private CardBonusDialog cardBonusDialog;
 
     public GUI(Map<String, Boolean> players, Map<String, String> playersColor) throws Exception {
         initComponents();
@@ -61,6 +61,7 @@ public class GUI extends JFrame implements GameObserver {
         inputArmies = new AttackDialog(game);
         inputArmies.setPreferredSize(new Dimension(500, 600));
         inputArmies.pack();
+        cardBonusDialog = new CardBonusDialog(game);
         labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
         labelAdvice.setFont(new Font("Serif", Font.PLAIN, 13));
     }
@@ -128,7 +129,6 @@ public class GUI extends JFrame implements GameObserver {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1400, 650));
-        setPreferredSize(new java.awt.Dimension(1400, 650));
 
         labelPlayerPhase.setBackground(new java.awt.Color(225, 207, 218));
         labelPlayerPhase.setForeground(new java.awt.Color(1, 1, 1));
@@ -188,17 +188,17 @@ public class GUI extends JFrame implements GameObserver {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelPlayerPhase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelAdvice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(mapLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(buttonAttack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(buttonNextPhase, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
-                            .addComponent(buttonMoreInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1)
-                            .addComponent(buttonShowMission, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1012, Short.MAX_VALUE))
-                    .addComponent(labelAdvice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(buttonShowMission, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(buttonMoreInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(buttonNextPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(buttonAttack, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 1251, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -214,11 +214,11 @@ public class GUI extends JFrame implements GameObserver {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(buttonShowMission, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(buttonMoreInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(buttonNextPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(11, 11, 11)
                         .addComponent(buttonAttack, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(mapLayeredPane))
@@ -318,8 +318,9 @@ public class GUI extends JFrame implements GameObserver {
      * @param phase
      */
     @Override
-    public void updateOnPhaseChange(String player, String phase) {
+    public void updateOnPhaseChange(String player, String phase, Color color) {
         this.labelPlayerPhase.setText(player + " " + phase);
+        this.labelPlayerPhase.setForeground(color);
         this.textAreaInfo.setText("");
         switch (phase) {
             case "REINFORCE":
@@ -380,7 +381,7 @@ public class GUI extends JFrame implements GameObserver {
         this.inputArmies.setMaxArmies(maxArmiesAttacker, maxArmiesDefender);
         repaint();
     }
-    
+
     /**
      * Aggiorna <code>textAreaInfo</code> e <code>labelAdvice</code> quando è
      * stato scelto il territorio da cui attaccare.
@@ -398,8 +399,6 @@ public class GUI extends JFrame implements GameObserver {
             labelAdvice.setText("Scegli un tuo territorio da cui spostare una o più armate");
         }
     }
-    
-    
 
     /**
      * Aggiorna  <code>textAreaInfo</code> e <code>labelAdvice</code> una volta
@@ -467,6 +466,18 @@ public class GUI extends JFrame implements GameObserver {
         repaint();
     }
 
+    @Override
+    public void updateOnNextTurn() {
+        cardBonusDialog.initImagesPanel();
+        cardBonusDialog.initButtonPanel();
+        cardBonusDialog.setVisible(true);
+    }
+
+    @Override
+    public void updateOnDrawnCard(String cardName) {
+        inputArmies.setDrawnCard(cardName);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
     private javax.swing.JButton buttonMoreInfo;
@@ -480,14 +491,18 @@ public class GUI extends JFrame implements GameObserver {
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * se il giocatore è reale viene richiamata una dialog che chiede al difensore con quante armate difendersi
+     * e poi completa l'attacco
+     * @param defender
+     * @param countryDefender
+     * @param attacker
+     * @param countryAttacker
+     * @param nrA 
+     */
     @Override
-    public void updateOnNextTurn(Player activePlayer) {
-        CardBonusDialog cardBonusDialog = new CardBonusDialog(game);
-    }
-
-    @Override
-    public void updateOnDrowCardBonus(CardBonus lastCardDrowed) {
-        JOptionPane.showMessageDialog(null, "Termini il turno, pescando questa carta", "carta bonus pescata", 0, new ImageIcon(lastCardDrowed.getImage()));
+    public void updateOnDefend(String defender, String countryDefender,String attacker, String countryAttacker, int nrA) {
+        
     }
 
 }
