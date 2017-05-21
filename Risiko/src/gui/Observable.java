@@ -37,6 +37,28 @@ public class Observable {
         }
 
     }
+    
+    /**
+     * notificha che chi viene attaccato deve scegliere con quante armate deve difendersi
+     * @param defender  giocatore attaccato
+     * @param defenderCountry territorio attaccato
+     * @param attacker  attaccante 
+     * @param attackerCountry   territorio attaccante
+     * @param nrA numero di armate da cui si viene attaccati
+     */
+    public void notifyDefender(String defender, String defenderCountry, String attacker, String attackerCountry, int nrA) {
+        synchronized (this) {
+            if (!changed) {
+                return;
+            }
+            clearChanged();
+        }
+
+        for (GameObserver ob : this.obs) {
+            ob.updateOnDefend(defender, defenderCountry, attacker, attackerCountry, nrA);
+        }
+
+    }
 
     /**
      * Notifica un cambiamento dopo che l'attaccante è stato settato
