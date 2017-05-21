@@ -2,6 +2,7 @@
 package gui;
 
 import java.awt.Color;
+import risiko.Player;
 
 /**
  * A class can implement the <code>Observer</code> interface when it
@@ -25,7 +26,7 @@ public interface GameObserver {
      * @param player
      * @param phase 
      */
-    public void updateOnPhaseChange(String player, String phase);
+    public void updateOnPhaseChange(String player, String phase, Color color);
 
     /**
      * Metodo chiamato quando viene settato l'attaccante
@@ -84,4 +85,10 @@ public interface GameObserver {
      * @param nrA 
      */
     public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA);
+
+    public void updateOnNextTurn();
+
+    public void updateOnSetFromCountry(String countryName);
+
+    public void updateOnDrawnCard(String cardName);
 }

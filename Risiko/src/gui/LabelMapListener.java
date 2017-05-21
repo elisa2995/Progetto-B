@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputAdapter;
 import risiko.Game;
 import utils.PlayAudio;
@@ -41,21 +40,27 @@ public class LabelMapListener extends MouseInputAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         String countryName = getCountryFromClick(e);
-        if (countryName == null) {
-            PlayAudio.play("sounds/clickOffShort.wav");
-            game.resetFightingCountries();
-            return;
-        }
-        PlayAudio.play("sounds/clickOnShort.wav");
+
         switch (game.getPhase()) {
             case REINFORCE:
-                if (game.controlAttacker(countryName) && game.canReinforce(1)) {
+                if (countryName == null) {
+                    PlayAudio.play("sounds/clickOffShort.wav");
+                    return;
+                }               
+                if (game.controlPlayer(countryName) && game.canReinforce(1)) {
                     //Ho ancora bonus armies e sono su un mio territorio
                     game.reinforce(countryName, 1);
                     //reinforce chiama notify(), la gui si aggiorna
+                    PlayAudio.play("sounds/clickOnShort.wav");
                 }
                 break;
             case FIGHT:
+                if (countryName == null) {
+                    PlayAudio.play("sounds/clickOffShort.wav");
+                    game.resetFightingCountries();
+                    return;
+                }
+                PlayAudio.play("sounds/clickOnShort.wav");
                 if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
                     game.setAttackerCountry(countryName);
@@ -69,6 +74,27 @@ public class LabelMapListener extends MouseInputAdapter {
                 //Sono su un territorio non valido per attaccare nè per difendere
                 game.resetFightingCountries();
                 break;
+            case MOVE:
+                if (countryName == null) {
+                    PlayAudio.play("sounds/clickOffShort.wav");
+                    game.resetFightingCountries();
+                    return;
+                }
+                PlayAudio.play("sounds/clickOnShort.wav");
+                if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
+                    //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
+                    game.setFromCountry(countryName);
+                    break;
+                }
+                if (game.getAttackerCountryName() != null && game.controlMovement(countryName)) {
+                    //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
+                    new movementDialog(game, countryName);
+                    break;
+                }
+                //Sono su un territorio non valido per spostarmi
+                game.resetFightingCountries();
+                break;
+   
         }
         // se ultimo reinforce metti nella textArea
     }
@@ -91,7 +117,7 @@ public class LabelMapListener extends MouseInputAdapter {
         mapLabel.setToolTipText(countryName);
         switch (game.getPhase()) {
             case REINFORCE:
-                if (game.controlAttacker(countryName) && game.canReinforce(1)) {
+                if (game.controlPlayer(countryName) && game.canReinforce(1)) {
                     //Ho ancora bonus armies e sono su un mio territorio
                     e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 } else {
@@ -111,6 +137,20 @@ public class LabelMapListener extends MouseInputAdapter {
                     break;
                 }
                 //Sono su un territorio non valido per attaccare nè per difendere
+                e.getComponent().setCursor(Cursor.getDefaultCursor());
+                break;
+            case MOVE:
+                if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
+                    //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
+                    e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    break;
+                }
+                if (game.getAttackerCountryName() != null && game.controlMovement(countryName)) {
+                    //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
+                    e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    break;
+                }
+                //Sono su un territorio non valido per spostarmi
                 e.getComponent().setCursor(Cursor.getDefaultCursor());
                 break;
         }

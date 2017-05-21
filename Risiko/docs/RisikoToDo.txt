@@ -1,0 +1,21 @@
+ELISA
+-colori invertiti se li cambio
+-metti che non si pox mettere utenti con lo stesso nome
+-metti freccia per indicare il vincitore dei dadi 
+
+CAROLINA
+-quando metto ultima armata di rinforzo passo direttamente a attack
+
+FEDERICO
+-guarda il progetti di poker e sette e mezzo per come vedono le carte
+-togliere che se schiaccio fuori durante rinforzo fa sparire la scritta
+-in labelmap listener cambia controlAttacker nella reinforce con un controlIfMyCountry
+
+ANDREA
+-carte bonus:
+	-togliere da game(observer)
+	-mostra la carta all'inizio dell a fase di spostamento
+-fase di spostamento
+
+ALESSANDRO
+-finire giocatore artificiale

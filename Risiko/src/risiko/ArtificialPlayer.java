@@ -201,7 +201,6 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     public void updateOnReinforce(String countryName, int bonusArmies) {
     }
 
-    @Override
     public void updateOnPhaseChange(String player, String phase) {
     }
 
@@ -235,6 +234,25 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     }
 
     @Override
+    public void updateOnSetFromCountry(String countryName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void updateOnNextTurn() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void updateOnDrawnCard(String cardName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void updateOnPhaseChange(String player, String phase, Color color) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA) {
         if (this.getName().equals(defender)) {
             this.currentAction = Action.DEFEND;

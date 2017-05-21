@@ -18,13 +18,13 @@ Scandinavia,Islanda,Gran Bretagna,Europa Settentrionale,Ucraina
 Gran Bretagna,Islanda,Scandinavia,Europa Settentrionale,Europa Occidentale
 Europa Settentrionale,Gran Bretagna,Scandinavia,Europa Occidentale,Europa Meridionale,Ucraina
 Europa Occidentale,Gran Bretagna,Europa Meridionale,Africa del Nord,Europa Settentrionale
-Europa Meridionale,Europa Settentrionale,Europa Occidentale,Egitto,Ucraina,Medio Oriente
+Europa Meridionale,Europa Settentrionale,Europa Occidentale,Egitto,Africa del Nord,Ucraina,Medio Oriente
 Ucraina,Scandinavia,Europa Settentrionale,Europa Meridionale,Urali,Afghanistan,Medio Oriente
 -Europa-7
-Africa del Nord,Europa Occidentale,Egitto,Africa Orientale,Congo,Brasile
+Africa del Nord,Europa Occidentale,Europa Meridionale,Egitto,Africa Orientale,Congo,Brasile
 Egitto,Europa Meridionale,Africa del Nord,Africa Orientale,Medio Oriente
 Congo,Africa del Nord,Africa Orientale,Africa del Sud
-Africa Orientale,Egitto,Africa del Nord,Congo,Africa del Sud,Madagascar
+Africa Orientale,Egitto,Africa del Nord,Congo,Africa del Sud,Madagascar,Medio Oriente
 Africa del Sud,Madagascar,Congo,Africa Orientale
 Madagascar,Africa Orientale,Africa del Sud
 -Africa-6
@@ -35,10 +35,10 @@ Cita,Siberia,Mongolia,Kamchatka,Jacuzia
 Kamchatka,Jacuzia,Cita,Mongolia,Giappone,Alaska
 Giappone,Kamchatka,Mongolia
 Mongolia,Cita,Siberia,Cina,Giappone,Kamchatka
-Afghanistan,Urali,Ucraina,Medio Oriente,Cina
-Medio Oriente,Ucraina,Europa Meridionale,India,Egitto,Cina
-India,Cina,Medio Oriente,Siam
-Cina,Mongolia,Siberia,Urali,Afghanistan,Medio Oriente,India,Siam
+Afghanistan,Urali,Ucraina,Medio Oriente,Cina,India
+Medio Oriente,Ucraina,Europa Meridionale,India,Egitto,Africa Orientale,Afghanistan
+India,Cina,Medio Oriente,Siam,Afghanistan
+Cina,Mongolia,Siberia,Urali,Afghanistan,India,Siam
 Siam,Cina,India,Indonesia
 -Asia-12
 Indonesia,Siam,Nuova Guinea,Australia Occidentale

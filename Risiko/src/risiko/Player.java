@@ -1,23 +1,33 @@
 package risiko;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import risiko.BonusDeck.Card;
 
 public class Player {
-    private ArrayList<CardBonus> cardBonus;
-    private String  name;
-    private Color   color;
-    private int     contaCarte[];
-    private int     bonusArmies;
-    private boolean justDrowCard;
-    
+
+    private Mission mission;
+    private ArrayList<Card> bonusCards;
+    private String name;
+    private Color color;
+    //private int contaCarte[];
+    private int bonusArmies;
+    private boolean alreadyDrawnCard;
+
     public Player(String name, Color color) {
-        this.justDrowCard=false;
+        this.alreadyDrawnCard = false;
         this.bonusArmies = 0;
-        this.contaCarte  = new int[4];
-        this.cardBonus   = new ArrayList<>();
-        this.color       = color;
-        this.name        = name;
+        this.mission = null;
+        //this.contaCarte = new int[4];
+        this.bonusCards = new ArrayList<>();
+        this.color = color;
+        this.name = name;
     }
 
     public String getName() {
@@ -32,78 +42,97 @@ public class Player {
         this.name = name;
     }
 
-    public void setBonusArmies(int bonusArmies) {
-        this.bonusArmies = bonusArmies;
+    public void addBonusArmies(int bonusArmies) {
+        this.bonusArmies += bonusArmies;
     }
-    
-    public void decrementBonusArmies(int bonusArmies){
-        this.bonusArmies-=bonusArmies;
+
+    public void decrementBonusArmies(int bonusArmies) {
+        this.bonusArmies -= bonusArmies;
     }
-    
-    public Color getColor(){
+
+    public Color getColor() {
         return this.color;
     }
 
-    public ArrayList<CardBonus> getCardBonus() {
-        return cardBonus;
+    public Mission getMission() {
+        return mission;
     }
 
-    public void countCardsByType(){
-        for (int i = 0; i < 4; i++) 
-            contaCarte[i]=0;
-        for (CardBonus cb : cardBonus) 
-            contaCarte[cb.ordinal()]++;
-    }
-        
-    public void playTris(CardBonus cardBonus1, CardBonus cardBonus2, CardBonus cardBonus3, int bonusArmiesTris){
-        cardBonus.remove(cardBonus1);
-        cardBonus.remove(cardBonus2);
-        cardBonus.remove(cardBonus3);
-        bonusArmies+=bonusArmiesTris;
-    }
-        
-    public boolean canPlay_3Cannon_Tris(){
-        return contaCarte[2]>=3;
-    }
-    
-    public boolean canPlay_3Fants_Tris(){
-        return contaCarte[0]>=3;
-    }
-    
-    public boolean canPlay_3Knight_Tris(){
-        return contaCarte[1]>=3;
-    }
-    
-    public boolean canPlay_Fants_Knight_Cannon_Tris(){
-        return (contaCarte[0]>=1 && contaCarte[1]>=1 && contaCarte[2]>=1);
-    }
-    
-    public boolean canPlay_Jolly_2Fants_Tris(){
-        return (contaCarte[3]>=1 && contaCarte[0]>=2);
-    }
-    
-    public boolean canPlay_Jolly_2Cannon_Tris(){
-        return (contaCarte[3]>=1 && contaCarte[2]>=2);
-    }
-    
-    public boolean canPlay_Jolly_2Knight_Tris(){
-        return (contaCarte[3]>=1 && contaCarte[1]>=2);
-    }
-    
-    public void drowBonusCard(){
-        this.cardBonus.add(CardBonus.giveRandomCard());
-        this.justDrowCard=true;
-    }
-    
-    public ArrayList<CardBonus> getAllBonusCard(){
-        return this.cardBonus;
+    public void setMission(Mission mission) {
+        this.mission = mission;
     }
 
-    public boolean havejustDrowCardBonus() {
-        return justDrowCard;
+    public ArrayList<Card> getBonusCards() {
+        return bonusCards;
     }
 
-    public void setJustDrowCard(boolean justDrowCard) {
-        this.justDrowCard = justDrowCard;
+    /**
+     * Gioca il tris di carte, guadagna le corrispettive bonus aramies.
+     *
+     * @param cards
+     * @param bonusArmiesTris
+     */
+    public void playTris(Card[] cards, int bonusArmiesTris) {
+        for (Card card : cards) {
+            bonusCards.remove(card);
+        }
+        bonusArmies += bonusArmiesTris;
+    }
+
+    /**
+     * Ritorna true se il giocatore può giocare il tris di carte
+     * <code> cards</code>. <code>cards</code> deve essere un array di 3
+     * elementi, o tutti dello stesso tipo, o tutti diversi.
+     *
+     * @param cards
+     * @return
+     */
+    public boolean canPlayThisTris(Card[] cards) {
+        if (cards[0].equals(cards[1]) && cards[1].equals(cards[2])) {  // elementi tutti uguali
+            return (Collections.frequency(bonusCards, cards[0])) >= cards.length; //3
+        }
+        if (cards[0].equals(cards[1])) { // 2 elementi uguali + 1 jolly (in caso di 3 uguali ho già fatto return)
+            return (Collections.frequency(bonusCards, cards[0])) >= 2 && bonusCards.contains(Card.WILD);
+        }
+
+        return bonusCards.containsAll(Arrays.asList(cards)); // 3 elementi diversi
+    }
+
+    /**
+     * Ritorna i tris giocabili dal player.
+     *
+     * @param tris
+     * @return
+     */
+    public Map<Card[], Integer> getPlayableTris(Map<Card[], Integer> tris) {
+        Map<Card[], Integer> playableTris = new HashMap<>();
+        for (Map.Entry<Card[], Integer> entry : tris.entrySet()) {
+            Card[] coll = entry.getKey();
+            if (canPlayThisTris(coll)) {
+                playableTris.put(coll, entry.getValue());
+            }
+        }
+        return playableTris;
+    }
+
+    public void addCard(Card card) {
+        bonusCards.add(card);
+        this.alreadyDrawnCard = true;
+    }
+
+    public boolean hasAlreadyDrawnCard() {
+        return alreadyDrawnCard;
+    }
+
+    public void setJustDrawnCard(boolean alreadyDrawn) {
+        this.alreadyDrawnCard = alreadyDrawn;
+    }
+
+    public Card getLastDrawnCard() {
+        return bonusCards.get(bonusCards.size() - 1);
+    }
+
+    public String getMissionDescription() {
+        return mission.getDescription();
     }
 }

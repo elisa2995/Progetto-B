@@ -4,7 +4,7 @@ import exceptions.LastPhaseException;
 
 
 public enum Phase {
-    REINFORCE, FIGHT; //MOVE, PLAYCARDS, ecc
+    REINFORCE, FIGHT, MOVE;
 
     private final int value;
 
