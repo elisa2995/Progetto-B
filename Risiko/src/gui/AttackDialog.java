@@ -92,25 +92,29 @@ public class AttackDialog extends JDialog {
                 //quindi occorre salvare il valore ritornante da game.haveJustDrowCard() prima di invocare game.attack() 
                 //useremo la variabile haveJustDrowCard nel caso isConquered fosse true.
                 boolean hasAlreadyDrawnCard = game.hasAlreadyDrawnCard();
-
+                ImageIcon icon;
                 game.attack((int) attackerArmies.getValue(), (int) defenderArmies.getValue());
                 for (int i = 0; i < diceR.length; i++) {
-                    if (i < attackerDice.length) {
-                        ImageIcon icon = new ImageIcon(imagePath + attackerDice[i] + "R.png");
-                        diceR[i].setIcon(icon);
+                    /*if (i < attackerDice.length) {
+                        icon = new ImageIcon(imagePath + attackerDice[i] + "R.png");
+                        //diceR[i].setIcon(icon);
                     } else {
-                        ImageIcon icon = null;
-                        diceR[i].setIcon(icon);
-                    }
+                        icon = null;
+                        //diceR[i].setIcon(icon);
+                    }*/
+                    icon=(i < attackerDice.length)? new ImageIcon(imagePath + attackerDice[i] + "R.png"):null;
+                    diceR[i].setIcon(icon);
                 }
                 for (int i = 0; i < diceB.length; i++) {
-                    if (i < defenderDice.length) {
-                        ImageIcon icon = new ImageIcon(imagePath + defenderDice[i] + "B.png");
-                        diceB[i].setIcon(icon);
+                   /* if (i < defenderDice.length) {
+                        icon = new ImageIcon(imagePath + defenderDice[i] + "B.png");
+                        //diceB[i].setIcon(icon);
                     } else {
-                        ImageIcon icon = null;
-                        diceB[i].setIcon(icon);
-                    }
+                        icon = null;
+                        //diceB[i].setIcon(icon);
+                    }*/
+                    icon=(i < defenderDice.length)?  new ImageIcon(imagePath + defenderDice[i] + "B.png"):null;
+                    diceB[i].setIcon(icon);
                 }
 
                 if (isConquered) {
@@ -123,7 +127,7 @@ public class AttackDialog extends JDialog {
                     } else {
                         JOptionPane.showMessageDialog(null, "Complimenti,\nhai conquistato " + getDefenderCountryName()
                                 + ",\ne pescato questa carta.", "Conquered",
-                                JOptionPane.INFORMATION_MESSAGE, new ImageIcon("images/"+drawnCard+".png"));
+                                JOptionPane.INFORMATION_MESSAGE, new ImageIcon("images/" + drawnCard + ".png"));
                     }
                     inputArmies.setVisible(false);
                     for (int i = 0; i < diceR.length; i++) {
@@ -158,13 +162,13 @@ public class AttackDialog extends JDialog {
         dialogPanel.add(execute);
         dialogPanel.add(new JLabel());
         dialogPanel.add(dice1R);
-        dialogPanel.add(new JLabel("hola"));
+        dialogPanel.add(new JLabel());
         dialogPanel.add(dice1B);
         dialogPanel.add(dice2R);
-        dialogPanel.add(new JLabel("hola"));
+        dialogPanel.add(new JLabel());
         dialogPanel.add(dice2B);
         dialogPanel.add(dice3R);
-        dialogPanel.add(new JLabel("hola"));
+        dialogPanel.add(new JLabel());
         dialogPanel.add(dice3B);
         inputArmies.add(dialogPanel);
         inputArmies.setModal(true);

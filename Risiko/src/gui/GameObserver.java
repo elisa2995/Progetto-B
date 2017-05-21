@@ -82,6 +82,8 @@ public interface GameObserver {
      * metodo chiamato per richiedere al difensore con quante armate difendersi
      * @param defender
      * @param countryDefender
+     * @param attacker
+     * @param countryAttacker
      * @param nrA 
      */
     public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA);

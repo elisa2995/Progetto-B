@@ -34,7 +34,8 @@ public class GUI extends JFrame implements GameObserver {
     private Game game;
     private final Map<Color, String> colorCountryNameMap;
     private final Map<String, JLabel> countryLabelMap;
-    private AttackDialog inputArmies;
+    private FightDialog inputArmies;
+    //private AttackDialog inputArmies;
     private CardBonusDialog cardBonusDialog;
 
     public GUI(Map<String, Boolean> players, Map<String, String> playersColor) throws Exception {
@@ -58,9 +59,10 @@ public class GUI extends JFrame implements GameObserver {
         LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
-        inputArmies = new AttackDialog(game);
-        inputArmies.setPreferredSize(new Dimension(500, 600));
-        inputArmies.pack();
+        //inputArmies = new AttackDialog(game);
+        inputArmies = new FightDialog(game, this, true);
+        //inputArmies.setPreferredSize(new Dimension(500, 600));
+        //inputArmies.pack();
         cardBonusDialog = new CardBonusDialog(game);
         labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
         labelAdvice.setFont(new Font("Serif", Font.PLAIN, 13));
@@ -492,17 +494,18 @@ public class GUI extends JFrame implements GameObserver {
     // End of variables declaration//GEN-END:variables
 
     /**
-     * se il giocatore è reale viene richiamata una dialog che chiede al difensore con quante armate difendersi
-     * e poi completa l'attacco
+     * se il giocatore è reale viene richiamata una dialog che chiede al
+     * difensore con quante armate difendersi e poi completa l'attacco
+     *
      * @param defender
      * @param countryDefender
      * @param attacker
      * @param countryAttacker
-     * @param nrA 
+     * @param nrA
      */
     @Override
-    public void updateOnDefend(String defender, String countryDefender,String attacker, String countryAttacker, int nrA) {
-        
+    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA) {
+
     }
 
 }
