@@ -66,8 +66,7 @@ public class GraphicsJLabel extends JLabel {
                 yy[2] = yy[1] + defaultWidth * sin(alpha);
                 //xx[2] = xx[1] + (xx[3] - xx[0]);
                 //yy[2] = yy[1] + (yy[3] - yy[0]);
-                label.repaint();
-                label.paintComponent(label.getGraphics());
+                label.updateUI();
             }
         });
     }
@@ -82,8 +81,7 @@ public class GraphicsJLabel extends JLabel {
             public void run() {
                xx=new double[]{0,0,0};
                yy= new double[]{0,0,0};
-               label.repaint();
-               label.paintComponent(label.getGraphics());
+               label.updateUI();
             }
         });
         

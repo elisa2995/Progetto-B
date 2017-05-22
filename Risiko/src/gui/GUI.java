@@ -2,6 +2,7 @@ package gui;
 
 import exceptions.PendingOperationsException;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.io.BufferedReader;
@@ -12,12 +13,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import risiko.Country;
@@ -40,7 +44,7 @@ public class GUI extends JFrame implements GameObserver {
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         initComponents();
-        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko7b.png"))));
+        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko.png"))));
         countryLabelMap = new HashMap<>();
         colorCountryNameMap = readColorTextMap("files/ColorCountry.txt");
         init(players, playersColor);
@@ -56,7 +60,7 @@ public class GUI extends JFrame implements GameObserver {
         initLabels("files/labelsTerritori.txt");
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
         game = new Game(players, playersColor, this);
-        LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game);
+        LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game, this);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
         //inputArmies = new AttackDialog(game);
@@ -99,14 +103,26 @@ public class GUI extends JFrame implements GameObserver {
      * @param y
      */
     private void createLabel(String countryName, int x, int y) {
-        JLabel label = new JLabel("0");
-        label.setFont(new Font("Verdana", Font.BOLD, 16));
-        label.setBounds(x, y, 10, 16);
+
+        JLabel label = new JLabel();
+        label.setFont(new Font("Serif", Font.BOLD, 16));
+        label.setBounds(x, y, 30, 30);
         //label.setOpaque(true);
         //label.setBackground(new Color(255, 255, 255, 100));
         mapLayeredPane.add(label);
         mapLayeredPane.setComponentZOrder(label, 1);
         countryLabelMap.put(countryName, label);
+    }
+
+    /**
+     * Ritorna la jlabel corrispondente al territorio di nome
+     * <code>country</code>.
+     *
+     * @param country
+     * @return
+     */
+    public JLabel getLabelByCountry(String country) {
+        return countryLabelMap.get(country);
     }
 
     /**
@@ -248,7 +264,7 @@ public class GUI extends JFrame implements GameObserver {
         } catch (PendingOperationsException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-        repaint();
+        //repaint();
     }//GEN-LAST:event_buttonNextPhaseActionPerformed
 
     private void buttonAttackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAttackActionPerformed
@@ -381,7 +397,8 @@ public class GUI extends JFrame implements GameObserver {
             labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
         this.inputArmies.setMaxArmies(maxArmiesAttacker, maxArmiesDefender);
-        repaint();
+        //repaint();
+        repaint(textAreaInfo, labelAdvice);
     }
 
     /**
@@ -460,12 +477,44 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnArmiesChange(String country, int armies, Color color) {
+        Map<Color,String> colorMap = buildColorMap();
+        String colorToString = colorMap.get(color);
         JLabel label = countryLabelMap.get(country);
-        int width = (armies > 9) ? 30 : 15;
-        label.setBounds((int) label.getBounds().getX(), (int) label.getBounds().getY(), width, 13);
-        label.setForeground(color);
+        label.setForeground(Color.WHITE);
         label.setText(Integer.toString(armies));
+        label.setHorizontalTextPosition(JLabel.CENTER);
+        try {
+            switch(colorToString){
+                case "Rosso":   
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/redlabel1.png"))));
+                    break;
+                
+                case "Verde":
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/greenlabel1.png"))));
+                    break;
+                
+                case "Blu":   
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/bluelabel1.png"))));
+                    break;
+                
+                case "Giallo":   
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/yellowlabel1.png"))));
+                    break;
+                
+                case "Viola":   
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/purplelabel1.png"))));
+                    break;
+                
+                case "Nero":   
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/blacklabel2.png"))));
+                    break;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         repaint();
+        repaint(label);
     }
 
     @Override
@@ -478,6 +527,27 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnDrawnCard(String cardName) {
         inputArmies.setDrawnCard(cardName);
+    }
+    
+    private Map<Color, String> buildColorMap() {
+        Map<Color, String> colorMap = new HashMap<>();
+        colorMap.put(new Color(255, 0, 0), "Rosso");
+        colorMap.put(new Color(0, 232, 0), "Verde");
+        colorMap.put(new Color(0, 0, 255), "Blu");
+        colorMap.put(new Color(255, 255, 0), "Giallo");
+        colorMap.put(new Color(255, 0, 255), "Viola");
+        colorMap.put(new Color(0, 0, 0), "Nero");
+        return colorMap;
+    }
+    
+    /**
+     * Chiama Component.repaint() sui components passati come parametro del metodo.
+     * @param components 
+     */
+    private void repaint(Component... components) {
+        for (Component c : components) {
+            c.repaint();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
