@@ -37,6 +37,28 @@ public class Observable {
         }
 
     }
+    
+    /**
+     * notificha che chi viene attaccato deve scegliere con quante armate deve difendersi
+     * @param defender  giocatore attaccato
+     * @param defenderCountry territorio attaccato
+     * @param attacker  attaccante 
+     * @param attackerCountry   territorio attaccante
+     * @param nrA numero di armate da cui si viene attaccati
+     */
+    public void notifyDefender(String defender, String defenderCountry, String attacker, String attackerCountry, int nrA) {
+        synchronized (this) {
+            if (!changed) {
+                return;
+            }
+            clearChanged();
+        }
+
+        for (GameObserver ob : this.obs) {
+            ob.updateOnDefend(defender, defenderCountry, attacker, attackerCountry, nrA);
+        }
+
+    }
 
     /**
      * Notifica un cambiamento dopo che l'attaccante è stato settato
@@ -123,7 +145,7 @@ public class Observable {
      * @param player
      * @param phase 
      */
-    public void notifyPhaseChange(String player, String phase) {
+    public void notifyPhaseChange(String player, String phase, Color color) {
         synchronized (this) {
             if (!changed) {
                 return;
@@ -131,7 +153,7 @@ public class Observable {
             clearChanged();
         }
         for (GameObserver ob : this.obs) {
-            ob.updateOnPhaseChange(player, phase);
+            ob.updateOnPhaseChange(player, phase, color);
         }
     }
 
@@ -172,6 +194,7 @@ public class Observable {
 
     }
     
+    
     /**
      * Notifica un cambiamento dopo uno spostamento
      * @param country
@@ -192,13 +215,11 @@ public class Observable {
 
     }
 
-        /**
-     * Notifica un cambiamento dopo uno spostamento
-     * @param country
-     * @param armies
-     * @param color 
+     /**
+     * Notifica all'observable che il giocatore del nuovo turno ha delle carte
+     * da giocare.
      */
-    public void notifyNextTurn(Player activePlayer) {
+    public void notifyNextTurn() {
         synchronized (this) {
             if (!changed) {
                 return;
@@ -207,9 +228,24 @@ public class Observable {
         }
 
         for (GameObserver ob : this.obs) {
-            ob.updateOnNextTurn(activePlayer);
+            ob.updateOnNextTurn();
+        }
+    }
+       
+    /**
+     * Notifica il............... di una carta.
+     */
+    public void notifyDrawnCard(String cardName){
+        synchronized (this) {
+            if (!changed) {
+                return;
+            }
+            clearChanged();
         }
 
+        for (GameObserver ob : this.obs) {
+            ob.updateOnDrawnCard(cardName);
+        }
     }
 
     /**

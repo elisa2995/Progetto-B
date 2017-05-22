@@ -384,9 +384,6 @@ public class RisikoMap {
         this.countryPlayer.put(defenderCountry, attacker);
         attackerCountry.removeArmies(armies);
         defenderCountry.setArmies(armies);
-        if (!attacker.havejustDrowCardBonus()) {
-            attacker.drowBonusCard();
-        }
     }
 
     /**
@@ -475,6 +472,7 @@ public class RisikoMap {
      * Ritorna la lista delle countries che compongono un continent.
      *
      * @param continent
+     * @return 
      */
     public List<Country> getCountriesByContinet(String continent) {
         return countryNeighbors.get(continent);

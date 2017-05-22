@@ -26,7 +26,7 @@ public interface GameObserver {
      * @param player
      * @param phase 
      */
-    public void updateOnPhaseChange(String player, String phase);
+    public void updateOnPhaseChange(String player, String phase, Color color);
 
     /**
      * Metodo chiamato quando viene settato l'attaccante
@@ -77,8 +77,20 @@ public interface GameObserver {
      * @param color 
      */
     public void updateOnArmiesChange(String country, int armies, Color color);
+    
+    /**
+     * metodo chiamato per richiedere al difensore con quante armate difendersi
+     * @param defender
+     * @param countryDefender
+     * @param attacker
+     * @param countryAttacker
+     * @param nrA 
+     */
+    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA);
 
-    public void updateOnNextTurn(Player activePlayer);
+    public void updateOnNextTurn();
 
     public void updateOnSetFromCountry(String countryName);
+
+    public void updateOnDrawnCard(String cardName);
 }

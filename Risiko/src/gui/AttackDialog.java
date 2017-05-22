@@ -7,7 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Arrays;
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -45,6 +48,7 @@ public class AttackDialog extends JDialog {
     private int[] defenderDice;
     private String defenderCountryName;
     private int maxArmiesDefender;
+    private String drawnCard;
 
     public AttackDialog(Game game) {
         this.game = game;
@@ -57,7 +61,7 @@ public class AttackDialog extends JDialog {
     private void init() {
 
         JDialog inputArmies = this;
-        dialogPanel = new JPanel(new GridLayout(0, 2));
+        dialogPanel = new JPanel(new GridLayout(0, 3));
         attackText = new JLabel(" n armate attaccco");
         defenseText = new JLabel(" n armate difesa");
         attackerModel = new SpinnerNumberModel(1, 1, 1, 1);
@@ -83,44 +87,47 @@ public class AttackDialog extends JDialog {
 
                 String imagePath = "files/images/dice/";
                 PlayAudio.play("sounds/tank.wav");
-                
+
                 //game.attack() potrebbe impostare a true il valore ritornante da game.haveJustDrowCard()
                 //quindi occorre salvare il valore ritornante da game.haveJustDrowCard() prima di invocare game.attack() 
                 //useremo la variabile haveJustDrowCard nel caso isConquered fosse true.
-                boolean haveJustDrowCard = game.haveJustDrowCard();
-                
+                boolean hasAlreadyDrawnCard = game.hasAlreadyDrawnCard();
+                ImageIcon icon;
                 game.attack((int) attackerArmies.getValue(), (int) defenderArmies.getValue());
                 for (int i = 0; i < diceR.length; i++) {
-                    if (i < attackerDice.length) {
-                        ImageIcon icon = new ImageIcon(imagePath + attackerDice[i] + "R.png");
-                        diceR[i].setIcon(icon);
+                    /*if (i < attackerDice.length) {
+                        icon = new ImageIcon(imagePath + attackerDice[i] + "R.png");
+                        //diceR[i].setIcon(icon);
                     } else {
-                        ImageIcon icon = null;
-                        diceR[i].setIcon(icon);
-                    }
+                        icon = null;
+                        //diceR[i].setIcon(icon);
+                    }*/
+                    icon=(i < attackerDice.length)? new ImageIcon(imagePath + attackerDice[i] + "R.png"):null;
+                    diceR[i].setIcon(icon);
                 }
                 for (int i = 0; i < diceB.length; i++) {
-                    if (i < defenderDice.length) {
-                        ImageIcon icon = new ImageIcon(imagePath + defenderDice[i] + "B.png");
-                        diceB[i].setIcon(icon);
+                   /* if (i < defenderDice.length) {
+                        icon = new ImageIcon(imagePath + defenderDice[i] + "B.png");
+                        //diceB[i].setIcon(icon);
                     } else {
-                        ImageIcon icon = null;
-                        diceB[i].setIcon(icon);
-                    }
+                        icon = null;
+                        //diceB[i].setIcon(icon);
+                    }*/
+                    icon=(i < defenderDice.length)?  new ImageIcon(imagePath + defenderDice[i] + "B.png"):null;
+                    diceB[i].setIcon(icon);
                 }
 
                 if (isConquered) {
                     PlayAudio.play("sounds/conquest.wav");
-                    
+
                     //Informa il player della conquista del nuovo territorio, 
                     //nel caso fosse la prima conquista del turno informa anche il player della cardBonus pescata
-                    if (haveJustDrowCard) {
+                    if (hasAlreadyDrawnCard) {
                         JOptionPane.showMessageDialog(null, "Complimenti, hai conquistato " + getDefenderCountryName());
                     } else {
-                        Image imageDrowedCard = game.getLastCardBonusDrowed();
-                        JOptionPane.showMessageDialog(  null, "Complimenti,\nhai conquistato " + getDefenderCountryName()
+                        JOptionPane.showMessageDialog(null, "Complimenti,\nhai conquistato " + getDefenderCountryName()
                                 + ",\ne pescato questa carta.", "Conquered",
-                                JOptionPane.INFORMATION_MESSAGE, new ImageIcon(imageDrowedCard));
+                                JOptionPane.INFORMATION_MESSAGE, new ImageIcon("images/" + drawnCard + ".png"));
                     }
                     inputArmies.setVisible(false);
                     for (int i = 0; i < diceR.length; i++) {
@@ -146,16 +153,22 @@ public class AttackDialog extends JDialog {
         });
 
         dialogPanel.add(attackText);
+        dialogPanel.add(new JLabel());
         dialogPanel.add(defenseText);
         dialogPanel.add(attackerArmies);
+        dialogPanel.add(new JLabel());
         dialogPanel.add(defenderArmies);
+        dialogPanel.add(new JLabel());
         dialogPanel.add(execute);
-        dialogPanel.add(emptyLabel);
+        dialogPanel.add(new JLabel());
         dialogPanel.add(dice1R);
+        dialogPanel.add(new JLabel());
         dialogPanel.add(dice1B);
         dialogPanel.add(dice2R);
+        dialogPanel.add(new JLabel());
         dialogPanel.add(dice2B);
         dialogPanel.add(dice3R);
+        dialogPanel.add(new JLabel());
         dialogPanel.add(dice3B);
         inputArmies.add(dialogPanel);
         inputArmies.setModal(true);
@@ -225,7 +238,8 @@ public class AttackDialog extends JDialog {
 
     /**
      * Setta il massimo numero di armate che può scegliere l'attaccante
-     * @param maxArmiesAttacker 
+     *
+     * @param maxArmiesAttacker
      */
     public void setMaxArmiesAttacker(int maxArmiesAttacker) {
         this.maxArmiesAttacker = maxArmiesAttacker;
@@ -233,9 +247,19 @@ public class AttackDialog extends JDialog {
 
     /**
      * Setta il massimo numero di armate che può scegliere il difensore
-     * @param maxArmiesDefender 
+     *
+     * @param maxArmiesDefender
      */
     public void setMaxArmiesDefender(int maxArmiesDefender) {
         this.maxArmiesDefender = maxArmiesDefender;
+    }
+
+    /**
+     * Setta la carta appena pescata.
+     *
+     * @param card
+     */
+    public void setDrawnCard(String card) {
+        this.drawnCard = card;
     }
 }
