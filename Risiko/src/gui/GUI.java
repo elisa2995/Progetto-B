@@ -103,7 +103,7 @@ public class GUI extends JFrame implements GameObserver {
     private void createLabel(String countryName, int x, int y) {
 
         JLabel label = new JLabel();
-        label.setFont(new Font("Verdana", Font.BOLD, 16));
+        label.setFont(new Font("Serif", Font.BOLD, 16));
         label.setBounds(x, y, 30, 30);
         //label.setOpaque(true);
         //label.setBackground(new Color(255, 255, 255, 100));
