@@ -75,7 +75,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
      * esegue un attacco
      */
     private synchronized void randomAttack() {
-        int i = 10;
+        int i = 2;
 
         while (i > 0) {
             if (canAttack) {
@@ -235,29 +235,25 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
 
     @Override
     public void updateOnSetFromCountry(String countryName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void updateOnNextTurn() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void updateOnDrawnCard(String cardName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void updateOnPhaseChange(String player, String phase, Color color) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA) {
+    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {
         if (this.getName().equals(defender)) {
-            this.currentAction = Action.DEFEND;
-        }
-        canAttack = false;
+            this.currentAction = Action.DEFEND;  
+        }   
+        //canAttack = false;
     }
 
 }
