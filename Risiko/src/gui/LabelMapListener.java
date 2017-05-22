@@ -46,54 +46,61 @@ public class LabelMapListener extends MouseInputAdapter {
         switch (game.getPhase()) {
             case REINFORCE:
                 if (countryName == null) {
-                    PlayAudio.play("sounds/clickOffShort.wav");
+                    PlayAudio.play("sounds/clickOff.wav");
                     return;
                 }
                 if (game.controlPlayer(countryName) && game.canReinforce(1)) {
                     //Ho ancora bonus armies e sono su un mio territorio
                     game.reinforce(countryName, 1);
                     //reinforce chiama notify(), la gui si aggiorna
-                    PlayAudio.play("sounds/clickOnShort.wav");
+                    PlayAudio.play("sounds/clickOn.wav");
+                    break;
                 }
+                PlayAudio.play("sounds/clickOff.wav");
                 break;
             case FIGHT:
                 if (countryName == null) {
-                    PlayAudio.play("sounds/clickOffShort.wav");
+                    PlayAudio.play("sounds/clickOff.wav");
                     game.resetFightingCountries();
                     return;
                 }
-                PlayAudio.play("sounds/clickOnShort.wav");
                 if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
                     game.setAttackerCountry(countryName);
+                    PlayAudio.play("sounds/clickOn.wav");
                     break;
                 }
                 if (game.getAttackerCountryName() != null && game.controlDefender(countryName)) {
                     //Devo scegliere il difensore, sono su un territorio confinante attaccabile
                     game.setDefenderCountry(countryName);
+                    PlayAudio.play("sounds/clickOn.wav");
                     break;
                 }
                 //Sono su un territorio non valido per attaccare nè per difendere
+                PlayAudio.play("sounds/clickOff.wav");
                 game.resetFightingCountries();
                 break;
             case MOVE:
                 if (countryName == null) {
-                    PlayAudio.play("sounds/clickOffShort.wav");
+                    PlayAudio.play("sounds/clickOff.wav");
                     game.resetFightingCountries();
                     return;
                 }
-                PlayAudio.play("sounds/clickOnShort.wav");
+                
                 if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
                     game.setFromCountry(countryName);
+                    PlayAudio.play("sounds/clickOn.wav");
                     break;
                 }
                 if (game.getAttackerCountryName() != null && game.controlMovement(countryName)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
                     new movementDialog(game, countryName);
+                    PlayAudio.play("sounds/clickOn.wav");
                     break;
                 }
                 //Sono su un territorio non valido per spostarmi
+                PlayAudio.play("sounds/clickOff.wav");
                 game.resetFightingCountries();
                 break;
 

@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -36,12 +38,13 @@ public class GUI extends JFrame implements GameObserver {
     private Game game;
     private final Map<Color, String> colorCountryNameMap;
     private final Map<String, JLabel> countryLabelMap;
-    private AttackDialog inputArmies;
+    private FightDialog inputArmies;
+    //private AttackDialog inputArmies;
     private CardBonusDialog cardBonusDialog;
 
     public GUI(Map<String, Boolean> players, Map<String, String> playersColor) throws Exception {
         initComponents();
-        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko7b.png"))));
+        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko.png"))));
         countryLabelMap = new HashMap<>();
         colorCountryNameMap = readColorTextMap("files/ColorCountry.txt");
         init(players, playersColor);
@@ -60,9 +63,10 @@ public class GUI extends JFrame implements GameObserver {
         LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game, this);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
-        inputArmies = new AttackDialog(game);
-        inputArmies.setPreferredSize(new Dimension(500, 600));
-        inputArmies.pack();
+        //inputArmies = new AttackDialog(game);
+        inputArmies = new FightDialog(game, this, true);
+        //inputArmies.setPreferredSize(new Dimension(500, 600));
+        //inputArmies.pack();
         cardBonusDialog = new CardBonusDialog(game);
         labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
         labelAdvice.setFont(new Font("Serif", Font.PLAIN, 13));
@@ -99,9 +103,10 @@ public class GUI extends JFrame implements GameObserver {
      * @param y
      */
     private void createLabel(String countryName, int x, int y) {
-        JLabel label = new JLabel("0");
-        label.setFont(new Font("Verdana", Font.BOLD, 16));
-        label.setBounds(x, y, 10, 16);
+
+        JLabel label = new JLabel();
+        label.setFont(new Font("Serif", Font.BOLD, 16));
+        label.setBounds(x, y, 30, 30);
         //label.setOpaque(true);
         //label.setBackground(new Color(255, 255, 255, 100));
         mapLayeredPane.add(label);
@@ -472,11 +477,43 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnArmiesChange(String country, int armies, Color color) {
+        Map<Color,String> colorMap = buildColorMap();
+        String colorToString = colorMap.get(color);
         JLabel label = countryLabelMap.get(country);
-        int width = (armies > 9) ? 30 : 15;
-        label.setBounds((int) label.getBounds().getX(), (int) label.getBounds().getY(), width, 13);
-        label.setForeground(color);
+        label.setForeground(Color.WHITE);
         label.setText(Integer.toString(armies));
+        label.setHorizontalTextPosition(JLabel.CENTER);
+        try {
+            switch(colorToString){
+                case "Rosso":   
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/redlabel1.png"))));
+                    break;
+                
+                case "Verde":
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/greenlabel1.png"))));
+                    break;
+                
+                case "Blu":   
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/bluelabel1.png"))));
+                    break;
+                
+                case "Giallo":   
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/yellowlabel1.png"))));
+                    break;
+                
+                case "Viola":   
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/purplelabel1.png"))));
+                    break;
+                
+                case "Nero":   
+                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/blacklabel2.png"))));
+                    break;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        repaint();
         repaint(label);
     }
 
@@ -490,6 +527,17 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnDrawnCard(String cardName) {
         inputArmies.setDrawnCard(cardName);
+    }
+    
+    private Map<Color, String> buildColorMap() {
+        Map<Color, String> colorMap = new HashMap<>();
+        colorMap.put(new Color(255, 0, 0), "Rosso");
+        colorMap.put(new Color(0, 232, 0), "Verde");
+        colorMap.put(new Color(0, 0, 255), "Blu");
+        colorMap.put(new Color(255, 255, 0), "Giallo");
+        colorMap.put(new Color(255, 0, 255), "Viola");
+        colorMap.put(new Color(0, 0, 0), "Nero");
+        return colorMap;
     }
     
     /**
@@ -516,17 +564,18 @@ public class GUI extends JFrame implements GameObserver {
     // End of variables declaration//GEN-END:variables
 
     /**
-     * se il giocatore è reale viene richiamata una dialog che chiede al difensore con quante armate difendersi
-     * e poi completa l'attacco
+     * se il giocatore è reale viene richiamata una dialog che chiede al
+     * difensore con quante armate difendersi e poi completa l'attacco
+     *
      * @param defender
      * @param countryDefender
      * @param attacker
      * @param countryAttacker
-     * @param nrA 
+     * @param nrA
      */
     @Override
-    public void updateOnDefend(String defender, String countryDefender,String attacker, String countryAttacker, int nrA) {
-        
+    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA) {
+
     }
 
 }
