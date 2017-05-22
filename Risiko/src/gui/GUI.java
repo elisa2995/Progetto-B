@@ -38,7 +38,7 @@ public class GUI extends JFrame implements GameObserver {
     //private AttackDialog inputArmies;
     private CardBonusDialog cardBonusDialog;
 
-    public GUI(Map<String, Boolean> players, Map<String, String> playersColor) throws Exception {
+    public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         initComponents();
         labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko7b.png"))));
         countryLabelMap = new HashMap<>();
@@ -52,7 +52,7 @@ public class GUI extends JFrame implements GameObserver {
      * @throws IOException
      * @throws Exception
      */
-    private void init(Map<String, Boolean> players, Map<String, String> playersColor) throws IOException, Exception {
+    private void init(Map<String, String> players, Map<String, String> playersColor) throws IOException, Exception {
         initLabels("files/labelsTerritori.txt");
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
         game = new Game(players, playersColor, this);

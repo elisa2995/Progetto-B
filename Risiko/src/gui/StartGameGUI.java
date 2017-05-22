@@ -5,6 +5,7 @@
  */
 package gui;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,8 +24,9 @@ public class StartGameGUI extends javax.swing.JFrame {
 
     private int nPlayers;
     private JTextField[] playerTexts;
-    private JCheckBox[] aiChecks;
     private JComboBox[] colorBoxs;
+    private JLabel[] playerTypes;
+    private JButton[] changeTypes;
     private ColorBoxListener cbListener;
     private UserDialog regDialog;
     private JButton[] logins;
@@ -35,6 +37,7 @@ public class StartGameGUI extends javax.swing.JFrame {
     public StartGameGUI() {
         initComponents();
         init();
+
     }
 
     /**
@@ -47,61 +50,27 @@ public class StartGameGUI extends javax.swing.JFrame {
         regDialog.setVisible(false);
 
         playerTexts = new JTextField[]{this.playerText1, this.playerText2, this.playerText3, this.playerText4, this.playerText5, this.playerText6};
-        aiChecks = new JCheckBox[]{ai1, ai2, ai3, ai4, ai5, ai6};
         logins = new JButton[]{login1, login2, login3, login4, login5, login6};
-
-        this.playerText3.setVisible(false);
-        this.playerText4.setVisible(false);
-        this.playerText5.setVisible(false);
-        this.playerText6.setVisible(false);
-        this.ai3.setVisible(false);
-        this.ai4.setVisible(false);
-        this.ai5.setVisible(false);
-        this.ai6.setVisible(false);
-
-        AIListener aiListener = new AIListener(playerTexts, aiChecks, logins);
-
-        this.ai1.addActionListener(aiListener);
-        this.ai2.addActionListener(aiListener);
-        this.ai3.addActionListener(aiListener);
-        this.ai4.addActionListener(aiListener);
-        this.ai5.addActionListener(aiListener);
-        this.ai6.addActionListener(aiListener);
-
-        String[] colors = new String[]{"Rosso", "Blu", "Nero", "Viola", "Verde", "Giallo"};
-        colorBox1.setModel(new DefaultComboBoxModel(colors));
-        colorBox2.setModel(new DefaultComboBoxModel(colors));
-        colorBox3.setModel(new DefaultComboBoxModel(colors));
-        colorBox4.setModel(new DefaultComboBoxModel(colors));
-        colorBox5.setModel(new DefaultComboBoxModel(colors));
-        colorBox6.setModel(new DefaultComboBoxModel(colors));
-
-        colorBox1.setSelectedItem(colors[0]);
-        colorBox2.setSelectedItem(colors[1]);
-        colorBox3.setSelectedItem(colors[2]);
-        colorBox4.setSelectedItem(colors[3]);
-        colorBox5.setSelectedItem(colors[4]);
-        colorBox6.setSelectedItem(colors[5]);
-
-        colorBox3.setVisible(false);
-        colorBox4.setVisible(false);
-        colorBox5.setVisible(false);
-        colorBox6.setVisible(false);
-
+        playerTypes = new JLabel[]{playerType1, playerType2, playerType3, playerType4, playerType5, playerType6};
+        changeTypes = new JButton[]{changeType1, changeType2, changeType3, changeType4, changeType5, changeType6};
         colorBoxs = new JComboBox[]{colorBox1, colorBox2, colorBox3, colorBox4, colorBox5, colorBox6};
-
+        String[] colors = new String[]{"Rosso", "Blu", "Nero", "Viola", "Verde", "Giallo"};
         cbListener = new ColorBoxListener(colorBoxs, colors.clone());
-        colorBox1.addActionListener(cbListener);
-        colorBox2.addActionListener(cbListener);
-        colorBox3.addActionListener(cbListener);
-        colorBox4.addActionListener(cbListener);
-        colorBox5.addActionListener(cbListener);
-        colorBox6.addActionListener(cbListener);
+        ChangeTypeListener ctListener=new ChangeTypeListener(playerTexts, logins, changeTypes, playerTypes);
 
-        login3.setVisible(false);
-        login4.setVisible(false);
-        login5.setVisible(false);
-        login6.setVisible(false);
+        for (int i = 0; i < colorBoxs.length; i++) {
+            colorBoxs[i].setModel(new DefaultComboBoxModel(colors));
+            colorBoxs[i].setSelectedItem(colors[i]);
+            colorBoxs[i].addActionListener(cbListener);
+            logins[i].setVisible(false);
+            changeTypes[i].addActionListener(ctListener);
+            if (i > 1) {
+                colorBoxs[i].setVisible(false);
+                playerTexts[i].setVisible(false);
+                changeTypes[i].setVisible(false);
+                playerTypes[i].setVisible(false);
+            }
+        }
 
     }
 
@@ -114,6 +83,8 @@ public class StartGameGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
+        jToggleButton1 = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
         playerText1 = new javax.swing.JTextField();
         playerText2 = new javax.swing.JTextField();
@@ -121,12 +92,6 @@ public class StartGameGUI extends javax.swing.JFrame {
         playerText4 = new javax.swing.JTextField();
         playerText5 = new javax.swing.JTextField();
         playerText6 = new javax.swing.JTextField();
-        ai1 = new javax.swing.JCheckBox();
-        ai2 = new javax.swing.JCheckBox();
-        ai3 = new javax.swing.JCheckBox();
-        ai4 = new javax.swing.JCheckBox();
-        ai5 = new javax.swing.JCheckBox();
-        ai6 = new javax.swing.JCheckBox();
         startButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
         addButton = new javax.swing.JButton();
@@ -144,22 +109,27 @@ public class StartGameGUI extends javax.swing.JFrame {
         login5 = new javax.swing.JButton();
         login6 = new javax.swing.JButton();
         commentsLabel = new javax.swing.JLabel();
+        playerType1 = new javax.swing.JLabel();
+        changeType1 = new javax.swing.JButton();
+        playerType2 = new javax.swing.JLabel();
+        playerType3 = new javax.swing.JLabel();
+        playerType4 = new javax.swing.JLabel();
+        playerType5 = new javax.swing.JLabel();
+        playerType6 = new javax.swing.JLabel();
+        changeType2 = new javax.swing.JButton();
+        changeType3 = new javax.swing.JButton();
+        changeType4 = new javax.swing.JButton();
+        changeType5 = new javax.swing.JButton();
+        changeType6 = new javax.swing.JButton();
+
+        jRadioButtonMenuItem1.setSelected(true);
+        jRadioButtonMenuItem1.setText("jRadioButtonMenuItem1");
+
+        jToggleButton1.setText("jToggleButton1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("RISIKO");
-
-        ai1.setText("Giocatore artificiale");
-
-        ai2.setText("Giocatore artificiale");
-
-        ai3.setText("Giocatore artificiale");
-
-        ai4.setText("Giocatore artificiale");
-
-        ai5.setText("Giocatore artificiale");
-
-        ai6.setText("Giocatore artificiale");
 
         startButton.setText("Gioca");
         startButton.addActionListener(new java.awt.event.ActionListener() {
@@ -231,6 +201,60 @@ public class StartGameGUI extends javax.swing.JFrame {
             }
         });
 
+        playerType1.setText("Normale");
+
+        changeType1.setText(">>");
+        changeType1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeType1ActionPerformed(evt);
+            }
+        });
+
+        playerType2.setText("Normale");
+
+        playerType3.setText("Normale");
+
+        playerType4.setText("Normale");
+
+        playerType5.setText("Normale");
+
+        playerType6.setText("Normale");
+
+        changeType2.setText(">>");
+        changeType2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeType2ActionPerformed(evt);
+            }
+        });
+
+        changeType3.setText(">>");
+        changeType3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeType3ActionPerformed(evt);
+            }
+        });
+
+        changeType4.setText(">>");
+        changeType4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeType4ActionPerformed(evt);
+            }
+        });
+
+        changeType5.setText(">>");
+        changeType5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeType5ActionPerformed(evt);
+            }
+        });
+
+        changeType6.setText(">>");
+        changeType6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeType6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -248,6 +272,10 @@ public class StartGameGUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(playerText2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(playerText3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -255,42 +283,42 @@ public class StartGameGUI extends javax.swing.JFrame {
                                     .addComponent(playerText5, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(playerText6, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(playerText1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
+                                .addGap(10, 10, 10)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(ai1)
-                                                .addComponent(ai2))
-                                            .addComponent(ai5, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(ai4))
-                                        .addComponent(ai6, javax.swing.GroupLayout.Alignment.TRAILING))
-                                    .addComponent(ai3))
-                                .addGap(26, 26, 26)
+                                    .addComponent(playerType1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(playerType2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(playerType3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(playerType4, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(playerType5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(playerType6, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(changeType1)
+                                    .addComponent(changeType2)
+                                    .addComponent(changeType3)
+                                    .addComponent(changeType4)
+                                    .addComponent(changeType5)
+                                    .addComponent(changeType6))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(login4, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
+                                    .addComponent(login4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(login5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(login2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(login1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(login3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(login6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                                    .addComponent(login6, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(colorBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(colorBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(colorBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(colorBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(colorBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(colorBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(colorBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(24, 24, 24))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(commentsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(24, 24, 24))
+                .addComponent(commentsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,39 +332,6 @@ public class StartGameGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(playerText1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11)
-                        .addComponent(playerText2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(playerText3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ai3)
-                            .addComponent(login3))
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(playerText4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ai4)
-                            .addComponent(login4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(playerText5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ai5)
-                            .addComponent(login5))
-                        .addGap(11, 11, 11)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(playerText6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ai6)
-                            .addComponent(login6)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(ai2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ai1)
-                            .addComponent(login1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(login2))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addComponent(colorBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -348,8 +343,52 @@ public class StartGameGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(colorBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(colorBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                        .addComponent(colorBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(playerText1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(playerText2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(playerType2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(changeType2)
+                                        .addComponent(login2)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(playerText3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(playerType3, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(changeType3)
+                                    .addComponent(login3))
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(playerText4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(playerType4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(changeType4)
+                                    .addComponent(login4))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(playerText5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(playerType5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(changeType5)
+                                    .addComponent(login5)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(playerType1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(changeType1)
+                                .addComponent(login1)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(playerText6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(playerType6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(changeType6)
+                                    .addComponent(login6))))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(commentsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -364,9 +403,10 @@ public class StartGameGUI extends javax.swing.JFrame {
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         if (nPlayers > 2) {
             playerTexts[nPlayers - 1].setVisible(false);
-            aiChecks[nPlayers - 1].setVisible(false);
             colorBoxs[nPlayers - 1].setVisible(false);
             logins[nPlayers - 1].setVisible(false);
+            changeTypes[nPlayers - 1].setVisible(false);
+            playerTypes[nPlayers - 1].setVisible(false);
             nPlayers--;
         }
     }//GEN-LAST:event_removeButtonActionPerformed
@@ -374,9 +414,9 @@ public class StartGameGUI extends javax.swing.JFrame {
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         if (nPlayers < 6) {
             playerTexts[nPlayers].setVisible(true);
-            aiChecks[nPlayers].setVisible(true);
             colorBoxs[nPlayers].setVisible(true);
-            logins[nPlayers].setVisible(true);
+            changeTypes[nPlayers].setVisible(true);
+            playerTypes[nPlayers].setVisible(true);
             nPlayers++;
         }
     }//GEN-LAST:event_addButtonActionPerformed
@@ -385,7 +425,7 @@ public class StartGameGUI extends javax.swing.JFrame {
         List<String> list = new ArrayList<>();
         boolean valid = true;
         for (int i = 0; i < playerTexts.length; i++) {
-            if (aiChecks[i].isSelected() || !aiChecks[i].isSelected() && playerTexts[i].isVisible()) {
+            if (playerTexts[i].isVisible()) {
                 list.add(playerTexts[i].getText());
             }
         }
@@ -403,12 +443,13 @@ public class StartGameGUI extends javax.swing.JFrame {
         }
 
         GUI gui;
-        Map<String, Boolean> players = new HashMap<>();
+        Map<String, String> players = new HashMap<>();
         Map<String, String> playersColor = new HashMap<>();
         String[] colors = cbListener.getUpdateColors(list.size());
 
         for (int i = 0; i < list.size(); i++) {
-            players.put(list.get(i), aiChecks[i].isSelected());
+            
+            players.put(list.get(i), getFormattedName(playerTypes[i].getText().toLowerCase()));
             playersColor.put(list.get(i), colors[i]);
         }
         try {
@@ -428,29 +469,53 @@ public class StartGameGUI extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_registrationButtonActionPerformed
 
-    private void login1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login1ActionPerformed
-        doLogin(0);
-    }//GEN-LAST:event_login1ActionPerformed
-
-    private void login2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login2ActionPerformed
-        doLogin(1);
-    }//GEN-LAST:event_login2ActionPerformed
-
-    private void login3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login3ActionPerformed
-        doLogin(2);
-    }//GEN-LAST:event_login3ActionPerformed
-
-    private void login4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login4ActionPerformed
-        doLogin(3);
-    }//GEN-LAST:event_login4ActionPerformed
+    private void login6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login6ActionPerformed
+        doLogin(5);
+    }//GEN-LAST:event_login6ActionPerformed
 
     private void login5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login5ActionPerformed
         doLogin(4);
     }//GEN-LAST:event_login5ActionPerformed
 
-    private void login6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login6ActionPerformed
-        doLogin(5);
-    }//GEN-LAST:event_login6ActionPerformed
+    private void login4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login4ActionPerformed
+        doLogin(3);
+    }//GEN-LAST:event_login4ActionPerformed
+
+    private void login3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login3ActionPerformed
+        doLogin(2);
+    }//GEN-LAST:event_login3ActionPerformed
+
+    private void login2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login2ActionPerformed
+        doLogin(1);
+    }//GEN-LAST:event_login2ActionPerformed
+
+    private void login1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login1ActionPerformed
+        doLogin(0);
+    }//GEN-LAST:event_login1ActionPerformed
+
+    private void changeType1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType1ActionPerformed
+
+    }//GEN-LAST:event_changeType1ActionPerformed
+
+    private void changeType2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_changeType2ActionPerformed
+
+    private void changeType3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_changeType3ActionPerformed
+
+    private void changeType4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_changeType4ActionPerformed
+
+    private void changeType5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_changeType5ActionPerformed
+
+    private void changeType6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_changeType6ActionPerformed
 
     /**
      * Setta il nome del player nel input e lo rende non editabile; cambia il
@@ -480,7 +545,7 @@ public class StartGameGUI extends javax.swing.JFrame {
             this.setVisible(false);
         } else {
             logins[index].setText("Login");
-            playerTexts[index].setEditable(true);
+            playerTexts[index].setEditable(false);
             playerTexts[index].setText("");
         }
     }
@@ -501,11 +566,11 @@ public class StartGameGUI extends javax.swing.JFrame {
     }
 
     private boolean checkUsername(List<String> players) {
-        Object[] players1=players.toArray();
-        Object[] players2 =players1.clone();
-        for (int i=0; i<players1.length;i++) {
-            for (int j=0; j<players2.length; j++) {
-                if (i!=j && players1[i].equals(players2[j])) {
+        Object[] players1 = players.toArray();
+        Object[] players2 = players1.clone();
+        for (int i = 0; i < players1.length; i++) {
+            for (int j = 0; j < players2.length; j++) {
+                if (i != j && players1[i].equals(players2[j])) {
                     return false;
                 }
             }
@@ -515,12 +580,12 @@ public class StartGameGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
-    private javax.swing.JCheckBox ai1;
-    private javax.swing.JCheckBox ai2;
-    private javax.swing.JCheckBox ai3;
-    private javax.swing.JCheckBox ai4;
-    private javax.swing.JCheckBox ai5;
-    private javax.swing.JCheckBox ai6;
+    private javax.swing.JButton changeType1;
+    private javax.swing.JButton changeType2;
+    private javax.swing.JButton changeType3;
+    private javax.swing.JButton changeType4;
+    private javax.swing.JButton changeType5;
+    private javax.swing.JButton changeType6;
     private javax.swing.JComboBox<String> colorBox1;
     private javax.swing.JComboBox<String> colorBox2;
     private javax.swing.JComboBox<String> colorBox3;
@@ -529,6 +594,8 @@ public class StartGameGUI extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> colorBox6;
     private javax.swing.JLabel commentsLabel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
+    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JButton login1;
     private javax.swing.JButton login2;
     private javax.swing.JButton login3;
@@ -541,9 +608,28 @@ public class StartGameGUI extends javax.swing.JFrame {
     private javax.swing.JTextField playerText4;
     private javax.swing.JTextField playerText5;
     private javax.swing.JTextField playerText6;
+    private javax.swing.JLabel playerType1;
+    private javax.swing.JLabel playerType2;
+    private javax.swing.JLabel playerType3;
+    private javax.swing.JLabel playerType4;
+    private javax.swing.JLabel playerType5;
+    private javax.swing.JLabel playerType6;
     private javax.swing.JButton registrationButton;
     private javax.swing.JButton removeButton;
     private javax.swing.JButton startButton;
     // End of variables declaration//GEN-END:variables
+
+    private String getFormattedName(String type) {
+        switch(type){
+            case "loggato":
+                return "LOGGED";
+            case "normale":
+                return "NORMAL";
+            case "artificiale":
+                return "ARTIFICIAL";
+            default:
+                return null;
+        }
+    }
 
 }

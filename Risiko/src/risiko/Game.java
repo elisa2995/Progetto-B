@@ -23,7 +23,7 @@ public class Game extends Observable {
     private int attackerArmies;
     private int defenderArmies;
     private boolean attackInProgress = false;
-    
+
     private RisikoMap map;
     private BonusDeck deck;
     private List<Player> players;
@@ -35,18 +35,18 @@ public class Game extends Observable {
 
     /**
      * setta il numero di armate con il quale si vuole difenders
-     * @param nrD numero di armate, se il valore è -1 allore verrà settato il numero di armate massimo
-     * @param aiCaller 
+     *
+     * @param nrD numero di armate, se il valore è -1 allore verrà settato il
+     * numero di armate massimo
+     * @param aiCaller
      */
     public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller) {
-        if(aiCaller.length==0){
-            if((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)){
+        if (aiCaller.length == 0) {
+            if ((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)) {
                 return;
             }
-        }else{
-            if(!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))){
-                return;
-            }
+        } else if (!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))) {
+            return;
         }
 
         if (nrD == -1) {
@@ -81,21 +81,22 @@ public class Game extends Observable {
 //            attackerArmies = nrA;
 //        }
 //    }
-
     /**
-     * dichiara un attacco che parte da attacker al territorio defender con nrA numero di armate
-     * l'attacco non viene portato a termine finchè il difensore non ha scelto con quante armate difendersi
+     * dichiara un attacco che parte da attacker al territorio defender con nrA
+     * numero di armate l'attacco non viene portato a termine finchè il
+     * difensore non ha scelto con quante armate difendersi
+     *
      * @param attacker territorio attaccante
      * @param defender territorio difensore
-     * @param nrA   numero di armate in attacco
-     * @param aiCaller 
+     * @param nrA numero di armate in attacco
+     * @param aiCaller
      */
     public void declareAttack(ArtificialPlayer... aiCaller) {
         attackInProgress = true;
         if (!checkCallerIdentity(aiCaller)) {
             return;
         }
-        
+
         Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
         Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
         if (attackerArmies > 0) {
@@ -103,33 +104,32 @@ public class Game extends Observable {
             notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies);
         }
     }
-    
+
     /**
-     * dopo che un attacco viene dichiarato viene chiamato questo metodo per 
+     * dopo che un attacco viene dichiarato viene chiamato questo metodo per
      * eseguirlo aggiungendo il numero di armate del difensore
-     * @param nrD   
-     * @param aiCaller 
+     *
+     * @param nrD
+     * @param aiCaller
      */
     public void confirmAttack(ArtificialPlayer... aiCaller) {
-        if(attackInProgress == false){
+        if (attackInProgress == false) {
             return;
         }
-        
-        if(aiCaller.length==0){
-            if((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)){
+
+        if (aiCaller.length == 0) {
+            if ((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)) {
                 return;
             }
-        }else{
-            if(!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))){
-                return;
-            }
+        } else if (!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))) {
+            return;
         }
 //        if (!checkCallerIdentity(aiCaller)) {
 //            return;
 //        }
         int nrA = this.attackerArmies;
         int nrD = this.defenderArmies;
-        
+
         Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
         Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
         int lostArmies[] = fight(attackerCountry, defenderCountry, nrA, nrD);
@@ -164,7 +164,7 @@ public class Game extends Observable {
         return activePlayer.getMissionDescription();
     }
 
-    public Game(Map<String, Boolean> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
+    public Game(Map<String, String> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
 
         this.players = new ArrayList<>();
         this.activePlayer = null;
@@ -189,7 +189,7 @@ public class Game extends Observable {
      * @throws rilancia l'eccezione che potrebbe lanciare la mappa nel caso in
      * cui l'url del file dei territori fosse sbagliato.
      */
-    private void init(Map<String, Boolean> playersMap, Map<String, String> playersColor) throws Exception {
+    private void init(Map<String, String> playersMap, Map<String, String> playersColor) throws Exception {
 
         buildPlayers(playersMap, playersColor);
         map.assignCountriesToPlayers(players);
@@ -200,17 +200,18 @@ public class Game extends Observable {
         map.computeBonusArmies(activePlayer);
         phase = Phase.REINFORCE;
         setChanged();
-        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor() );
+        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
         startArtificialPlayerThreads();
     }
-    
+
     /**
-     * aggiunge gli observer degli artificial player alla lista e fa partire i thread 
+     * aggiunge gli observer degli artificial player alla lista e fa partire i
+     * thread
      */
     private void startArtificialPlayerThreads() {
         for (Player playerThread : this.players) {
             if (playerThread instanceof ArtificialPlayer) {
-                this.addObserver((ArtificialPlayer)playerThread);
+                this.addObserver((ArtificialPlayer) playerThread);
                 new Thread((ArtificialPlayer) playerThread).start();
             }
         }
@@ -226,19 +227,23 @@ public class Game extends Observable {
      * @param playersMap
      * @param colors
      */
-    private void buildPlayers(Map<String, Boolean> playersMap, Map<String, String> playersColor) {
+    private void buildPlayers(Map<String, String> playersMap, Map<String, String> playersColor) {
 
         Map<String, Color> colorMap = buildColorMap();
         int i = 0;
-        for (Map.Entry<String, Boolean> entry : playersMap.entrySet()) {
+        for (Map.Entry<String, String> entry : playersMap.entrySet()) {
 
             for (Map.Entry<String, String> entryColor : playersColor.entrySet()) {
 
                 if (entry.getKey().equals(entryColor.getKey())) {
-                    if (entry.getValue()) {
-                        this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i, colorMap.get(entryColor.getValue()), this));
-                    } else {
-                        this.players.add(new Player(entry.getKey(), colorMap.get(entryColor.getValue())));
+                    switch (PlayerType.valueOf(entry.getValue())) {
+                        case ARTIFICIAL:
+                            this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i, colorMap.get(entryColor.getValue()), this));
+                            break;
+                        case NORMAL:
+                        case LOGGED:
+                            this.players.add(new Player(entry.getKey(), colorMap.get(entryColor.getValue())));
+                            break;
                     }
                     i++;
                 }
@@ -509,8 +514,8 @@ public class Game extends Observable {
         if (phase == Phase.REINFORCE && activePlayer.getBonusArmies() != 0) {
             throw new PendingOperationsException("Hai ancora armate da posizionare!");
         }
-        
-        if(phase == Phase.FIGHT && attackInProgress){
+
+        if (phase == Phase.FIGHT && attackInProgress) {
             throw new PendingOperationsException("Attacco ancora in corso!");
         }
 
@@ -588,7 +593,7 @@ public class Game extends Observable {
         }
         Card card = deck.drawCard();
         activePlayer.addCard(card);
-        
+
         setChanged();
         notifyDrawnCard(card.name());
     }
@@ -605,16 +610,18 @@ public class Game extends Observable {
         }
         return bonusCardsNames;
     }
-    
+
     /**
-     * Ritorna una mappa che ha come key i nomi delle carte che compongono i tris
-     * giocabili dall'activePlayer, e come value le armate bonus corrisponenti.
-     * @return 
+     * Ritorna una mappa che ha come key i nomi delle carte che compongono i
+     * tris giocabili dall'activePlayer, e come value le armate bonus
+     * corrisponenti.
+     *
+     * @return
      */
-    public Map<String[], Integer> getPlayableTris(){
+    public Map<String[], Integer> getPlayableTris() {
         Map<Card[], Integer> tris = activePlayer.getPlayableTris(deck.getTris());
         Map<String[], Integer> playableTrisNames = new HashMap<>();
-        for(Map.Entry<Card[], Integer> entry : tris.entrySet()){
+        for (Map.Entry<Card[], Integer> entry : tris.entrySet()) {
             Card[] cards = entry.getKey();
             String[] names = {cards[0].name(), cards[1].name(), cards[2].name()};
             playableTrisNames.put(names, entry.getValue());
@@ -868,7 +875,7 @@ public class Game extends Observable {
         setChanged();
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getColorByCountry(attackerCountry));
     }
-    
+
 //    public Image getLastCardBonusDrowed(){
 //        ArrayList<CardBonus> cards = activePlayer.getAllBonusCard();
 //        CardBonus lastCard = cards.get(cards.size() - 1);
@@ -877,29 +884,34 @@ public class Game extends Observable {
 //    public boolean haveJustDrowCard(){
 //        return activePlayer.havejustDrowCardBonus();
 //    }
-    
     /**
-     * questo metodo serve per i giocatori artificiali per determinare quali sono i suoi territori
+     * questo metodo serve per i giocatori artificiali per determinare quali
+     * sono i suoi territori
+     *
      * @param player il giocatore che fa la richiesta
      * @return i territori posseduti da player
      */
     public String[] getMyCountries(ArtificialPlayer player) {
         return this.map.getMyCountries(player).stream().map(element -> element.getName()).toArray(size -> new String[size]);
     }
-    
+
     /**
-     * questo metodo serve per i giocatori artificiali per determinare da quali territori puo attaccare
+     * questo metodo serve per i giocatori artificiali per determinare da quali
+     * territori puo attaccare
+     *
      * @param player il giocatore che fa la richiesta
      * @return i territori posseduti da player
      */
     public String[] getAllAttackers(ArtificialPlayer player) {
         return this.map.getMyCountries(player).stream().filter(element -> this.canAttackFromCountry(element.getName(), player)).map(element -> element.getName()).toArray(size -> new String[size]);
     }
-    
+
     /**
-     * restituisce tutti i territori che possono essere attaccati dal territorio attacker
+     * restituisce tutti i territori che possono essere attaccati dal territorio
+     * attacker
+     *
      * @param attacker
-     * @return 
+     * @return
      */
     public String[] getAllDefenders(String attacker) {
         String[] defenders = map.getNeighbors(map.getCountryByName(attacker)).stream().filter(element
