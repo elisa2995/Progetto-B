@@ -39,6 +39,7 @@ public class GUI extends JFrame implements GameObserver {
     private final Map<Color, String> colorCountryNameMap;
     private final Map<String, JLabel> countryLabelMap;
     private FightDialog inputArmies;
+    private DefenseDialog defenseArmies;
     //private AttackDialog inputArmies;
     private CardBonusDialog cardBonusDialog;
 
@@ -65,6 +66,7 @@ public class GUI extends JFrame implements GameObserver {
         labelMap.addMouseMotionListener(labelMapListener);
         //inputArmies = new AttackDialog(game);
         inputArmies = new FightDialog(game, this, true);
+        defenseArmies = new DefenseDialog(game, this, true);
         //inputArmies.setPreferredSize(new Dimension(500, 600));
         //inputArmies.pack();
         cardBonusDialog = new CardBonusDialog(game);
@@ -400,6 +402,7 @@ public class GUI extends JFrame implements GameObserver {
             labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
         this.inputArmies.setMaxArmies(maxArmiesAttacker, maxArmiesDefender);
+        this.defenseArmies.setMaxArmies(maxArmiesDefender);
         //repaint();
         repaint(textAreaInfo, labelAdvice);
     }
@@ -441,6 +444,7 @@ public class GUI extends JFrame implements GameObserver {
         inputArmies.setIsConquered(isConquered);
         inputArmies.setCanAttackFromCountry(canAttackFromCountry);
         inputArmies.setDefenderCountryName(game.getDefenderCountryName());
+        defenseArmies.setMaxArmies(maxArmiesDefender);
         labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
     }
 
@@ -575,10 +579,13 @@ public class GUI extends JFrame implements GameObserver {
      * @param attacker
      * @param countryAttacker
      * @param nrA
+     * @param isArtificialPlayer
      */
     @Override
-    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA) {
-
+    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {
+        if (!isArtificialPlayer){
+            this.defenseArmies.setVisible(true);
+        }
     }
 
 }

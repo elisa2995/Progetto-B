@@ -272,49 +272,34 @@
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="login1">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="login1ActionPerformed"/>
-      </Events>
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Login"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="login2">
       <Properties>
         <Property name="text" type="java.lang.String" value="Login"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="login2ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="login3">
       <Properties>
         <Property name="text" type="java.lang.String" value="Login"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="login3ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="login4">
       <Properties>
         <Property name="text" type="java.lang.String" value="Login"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="login4ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="login5">
       <Properties>
         <Property name="text" type="java.lang.String" value="Login"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="login5ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="login6">
       <Properties>
         <Property name="text" type="java.lang.String" value="Login"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="login6ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="commentsLabel">
     </Component>
@@ -327,9 +312,6 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeType1ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="playerType2">
       <Properties>
@@ -360,41 +342,26 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeType2ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="changeType3">
       <Properties>
         <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeType3ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="changeType4">
       <Properties>
         <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeType4ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="changeType5">
       <Properties>
         <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeType5ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="changeType6">
       <Properties>
         <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeType6ActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>
