@@ -86,7 +86,7 @@ public interface GameObserver {
      * @param countryAttacker
      * @param nrA 
      */
-    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA);
+    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer);
 
     public void updateOnNextTurn();
 

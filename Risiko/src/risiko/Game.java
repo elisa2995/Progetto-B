@@ -101,7 +101,11 @@ public class Game extends Observable {
         Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
         if (attackerArmies > 0) {
             setChanged();
-            notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies);
+            if (defenderPlayer instanceof ArtificialPlayer) {
+                notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, true);
+            } else {
+                notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, false);
+            }
         }
     }
 

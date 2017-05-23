@@ -46,7 +46,7 @@ public class Observable {
      * @param attackerCountry   territorio attaccante
      * @param nrA numero di armate da cui si viene attaccati
      */
-    public void notifyDefender(String defender, String defenderCountry, String attacker, String attackerCountry, int nrA) {
+    public void notifyDefender(String defender, String defenderCountry, String attacker, String attackerCountry, int nrA, boolean isArtificialPlayer) {
         synchronized (this) {
             if (!changed) {
                 return;
@@ -55,7 +55,7 @@ public class Observable {
         }
 
         for (GameObserver ob : this.obs) {
-            ob.updateOnDefend(defender, defenderCountry, attacker, attackerCountry, nrA);
+            ob.updateOnDefend(defender, defenderCountry, attacker, attackerCountry, nrA, isArtificialPlayer);
         }
 
     }
