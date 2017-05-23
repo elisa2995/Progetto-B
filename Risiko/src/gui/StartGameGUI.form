@@ -36,151 +36,143 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" pref="159" max="-2" attributes="0"/>
+              <Component id="registrationButton" min="-2" pref="139" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="startButton" min="-2" pref="152" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="177" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="commentsLabel" min="-2" pref="508" max="-2" attributes="0"/>
+          </Group>
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+              <EmptySpace min="162" pref="162" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="jLabel1" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="playerText2" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                          <Component id="playerText3" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                          <Component id="playerText4" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                          <Component id="playerText5" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                          <Component id="playerText6" min="-2" pref="99" max="-2" attributes="0"/>
+                          <Component id="playerText1" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="playerType1" min="-2" pref="60" max="-2" attributes="0"/>
+                          <Component id="playerType2" min="-2" pref="60" max="-2" attributes="0"/>
+                          <Component id="playerType3" min="-2" pref="60" max="-2" attributes="0"/>
+                          <Component id="playerType4" min="-2" pref="60" max="-2" attributes="0"/>
+                          <Component id="playerType5" min="-2" pref="60" max="-2" attributes="0"/>
+                          <Component id="playerType6" min="-2" pref="60" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="registrationButton" min="-2" pref="139" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="startButton" min="-2" pref="157" max="-2" attributes="0"/>
+                              <Component id="changeType6" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="colorBox6" min="-2" pref="92" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="login5" min="-2" pref="72" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
-                              <Component id="addButton" min="-2" pref="146" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="removeButton" min="-2" pref="146" max="-2" attributes="0"/>
+                              <Component id="changeType2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="colorBox2" min="-2" pref="92" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="login2" min="-2" pref="72" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="playerText2" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="playerText3" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="playerText4" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="playerText5" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="playerText6" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="playerText1" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="playerType1" min="-2" pref="60" max="-2" attributes="0"/>
-                                  <Component id="playerType2" min="-2" pref="60" max="-2" attributes="0"/>
-                                  <Component id="playerType3" min="-2" pref="60" max="-2" attributes="0"/>
-                                  <Component id="playerType4" min="-2" pref="60" max="-2" attributes="0"/>
-                                  <Component id="playerType5" min="-2" pref="60" max="-2" attributes="0"/>
-                                  <Component id="playerType6" min="-2" pref="60" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="changeType3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="changeType1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="changeType2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="changeType3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="changeType4" min="-2" max="-2" attributes="0"/>
-                                  <Component id="changeType5" min="-2" max="-2" attributes="0"/>
-                                  <Component id="changeType6" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="colorBox3" min="-2" pref="92" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="login3" min="-2" pref="72" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="changeType4" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="login4" max="32767" attributes="0"/>
-                                  <Component id="login5" max="32767" attributes="0"/>
-                                  <Component id="login2" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="login1" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="login3" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="login6" min="-2" pref="72" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace pref="51" max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="colorBox2" alignment="0" min="-2" pref="92" max="-2" attributes="0"/>
-                                  <Component id="colorBox3" alignment="0" min="-2" pref="92" max="-2" attributes="0"/>
-                                  <Component id="colorBox4" alignment="0" min="-2" pref="92" max="-2" attributes="0"/>
-                                  <Component id="colorBox5" alignment="0" min="-2" pref="92" max="-2" attributes="0"/>
-                                  <Component id="colorBox6" alignment="0" min="-2" pref="92" max="-2" attributes="0"/>
-                                  <Component id="colorBox1" alignment="0" min="-2" pref="92" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="colorBox4" min="-2" pref="92" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="login4" min="-2" pref="72" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="changeType5" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="colorBox5" min="-2" pref="92" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="login6" min="-2" pref="72" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="changeType1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="colorBox1" min="-2" pref="92" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="login1" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                      <EmptySpace min="253" pref="264" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="addButton" min="-2" pref="149" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="removeButton" min="-2" pref="150" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="178" max="-2" attributes="0"/>
                   </Group>
               </Group>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="commentsLabel" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="removeButton" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
-                  <Component id="addButton" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <EmptySpace min="-2" pref="160" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="addButton" min="-2" pref="44" max="-2" attributes="0"/>
+                  <Component id="removeButton" min="-2" pref="44" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                      <Component id="colorBox1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="colorBox2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="colorBox3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="colorBox4" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="colorBox5" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="colorBox6" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="playerText1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="playerText2" min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="playerType2" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                                      <Component id="changeType2" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="login2" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="playerText3" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="playerType3" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                                  <Component id="changeType3" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="login3" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="playerText4" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="playerType4" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                                  <Component id="changeType4" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="login4" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="playerText5" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="playerType5" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                                  <Component id="changeType5" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="login5" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                              <Component id="playerType1" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                              <Component id="changeType1" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="login1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="playerText1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="playerText2" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                              <Component id="playerType2" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                              <Component id="changeType2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="colorBox2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="login2" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="playerText3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="playerType3" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                          <Component id="changeType3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="colorBox3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="login3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="playerText4" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="playerType4" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                          <Component id="changeType4" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="colorBox4" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="login4" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="playerText5" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="playerType5" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                          <Component id="changeType5" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="colorBox5" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="login6" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="playerText6" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -191,30 +183,32 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="changeType6" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="login6" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="colorBox6" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="login5" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
                   </Group>
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="playerType1" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                      <Component id="changeType1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="colorBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="login1" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace pref="40" max="32767" attributes="0"/>
-              <Component id="commentsLabel" min="-2" pref="28" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="registrationButton" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
-                  <Component id="startButton" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+              <EmptySpace pref="51" max="32767" attributes="0"/>
+              <Component id="commentsLabel" min="-2" pref="32" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="registrationButton" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                  <Component id="startButton" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="jLabel1">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="RISIKO"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JTextField" name="playerText1">
     </Component>
     <Component class="javax.swing.JTextField" name="playerText2">
@@ -228,25 +222,16 @@
     <Component class="javax.swing.JTextField" name="playerText6">
     </Component>
     <Component class="javax.swing.JButton" name="startButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Gioca"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startButtonActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="removeButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Rimuovi giocatore"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeButtonActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="addButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Aggiungi giocatore"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addButtonActionPerformed"/>
       </Events>
@@ -282,9 +267,6 @@
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="registrationButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Registra giocatore"/>
-      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registrationButtonActionPerformed"/>
       </Events>
