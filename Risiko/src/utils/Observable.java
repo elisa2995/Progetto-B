@@ -1,9 +1,10 @@
-package gui;
+package utils;
 
+import utils.GameObserver;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import risiko.Player;
+import risiko.players.Player;
 
 public class Observable {
 

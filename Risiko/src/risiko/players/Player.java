@@ -1,4 +1,4 @@
-package risiko;
+package risiko.players;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import risiko.BonusDeck.Card;
+import risiko.Mission;
 
 public class Player {
 

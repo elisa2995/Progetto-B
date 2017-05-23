@@ -3,15 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package risiko;
+package risiko.players;
 
 import exceptions.PendingOperationsException;
-import gui.GameObserver;
+import utils.GameObserver;
 import java.awt.Color;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import risiko.Action;
+import risiko.Game;
 
 /**
  *

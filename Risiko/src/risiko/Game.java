@@ -1,5 +1,8 @@
 package risiko;
 
+import risiko.players.PlayerType;
+import risiko.players.Player;
+import risiko.players.ArtificialPlayer;
 import exceptions.LastPhaseException;
 import exceptions.PendingOperationsException;
 import java.util.ArrayList;
@@ -7,8 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import gui.Observable;
-import gui.GameObserver;
+import utils.Observable;
+import utils.GameObserver;
 import java.awt.Color;
 //import java.awt.Image;
 import java.util.HashMap;

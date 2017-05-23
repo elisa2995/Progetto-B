@@ -1,5 +1,7 @@
 package gui;
 
+import controllers.LabelMapListener;
+import utils.GameObserver;
 import exceptions.PendingOperationsException;
 import java.awt.Color;
 import java.awt.Component;
@@ -27,8 +29,7 @@ import javax.swing.border.LineBorder;
 import risiko.Country;
 import risiko.Phase;
 import risiko.Game;
-import risiko.Player;
-import utils.PlayAudio;
+import risiko.players.Player;
 
 /**
  * @author andrea

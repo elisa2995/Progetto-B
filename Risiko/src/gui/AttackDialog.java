@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import risiko.Game;
-import utils.PlayAudio;
 
 public class AttackDialog extends JDialog {
 

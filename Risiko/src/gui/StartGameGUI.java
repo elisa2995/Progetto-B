@@ -5,6 +5,8 @@
  */
 package gui;
 
+import controllers.ColorBoxListener;
+import controllers.ChangeTypeListener;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;

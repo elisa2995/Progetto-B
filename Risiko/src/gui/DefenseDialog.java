@@ -7,7 +7,7 @@ package gui;
 
 import javax.swing.JDialog;
 import javax.swing.SpinnerNumberModel;
-import risiko.ArtificialPlayer;
+import risiko.players.ArtificialPlayer;
 import risiko.Game;
 
 /**
