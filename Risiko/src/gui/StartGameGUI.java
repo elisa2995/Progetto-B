@@ -5,6 +5,7 @@
  */
 package gui;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -53,6 +54,8 @@ public class StartGameGUI extends javax.swing.JFrame {
         nPlayers = 2;
         regDialog = new UserDialog(this);
         regDialog.setVisible(false);
+        Dimension dim=getToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getWidth()/2, dim.height/2-this.getHeight()/2);
 
         playerTexts = new JTextField[]{this.playerText1, this.playerText2, this.playerText3, this.playerText4, this.playerText5, this.playerText6};
         logins = new JButton[]{login1, login2, login3, login4, login5, login6};

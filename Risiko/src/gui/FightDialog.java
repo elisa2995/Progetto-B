@@ -79,7 +79,7 @@ public class FightDialog extends javax.swing.JDialog {
 
                 int pairs = Math.min(attackerDice.length, defenderDice.length);
                 for (int i = 0; i < pairs; i++) {
-                    icon = (defenderDice[i] >= attackerDice[i]) ? new ImageIcon(imagePath + "DefenderCone.png") : new ImageIcon(imagePath + "AttackerCone.png");
+                    icon = (defenderDice[i] >= attackerDice[i]) ? new ImageIcon(imagePath + "DefenderConeB.png") : new ImageIcon(imagePath + "AttackerConeR.png");
                     cones[i].setIcon(icon);
                 }
 
