@@ -5,6 +5,7 @@
  */
 package gui;
 
+import java.awt.Dimension;
 import controllers.ColorBoxListener;
 import controllers.ChangeTypeListener;
 import java.awt.Point;
@@ -55,6 +56,8 @@ public class StartGameGUI extends javax.swing.JFrame {
         nPlayers = 2;
         regDialog = new UserDialog(this);
         regDialog.setVisible(false);
+        Dimension dim=getToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getWidth()/2, dim.height/2-this.getHeight()/2);
 
         playerTexts = new JTextField[]{this.playerText1, this.playerText2, this.playerText3, this.playerText4, this.playerText5, this.playerText6};
         logins = new JButton[]{login1, login2, login3, login4, login5, login6};
@@ -64,13 +67,14 @@ public class StartGameGUI extends javax.swing.JFrame {
         String[] colors = new String[]{"Rosso", "Blu", "Nero", "Viola", "Verde", "Giallo"};
         cbListener = new ColorBoxListener(colorBoxs, colors.clone());
         ChangeTypeListener ctListener = new ChangeTypeListener(playerTexts, logins, changeTypes, playerTypes);
-
+        LoginListener loginListener = new LoginListener(logins, regDialog, this, playerTexts);
         for (int i = 0; i < colorBoxs.length; i++) {
             colorBoxs[i].setModel(new DefaultComboBoxModel(colors));
             colorBoxs[i].setSelectedItem(colors[i]);
             colorBoxs[i].addActionListener(cbListener);
             logins[i].setVisible(false);
             changeTypes[i].addActionListener(ctListener);
+            logins[i].addActionListener(loginListener);
             if (i > 1) {
                 colorBoxs[i].setVisible(false);
                 playerTexts[i].setVisible(false);
@@ -175,55 +179,21 @@ public class StartGameGUI extends javax.swing.JFrame {
             }
         });
 
-        login1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                login1ActionPerformed(evt);
-            }
-        });
+        login1.setText("Login");
 
         login2.setText("Login");
-        login2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                login2ActionPerformed(evt);
-            }
-        });
 
         login3.setText("Login");
-        login3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                login3ActionPerformed(evt);
-            }
-        });
 
         login4.setText("Login");
-        login4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                login4ActionPerformed(evt);
-            }
-        });
 
         login5.setText("Login");
-        login5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                login5ActionPerformed(evt);
-            }
-        });
 
         login6.setText("Login");
-        login6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                login6ActionPerformed(evt);
-            }
-        });
 
         playerType1.setText("Normale");
 
         changeType1.setText(">>");
-        changeType1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeType1ActionPerformed(evt);
-            }
-        });
 
         playerType2.setText("Normale");
 
@@ -236,39 +206,14 @@ public class StartGameGUI extends javax.swing.JFrame {
         playerType6.setText("Normale");
 
         changeType2.setText(">>");
-        changeType2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeType2ActionPerformed(evt);
-            }
-        });
 
         changeType3.setText(">>");
-        changeType3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeType3ActionPerformed(evt);
-            }
-        });
 
         changeType4.setText(">>");
-        changeType4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeType4ActionPerformed(evt);
-            }
-        });
 
         changeType5.setText(">>");
-        changeType5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeType5ActionPerformed(evt);
-            }
-        });
 
         changeType6.setText(">>");
-        changeType6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeType6ActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -416,6 +361,10 @@ public class StartGameGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /** 
+     * Rimuove un giocatore se ci sono più di due giocatori
+     * @param evt 
+     */
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         if (nPlayers > 2) {
             playerTexts[nPlayers - 1].setVisible(false);
@@ -427,6 +376,11 @@ public class StartGameGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_removeButtonActionPerformed
 
+    /**
+     * Aggiunge un giocatore se non è stato raggiunto il numero massimo 
+     * di giocatori
+     * @param evt 
+     */
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         if (nPlayers < 6) {
             playerTexts[nPlayers].setVisible(true);
@@ -437,12 +391,16 @@ public class StartGameGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addButtonActionPerformed
 
+    /**
+     * Inizia la partita se tutti i nomi dei giocatori sono stati inseriti e 
+     * non si ripetono
+     * @param evt 
+     */
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         List<String> list = new ArrayList<>();
-        boolean valid = true;
-        for (int i = 0; i < playerTexts.length; i++) {
-            if (playerTexts[i].isVisible()) {
-                list.add(playerTexts[i].getText());
+        for (JTextField playerText : playerTexts) {
+            if (playerText.isVisible()) {
+                list.add(playerText.getText());
             }
         }
 
@@ -464,7 +422,6 @@ public class StartGameGUI extends javax.swing.JFrame {
         String[] colors = cbListener.getUpdateColors(list.size());
 
         for (int i = 0; i < list.size(); i++) {
-
             players.put(list.get(i), getFormattedName(playerTypes[i].getText().toLowerCase()));
             playersColor.put(list.get(i), colors[i]);
         }
@@ -479,59 +436,15 @@ public class StartGameGUI extends javax.swing.JFrame {
 
     }//GEN-LAST:event_startButtonActionPerformed
 
+    /**
+     * Permette di registrare un nuovo utente
+     * @param evt 
+     */
     private void registrationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationButtonActionPerformed
         regDialog.setRegistrationMode(true);
         regDialog.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_registrationButtonActionPerformed
-
-    private void login6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login6ActionPerformed
-        doLogin(5);
-    }//GEN-LAST:event_login6ActionPerformed
-
-    private void login5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login5ActionPerformed
-        doLogin(4);
-    }//GEN-LAST:event_login5ActionPerformed
-
-    private void login4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login4ActionPerformed
-        doLogin(3);
-    }//GEN-LAST:event_login4ActionPerformed
-
-    private void login3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login3ActionPerformed
-        doLogin(2);
-    }//GEN-LAST:event_login3ActionPerformed
-
-    private void login2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login2ActionPerformed
-        doLogin(1);
-    }//GEN-LAST:event_login2ActionPerformed
-
-    private void login1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login1ActionPerformed
-        doLogin(0);
-    }//GEN-LAST:event_login1ActionPerformed
-
-    private void changeType1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType1ActionPerformed
-
-    }//GEN-LAST:event_changeType1ActionPerformed
-
-    private void changeType2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_changeType2ActionPerformed
-
-    private void changeType3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_changeType3ActionPerformed
-
-    private void changeType4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_changeType4ActionPerformed
-
-    private void changeType5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_changeType5ActionPerformed
-
-    private void changeType6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeType6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_changeType6ActionPerformed
 
     /**
      * Setta il nome del player nel input e lo rende non editabile; cambia il
@@ -545,42 +458,12 @@ public class StartGameGUI extends javax.swing.JFrame {
         playerTexts[index].setEditable(false);
         logins[index].setText("Logout");
     }
-
+    
     /**
-     * Consente di aprire il JDialog per effettuare la login se il giocatore
-     * scelto non è loggato; se è già loggato consente di effettuare il logout
-     *
-     * @param index
+     * Controlla se non sono stati inseriti username uguali
+     * @param players
+     * @return 
      */
-    public void doLogin(int index) {
-        if (logins[index].getText().equals("Login")) {
-            regDialog.setRegistrationMode(false);
-            regDialog.setIndex(index);
-            regDialog.setPlayers(getPlayers());
-            regDialog.setVisible(true);
-            this.setVisible(false);
-        } else {
-            logins[index].setText("Login");
-            playerTexts[index].setEditable(false);
-            playerTexts[index].setText("");
-        }
-    }
-
-    /**
-     * Ritorna la lista dei giocatori già loggati
-     *
-     * @return
-     */
-    private List getPlayers() {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < playerTexts.length; i++) {
-            if (playerTexts[i].getText().length() != 0 && logins[i].getText().equals("Logout")) {
-                list.add(playerTexts[i].getText());
-            }
-        }
-        return list;
-    }
-
     private boolean checkUsername(List<String> players) {
         Object[] players1 = players.toArray();
         Object[] players2 = players1.clone();
@@ -592,6 +475,24 @@ public class StartGameGUI extends javax.swing.JFrame {
             }
         }
         return true;
+    }
+
+    /**
+     * Formatta la tipologia di giocatore
+     * @param type
+     * @return 
+     */
+    private String getFormattedName(String type) {
+        switch (type) {
+            case "loggato":
+                return "LOGGED";
+            case "normale":
+                return "NORMAL";
+            case "artificiale":
+                return "ARTIFICIAL";
+            default:
+                return null;
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -633,18 +534,5 @@ public class StartGameGUI extends javax.swing.JFrame {
     private javax.swing.JButton removeButton;
     private javax.swing.JButton startButton;
     // End of variables declaration//GEN-END:variables
-
-    private String getFormattedName(String type) {
-        switch (type) {
-            case "loggato":
-                return "LOGGED";
-            case "normale":
-                return "NORMAL";
-            case "artificiale":
-                return "ARTIFICIAL";
-            default:
-                return null;
-        }
-    }
 
 }
