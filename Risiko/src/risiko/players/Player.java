@@ -17,12 +17,13 @@ public class Player {
     private Mission mission;
     private ArrayList<Card> bonusCards;
     private String name;
-    private Color color;
+    //private Color color;
+    private String color;
     //private int contaCarte[];
     private int bonusArmies;
     private boolean alreadyDrawnCard;
 
-    public Player(String name, Color color) {
+    public Player(String name, String color) {
         this.alreadyDrawnCard = false;
         this.bonusArmies = 0;
         this.mission = null;
@@ -52,7 +53,7 @@ public class Player {
         this.bonusArmies -= bonusArmies;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return this.color;
     }
 

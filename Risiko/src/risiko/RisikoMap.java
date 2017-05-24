@@ -451,17 +451,17 @@ public class RisikoMap {
         return nameCountry.get(countryName);
     }
 
-    public Color[] getCountriesColors() {
-        Color[] colors = new Color[getCountriesList().size()];
+    public String[] getCountriesColors() {
+        String[] colors = new String[getCountriesList().size()];
         int i = 0;
         for (Country country : getCountriesList()) {
-            colors[i] = getColorByCountry(country);
+            colors[i] = getPlayerColorByCountry(country);
             i++;
         }
         return colors;
     }
 
-    public Color getColorByCountry(Country country) {
+    public String getPlayerColorByCountry(Country country) {
         return getPlayerByCountry(country).getColor();
     }
 

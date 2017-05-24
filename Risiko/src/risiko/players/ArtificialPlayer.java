@@ -49,7 +49,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
      * @param name
      * @param color
      */
-    public ArtificialPlayer(String name, Color color, Game game) {
+    public ArtificialPlayer(String name, String color, Game game) {
         super(name, color);
         this.game = game;
         currentAction = Action.NOACTION;
@@ -228,11 +228,11 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     }
 
     @Override
-    public void updateOnCountryAssignment(String[] countries, int[] armies, Color[] colors) {
+    public void updateOnCountryAssignment(String[] countries, int[] armies, String[] colors) {
     }
 
     @Override
-    public void updateOnArmiesChange(String country, int armies, Color color) {
+    public void updateOnArmiesChange(String country, int armies, String color) {
     }
 
     @Override
@@ -248,7 +248,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     }
 
     @Override
-    public void updateOnPhaseChange(String player, String phase, Color color) {
+    public void updateOnPhaseChange(String player, String phase, String color) {
     }
     
     public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {

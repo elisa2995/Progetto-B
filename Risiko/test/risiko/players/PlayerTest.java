@@ -18,7 +18,7 @@ public class PlayerTest {
     private Player player;
 
     public PlayerTest() {
-        player = new Player("prova", Color.BLACK);
+        player = new Player("prova", "black");
     }
 
     @BeforeClass
