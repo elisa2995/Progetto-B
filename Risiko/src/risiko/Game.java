@@ -563,7 +563,7 @@ public class Game extends Observable {
         }
 
         //Devo resettare a false JustDrowCardBonus così che si possa pescare con map.updateOnConquer 
-        activePlayer.setJustDrawnCard(false);
+        activePlayer.setAlreadyDrawnCard(false);
         if (!activePlayer.getBonusCards().isEmpty()) {
             setChanged();
             notifyNextTurn();
