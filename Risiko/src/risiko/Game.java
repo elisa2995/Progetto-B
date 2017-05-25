@@ -33,6 +33,14 @@ public class Game extends Observable {
     private int resultsDiceAttack[];
     private int resultsDiceDefense[];
 
+    
+    public void setPlayerSettings(ArtificialPlayerSettings aps){
+        for(Player p:players){
+            if(p instanceof ArtificialPlayer){
+                ((ArtificialPlayer) p).setSetting(aps);
+            }
+        }
+    }
     /**
      * setta il numero di armate con il quale si vuole difenders
      *

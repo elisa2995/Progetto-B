@@ -10,22 +10,24 @@ package risiko;
  * @author alessandro
  */
 public class ArtificialPlayerSettings {
-    private int attackRate;
+    private int baseAttack;
     private int attackDelay;
     private int reinforceDelay;
     private int attackDeclarationDelay;
-    private int reinforceDistribution;
 
-    public ArtificialPlayerSettings(int attackRate, int attackDelay, int reinforceDelay, int attackDeclarationDelay, int reinforceDistribution) {
-        this.attackRate = attackRate;
+    public ArtificialPlayerSettings(int baseAttack, int attackDelay, int reinforceDelay, int attackDeclarationDelay, int reinforceDistribution) {
+        this.baseAttack = baseAttack;
         this.attackDelay = attackDelay;
         this.reinforceDelay = reinforceDelay;
         this.attackDeclarationDelay = attackDeclarationDelay;
-        this.reinforceDistribution = reinforceDistribution;
     }
 
-    public int getAttackRate() {
-        return attackRate;
+    public ArtificialPlayerSettings() {
+        
+    }
+    
+    public int getBaseAttack() {
+        return baseAttack;
     }
 
     public int getAttackDelay() {
@@ -40,12 +42,8 @@ public class ArtificialPlayerSettings {
         return attackDeclarationDelay;
     }
 
-    public int getReinforceDistribution() {
-        return reinforceDistribution;
-    }
-
-    public void setAttackRate(int attackRate) {
-        this.attackRate = attackRate;
+    public void setBaseAttack(int baseAttack) {
+        this.baseAttack = baseAttack;
     }
 
     public void setAttackDelay(int attackDelay) {
@@ -59,11 +57,5 @@ public class ArtificialPlayerSettings {
     public void setAttackDeclarationDelay(int attackDeclarationDelay) {
         this.attackDeclarationDelay = attackDeclarationDelay;
     }
-
-    public void setReinforceDistribution(int reinforceDistribution) {
-        this.reinforceDistribution = reinforceDistribution;
-    }
-    
-    
-    
+   
 }

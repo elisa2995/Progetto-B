@@ -26,20 +26,24 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     boolean maxArmiesSet;
     boolean canAttack;
 
-    private int attackRate = 100;
+    //private int attackRate = 100;
     private Action currentAction;
-    private int reinforceSpeed = 100;
+    //private int reinforceSpeed = 100;
     private ArtificialPlayerSettings setting;
-    private int declareSpeed = 500;
-    private int attackSpeed = 500;
+    //private int declareSpeed = 500;
+    //private int attackSpeed = 500;
 
-    /**
-     * crea un delay tra successivi rinforzi di un giocatore artificiale
-     *
-     * @param reinforceSpeed tempo in ms tra un rinforzo e l'altro
-     */
-    public void setReinforceSpeed(int reinforceSpeed) {
-        this.reinforceSpeed = reinforceSpeed;
+//    /**
+//     * crea un delay tra successivi rinforzi di un giocatore artificiale
+//     *
+//     * @param reinforceSpeed tempo in ms tra un rinforzo e l'altro
+//     */
+//    public void setReinforceSpeed(int reinforceSpeed) {
+//        this.reinforceSpeed = reinforceSpeed;
+//    }
+
+    public void setSetting(ArtificialPlayerSettings setting) {
+        this.setting = setting;
     }
 
     /**
@@ -51,6 +55,11 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
         super(name, color);
         this.game = game;
         currentAction = Action.NOACTION;
+        setting = new ArtificialPlayerSettings();
+        setting.setBaseAttack(5);
+        setting.setAttackDeclarationDelay(500);
+        setting.setReinforceDelay(100);
+        setting.setAttackDelay(500);
     }
 
     /**
@@ -64,7 +73,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
             int index = new Random().nextInt(myCountries.length);
             game.reinforce(myCountries[index], 1, this);
             try {
-                this.wait(reinforceSpeed);
+                this.wait(setting.getReinforceDelay());
             } catch (InterruptedException ex) {
 
             }
@@ -75,7 +84,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
      * esegue un attacco
      */
     private synchronized void randomAttack() {
-        int i = 2;
+        int i = setting.getBaseAttack();
 
         while (i > 0) {
             if (canAttack) {
@@ -135,7 +144,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
             game.declareAttack(this);
 
             try {
-                this.wait(declareSpeed);
+                this.wait(setting.getAttackDeclarationDelay());
             } catch (InterruptedException ex) {
 
             }
@@ -156,7 +165,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
 
         game.confirmAttack(this);
         try {
-            this.wait(attackSpeed);
+            this.wait(setting.getAttackDelay());
         } catch (InterruptedException ex) {
 
         }
