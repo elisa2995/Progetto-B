@@ -1,5 +1,6 @@
 package risiko;
 
+import risiko.players.Player;
 import java.util.Observable;
 
 /**

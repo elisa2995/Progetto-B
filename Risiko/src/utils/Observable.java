@@ -1,9 +1,10 @@
-package gui;
+package utils;
 
+import utils.GameObserver;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import risiko.Player;
+import risiko.players.Player;
 
 public class Observable {
 
@@ -145,7 +146,7 @@ public class Observable {
      * @param player
      * @param phase 
      */
-    public void notifyPhaseChange(String player, String phase, Color color) {
+    public void notifyPhaseChange(String player, String phase, String color) {
         synchronized (this) {
             if (!changed) {
                 return;
@@ -180,7 +181,7 @@ public class Observable {
      * @param armies
      * @param colors 
      */
-    public void notifyCountryAssignment(String[] countries, int[] armies, Color[] colors) {
+    public void notifyCountryAssignment(String[] countries, int[] armies, String[] colors) {
         synchronized (this) {
             if (!changed) {
                 return;
@@ -201,7 +202,7 @@ public class Observable {
      * @param armies
      * @param color 
      */
-    public void notifyArmiesChange(String country, int armies, Color color) {
+    public void notifyArmiesChange(String country, int armies, String color) {
         synchronized (this) {
             if (!changed) {
                 return;

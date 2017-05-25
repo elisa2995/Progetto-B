@@ -5,7 +5,7 @@
  */
 package gui;
 
-import risiko.ArtificialPlayerSettings;
+import risiko.players.ArtificialPlayerSettings;
 import risiko.Game;
 
 /**

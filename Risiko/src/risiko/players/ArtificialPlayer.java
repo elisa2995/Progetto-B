@@ -3,16 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package risiko;
+package risiko.players;
 
 import exceptions.PendingOperationsException;
-import gui.GameObserver;
+import utils.GameObserver;
 import java.awt.Color;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import risiko.Action;
+import risiko.Game;
+import risiko.players.ArtificialPlayerSettings;
 /**
  *
  * @author emanuela
@@ -26,24 +28,24 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     boolean maxArmiesSet;
     boolean canAttack;
 
-    //private int attackRate = 100;
+    private int attackRate = 100;
     private Action currentAction;
-    //private int reinforceSpeed = 100;
+    private int reinforceSpeed = 100;
     private ArtificialPlayerSettings setting;
-    //private int declareSpeed = 500;
-    //private int attackSpeed = 500;
+    private int declareSpeed = 500;
+    private int attackSpeed = 500;
 
-//    /**
-//     * crea un delay tra successivi rinforzi di un giocatore artificiale
-//     *
-//     * @param reinforceSpeed tempo in ms tra un rinforzo e l'altro
-//     */
-//    public void setReinforceSpeed(int reinforceSpeed) {
-//        this.reinforceSpeed = reinforceSpeed;
-//    }
-
-    public void setSetting(ArtificialPlayerSettings setting) {
+    
+     public void setSetting(ArtificialPlayerSettings setting) {
         this.setting = setting;
+    }
+    /**
+     * crea un delay tra successivi rinforzi di un giocatore artificiale
+     *
+     * @param reinforceSpeed tempo in ms tra un rinforzo e l'altro
+     */
+    public void setReinforceSpeed(int reinforceSpeed) {
+        this.reinforceSpeed = reinforceSpeed;
     }
 
     /**
@@ -51,7 +53,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
      * @param name
      * @param color
      */
-    public ArtificialPlayer(String name, Color color, Game game) {
+    public ArtificialPlayer(String name, String color, Game game) {
         super(name, color);
         this.game = game;
         currentAction = Action.NOACTION;
@@ -62,6 +64,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
         setting.setAttackDelay(500);
     }
 
+    
     /**
      * aggiunge armate ai territori posseduti fino a che non sono esaurite
      */
@@ -235,11 +238,11 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     }
 
     @Override
-    public void updateOnCountryAssignment(String[] countries, int[] armies, Color[] colors) {
+    public void updateOnCountryAssignment(String[] countries, int[] armies, String[] colors) {
     }
 
     @Override
-    public void updateOnArmiesChange(String country, int armies, Color color) {
+    public void updateOnArmiesChange(String country, int armies, String color) {
     }
 
     @Override
@@ -255,7 +258,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     }
 
     @Override
-    public void updateOnPhaseChange(String player, String phase, Color color) {
+    public void updateOnPhaseChange(String player, String phase, String color) {
     }
     
     public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {

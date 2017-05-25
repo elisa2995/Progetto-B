@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui;
+package controllers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,38 +19,34 @@ import javax.swing.JComboBox;
 public class ColorBoxListener implements ActionListener {
 
     private String[] updateColors;
-    private JComboBox[] colorBoxs;
+    private JComboBox[] colorBoxes;
 
-    public ColorBoxListener(JComboBox[] colorBoxs, String[] updateColors) {
+    public ColorBoxListener(JComboBox[] colorBoxes, String[] updateColors) {
         this.updateColors = updateColors;
-        this.colorBoxs = colorBoxs;
+        this.colorBoxes = colorBoxes;
     }
 
     /**
      * Se un giocatore cambia il suo colore di default, quel colore viene 
-     * assegnato al giocatore che possedev in precedenza il nuovo colore
+     * assegnato al giocatore che possedeva in precedenza il nuovo colore
      * @param e 
      */
     @Override
     public void actionPerformed(ActionEvent e) {
         JComboBox comboBox = (JComboBox) e.getSource();
         String selected = (String) comboBox.getSelectedItem();
-
-        for (int i = 0; i < colorBoxs.length; i++) {
-
-            if (colorBoxs[i] == (comboBox) && !updateColors[i].equals(selected)) {
-                String colorTmp = updateColors[i];
-                updateColors[i] = selected;
-                for (int j = 0; j < colorBoxs.length; j++) {
-                    if (colorBoxs[j] != comboBox && colorBoxs[j].getSelectedItem().equals(selected)) {
-                        colorBoxs[j].setSelectedItem(colorTmp);
+        
+        int index = Arrays.asList(colorBoxes).indexOf(comboBox);
+        if(!updateColors[index].equals(selected)){ 
+            String colorTmp = updateColors[index]; 
+            updateColors[index] = selected;       
+            for (int j = 0; j < colorBoxes.length; j++) {
+                    if (colorBoxes[j] != comboBox && colorBoxes[j].getSelectedItem().equals(selected)) {
+                        colorBoxes[j].setSelectedItem(colorTmp);    
                         updateColors[j] = colorTmp;
                     }
                 }
-            }
-
         }
-
     }
 
     /**

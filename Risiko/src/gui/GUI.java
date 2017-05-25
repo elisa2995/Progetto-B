@@ -1,5 +1,7 @@
 package gui;
 
+import controllers.LabelMapListener;
+import utils.GameObserver;
 import exceptions.PendingOperationsException;
 import java.awt.Color;
 import java.awt.Component;
@@ -13,22 +15,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-import javax.swing.border.LineBorder;
 import risiko.Country;
 import risiko.Phase;
 import risiko.Game;
-import risiko.Player;
-import utils.PlayAudio;
+import risiko.players.Player;
 
 /**
  * @author andrea
@@ -45,7 +40,7 @@ public class GUI extends JFrame implements GameObserver {
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         initComponents();
-        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko.png"))));
+        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risikoA.png"))));
         countryLabelMap = new HashMap<>();
         colorCountryNameMap = readColorTextMap("files/ColorCountry.txt");
         init(players, playersColor);
@@ -72,6 +67,8 @@ public class GUI extends JFrame implements GameObserver {
         cardBonusDialog = new CardBonusDialog(game);
         labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
         labelAdvice.setFont(new Font("Serif", Font.PLAIN, 13));
+        Dimension dim=getToolkit().getScreenSize();
+        this.setLocation(dim.width/2-this.getWidth()/2, dim.height/2-this.getHeight()/2);
     }
 
     /**
@@ -149,6 +146,7 @@ public class GUI extends JFrame implements GameObserver {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1400, 650));
+        setPreferredSize(new java.awt.Dimension(1400, 650));
 
         labelPlayerPhase.setBackground(new java.awt.Color(225, 207, 218));
         labelPlayerPhase.setForeground(new java.awt.Color(1, 1, 1));
@@ -338,9 +336,9 @@ public class GUI extends JFrame implements GameObserver {
      * @param phase
      */
     @Override
-    public void updateOnPhaseChange(String player, String phase, Color color) {
+    public void updateOnPhaseChange(String player, String phase, String color) {
         this.labelPlayerPhase.setText(player + " " + phase);
-        this.labelPlayerPhase.setForeground(color);
+        this.labelPlayerPhase.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
         this.textAreaInfo.setText("");
         switch (phase) {
             case "REINFORCE":
@@ -463,7 +461,7 @@ public class GUI extends JFrame implements GameObserver {
      * @param colors
      */
     @Override
-    public void updateOnCountryAssignment(String[] countries, int[] armies, Color[] colors) {
+    public void updateOnCountryAssignment(String[] countries, int[] armies, String[] colors) {
         int i = 0;
         for (String country : countries) {
             updateOnArmiesChange(country, armies[i], colors[i]);
@@ -480,44 +478,14 @@ public class GUI extends JFrame implements GameObserver {
      * @param color
      */
     @Override
-    public void updateOnArmiesChange(String country, int armies, Color color) {
-        Map<Color,String> colorMap = buildColorMap();
-        String colorToString = colorMap.get(color);
+    public void updateOnArmiesChange(String country, int armies, String color) {
+        String colorToString = color;
         JLabel label = countryLabelMap.get(country);
         label.setForeground(Color.WHITE);
         label.setText(Integer.toString(armies));
         label.setHorizontalTextPosition(JLabel.CENTER);
-        try {
-            switch(colorToString){
-                case "Rosso":   
-                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/redlabel1.png"))));
-                    break;
-                
-                case "Verde":
-                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/greenlabel1.png"))));
-                    break;
-                
-                case "Blu":   
-                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/bluelabel1.png"))));
-                    break;
-                
-                case "Giallo":   
-                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/yellowlabel1.png"))));
-                    break;
-                
-                case "Viola":   
-                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/purplelabel1.png"))));
-                    break;
-                
-                case "Nero":   
-                    label.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("files/images/labelCountry/blacklabel2.png"))));
-                    break;
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        repaint();
+        label.setIcon(new ImageIcon("files/images/labelCountry/"+colorToString+"label1.png"));
+             
         repaint(label);
     }
 
@@ -533,16 +501,6 @@ public class GUI extends JFrame implements GameObserver {
         inputArmies.setDrawnCard(cardName);
     }
     
-    private Map<Color, String> buildColorMap() {
-        Map<Color, String> colorMap = new HashMap<>();
-        colorMap.put(new Color(255, 0, 0), "Rosso");
-        colorMap.put(new Color(0, 232, 0), "Verde");
-        colorMap.put(new Color(0, 0, 255), "Blu");
-        colorMap.put(new Color(255, 255, 0), "Giallo");
-        colorMap.put(new Color(255, 0, 255), "Viola");
-        colorMap.put(new Color(0, 0, 0), "Nero");
-        return colorMap;
-    }
     
     /**
      * Chiama Component.repaint() sui components passati come parametro del metodo.

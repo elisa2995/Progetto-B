@@ -1,5 +1,8 @@
 package risiko;
 
+import risiko.players.PlayerType;
+import risiko.players.Player;
+import risiko.players.ArtificialPlayer;
 import exceptions.LastPhaseException;
 import exceptions.PendingOperationsException;
 import java.util.ArrayList;
@@ -7,14 +10,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import gui.Observable;
-import gui.GameObserver;
+import utils.Observable;
+import utils.GameObserver;
 import java.awt.Color;
 //import java.awt.Image;
 import java.util.HashMap;
 import java.util.Random;
 import risiko.BonusDeck;
 import risiko.BonusDeck.Card;
+import risiko.players.ArtificialPlayerSettings;
 
 public class Game extends Observable {
 
@@ -76,19 +80,6 @@ public class Game extends Observable {
         }
     }
 
-//    public void setAttackerCountry(String attackerCountryName, int nrA, ArtificialPlayer... aiCaller) {
-//        if (!checkCallerIdentity(aiCaller)) {
-//            return;
-//        }
-//        this.attackerCountry = map.getCountryByName(attackerCountryName); 
-//        setChanged();
-//        notifySetAttacker(attackerCountryName);
-//        if (nrA == -1) {
-//            attackerArmies = map.getMaxArmies(map.getCountryByName(attackerCountryName), true);
-//        } else {
-//            attackerArmies = nrA;
-//        }
-//    }
     /**
      * dichiara un attacco che parte da attacker al territorio defender con nrA
      * numero di armate l'attacco non viene portato a termine finchè il
@@ -230,49 +221,27 @@ public class Game extends Observable {
     }
 
     /**
-     * Costruisce nrPlayer giocatori (nome di default "Giocatore-i"), e li
-     * aggiunge alla lista {@code List<Player> this.players}.
      *
+     * @param playersMap una Map nomePlayer - tipoPlayer
+     * @param colors una Map nomePlayer - colorePlayer
      */
-    /**
-     *
-     * @param playersMap
-     * @param colors
-     */
-    private void buildPlayers(Map<String, String> playersMap, Map<String, String> playersColor) {
+    private void buildPlayers(Map<String, String> playersTypeMap, Map<String, String> playersColor) {
 
-        Map<String, Color> colorMap = buildColorMap();
         int i = 0;
-        for (Map.Entry<String, String> entry : playersMap.entrySet()) {
-
-            for (Map.Entry<String, String> entryColor : playersColor.entrySet()) {
-
-                if (entry.getKey().equals(entryColor.getKey())) {
-                    switch (PlayerType.valueOf(entry.getValue())) {
-                        case ARTIFICIAL:
-                            this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i, colorMap.get(entryColor.getValue()), this));
-                            break;
-                        case NORMAL:
-                        case LOGGED:
-                            this.players.add(new Player(entry.getKey(), colorMap.get(entryColor.getValue())));
-                            break;
-                    }
-                    i++;
-                }
+        for (Map.Entry<String, String> playerType : playersTypeMap.entrySet()) {
+            String color = playersColor.get(playerType.getKey());
+            switch (PlayerType.valueOf(playerType.getValue())) {
+                case ARTIFICIAL:
+                    this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i, color, this));
+                    break;
+                case NORMAL:
+                case LOGGED:
+                    this.players.add(new Player(playerType.getKey(), color));
+                    break;
             }
+            i++;
 
         }
-    }
-
-    private Map<String, Color> buildColorMap() {
-        Map<String, Color> colorMap = new HashMap<>();
-        colorMap.put("Rosso", new Color(255, 0, 0));
-        colorMap.put("Verde", new Color(0, 232, 0));
-        colorMap.put("Blu", new Color(0, 0, 255));
-        colorMap.put("Giallo", new Color(255, 255, 0));
-        colorMap.put("Viola", new Color(255, 0, 255));
-        colorMap.put("Nero", new Color(0, 0, 0));
-        return colorMap;
     }
 
     //------------------------  Attacco  ------------------------------------//
@@ -487,7 +456,7 @@ public class Game extends Observable {
         setChanged();
         notifyReinforce(countryName, activePlayer.getBonusArmies());
         setChanged();
-        notifyArmiesChange(countryName, country.getArmies(), map.getColorByCountry(country));
+        notifyArmiesChange(countryName, country.getArmies(), map.getPlayerColorByCountry(country));
     }
 
     /**
@@ -568,7 +537,7 @@ public class Game extends Observable {
         }
 
         //Devo resettare a false JustDrowCardBonus così che si possa pescare con map.updateOnConquer 
-        activePlayer.setJustDrawnCard(false);
+        activePlayer.setAlreadyDrawnCard(false);
         if (!activePlayer.getBonusCards().isEmpty()) {
             setChanged();
             notifyNextTurn();
@@ -876,16 +845,16 @@ public class Game extends Observable {
         return countriesArmies;
     }
 
-    public Color[] getCountriesColors() {
+    public String[] getCountriesColors() {
         return map.getCountriesColors();
 
     }
 
     public void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
         setChanged();
-        notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getColorByCountry(defenderCountry));
+        notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getPlayerColorByCountry(defenderCountry));
         setChanged();
-        notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getColorByCountry(attackerCountry));
+        notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getPlayerColorByCountry(attackerCountry));
     }
 
 //    public Image getLastCardBonusDrowed(){

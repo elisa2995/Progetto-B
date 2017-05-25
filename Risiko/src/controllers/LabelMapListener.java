@@ -1,5 +1,7 @@
-package gui;
+package controllers;
 
+import gui.GUI;
+import gui.movementDialog;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -12,7 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
 import risiko.Game;
-import utils.PlayAudio;
+import gui.PlayAudio;
 
 /**
  *
