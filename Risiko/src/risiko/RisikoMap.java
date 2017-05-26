@@ -18,13 +18,13 @@ public class RisikoMap {
     private final String urlCountries = "files/territori.txt";
     //private final String urlCountries = "files/prova.txt";
     private final String urlMissions = "files/missions.txt";
-    private Map<String,  List<Country>> continentCountries;
+    private Map<String, List<Country>> continentCountries;
     private Map<Country, List<Country>> countryNeighbors;
     private List<Mission> missions;
-    private Map<String,  Integer>       continentBonus;
-    private Map<Country, Player>        countryPlayer;
-    private Map<String,  Country>       nameCountry;
-    
+    private Map<String, Integer> continentBonus;
+    private Map<Country, Player> countryPlayer;
+    private Map<String, Country> nameCountry;
+
     public Map<Country, Player> getCountryPlayer() {
         return countryPlayer;
     }
@@ -115,11 +115,11 @@ public class RisikoMap {
             String line;
             List<Country> countries = new ArrayList<>();
             while ((line = br.readLine()) != null) {
-                
+
                 if (line.startsWith("-")) {
                     String str[] = line.split("-");     //str[] sarà un'array di 3 stringhe, la prima sarà vuota, questo perchè line inizia con "-"
-                    continentCountries.put(str[1], countries);                    
-                    continentBonus.put(str[1],new Integer(str[2]));
+                    continentCountries.put(str[1], countries);
+                    continentBonus.put(str[1], new Integer(str[2]));
                     countries = new ArrayList<>();
                 } else {
                     String str[] = line.split(",");
@@ -130,16 +130,16 @@ public class RisikoMap {
             System.out.println("Error in buildContinentCountry");
         }
     }
-    
+
     /**
-     * Legge il file specificato da urlMissions, da ogni riga estrae la description
-     * di un obiettivo e crea gli oggetti Mission
-     * 
+     * Legge il file specificato da urlMissions, da ogni riga estrae la
+     * description di un obiettivo e crea gli oggetti Mission
+     *
      * @throws qualche eccezione legata alla lettura del file
      * @author Federico
      */
     private void buildMissions() {
-        
+
         try (BufferedReader br = new BufferedReader(new FileReader(urlMissions))) {
 
             String line;
@@ -155,41 +155,42 @@ public class RisikoMap {
             System.out.println("File not found");
         }
     }
-    
+
     /**
-     * Costruisce la targetList (contenente i country da conquistare) di una mission
-     * 
+     * Costruisce la targetList (contenente i country da conquistare) di una
+     * mission
+     *
      * @param mission
      * @author Federico
-     * 
+     *
      */
-    private void buildTargetListForMission(Mission mission){
-        
+    private void buildTargetListForMission(Mission mission) {
+
         String description = mission.getDescription();
-        List<String> continents = new ArrayList<> (continentCountries.keySet());
-        for (int i=0 ; i<continents.size() ; i++){
-            if(description.contains(continents.get(i))){
-            	mission.setTargetList(continentCountries.get(continents.get(i)));            
+        List<String> continents = new ArrayList<>(continentCountries.keySet());
+        for (int i = 0; i < continents.size(); i++) {
+            if (description.contains(continents.get(i))) {
+                mission.setTargetList(continentCountries.get(continents.get(i)));
             }
         }
-        if(mission.getTargetList().isEmpty()){
+        if (mission.getTargetList().isEmpty()) {
             mission.setNrCountryToConquer(24);
         }
     }
-    
+
     /**
      * Effettua l'assegnazione degli obiettivi ai giocatori.
-     * 
+     *
      * @param players
      * @author Federico
      */
     public void assignMissionToPlayers(List<Player> players) {
         Collections.shuffle(this.missions);
-        for(int i=0;i<players.size();i++){
+        for (int i = 0; i < players.size(); i++) {
             players.get(i).setMission(missions.get(i));
         }
     }
-    
+
     /**
      * Effettua l'assegnazione iniziale dei territori ai giocatori (random).
      *
@@ -260,8 +261,9 @@ public class RisikoMap {
         List<Country> countryOfThatPlayer = getMyCountries(player);
         Set<String> continentSet = continentCountries.keySet();
         for (String continent : continentSet) {
-            if (countryOfThatPlayer.containsAll(continentCountries.get(continent)))
-                bonus+=continentBonus.get(continent);
+            if (countryOfThatPlayer.containsAll(continentCountries.get(continent))) {
+                bonus += continentBonus.get(continent);
+            }
         }
         bonus += (int) Math.floor(getMyCountries(player).size() / 3);
         player.addBonusArmies(bonus);
@@ -344,16 +346,17 @@ public class RisikoMap {
 
         return !this.countryPlayer.get(defender).equals(player) && this.getNeighbors(attacker).contains(defender);
     }
+
     /**
-     * Controlla che toCountry  sia dell'active player e che sia un
-     * confinante dell'fromCountry
+     * Controlla che toCountry sia dell'active player e che sia un confinante
+     * dell'fromCountry
      */
     public boolean controlMovement(Country fromCountry, Country toCountry, Player player) {
 
         return this.countryPlayer.get(toCountry).equals(player) && this.getNeighbors(fromCountry).contains(toCountry);
     }
-    
-    public void move(Country fromCountry, Country toCountry, int nrArmies){
+
+    public void move(Country fromCountry, Country toCountry, int nrArmies) {
         fromCountry.removeArmies(nrArmies);
         toCountry.addArmies(nrArmies);
     }
@@ -396,22 +399,19 @@ public class RisikoMap {
      * @author Federico
      */
     public boolean checkIfWinner(Player player) {
-        
+
         boolean result = false;
-        
-        if ( !player.getMission().getTargetList().isEmpty() ) {
-            
-            if ( getMyCountries(player).containsAll(player.getMission().getTargetList()) ) {
+
+        if (!player.getMission().getTargetList().isEmpty()) {
+
+            if (getMyCountries(player).containsAll(player.getMission().getTargetList())) {
                 result = true;
             }
-            
-        } else {
-            
-            if ( getMyCountries(player).size() == player.getMission().getNrCountryToConquer()){
-                result = true;
-            }
+
+        } else if (getMyCountries(player).size() == player.getMission().getNrCountryToConquer()) {
+            result = true;
         }
-        
+
         return result;
     }
 
@@ -473,7 +473,7 @@ public class RisikoMap {
      * Ritorna la lista delle countries che compongono un continent.
      *
      * @param continent
-     * @return 
+     * @return
      */
     public List<Country> getCountriesByContinet(String continent) {
         return countryNeighbors.get(continent);

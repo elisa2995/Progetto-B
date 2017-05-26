@@ -19,6 +19,7 @@ import java.util.Random;
 import risiko.BonusDeck;
 import risiko.BonusDeck.Card;
 import risiko.players.ArtificialPlayerSettings;
+import utils.BasicObservable;
 
 public class Game extends Observable {
 
@@ -159,7 +160,7 @@ public class Game extends Observable {
         }
         this.defenderCountry = map.getCountryByName(defenderCountryName);
         setChanged();
-        notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
+        ((BasicObservable)this).notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
     }
 
     /**
@@ -375,7 +376,7 @@ public class Game extends Observable {
                 notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, false);
             }
         }
-        this.resetFightingCountries();
+        this.resetFightingCountries();        
     }
 
     /**

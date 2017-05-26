@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package risiko.players;
 
 import exceptions.PendingOperationsException;
@@ -15,12 +10,10 @@ import java.util.logging.Logger;
 import risiko.Action;
 import risiko.Game;
 import risiko.players.ArtificialPlayerSettings;
+import utils.BasicGameObserver;
 
-/**
- *
- * @author emanuela
- */
-public class ArtificialPlayer extends Player implements Runnable, GameObserver {
+
+public class ArtificialPlayer extends Player implements Runnable, BasicGameObserver {
 
     private Game game;
 
@@ -211,17 +204,6 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     }
 
     @Override
-    public void updateOnReinforce(String countryName, int bonusArmies) {
-    }
-
-    public void updateOnPhaseChange(String player, String phase) {
-    }
-
-    @Override
-    public void updateOnSetAttacker(String countryName) {
-    }
-
-    @Override
     public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender) {
         this.maxArmiesAttack = maxArmiesAttacker;
         this.maxArmiesDefense = maxArmiesDefender;
@@ -236,30 +218,6 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     @Override
     public void updateOnVictory(String winner) {
         this.currentAction = Action.ENDGAME;
-    }
-
-    @Override
-    public void updateOnCountryAssignment(String[] countries, int[] armies, String[] colors) {
-    }
-
-    @Override
-    public void updateOnArmiesChange(String country, int armies, String color) {
-    }
-
-    @Override
-    public void updateOnSetFromCountry(String countryName) {
-    }
-
-    @Override
-    public void updateOnNextTurn() {
-    }
-
-    @Override
-    public void updateOnDrawnCard(String cardName) {
-    }
-
-    @Override
-    public void updateOnPhaseChange(String player, String phase, String color) {
     }
 
     public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {
