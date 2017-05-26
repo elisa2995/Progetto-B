@@ -8,6 +8,9 @@ package gui;
 import java.awt.Dimension;
 import controllers.ColorBoxListener;
 import controllers.ChangeTypeListener;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -31,7 +34,7 @@ public class StartGameGUI extends javax.swing.JFrame {
 
     private int nPlayers;
     private JTextField[] playerTexts;
-    private JComboBox[] colorBoxs;
+    private JComboBox[] colorBoxes;
     private JLabel[] playerTypes;
     private JButton[] changeTypes;
     private ColorBoxListener cbListener;
@@ -44,8 +47,8 @@ public class StartGameGUI extends javax.swing.JFrame {
     public StartGameGUI() {
         initBackground();
         initComponents();
+        initColorBoxes();
         init();
-
     }
 
     /**
@@ -56,34 +59,58 @@ public class StartGameGUI extends javax.swing.JFrame {
         nPlayers = 2;
         regDialog = new UserDialog(this);
         regDialog.setVisible(false);
-        Dimension dim=getToolkit().getScreenSize();
-        this.setLocation(dim.width/2-this.getWidth()/2, dim.height/2-this.getHeight()/2);
+        Dimension dim = getToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
 
         playerTexts = new JTextField[]{this.playerText1, this.playerText2, this.playerText3, this.playerText4, this.playerText5, this.playerText6};
         logins = new JButton[]{login1, login2, login3, login4, login5, login6};
         playerTypes = new JLabel[]{playerType1, playerType2, playerType3, playerType4, playerType5, playerType6};
         changeTypes = new JButton[]{changeType1, changeType2, changeType3, changeType4, changeType5, changeType6};
-        colorBoxs = new JComboBox[]{colorBox1, colorBox2, colorBox3, colorBox4, colorBox5, colorBox6};
-        String[] colors = new String[]{"Rosso", "Blu", "Nero", "Viola", "Verde", "Giallo"};
-        cbListener = new ColorBoxListener(colorBoxs, colors.clone());
+
         ChangeTypeListener ctListener = new ChangeTypeListener(playerTexts, logins, changeTypes, playerTypes);
         LoginListener loginListener = new LoginListener(logins, regDialog, this, playerTexts);
-        for (int i = 0; i < colorBoxs.length; i++) {
-            colorBoxs[i].setModel(new DefaultComboBoxModel(colors));
-            colorBoxs[i].setSelectedItem(colors[i]);
-            colorBoxs[i].addActionListener(cbListener);
+        for (int i = 0; i < playerTexts.length; i++) {
             logins[i].setVisible(false);
             changeTypes[i].addActionListener(ctListener);
             logins[i].addActionListener(loginListener);
             if (i > 1) {
-                colorBoxs[i].setVisible(false);
+                colorBoxes[i].setVisible(false);
                 playerTexts[i].setVisible(false);
                 changeTypes[i].setVisible(false);
                 playerTypes[i].setVisible(false);
             }
         }
-        
-        // Immagini sui bottoni
+
+        // Setto trasparenti i campi di input di testo (scherzavo)
+        Color transparentWhite = new Color(255, 255, 255, 100);
+        for (JTextField text : playerTexts) {
+            text.setOpaque(false);
+            text.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0, 150)));
+            /*text.setBackground(transparentWhite);
+            text.setCaretColor(transparentWhite);
+            text.setDisabledTextColor(transparentWhite);*/
+        }
+
+        // Setto le immagini ai bottoni di login
+        ImageIcon icon = new ImageIcon("images/loginButton.png");
+        for (JButton login : logins) {
+            login.setText("");
+            login.setSize(icon.getIconWidth(), icon.getIconHeight());
+            login.putClientProperty("value", "login");
+            login.setBorder(null);
+            login.setIcon(icon);
+        }
+
+        // Setto le immagini ai bottoni per cambiare tipo di giocatore
+        icon = new ImageIcon("images/forwardButton.png");
+        for (JButton forward : changeTypes) {
+            forward.setText("");
+            forward.setSize(icon.getIconWidth(), icon.getIconHeight());
+            forward.setBorder(null);
+            forward.setIcon(icon);
+        }
+
+        // Setto le immagini sugli altri bottoni
         addButton.setIcon(new ImageIcon("images/addButton.png"));
         removeButton.setIcon(new ImageIcon("images/removeButton.png"));
         registrationButton.setIcon(new ImageIcon("images/registrationButton.png"));
@@ -97,7 +124,39 @@ public class StartGameGUI extends javax.swing.JFrame {
             backgroundImage = ImageIO.read(new File("images/loginBackground.png"));
             this.setContentPane(new BackgroundPane(backgroundImage));
         } catch (IOException ex) {
-            System.out.println("loginBackground.png not found");
+            System.err.println("loginBackground.png not found");
+        }
+    }
+
+    /**
+     * Inizializza i colorBoxes. Setta come modello un array coni nomi dei
+     * colori, setta come renderer una JLabel che ha come Icon un rettangolo del
+     * colore corrispondente ...
+     */
+    private void initColorBoxes() {
+
+        colorBoxes = new JComboBox[]{colorBox1, colorBox2, colorBox3, colorBox4, colorBox5, colorBox6};
+        DefaultColor[] colors = DefaultColor.values();
+        ImageIcon[] icons = new ImageIcon[colors.length];
+        String[] names = new String[colors.length];
+
+        // Creo un array di icons (una per colore)
+        for (int i = 0; i < icons.length; i++) {
+            names[i] = colors[i].toStringLC();
+            icons[i] = new ImageIcon("images/" + colors[i].toStringLC() + ".png");
+        }
+
+        cbListener = new ColorBoxListener(colorBoxes, names.clone());
+
+        // Setto i colorBoxes
+        for (int i = 0; i < colorBoxes.length; i++) {
+            JComboBox colorBox = colorBoxes[i];
+            colorBox.setModel(new DefaultComboBoxModel(names));
+            colorBox.setSelectedItem(names[i]);
+            ComboBoxRenderer renderer = new ComboBoxRenderer(icons, names);
+            renderer.setPreferredSize(new Dimension(icons[0].getIconWidth(), icons[0].getIconHeight()));
+            colorBox.setRenderer(renderer);
+            colorBoxes[i].addActionListener(cbListener);
         }
     }
 
@@ -179,17 +238,11 @@ public class StartGameGUI extends javax.swing.JFrame {
             }
         });
 
-        login1.setText("Login");
-
-        login2.setText("Login");
-
-        login3.setText("Login");
-
-        login4.setText("Login");
-
-        login5.setText("Login");
-
-        login6.setText("Login");
+        login2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                login2ActionPerformed(evt);
+            }
+        });
 
         playerType1.setText("Normale");
 
@@ -348,7 +401,7 @@ public class StartGameGUI extends javax.swing.JFrame {
                         .addComponent(playerType1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(changeType1)
                         .addComponent(colorBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(login1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(login1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                 .addComponent(commentsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -361,14 +414,15 @@ public class StartGameGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /** 
+    /**
      * Rimuove un giocatore se ci sono più di due giocatori
-     * @param evt 
+     *
+     * @param evt
      */
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         if (nPlayers > 2) {
             playerTexts[nPlayers - 1].setVisible(false);
-            colorBoxs[nPlayers - 1].setVisible(false);
+            colorBoxes[nPlayers - 1].setVisible(false);
             logins[nPlayers - 1].setVisible(false);
             changeTypes[nPlayers - 1].setVisible(false);
             playerTypes[nPlayers - 1].setVisible(false);
@@ -377,14 +431,15 @@ public class StartGameGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_removeButtonActionPerformed
 
     /**
-     * Aggiunge un giocatore se non è stato raggiunto il numero massimo 
-     * di giocatori
-     * @param evt 
+     * Aggiunge un giocatore se non è stato raggiunto il numero massimo di
+     * giocatori
+     *
+     * @param evt
      */
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         if (nPlayers < 6) {
             playerTexts[nPlayers].setVisible(true);
-            colorBoxs[nPlayers].setVisible(true);
+            colorBoxes[nPlayers].setVisible(true);
             changeTypes[nPlayers].setVisible(true);
             playerTypes[nPlayers].setVisible(true);
             nPlayers++;
@@ -392,9 +447,10 @@ public class StartGameGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_addButtonActionPerformed
 
     /**
-     * Inizia la partita se tutti i nomi dei giocatori sono stati inseriti e 
-     * non si ripetono
-     * @param evt 
+     * Inizia la partita se tutti i nomi dei giocatori sono stati inseriti e non
+     * si ripetono
+     *
+     * @param evt
      */
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         List<String> list = new ArrayList<>();
@@ -438,13 +494,18 @@ public class StartGameGUI extends javax.swing.JFrame {
 
     /**
      * Permette di registrare un nuovo utente
-     * @param evt 
+     *
+     * @param evt
      */
     private void registrationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationButtonActionPerformed
         regDialog.setRegistrationMode(true);
         regDialog.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_registrationButtonActionPerformed
+
+    private void login2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_login2ActionPerformed
 
     /**
      * Setta il nome del player nel input e lo rende non editabile; cambia il
@@ -456,13 +517,15 @@ public class StartGameGUI extends javax.swing.JFrame {
     public void setPlayerName(String username, int index) {
         playerTexts[index].setText(username);
         playerTexts[index].setEditable(false);
-        logins[index].setText("Logout");
+        logins[index].putClientProperty("value", "logout");
+        logins[index].setIcon(new ImageIcon("images/logoutButton.png"));
     }
-    
+
     /**
      * Controlla se non sono stati inseriti username uguali
+     *
      * @param players
-     * @return 
+     * @return
      */
     private boolean checkUsername(List<String> players) {
         Object[] players1 = players.toArray();
@@ -479,8 +542,9 @@ public class StartGameGUI extends javax.swing.JFrame {
 
     /**
      * Formatta la tipologia di giocatore
+     *
      * @param type
-     * @return 
+     * @return
      */
     private String getFormattedName(String type) {
         switch (type) {

@@ -63,9 +63,12 @@ public class CardBonusDialog extends JDialog {
         buttonPanel.add(createButtonTris("Giocherò il TRIS la prossima volta", null, 0));
 
         Map<String[], Integer> playableTris = game.getPlayableTris();
+        String[] c;
+        String message;
         for (Map.Entry<String[], Integer> entry : playableTris.entrySet()) {
-            String[] c = entry.getKey();
-            buttonPanel.add(createButtonTris("Gioca il tris: \"" + getFormattedString(c), c, entry.getValue()));
+            c = entry.getKey();
+            message = "Gioca : "+getFormattedString(c)+", ("+entry.getValue()+" armate)";
+            buttonPanel.add(createButtonTris(message, c, entry.getValue()));
         }
     }
 

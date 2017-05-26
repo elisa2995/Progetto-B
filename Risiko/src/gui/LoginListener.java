@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JTextField;
@@ -36,14 +37,15 @@ public class LoginListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JButton source = (JButton) e.getSource();
         int index = Arrays.asList(logins).indexOf(source);
-        if (logins[index].getText().equals("Login")) {
+        if (((String)logins[index].getClientProperty("value")).equals("login")){
             regDialog.setRegistrationMode(false);
             regDialog.setIndex(index);
             regDialog.setPlayers(getPlayers());
             regDialog.setVisible(true);
             gui.setVisible(false);
         } else {
-            logins[index].setText("Login");
+            logins[index].putClientProperty("value", "login");
+            logins[index].setIcon(new ImageIcon("images/loginButton.png"));
             playerTexts[index].setEditable(false);
             playerTexts[index].setText("");
         }
@@ -57,7 +59,7 @@ public class LoginListener implements ActionListener {
     private List getPlayers() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < playerTexts.length; i++) {
-            if (playerTexts[i].getText().length() != 0 && logins[i].getText().equals("Logout")) {
+            if (playerTexts[i].getText().length() != 0 && ((String)logins[i].getClientProperty("value")).equals("logout")) {
                 list.add(playerTexts[i].getText());
             }
         }
