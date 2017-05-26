@@ -375,6 +375,7 @@ public class Game extends Observable {
                 notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, false);
             }
         }
+        this.resetFightingCountries();
     }
 
     /**

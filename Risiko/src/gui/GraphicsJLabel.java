@@ -82,6 +82,7 @@ public class GraphicsJLabel extends JLabel {
                xx=new double[]{0,0,0};
                yy= new double[]{0,0,0};
                label.updateUI();
+               
             }
         });
         

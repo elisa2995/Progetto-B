@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import risiko.Action;
 import risiko.Game;
 import risiko.players.ArtificialPlayerSettings;
+
 /**
  *
  * @author emanuela
@@ -35,10 +36,10 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     private int declareSpeed = 500;
     private int attackSpeed = 500;
 
-    
-     public void setSetting(ArtificialPlayerSettings setting) {
+    public void setSetting(ArtificialPlayerSettings setting) {
         this.setting = setting;
     }
+
     /**
      * crea un delay tra successivi rinforzi di un giocatore artificiale
      *
@@ -64,7 +65,6 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
         setting.setAttackDelay(500);
     }
 
-    
     /**
      * aggiunge armate ai territori posseduti fino a che non sono esaurite
      */
@@ -93,6 +93,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
             if (canAttack) {
                 randomSingleAttack();
                 i--;
+
             }
             //se non può attaccare da nessun territorio viene fermato l'attacco
             if (game.getAllAttackers(this).length == 0) {
@@ -107,7 +108,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
      */
     private synchronized void randomSingleAttack() {
         maxArmiesSet = false;
-
+        canAttack = false;
         String[] myCountries = game.getAllAttackers(this);
         String[] opponentCountries;
         int index, defendIndex;
@@ -260,12 +261,12 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     @Override
     public void updateOnPhaseChange(String player, String phase, String color) {
     }
-    
+
     public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {
         if (this.getName().equals(defender)) {
-            this.currentAction = Action.DEFEND;  
-        }   
-        //canAttack = false;
+            this.currentAction = Action.DEFEND;
+        }
+
     }
 
 }

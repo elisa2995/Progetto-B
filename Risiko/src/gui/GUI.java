@@ -269,7 +269,7 @@ public class GUI extends JFrame implements GameObserver {
 
     private void buttonNextPhaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextPhaseActionPerformed
         //System.out.println(javax.swing.SwingUtilities.isEventDispatchThread());
-        ((GraphicsJLabel) labelMap).resetCone();
+        //((GraphicsJLabel) labelMap).resetCone();
 
         try {
             game.nextPhase();
@@ -282,8 +282,7 @@ public class GUI extends JFrame implements GameObserver {
     private void buttonAttackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAttackActionPerformed
         if (game.getPhase().equals(Phase.FIGHT)) {
             if (game.getAttackerCountryName() != null && game.getDefenderCountryName() != null) {
-                inputArmies.setVisible(true);
-                game.resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
+                inputArmies.setVisible(true);                
             }
             game.resetFightingCountries();
         }
@@ -349,6 +348,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnPhaseChange(String player, String phase, String color) {
+        ((GraphicsJLabel) labelMap).resetCone();
         this.labelPlayerPhase.setText(player + " " + phase);
         this.labelPlayerPhase.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
         this.textAreaInfo.setText("");
@@ -422,7 +422,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnSetFromCountry(String countryName) {
-        //((GraphicsJLabel) labelMap).resetCone();
+        //((GraphicsJLabel) labelMap).Cone();
         if (countryName != null) {
             this.textAreaInfo.setText("Territorio di partenza : " + countryName);
             labelAdvice.setText("Clicca su un territorio confinante per sceglierlo come destinazione");
