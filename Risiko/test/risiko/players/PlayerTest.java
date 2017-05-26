@@ -10,7 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import risiko.BonusDeck;
-import risiko.BonusDeck.Card;
+import risiko.Card;
 import risiko.Mission;
 
 public class PlayerTest {

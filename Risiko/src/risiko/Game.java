@@ -17,7 +17,7 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Random;
 import risiko.BonusDeck;
-import risiko.BonusDeck.Card;
+import risiko.Card;
 
 public class Game extends Observable {
 

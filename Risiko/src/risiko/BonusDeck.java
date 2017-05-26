@@ -37,7 +37,7 @@ public class BonusDeck {
      * @param card
      */
     private void buildCards(Card card) {
-        for (int i = 0; i < card.amount; i++) {
+        for (int i = 0; i < card.getAmount(); i++) {
             cards.add(getCardByName(card.toString()));
         }
     }
@@ -104,14 +104,5 @@ public class BonusDeck {
         return this.tris;
     }
 
-    public enum Card {
-
-        INFANTRY(13), CAVALRY(13), ARTILLERY(13), WILD(3);
-
-        private final int amount; // Il numero di carte di quel tipo nel mazzo
-
-        private Card(int n) {
-            this.amount = n;
-        }
-    }
+    
 }
