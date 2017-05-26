@@ -129,6 +129,7 @@ public class SettingsDialog extends javax.swing.JDialog {
         aps.setReinforceDelay((int) this.reinforceDelay.getValue());
         aps.setAttackDelay((int) this.attackDelay.getValue());
         game.setPlayerSettings(aps);
+        this.dispose();
     }//GEN-LAST:event_saveActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

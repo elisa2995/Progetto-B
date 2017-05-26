@@ -83,10 +83,11 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         int i = setting.getBaseAttack();
 
         while (i > 0) {
+            System.out.println(i);
             if (canAttack) {
                 randomSingleAttack();
                 i--;
-
+                
             }
             //se non può attaccare da nessun territorio viene fermato l'attacco
             if (game.getAllAttackers(this).length == 0) {
@@ -194,6 +195,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                 }
 
                 if (!game.canReinforce(1, this)) {
+                    //System.out.println("cambia fase");
                     game.nextPhase(this);
                 }
             } catch (PendingOperationsException ex) {

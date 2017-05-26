@@ -155,6 +155,9 @@ public class GUI extends JFrame implements GameObserver {
         labelMap = new GraphicsJLabel();
         labelAdvice = new javax.swing.JLabel();
         buttonShowMission = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        settingsItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1400, 650));
@@ -209,6 +212,20 @@ public class GUI extends JFrame implements GameObserver {
                 buttonShowMissionActionPerformed(evt);
             }
         });
+
+        jMenu1.setText("Settings");
+
+        settingsItem.setText("AISettings");
+        settingsItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                settingsItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(settingsItem);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -292,6 +309,11 @@ public class GUI extends JFrame implements GameObserver {
 
         JOptionPane.showMessageDialog(null, game.getActivePlayerMission());
     }//GEN-LAST:event_buttonShowMissionActionPerformed
+
+    private void settingsItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsItemActionPerformed
+        SettingsDialog settings=new SettingsDialog(this, true, game);
+        settings.setVisible(true);
+    }//GEN-LAST:event_settingsItemActionPerformed
 
     /**
      * Procedurone per la creazione di una map<Color,String> a partire da un
@@ -529,11 +551,14 @@ public class GUI extends JFrame implements GameObserver {
     private javax.swing.JButton buttonMoreInfo;
     private javax.swing.JButton buttonNextPhase;
     private javax.swing.JButton buttonShowMission;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelAdvice;
     private javax.swing.JLabel labelMap;
     private javax.swing.JLabel labelPlayerPhase;
     private javax.swing.JLayeredPane mapLayeredPane;
+    private javax.swing.JMenuItem settingsItem;
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables
 
