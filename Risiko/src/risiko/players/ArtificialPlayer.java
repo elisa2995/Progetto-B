@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import risiko.Action;
 import risiko.Game;
-
+import risiko.players.ArtificialPlayerSettings;
 /**
  *
  * @author emanuela
@@ -35,6 +35,10 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     private int declareSpeed = 500;
     private int attackSpeed = 500;
 
+    
+     public void setSetting(ArtificialPlayerSettings setting) {
+        this.setting = setting;
+    }
     /**
      * crea un delay tra successivi rinforzi di un giocatore artificiale
      *
@@ -53,8 +57,14 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
         super(name, color);
         this.game = game;
         currentAction = Action.NOACTION;
+        setting = new ArtificialPlayerSettings();
+        setting.setBaseAttack(5);
+        setting.setAttackDeclarationDelay(500);
+        setting.setReinforceDelay(100);
+        setting.setAttackDelay(500);
     }
 
+    
     /**
      * aggiunge armate ai territori posseduti fino a che non sono esaurite
      */
@@ -66,7 +76,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
             int index = new Random().nextInt(myCountries.length);
             game.reinforce(myCountries[index], 1, this);
             try {
-                this.wait(reinforceSpeed);
+                this.wait(setting.getReinforceDelay());
             } catch (InterruptedException ex) {
 
             }
@@ -77,7 +87,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
      * esegue un attacco
      */
     private synchronized void randomAttack() {
-        int i = 2;
+        int i = setting.getBaseAttack();
 
         while (i > 0) {
             if (canAttack) {
@@ -137,7 +147,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
             game.declareAttack(this);
 
             try {
-                this.wait(declareSpeed);
+                this.wait(setting.getAttackDeclarationDelay());
             } catch (InterruptedException ex) {
 
             }
@@ -158,7 +168,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
 
         game.confirmAttack(this);
         try {
-            this.wait(attackSpeed);
+            this.wait(setting.getAttackDelay());
         } catch (InterruptedException ex) {
 
         }

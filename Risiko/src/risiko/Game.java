@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Random;
 import risiko.BonusDeck;
 import risiko.BonusDeck.Card;
+import risiko.players.ArtificialPlayerSettings;
 
 public class Game extends Observable {
 
@@ -35,6 +36,14 @@ public class Game extends Observable {
     private Phase phase;
     private int resultsDiceAttack[];
     private int resultsDiceDefense[];
+
+    public void setPlayerSettings(ArtificialPlayerSettings aps){
+        for(Player p:players){
+            if(p instanceof ArtificialPlayer){
+                ((ArtificialPlayer) p).setSetting(aps);
+            }
+        }
+    }
 
     public Game(Map<String, String> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
 
