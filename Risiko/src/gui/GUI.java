@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,11 +46,22 @@ public class GUI extends JFrame implements GameObserver {
     private CardBonusDialog cardBonusDialog;
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
+        initBackground();
         initComponents();
-        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risikoA.png"))));
+        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko.png"))));
         countryLabelMap = new HashMap<>();
         colorCountryNameMap = readColorTextMap("files/ColorCountry.txt");
         init(players, playersColor);
+    }
+    
+    private void initBackground() {
+        BufferedImage backgroundImage;
+        try {
+            backgroundImage = ImageIO.read(new File("images/background.jpg"));
+            this.setContentPane(new BackgroundPane(backgroundImage));
+        } catch (IOException ex) {
+            System.out.println("loginBackground.png not found");
+        }
     }
 
     /**
