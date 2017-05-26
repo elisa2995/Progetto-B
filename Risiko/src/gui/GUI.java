@@ -40,7 +40,7 @@ public class GUI extends JFrame implements GameObserver {
     private CardBonusDialog cardBonusDialog;
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
-        initBackground();
+        //initBackground();
         initComponents();
         labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko.png"))));
         countryLabelMap = new HashMap<>();
@@ -48,7 +48,7 @@ public class GUI extends JFrame implements GameObserver {
         init(players, playersColor);
     }
     
-    private void initBackground() {
+    /*private void initBackground() {
         BufferedImage backgroundImage;
         try {
             backgroundImage = ImageIO.read(new File("images/background.jpg"));
@@ -56,7 +56,7 @@ public class GUI extends JFrame implements GameObserver {
         } catch (IOException ex) {
             System.out.println("loginBackground.png not found");
         }
-    }
+    }*/
 
     /**
      * Inizializza la gui e il game.
