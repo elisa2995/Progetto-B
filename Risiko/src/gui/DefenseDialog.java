@@ -23,7 +23,7 @@ public class DefenseDialog extends JDialog {
         super(parent, modal);
         initComponents();
         this.game = game;
-        //this.setDefaultCloseOperation(0);
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     }
     
     public void setMaxArmies(int maxArmiesDefender) {

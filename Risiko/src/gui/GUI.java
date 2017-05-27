@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,12 +40,23 @@ public class GUI extends JFrame implements GameObserver {
     private CardBonusDialog cardBonusDialog;
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
+        //initBackground();
         initComponents();
-        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risikoA.png"))));
+        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko.png"))));
         countryLabelMap = new HashMap<>();
         colorCountryNameMap = readColorTextMap("files/ColorCountry.txt");
         init(players, playersColor);
     }
+    
+    /*private void initBackground() {
+        BufferedImage backgroundImage;
+        try {
+            backgroundImage = ImageIO.read(new File("images/background.jpg"));
+            this.setContentPane(new BackgroundPane(backgroundImage));
+        } catch (IOException ex) {
+            System.out.println("loginBackground.png not found");
+        }
+    }*/
 
     /**
      * Inizializza la gui e il game.
@@ -257,7 +269,7 @@ public class GUI extends JFrame implements GameObserver {
 
     private void buttonNextPhaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextPhaseActionPerformed
         //System.out.println(javax.swing.SwingUtilities.isEventDispatchThread());
-        ((GraphicsJLabel) labelMap).resetCone();
+        //((GraphicsJLabel) labelMap).resetCone();
 
         try {
             game.nextPhase();
@@ -270,8 +282,7 @@ public class GUI extends JFrame implements GameObserver {
     private void buttonAttackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAttackActionPerformed
         if (game.getPhase().equals(Phase.FIGHT)) {
             if (game.getAttackerCountryName() != null && game.getDefenderCountryName() != null) {
-                inputArmies.setVisible(true);
-                game.resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
+                inputArmies.setVisible(true);                
             }
             game.resetFightingCountries();
         }
@@ -337,6 +348,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnPhaseChange(String player, String phase, String color) {
+        ((GraphicsJLabel) labelMap).resetCone();
         this.labelPlayerPhase.setText(player + " " + phase);
         this.labelPlayerPhase.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
         this.textAreaInfo.setText("");
@@ -410,7 +422,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnSetFromCountry(String countryName) {
-        ((GraphicsJLabel) labelMap).resetCone();
+        //((GraphicsJLabel) labelMap).Cone();
         if (countryName != null) {
             this.textAreaInfo.setText("Territorio di partenza : " + countryName);
             labelAdvice.setText("Clicca su un territorio confinante per sceglierlo come destinazione");

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package risiko.players;
 
 import exceptions.PendingOperationsException;
@@ -14,12 +9,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import risiko.Action;
 import risiko.Game;
+import risiko.players.ArtificialPlayerSettings;
+import utils.BasicGameObserver;
 
-/**
- *
- * @author emanuela
- */
-public class ArtificialPlayer extends Player implements Runnable, GameObserver {
+
+public class ArtificialPlayer extends Player implements Runnable, BasicGameObserver {
 
     private Game game;
 
@@ -34,6 +28,10 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     private ArtificialPlayerSettings setting;
     private int declareSpeed = 500;
     private int attackSpeed = 500;
+
+    public void setSetting(ArtificialPlayerSettings setting) {
+        this.setting = setting;
+    }
 
     /**
      * crea un delay tra successivi rinforzi di un giocatore artificiale
@@ -53,6 +51,11 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
         super(name, color);
         this.game = game;
         currentAction = Action.NOACTION;
+        setting = new ArtificialPlayerSettings();
+        setting.setBaseAttack(5);
+        setting.setAttackDeclarationDelay(500);
+        setting.setReinforceDelay(100);
+        setting.setAttackDelay(500);
     }
 
     /**
@@ -66,7 +69,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
             int index = new Random().nextInt(myCountries.length);
             game.reinforce(myCountries[index], 1, this);
             try {
-                this.wait(reinforceSpeed);
+                this.wait(setting.getReinforceDelay());
             } catch (InterruptedException ex) {
 
             }
@@ -77,7 +80,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
      * esegue un attacco
      */
     private synchronized void randomAttack() {
-        int i = 2;
+        int i = setting.getBaseAttack();
 
         while (i > 0) {
             if (canAttack) {
@@ -89,7 +92,11 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
                 i = 0;
             }
         }
-
+        try {   // Carolina in modo che non continui a attaccare
+            game.nextPhase(this);
+        } catch (PendingOperationsException ex) {
+            Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -97,7 +104,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
      */
     private synchronized void randomSingleAttack() {
         maxArmiesSet = false;
-
+        canAttack = false;
         String[] myCountries = game.getAllAttackers(this);
         String[] opponentCountries;
         int index, defendIndex;
@@ -105,7 +112,10 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
 
         do {
             //set country attacco
-            index = new Random().nextInt(myCountries.length);
+            index = new Random().nextInt(myCountries.length);  
+            /* Dovrebbe esserci un check sul fatto che myCountries non sia vuoto,
+            che se no dà un errore (fa nextInt(0)) // Carolina
+            */
             game.setAttackerCountry(myCountries[index], this);
 
             //set country difesa
@@ -137,7 +147,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
             game.declareAttack(this);
 
             try {
-                this.wait(declareSpeed);
+                this.wait(setting.getAttackDeclarationDelay());
             } catch (InterruptedException ex) {
 
             }
@@ -158,7 +168,7 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
 
         game.confirmAttack(this);
         try {
-            this.wait(attackSpeed);
+            this.wait(setting.getAttackDelay());
         } catch (InterruptedException ex) {
 
         }
@@ -181,6 +191,9 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
                             //this.randomSingleAttack();
                             this.randomAttack();
                             break;
+                        case MOVE:
+                            game.nextPhase(this); // Carolina
+                            break;
                     }
                 }
                 switch (this.currentAction) {
@@ -200,17 +213,6 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
     }
 
     @Override
-    public void updateOnReinforce(String countryName, int bonusArmies) {
-    }
-
-    public void updateOnPhaseChange(String player, String phase) {
-    }
-
-    @Override
-    public void updateOnSetAttacker(String countryName) {
-    }
-
-    @Override
     public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender) {
         this.maxArmiesAttack = maxArmiesAttacker;
         this.maxArmiesDefense = maxArmiesDefender;
@@ -227,35 +229,11 @@ public class ArtificialPlayer extends Player implements Runnable, GameObserver {
         this.currentAction = Action.ENDGAME;
     }
 
-    @Override
-    public void updateOnCountryAssignment(String[] countries, int[] armies, String[] colors) {
-    }
-
-    @Override
-    public void updateOnArmiesChange(String country, int armies, String color) {
-    }
-
-    @Override
-    public void updateOnSetFromCountry(String countryName) {
-    }
-
-    @Override
-    public void updateOnNextTurn() {
-    }
-
-    @Override
-    public void updateOnDrawnCard(String cardName) {
-    }
-
-    @Override
-    public void updateOnPhaseChange(String player, String phase, String color) {
-    }
-    
     public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {
         if (this.getName().equals(defender)) {
-            this.currentAction = Action.DEFEND;  
-        }   
-        //canAttack = false;
+            this.currentAction = Action.DEFEND;
+        }
+
     }
 
 }

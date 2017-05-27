@@ -12,12 +12,13 @@ import java.util.ListIterator;
 import java.util.Map;
 import utils.Observable;
 import utils.GameObserver;
-import java.awt.Color;
 //import java.awt.Image;
 import java.util.HashMap;
 import java.util.Random;
 import risiko.BonusDeck;
 import risiko.Card;
+import risiko.players.ArtificialPlayerSettings;
+import utils.BasicObservable;
 
 public class Game extends Observable {
 
@@ -36,126 +37,12 @@ public class Game extends Observable {
     private int resultsDiceAttack[];
     private int resultsDiceDefense[];
 
-    /**
-     * setta il numero di armate con il quale si vuole difenders
-     *
-     * @param nrD numero di armate, se il valore è -1 allore verrà settato il
-     * numero di armate massimo
-     * @param aiCaller
-     */
-    public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller) {
-        if (aiCaller.length == 0) {
-            if ((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)) {
-                return;
-            }
-        } else if (!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))) {
-            return;
-        }
-
-        if (nrD == -1) {
-            defenderArmies = map.getMaxArmies(defenderCountry, false);
-        } else {
-            defenderArmies = nrD;
-        }
-    }
-
-    public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
-
-        if (nrA == -1) {
-            attackerArmies = map.getMaxArmies(attackerCountry, true);
-        } else {
-            attackerArmies = nrA;
-        }
-    }
-
-    /**
-     * dichiara un attacco che parte da attacker al territorio defender con nrA
-     * numero di armate l'attacco non viene portato a termine finchè il
-     * difensore non ha scelto con quante armate difendersi
-     *
-     * @param attacker territorio attaccante
-     * @param defender territorio difensore
-     * @param nrA numero di armate in attacco
-     * @param aiCaller
-     */
-    public void declareAttack(ArtificialPlayer... aiCaller) {
-        attackInProgress = true;
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
-
-        Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
-        Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
-        if (attackerArmies > 0) {
-            setChanged();
-            if (defenderPlayer instanceof ArtificialPlayer) {
-                notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, true);
-            } else {
-                notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, false);
+    public void setPlayerSettings(ArtificialPlayerSettings aps){
+        for(Player p:players){
+            if(p instanceof ArtificialPlayer){
+                ((ArtificialPlayer) p).setSetting(aps);
             }
         }
-    }
-
-    /**
-     * dopo che un attacco viene dichiarato viene chiamato questo metodo per
-     * eseguirlo aggiungendo il numero di armate del difensore
-     *
-     * @param nrD
-     * @param aiCaller
-     */
-    public void confirmAttack(ArtificialPlayer... aiCaller) {
-        if (attackInProgress == false) {
-            return;
-        }
-
-        if (aiCaller.length == 0) {
-            if ((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)) {
-                return;
-            }
-        } else if (!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))) {
-            return;
-        }
-//        if (!checkCallerIdentity(aiCaller)) {
-//            return;
-//        }
-        int nrA = this.attackerArmies;
-        int nrD = this.defenderArmies;
-
-        Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
-        Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
-        int lostArmies[] = fight(attackerCountry, defenderCountry, nrA, nrD);
-        boolean conquered = map.isConquered(defenderCountry);
-        String attackResult = (new AttackResult(attackerPlayer,
-                defenderPlayer, nrA, nrD,
-                lostArmies, conquered)).toString();
-
-        if (conquered) {
-            map.updateOnConquer(attackerCountry, defenderCountry, nrA);
-            notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
-            if (hasLost(defenderPlayer)) {
-                players.remove(defenderPlayer);
-            }
-            if (hasWon()) {
-                setChanged();
-                notifyVictory(activePlayer.getName());
-                return;
-            }
-        }
-
-        setChanged();
-        notifyAttackResult(attackResult, conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense());
-        attackInProgress = false;
-    }
-
-    public Player getActivePlayer() {
-        return activePlayer;
-    }
-
-    public String getActivePlayerMission() {
-        return activePlayer.getMissionDescription();
     }
 
     public Game(Map<String, String> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
@@ -171,6 +58,15 @@ public class Game extends Observable {
 
     public Phase getPhase() {
         return this.phase;
+    }    
+        
+
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
+    public String getActivePlayerMission() {
+        return activePlayer.getMissionDescription();
     }
 
     /**
@@ -188,12 +84,10 @@ public class Game extends Observable {
         buildPlayers(playersMap, playersColor);
         map.assignCountriesToPlayers(players);
         map.assignMissionToPlayers(players);
-        setChanged();
         notifyCountryAssignment(getCountriesNames(), getCountriesArmies(), getCountriesColors());
         activePlayer = players.get(new Random().nextInt(players.size()));
         map.computeBonusArmies(activePlayer);
         phase = Phase.REINFORCE;
-        setChanged();
         notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
         startArtificialPlayerThreads();
     }
@@ -247,7 +141,6 @@ public class Game extends Observable {
             return;
         }
         this.attackerCountry = map.getCountryByName(attackerCountryName);
-        setChanged();
         notifySetAttacker(attackerCountryName);
     }
 
@@ -262,8 +155,7 @@ public class Game extends Observable {
             return;
         }
         this.defenderCountry = map.getCountryByName(defenderCountryName);
-        setChanged();
-        notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
+        ((BasicObservable)this).notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
     }
 
     /**
@@ -278,7 +170,6 @@ public class Game extends Observable {
         }
         this.defenderCountry = null;
         this.attackerCountry = null;
-        setChanged();
         switch (getPhase()) {
             case FIGHT:
                 notifySetAttacker(null);
@@ -324,13 +215,11 @@ public class Game extends Observable {
                 players.remove(defenderPlayer);
             }
             if (hasWon()) {
-                setChanged();
                 notifyVictory(activePlayer.getName());
                 return;
             }
         }
 
-        setChanged();
         notifyAttackResult(attackResult, conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense());
 
     }
@@ -417,6 +306,118 @@ public class Game extends Observable {
     private int rollDie() {
         return (int) (Math.random() * 6) + 1;
     }
+    
+    /**
+     * setta il numero di armate con il quale si vuole difenders
+     *
+     * @param nrD numero di armate, se il valore è -1 allore verrà settato il
+     * numero di armate massimo
+     * @param aiCaller
+     */
+    public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller) {
+        if (aiCaller.length == 0) {
+            if ((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)) {
+                return;
+            }
+        } else if (!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))) {
+            return;
+        }
+
+        if (nrD == -1) {
+            defenderArmies = map.getMaxArmies(defenderCountry, false);
+        } else {
+            defenderArmies = nrD;
+        }
+    }
+
+    public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller) {
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+
+        if (nrA == -1) {
+            attackerArmies = map.getMaxArmies(attackerCountry, true);
+        } else {
+            attackerArmies = nrA;
+        }
+    }
+
+    /**
+     * dichiara un attacco che parte da attacker al territorio defender con nrA
+     * numero di armate l'attacco non viene portato a termine finchè il
+     * difensore non ha scelto con quante armate difendersi
+     *
+     * @param attacker territorio attaccante
+     * @param defender territorio difensore
+     * @param nrA numero di armate in attacco
+     * @param aiCaller
+     */
+    public void declareAttack(ArtificialPlayer... aiCaller) {
+        attackInProgress = true;
+        if (!checkCallerIdentity(aiCaller)) {
+            return;
+        }
+
+        Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
+        Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
+        if (attackerArmies > 0) {
+            if (defenderPlayer instanceof ArtificialPlayer) {
+                notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, true);
+            } else {
+                notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, false);
+            }
+        }
+        this.resetFightingCountries();        
+    }
+
+    /**
+     * dopo che un attacco viene dichiarato viene chiamato questo metodo per
+     * eseguirlo aggiungendo il numero di armate del difensore
+     *
+     * @param nrD
+     * @param aiCaller
+     */
+    public void confirmAttack(ArtificialPlayer... aiCaller) {
+        if (attackInProgress == false) {
+            return;
+        }
+
+        if (aiCaller.length == 0) {
+            if ((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)) {
+                return;
+            }
+        } else if (!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))) {
+            return;
+        }
+//        if (!checkCallerIdentity(aiCaller)) {
+//            return;
+//        }
+        int nrA = this.attackerArmies;
+        int nrD = this.defenderArmies;
+
+        Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
+        Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
+        int lostArmies[] = fight(attackerCountry, defenderCountry, nrA, nrD);
+        boolean conquered = map.isConquered(defenderCountry);
+        String attackResult = (new AttackResult(attackerPlayer,
+                defenderPlayer, nrA, nrD,
+                lostArmies, conquered)).toString();
+
+        if (conquered) {
+            map.updateOnConquer(attackerCountry, defenderCountry, nrA);
+            notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
+            if (hasLost(defenderPlayer)) {
+                players.remove(defenderPlayer);
+            }
+            if (hasWon()) {
+                notifyVictory(activePlayer.getName());
+                return;
+            }
+        }
+
+        notifyAttackResult(attackResult, conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense());
+        attackInProgress = false;
+    }
 
     // ----------------------- Rinforzo ------------------------------------
     /**
@@ -444,9 +445,7 @@ public class Game extends Observable {
             }
         }
 
-        setChanged();
         notifyReinforce(countryName, activePlayer.getBonusArmies());
-        setChanged();
         notifyArmiesChange(countryName, country.getArmies(), map.getPlayerColorByCountry(country));
     }
 
@@ -496,7 +495,6 @@ public class Game extends Observable {
         } catch (LastPhaseException ex) {
             passTurn();
         }
-        setChanged();
         notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
     }
 
@@ -530,7 +528,6 @@ public class Game extends Observable {
         //Devo resettare a false JustDrowCardBonus così che si possa pescare con map.updateOnConquer 
         activePlayer.setAlreadyDrawnCard(false);
         if (!activePlayer.getBonusCards().isEmpty()) {
-            setChanged();
             notifyNextTurn();
         }
     }
@@ -566,7 +563,6 @@ public class Game extends Observable {
         Card card = deck.drawCard();
         activePlayer.addCard(card);
 
-        setChanged();
         notifyDrawnCard(card.name());
     }
 
@@ -645,7 +641,6 @@ public class Game extends Observable {
             return;
         }
         this.attackerCountry = map.getCountryByName(attackerCountryName);
-        setChanged();
         notifySetFromCountry(attackerCountryName);
     }
 
@@ -662,12 +657,9 @@ public class Game extends Observable {
         }
         Country toCountry = map.getCountryByName(toCountryName);
         map.move(attackerCountry, toCountry, i);
-        setChanged();
         notifyArmiesChange(toCountryName, toCountry.getArmies(), activePlayer.getColor());
-        setChanged();
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), activePlayer.getColor());
         passTurn();
-        setChanged();
         notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
     }
 
@@ -842,20 +834,10 @@ public class Game extends Observable {
     }
 
     public void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
-        setChanged();
         notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getPlayerColorByCountry(defenderCountry));
-        setChanged();
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getPlayerColorByCountry(attackerCountry));
     }
 
-//    public Image getLastCardBonusDrowed(){
-//        ArrayList<CardBonus> cards = activePlayer.getAllBonusCard();
-//        CardBonus lastCard = cards.get(cards.size() - 1);
-//        return lastCard.getImage();
-//    }
-//    public boolean haveJustDrowCard(){
-//        return activePlayer.havejustDrowCardBonus();
-//    }
     /**
      * questo metodo serve per i giocatori artificiali per determinare quali
      * sono i suoi territori

@@ -60,16 +60,12 @@ public interface PlayAudio {
                         }
                         sourceDataLine.drain();
                         sourceDataLine.close();
-                    } catch (LineUnavailableException | IOException ex) {
-                        //Logger.getLogger(playAudio.class.getName()).log(Level.SEVERE, null, ex);
-                    } 
+                    } catch (IOException | LineUnavailableException ex) {
+                        Logger.getLogger(PlayAudio.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }).start();
-        } catch (LineUnavailableException ex) {
-            Logger.getLogger(PlayAudio.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(PlayAudio.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedAudioFileException ex) {
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
             Logger.getLogger(PlayAudio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

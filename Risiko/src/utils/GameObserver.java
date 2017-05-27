@@ -12,7 +12,7 @@ import risiko.players.Player;
  * @see     java.util.Observable
  * @since   JDK1.0
  */
-public interface GameObserver {
+public interface GameObserver extends BasicGameObserver {
 
     /**
      * Metodo chiamato dopo la fase di rinforzo
@@ -34,34 +34,7 @@ public interface GameObserver {
      */
     public void updateOnSetAttacker(String countryName);
 
-    /**
-     * Metodo chiamato quando viene settato il difensore
-     * @param countryAttackerName
-     * @param countryDefenderName
-     * @param defenderPlayer
-     * @param maxArmiesAttacker
-     * @param maxArmiesDefender 
-     */
-    public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender);
-
-    /**
-     * Metodo chiamato dopo un attacco
-     * @param attackResultInfo
-     * @param isConquered
-     * @param canAttackFromCountry
-     * @param maxArmiesAttacker
-     * @param maxArmiesDefender
-     * @param attackerDice
-     * @param defenderDice 
-     */
-    public void updateOnAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice);
     
-    /**
-     * Metodo chiamato in caso di vittoria
-     * @param winner 
-     */
-    public void updateOnVictory(String winner);
-
     /**
      * Metodo chiamato dopo l'assegnazione delle country
      * @param countries
@@ -76,18 +49,8 @@ public interface GameObserver {
      * @param armies
      * @param color 
      */
-    public void updateOnArmiesChange(String country, int armies, String color);
+    public void updateOnArmiesChange(String country, int armies, String color);    
     
-    /**
-     * metodo chiamato per richiedere al difensore con quante armate difendersi
-     * @param defender
-     * @param countryDefender
-     * @param attacker
-     * @param countryAttacker
-     * @param nrA 
-     */
-    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer);
-
     public void updateOnNextTurn();
 
     public void updateOnSetFromCountry(String countryName);
