@@ -23,13 +23,6 @@ public class Observable extends BasicObservable {
      * @param bonusArmies
      */
     public void notifyReinforce(String countryName, int bonusArmies) {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
-
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
                 ((GameObserver) ob).updateOnReinforce(countryName, bonusArmies);
@@ -44,13 +37,6 @@ public class Observable extends BasicObservable {
      * @param countryName
      */
     public void notifySetAttacker(String countryName) {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
-
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
                 ((GameObserver) ob).updateOnSetAttacker(countryName);
@@ -65,14 +51,7 @@ public class Observable extends BasicObservable {
      * @param countryName
      */
     public void notifySetFromCountry(String countryName) {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
-
-        for (BasicGameObserver ob : this.obs) {
+       for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
                 ((GameObserver) ob).updateOnSetFromCountry(countryName);
             }
@@ -88,12 +67,6 @@ public class Observable extends BasicObservable {
      * @param color
      */
     public void notifyPhaseChange(String player, String phase, String color) {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
                 ((GameObserver) ob).updateOnPhaseChange(player, phase, color);
@@ -109,13 +82,6 @@ public class Observable extends BasicObservable {
      * @param colors
      */
     public void notifyCountryAssignment(String[] countries, int[] armies, String[] colors) {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
-
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
                 ((GameObserver) ob).updateOnCountryAssignment(countries, armies, colors);
@@ -132,13 +98,6 @@ public class Observable extends BasicObservable {
      * @param color
      */
     public void notifyArmiesChange(String country, int armies, String color) {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
-
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
                 ((GameObserver) ob).updateOnArmiesChange(country, armies, color);
@@ -152,13 +111,6 @@ public class Observable extends BasicObservable {
      * da giocare.
      */
     public void notifyNextTurn() {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
-
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
                 ((GameObserver) ob).updateOnNextTurn();
@@ -170,13 +122,6 @@ public class Observable extends BasicObservable {
      * Notifica il............... di una carta.
      */
     public void notifyDrawnCard(String cardName) {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
-
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
                 ((GameObserver) ob).updateOnDrawnCard(cardName);

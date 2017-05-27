@@ -94,7 +94,11 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                 i = 0;
             }
         }
-
+        try {   // Carolina in modo che non continui a attaccare
+            game.nextPhase(this);
+        } catch (PendingOperationsException ex) {
+            Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -110,7 +114,10 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
         do {
             //set country attacco
-            index = new Random().nextInt(myCountries.length);
+            index = new Random().nextInt(myCountries.length);  
+            /* Dovrebbe esserci un check sul fatto che myCountries non sia vuoto,
+            che se no dà un errore (fa nextInt(0)) // Carolina
+            */
             game.setAttackerCountry(myCountries[index], this);
 
             //set country difesa
@@ -185,6 +192,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                             canAttack = true;
                             //this.randomSingleAttack();
                             this.randomAttack();
+                            break;
+                        case MOVE:
+                            game.nextPhase(this); // Carolina
                             break;
                     }
                 }

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.Predicate;
-import risiko.BonusDeck.Card;
+import risiko.Card;
 import risiko.Mission;
 
 public class Player {

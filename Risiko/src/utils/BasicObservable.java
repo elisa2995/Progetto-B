@@ -13,8 +13,7 @@ import java.util.List;
  * @author Elisa
  */
 public class BasicObservable {
-
-    protected boolean changed = false;
+    
     protected List<BasicGameObserver> obs;
 
     /**
@@ -36,13 +35,6 @@ public class BasicObservable {
      * @param nrA numero di armate da cui si viene attaccati
      */
     public void notifyDefender(String defender, String defenderCountry, String attacker, String attackerCountry, int nrA, boolean isArtificialPlayer) {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
-
         for (BasicGameObserver ob : this.obs) {
             ob.updateOnDefend(defender, defenderCountry, attacker, attackerCountry, nrA, isArtificialPlayer);
         }
@@ -61,13 +53,6 @@ public class BasicObservable {
      * @param defenderDice
      */
     public void notifyAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice) {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
-
         for (BasicGameObserver ob : this.obs) {
             ob.updateOnAttackResult(attackResultInfo, isConquered, canAttackFromCountry, maxArmiesAttacker, maxArmiesDefender, attackerDice, defenderDice);
         }
@@ -79,13 +64,7 @@ public class BasicObservable {
      * @param winner
      */
     public void notifyVictory(String winner) {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
-
+        
         for (BasicGameObserver ob : this.obs) {
             ob.updateOnVictory(winner);
         }
@@ -101,12 +80,6 @@ public class BasicObservable {
      * @param maxArmiesDefender
      */
     public void notifySetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender) {
-        synchronized (this) {
-            if (!changed) {
-                return;
-            }
-            clearChanged();
-        }
         for (BasicGameObserver ob : this.obs) {
             
             ob.updateOnSetDefender(countryAttackerName, countryDefenderName, defenderPlayer, maxArmiesAttacker, maxArmiesDefender);
@@ -146,40 +119,6 @@ public class BasicObservable {
      */
     public synchronized void deleteObservers() {
         obs.clear();
-    }
-
-    /**
-     * Marks this <tt>Observable</tt> object as having been changed; the
-     * <tt>hasChanged</tt> method will now return <tt>true</tt>.
-     */
-    public synchronized void setChanged() {
-        changed = true;
-    }
-
-    /**
-     * Indicates that this object has no longer changed, or that it has already
-     * notified all of its observers of its most recent change, so that the
-     * <tt>hasChanged</tt> method will now return <tt>false</tt>. This method is
-     * called automatically by the <code>notifyObservers</code> methods.
-     *
-     * @see java.util.Observable#notifyObservers()
-     * @see java.util.Observable#notifyObservers(java.lang.Object)
-     */
-    protected synchronized void clearChanged() {
-        changed = false;
-    }
-
-    /**
-     * Tests if this object has changed.
-     *
-     * @return  <code>true</code> if and only if the <code>setChanged</code>
-     * method has been called more recently than the <code>clearChanged</code>
-     * method on this object; <code>false</code> otherwise.
-     * @see java.util.Observable#clearChanged()
-     * @see java.util.Observable#setChanged()
-     */
-    public synchronized boolean hasChanged() {
-        return changed;
     }
 
     /**
