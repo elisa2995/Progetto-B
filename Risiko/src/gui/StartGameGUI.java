@@ -9,15 +9,10 @@ import java.awt.Dimension;
 import controllers.ColorBoxListener;
 import controllers.ChangeTypeListener;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +25,7 @@ import javax.swing.*;
  *
  * @author Elisa
  */
-public class StartGameGUI extends javax.swing.JFrame {
+public class StartGameGUI extends JFrame {
 
     private int nPlayers;
     private JTextField[] playerTexts;
