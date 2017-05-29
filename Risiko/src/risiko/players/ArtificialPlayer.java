@@ -83,7 +83,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         int i = setting.getBaseAttack();
 
         while (i > 0) {
-            System.out.println(i);
+            //System.out.println(i);
             if (canAttack) {
                 randomSingleAttack();
                 i--;

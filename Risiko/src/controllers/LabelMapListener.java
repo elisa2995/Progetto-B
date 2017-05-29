@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
 import risiko.Game;
 import gui.PlayAudio;
+import risiko.GameProxy;
 
 /**
  *
@@ -22,13 +23,13 @@ import gui.PlayAudio;
  */
 public class LabelMapListener extends MouseInputAdapter {
 
-    private Game game;
+    private GameProxy game;
     private final BufferedImage bufferedImage;
     private final Map<Color, String> ColorNameCountry;
     private JLabel mapLabel;
     private GUI gui;
 
-    public LabelMapListener(JLabel mapLabel, Map<Color, String> ColorNameCountry, Game game, GUI gui) {
+    public LabelMapListener(JLabel mapLabel, Map<Color, String> ColorNameCountry, GameProxy game, GUI gui) {
         this.game = game;
         this.gui = gui;
         this.mapLabel = mapLabel;

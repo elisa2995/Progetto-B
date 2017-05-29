@@ -5,6 +5,7 @@ import risiko.players.Player;
 import risiko.players.ArtificialPlayer;
 import exceptions.LastPhaseException;
 import exceptions.PendingOperationsException;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,19 +16,17 @@ import utils.GameObserver;
 //import java.awt.Image;
 import java.util.HashMap;
 import java.util.Random;
-import risiko.BonusDeck;
-import risiko.Card;
 import risiko.players.ArtificialPlayerSettings;
 import utils.BasicObservable;
 
-public class Game extends Observable {
+public class Game extends Observable implements GameProxy {
 
     private Country attackerCountry;
     private Country defenderCountry;
     private int attackerArmies;
     private int defenderArmies;
     private boolean attackInProgress = false;
-
+    private GameProxy proxy;
     private RisikoMap map;
     private BonusDeck deck;
     private List<Player> players;
@@ -37,14 +36,6 @@ public class Game extends Observable {
     private int resultsDiceAttack[];
     private int resultsDiceDefense[];
 
-    public void setPlayerSettings(ArtificialPlayerSettings aps){
-        for(Player p:players){
-            if(p instanceof ArtificialPlayer){
-                ((ArtificialPlayer) p).setSetting(aps);
-            }
-        }
-    }
-
     public Game(Map<String, String> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
 
         this.players = new ArrayList<>();
@@ -52,21 +43,31 @@ public class Game extends Observable {
         this.deck = new BonusDeck();
         this.map = new RisikoMap();
         this.addObserver(observer);
+        initInvocationHandler();
         init(playersMap, playersColor);
 
     }
 
-    public Phase getPhase() {
+    @Override
+    public Phase getPhase(ArtificialPlayer... aiCaller) {
         return this.phase;
-    }    
-        
+    }
 
-    public Player getActivePlayer() {
+    @Override
+    public Player getActivePlayer(ArtificialPlayer... aiCaller) {
         return activePlayer;
     }
 
-    public String getActivePlayerMission() {
+    @Override
+    public String getActivePlayerMission(ArtificialPlayer... aiCaller) {
         return activePlayer.getMissionDescription();
+    }
+
+    private void initInvocationHandler() {
+
+        this.proxy = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
+                new Class<?>[]{GameProxy.class},
+                new GameInvocationHandler(this));
     }
 
     /**
@@ -105,6 +106,15 @@ public class Game extends Observable {
         }
     }
 
+    @Override
+    public void setPlayerSettings(ArtificialPlayerSettings aps, ArtificialPlayer... aiCaller) {
+        for (Player p : players) {
+            if (p instanceof ArtificialPlayer) {
+                ((ArtificialPlayer) p).setSetting(aps);
+            }
+        }
+    }
+
     /**
      *
      * @param playersMap una Map nomePlayer - tipoPlayer
@@ -136,10 +146,8 @@ public class Game extends Observable {
      * @param attackerCountryName
      * @param aiCaller l'eventuale artificialPlayer caller del metodo.
      */
+    @Override
     public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
         this.attackerCountry = map.getCountryByName(attackerCountryName);
         notifySetAttacker(attackerCountryName);
     }
@@ -150,12 +158,10 @@ public class Game extends Observable {
      * @param defenderCountryName
      * @param aiCaller l'eventuale artificialPlayer caller del metodo.
      */
+    @Override
     public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
         this.defenderCountry = map.getCountryByName(defenderCountryName);
-        ((BasicObservable)this).notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
+        ((BasicObservable) this).notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
     }
 
     /**
@@ -164,10 +170,8 @@ public class Game extends Observable {
      *
      * @param aiCaller
      */
+    @Override
     public void resetFightingCountries(ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
         this.defenderCountry = null;
         this.attackerCountry = null;
         switch (getPhase()) {
@@ -191,6 +195,7 @@ public class Game extends Observable {
      * @param nrD
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
+    @Override
     public void attack(int nrA, int nrD, ArtificialPlayer... aiCaller) {
 
         if (!checkCallerIdentity(aiCaller)) {
@@ -266,11 +271,13 @@ public class Game extends Observable {
         return armiesLost;
     }
 
-    public int[] getResultsDiceAttack() {
+    @Override
+    public int[] getResultsDiceAttack(ArtificialPlayer... aiCaller) {
         return resultsDiceAttack;
     }
 
-    public int[] getResultsDiceDefense() {
+    @Override
+    public int[] getResultsDiceDefense(ArtificialPlayer... aiCaller) {
         return resultsDiceDefense;
     }
 
@@ -306,7 +313,7 @@ public class Game extends Observable {
     private int rollDie() {
         return (int) (Math.random() * 6) + 1;
     }
-    
+
     /**
      * setta il numero di armate con il quale si vuole difenders
      *
@@ -314,6 +321,7 @@ public class Game extends Observable {
      * numero di armate massimo
      * @param aiCaller
      */
+    @Override
     public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller) {
         if (aiCaller.length == 0) {
             if ((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)) {
@@ -330,6 +338,7 @@ public class Game extends Observable {
         }
     }
 
+    @Override
     public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller) {
         if (!checkCallerIdentity(aiCaller)) {
             return;
@@ -352,6 +361,7 @@ public class Game extends Observable {
      * @param nrA numero di armate in attacco
      * @param aiCaller
      */
+    @Override
     public void declareAttack(ArtificialPlayer... aiCaller) {
         attackInProgress = true;
         if (!checkCallerIdentity(aiCaller)) {
@@ -367,7 +377,7 @@ public class Game extends Observable {
                 notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, false);
             }
         }
-        this.resetFightingCountries();        
+        this.resetFightingCountries();
     }
 
     /**
@@ -377,6 +387,7 @@ public class Game extends Observable {
      * @param nrD
      * @param aiCaller
      */
+    @Override
     public void confirmAttack(ArtificialPlayer... aiCaller) {
         if (attackInProgress == false) {
             return;
@@ -428,6 +439,7 @@ public class Game extends Observable {
      * @param nArmies numero di armate da aggiungere
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
+    @Override
     public void reinforce(String countryName, int nArmies, ArtificialPlayer... aiCaller) {
 
         // La seconda condizione sarà da cancellare in futuro perché in teoria sempre vera
@@ -458,6 +470,7 @@ public class Game extends Observable {
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo
      * @return
      */
+    @Override
     public boolean canReinforce(int nArmies, ArtificialPlayer... aiCaller) {
         return checkCallerIdentity(aiCaller) && activePlayer.getBonusArmies() - nArmies >= 0;
     }
@@ -475,6 +488,7 @@ public class Game extends Observable {
      * successiva perché ci sono operazioni in sospeso.
      * @author Carolina
      */
+    @Override
     public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
 
         if (!checkCallerIdentity(aiCaller)) {
@@ -538,7 +552,8 @@ public class Game extends Observable {
      *
      * @return
      */
-    public String getLastCardDrawn() {
+    @Override
+    public String getLastCardDrawn(ArtificialPlayer... aiCaller) {
         return activePlayer.getLastDrawnCard().name();
     }
 
@@ -547,7 +562,8 @@ public class Game extends Observable {
      *
      * @return
      */
-    public boolean hasAlreadyDrawnCard() {
+    @Override
+    public boolean hasAlreadyDrawnCard(ArtificialPlayer... aiCaller) {
         return activePlayer.hasAlreadyDrawnCard();
     }
 
@@ -567,12 +583,14 @@ public class Game extends Observable {
     }
 
     /**
-     * Ritorna un'arrayList contentente i nomi delle carte dell'active player.
+     * Ritorna un arrayList contentente i nomi delle carte dell'active player.
      *
+     * @param aiCaller
      * @return
      */
-    public ArrayList<String> getCardsNames() {
-        ArrayList<String> bonusCardsNames = new ArrayList<>();
+    @Override
+    public List<String> getCardsNames(ArtificialPlayer... aiCaller) {
+        List<String> bonusCardsNames = new ArrayList<>();
         for (Card card : activePlayer.getBonusCards()) {
             bonusCardsNames.add(card.name());
         }
@@ -586,7 +604,8 @@ public class Game extends Observable {
      *
      * @return
      */
-    public Map<String[], Integer> getPlayableTris() {
+    @Override
+    public Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller) {
         Map<Card[], Integer> tris = activePlayer.getPlayableTris(deck.getTris());
         Map<String[], Integer> playableTrisNames = new HashMap<>();
         for (Map.Entry<Card[], Integer> entry : tris.entrySet()) {
@@ -603,7 +622,8 @@ public class Game extends Observable {
      * @param cards
      * @return
      */
-    public boolean canPlayThisTris(Card[] cards) {
+    @Override
+    public boolean canPlayThisTris(Card[] cards, ArtificialPlayer... aiCaller) {
         return activePlayer.canPlayThisTris(cards);
     }
 
@@ -614,6 +634,7 @@ public class Game extends Observable {
      * @param bonusArmiesTris
      * @param aiCaller
      */
+    @Override
     public void playTris(String[] cardsNames, int bonusArmiesTris, ArtificialPlayer... aiCaller) {
         if (!checkCallerIdentity(aiCaller) || cardsNames == null) {
             return;
@@ -626,7 +647,8 @@ public class Game extends Observable {
      *
      * @return
      */
-    public int getMaxArmiesForMovement() {
+    @Override
+    public int getMaxArmiesForMovement(ArtificialPlayer... aiCaller) {
         return attackerCountry.getArmies() - 1;
     }
 
@@ -636,6 +658,7 @@ public class Game extends Observable {
      * @param attackerCountryName
      * @param aiCaller
      */
+    @Override
     public void setFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
         if (!checkCallerIdentity(aiCaller)) {
             return;
@@ -651,6 +674,7 @@ public class Game extends Observable {
      * @param toCountryName
      * @param i
      */
+    @Override
     public void move(String toCountryName, Integer i, ArtificialPlayer... aiCaller) {
         if (!checkCallerIdentity(aiCaller)) {
             return;
@@ -692,6 +716,7 @@ public class Game extends Observable {
      * @param aiCaller l'eventuale ArtificialPlayer che chiama il metodo
      * @return true se l'attacco è legale, false altrimenti.
      */
+    @Override
     public boolean controlAttacker(String countryName, ArtificialPlayer... aiCaller) {
         return checkCallerIdentity(aiCaller) && map.controlAttacker(map.getCountryByName(countryName), activePlayer);
     }
@@ -704,6 +729,7 @@ public class Game extends Observable {
      * @param aiCaller l'eventuale artificialPlayer caller del metodo.
      * @return true se la country è dell'active player, false altrimenti.
      */
+    @Override
     public boolean controlPlayer(String countryName, ArtificialPlayer... aiCaller) {
         return checkCallerIdentity(aiCaller) && map.controlPlayer(map.getCountryByName(countryName), activePlayer);
     }
@@ -716,6 +742,7 @@ public class Game extends Observable {
      * @param aiCaller l'eventuale artificialPlayer caller del metodo.
      * @return
      */
+    @Override
     public boolean controlDefender(String defenderCountryName, ArtificialPlayer... aiCaller) {
         return checkCallerIdentity(aiCaller) && map.controlDefender(attackerCountry, map.getCountryByName(defenderCountryName), activePlayer);
     }
@@ -728,7 +755,8 @@ public class Game extends Observable {
      * @param toCountryName
      * @return
      */
-    public boolean controlMovement(String toCountryName) {
+    @Override
+    public boolean controlMovement(String toCountryName, ArtificialPlayer... aiCaller) {
         return map.controlMovement(attackerCountry, map.getCountryByName(toCountryName), activePlayer);
 
     }
@@ -739,7 +767,8 @@ public class Game extends Observable {
      *
      * @return
      */
-    public Country[] getCountryList() {
+    @Override
+    public Country[] getCountryList(ArtificialPlayer... aiCaller) {
         return (Country[]) map.getCountriesList().toArray();
     }
 
@@ -748,7 +777,8 @@ public class Game extends Observable {
      *
      * @return
      */
-    public Map<Country, Player> getCountryPlayer() {
+    @Override
+    public Map<Country, Player> getCountryPlayer(ArtificialPlayer... aiCaller) {
         return map.getCountryPlayer();
     }
 
@@ -759,6 +789,7 @@ public class Game extends Observable {
      * @param aiCaller
      * @return
      */
+    @Override
     public boolean canAttackFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
         return checkCallerIdentity(aiCaller) && map.canAttackFromCountry(map.getCountryByName(attackerCountryName));
     }
@@ -768,7 +799,8 @@ public class Game extends Observable {
      *
      * @return
      */
-    public String getAttackerCountryName() {
+    @Override
+    public String getAttackerCountryName(ArtificialPlayer... aiCaller) {
         return (attackerCountry == null) ? null : attackerCountry.getName();
     }
 
@@ -777,7 +809,8 @@ public class Game extends Observable {
      *
      * @return
      */
-    public String getDefenderCountryName() {
+    @Override
+    public String getDefenderCountryName(ArtificialPlayer... aiCaller) {
         return (defenderCountry == null) ? null : defenderCountry.getName();
     }
 
@@ -788,12 +821,13 @@ public class Game extends Observable {
      * metodo è stato chiamato da un giocatore artificiale, che quindi deve
      * coincidere con l'activePlayer.
      *
-     * @param callerAI l'eventuale <code>ArtificialPlayer</code> caller del
+     * @param aiCaller l'eventuale <code>ArtificialPlayer</code> caller del
      * metodo.
      * @return
      * @author Carolina
      */
-    private boolean checkCallerIdentity(ArtificialPlayer[] aiCaller) {
+    public boolean checkCallerIdentity(ArtificialPlayer[] aiCaller) {
+        System.out.println("checkCallerIdentity");
         return (aiCaller.length == 0) ? !(activePlayer instanceof ArtificialPlayer) : aiCaller[0].equals(activePlayer);
     }
 
@@ -803,11 +837,13 @@ public class Game extends Observable {
      * @return true se sono stati settati tutti i parametri, false altrimenti.
      * @author Carolina
      */
-    public boolean isReadyToFight() {
+    @Override
+    public boolean isReadyToFight(ArtificialPlayer... aiCaller) {
         return phase.equals(Phase.FIGHT) && attackerCountry != null && defenderCountry != null;
     }
 
-    public String[] getCountriesNames() {
+    @Override
+    public String[] getCountriesNames(ArtificialPlayer... aiCaller) {
 
         String[] countriesName = new String[map.getCountriesList().size()];
         int i = 0;
@@ -818,7 +854,8 @@ public class Game extends Observable {
         return countriesName;
     }
 
-    public int[] getCountriesArmies() {
+    @Override
+    public int[] getCountriesArmies(ArtificialPlayer... aiCaller) {
         int[] countriesArmies = new int[map.getCountriesList().size()];
         int i = 0;
         for (Country country : map.getCountriesList()) {
@@ -828,12 +865,13 @@ public class Game extends Observable {
         return countriesArmies;
     }
 
-    public String[] getCountriesColors() {
+    @Override
+    public String[] getCountriesColors(ArtificialPlayer... aiCaller) {
         return map.getCountriesColors();
 
     }
 
-    public void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
+    private void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
         notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getPlayerColorByCountry(defenderCountry));
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getPlayerColorByCountry(attackerCountry));
     }
@@ -845,7 +883,8 @@ public class Game extends Observable {
      * @param player il giocatore che fa la richiesta
      * @return i territori posseduti da player
      */
-    public String[] getMyCountries(ArtificialPlayer player) {
+    @Override
+    public String[] getMyCountries(ArtificialPlayer player, ArtificialPlayer... aiCaller) {
         return this.map.getMyCountries(player).stream().map(element -> element.getName()).toArray(size -> new String[size]);
     }
 
@@ -856,7 +895,8 @@ public class Game extends Observable {
      * @param player il giocatore che fa la richiesta
      * @return i territori posseduti da player
      */
-    public String[] getAllAttackers(ArtificialPlayer player) {
+    @Override
+    public String[] getAllAttackers(ArtificialPlayer player, ArtificialPlayer... aiCaller) {
         return this.map.getMyCountries(player).stream().filter(element -> this.canAttackFromCountry(element.getName(), player)).map(element -> element.getName()).toArray(size -> new String[size]);
     }
 
@@ -867,16 +907,14 @@ public class Game extends Observable {
      * @param attacker
      * @return
      */
-    public String[] getAllDefenders(String attacker) {
+    @Override
+    public String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller) {
         String[] defenders = map.getNeighbors(map.getCountryByName(attacker)).stream().filter(element
                 -> {
-            if (map.controlDefender(map.getCountryByName(attacker), element, activePlayer)) {
-                return true;
-            } else {
-                return false;
-            }
+            return map.controlDefender(map.getCountryByName(attacker), element, activePlayer);
         }).map(element -> element.getName()).toArray(size -> new String[size]);
 
         return defenders;
     }
+
 }

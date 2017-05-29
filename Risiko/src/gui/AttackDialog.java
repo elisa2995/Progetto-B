@@ -1,17 +1,8 @@
 package gui;
 
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.Arrays;
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,11 +11,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import risiko.Game;
+import risiko.GameProxy;
 
 public class AttackDialog extends JDialog {
 
-    private Game game;
+    private GameProxy game;
     private JPanel dialogPanel;
     private JLabel attackText;
     private JLabel defenseText;
@@ -49,7 +40,7 @@ public class AttackDialog extends JDialog {
     private int maxArmiesDefender;
     private String drawnCard;
 
-    public AttackDialog(Game game) {
+    public AttackDialog(GameProxy game) {
         this.game = game;
         init();
     }

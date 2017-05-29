@@ -6,7 +6,7 @@
 package gui;
 
 import risiko.players.ArtificialPlayerSettings;
-import risiko.Game;
+import risiko.GameProxy;
 
 /**
  *
@@ -14,12 +14,12 @@ import risiko.Game;
  */
 public class SettingsDialog extends javax.swing.JDialog {
 
-    Game game;
+    GameProxy game;
 
     /**
      * Creates new form SettingsDialog
      */
-    public SettingsDialog(java.awt.Frame parent, boolean modal, Game game) {
+    public SettingsDialog(java.awt.Frame parent, boolean modal, GameProxy game) {
         super(parent, modal);
         initComponents();
         this.game = game;

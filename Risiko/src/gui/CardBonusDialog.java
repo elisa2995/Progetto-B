@@ -10,21 +10,21 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import risiko.Game;
+import risiko.GameProxy;
 
 /**
  * @author andrea
  */
 public class CardBonusDialog extends JDialog {
 
-    private final Game game;
+    private final GameProxy game;
     private final JPanel imagesPanel;
     private final JPanel buttonPanel;
     private String drawnCard;
     private final int WIDTH = 200;
     private final int HEIGHT = 320;
 
-    public CardBonusDialog(Game game) {
+    public CardBonusDialog(GameProxy game) {
         this.game = game;
         this.imagesPanel = new JPanel();
         this.buttonPanel = new JPanel();

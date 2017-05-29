@@ -5,15 +5,14 @@
  */
 package gui;
 
-import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import risiko.Game;
+import risiko.GameProxy;
 
 /**
  *
@@ -21,7 +20,7 @@ import risiko.Game;
  */
 public class FightDialog extends javax.swing.JDialog {
 
-    private Game game;
+    private GameProxy game;
     private boolean isConquered;
     private boolean canAttackFromCountry;
     private int maxArmiesAttacker;
@@ -31,7 +30,7 @@ public class FightDialog extends javax.swing.JDialog {
     private int maxArmiesDefender;
     private String drawnCard;
 
-    public FightDialog(Game game, java.awt.Frame parent, boolean modal) {
+    public FightDialog(GameProxy game, Frame parent, boolean modal) {
         super(parent, modal);
         this.game = game;
         initComponents();

@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -24,6 +25,8 @@ import javax.swing.JOptionPane;
 import risiko.Country;
 import risiko.Phase;
 import risiko.Game;
+import risiko.GameInvocationHandler;
+import risiko.GameProxy;
 import risiko.players.Player;
 
 /**
@@ -31,7 +34,8 @@ import risiko.players.Player;
  */
 public class GUI extends JFrame implements GameObserver {
 
-    private Game game;
+    //private Game game;
+    private GameProxy game;
     private final Map<Color, String> colorCountryNameMap;
     private final Map<String, JLabel> countryLabelMap;
     private FightDialog inputArmies;
@@ -67,7 +71,9 @@ public class GUI extends JFrame implements GameObserver {
     private void init(Map<String, String> players, Map<String, String> playersColor) throws IOException, Exception {
         initLabels("files/labelsTerritori.txt");
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
-        game = new Game(players, playersColor, this);
+        game = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
+                new Class<?>[]{GameProxy.class},
+                new GameInvocationHandler(new Game(players, playersColor, this)));
         LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game, this);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
