@@ -127,7 +127,9 @@ public class Game extends Observable implements GameProxy {
             String color = playersColor.get(playerType.getKey());
             switch (PlayerType.valueOf(playerType.getValue())) {
                 case ARTIFICIAL:
-                    this.players.add(new ArtificialPlayer("GiocatoreArtificiale - " + i, color, this));
+                    this.players.add(new ArtificialPlayer(playerType.getKey(), color, (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
+                new Class<?>[]{GameProxy.class},
+                new GameInvocationHandler(this))));
                     break;
                 case NORMAL:
                 case LOGGED:
@@ -197,10 +199,6 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void attack(int nrA, int nrD, ArtificialPlayer... aiCaller) {
-
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
 
         Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
         Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
@@ -340,10 +338,6 @@ public class Game extends Observable implements GameProxy {
 
     @Override
     public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
-
         if (nrA == -1) {
             attackerArmies = map.getMaxArmies(attackerCountry, true);
         } else {
@@ -364,9 +358,6 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void declareAttack(ArtificialPlayer... aiCaller) {
         attackInProgress = true;
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
 
         Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
         Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
@@ -377,7 +368,7 @@ public class Game extends Observable implements GameProxy {
                 notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, false);
             }
         }
-        this.resetFightingCountries();
+        //this.resetFightingCountries();
     }
 
     /**
@@ -392,7 +383,6 @@ public class Game extends Observable implements GameProxy {
         if (attackInProgress == false) {
             return;
         }
-
         if (aiCaller.length == 0) {
             if ((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)) {
                 return;
@@ -400,9 +390,6 @@ public class Game extends Observable implements GameProxy {
         } else if (!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))) {
             return;
         }
-//        if (!checkCallerIdentity(aiCaller)) {
-//            return;
-//        }
         int nrA = this.attackerArmies;
         int nrD = this.defenderArmies;
 
@@ -425,7 +412,6 @@ public class Game extends Observable implements GameProxy {
                 return;
             }
         }
-
         notifyAttackResult(attackResult, conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense());
         attackInProgress = false;
     }
@@ -441,9 +427,12 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void reinforce(String countryName, int nArmies, ArtificialPlayer... aiCaller) {
-
-        // La seconda condizione sarà da cancellare in futuro perché in teoria sempre vera
-        if (!checkCallerIdentity(aiCaller) || activePlayer.getBonusArmies() - nArmies < 0) {
+        
+        if (!canReinforce(1, aiCaller)) {
+            try {
+                nextPhase();
+            } catch (PendingOperationsException ex) {
+            }
             return;
         }
         Country country = map.getCountryByName(countryName);
@@ -472,7 +461,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public boolean canReinforce(int nArmies, ArtificialPlayer... aiCaller) {
-        return checkCallerIdentity(aiCaller) && activePlayer.getBonusArmies() - nArmies >= 0;
+        return activePlayer.getBonusArmies() - nArmies >= 0;
     }
 
     //--------------------- Gestione fasi / turni --------------------------//
@@ -490,10 +479,6 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
-
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
         resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
 
         if (phase == Phase.REINFORCE && activePlayer.getBonusArmies() != 0) {
@@ -573,9 +558,6 @@ public class Game extends Observable implements GameProxy {
      * @param aiCaller
      */
     private void drawBonusCard(ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
         Card card = deck.drawCard();
         activePlayer.addCard(card);
 
@@ -636,7 +618,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void playTris(String[] cardsNames, int bonusArmiesTris, ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller) || cardsNames == null) {
+        if (cardsNames == null) {
             return;
         }
         activePlayer.playTris(deck.getCardsByNames(cardsNames), bonusArmiesTris);
@@ -660,9 +642,6 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void setFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
         this.attackerCountry = map.getCountryByName(attackerCountryName);
         notifySetFromCountry(attackerCountryName);
     }
@@ -676,9 +655,6 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void move(String toCountryName, Integer i, ArtificialPlayer... aiCaller) {
-        if (!checkCallerIdentity(aiCaller)) {
-            return;
-        }
         Country toCountry = map.getCountryByName(toCountryName);
         map.move(attackerCountry, toCountry, i);
         notifyArmiesChange(toCountryName, toCountry.getArmies(), activePlayer.getColor());
@@ -718,7 +694,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public boolean controlAttacker(String countryName, ArtificialPlayer... aiCaller) {
-        return checkCallerIdentity(aiCaller) && map.controlAttacker(map.getCountryByName(countryName), activePlayer);
+        return map.controlAttacker(map.getCountryByName(countryName), activePlayer);
     }
 
     /**
@@ -731,7 +707,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public boolean controlPlayer(String countryName, ArtificialPlayer... aiCaller) {
-        return checkCallerIdentity(aiCaller) && map.controlPlayer(map.getCountryByName(countryName), activePlayer);
+        return map.controlPlayer(map.getCountryByName(countryName), activePlayer);
     }
 
     /**
@@ -744,7 +720,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public boolean controlDefender(String defenderCountryName, ArtificialPlayer... aiCaller) {
-        return checkCallerIdentity(aiCaller) && map.controlDefender(attackerCountry, map.getCountryByName(defenderCountryName), activePlayer);
+        return map.controlDefender(attackerCountry, map.getCountryByName(defenderCountryName), activePlayer);
     }
 
     /**
@@ -791,7 +767,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public boolean canAttackFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
-        return checkCallerIdentity(aiCaller) && map.canAttackFromCountry(map.getCountryByName(attackerCountryName));
+        return map.canAttackFromCountry(map.getCountryByName(attackerCountryName));
     }
 
     /**
@@ -826,8 +802,7 @@ public class Game extends Observable implements GameProxy {
      * @return
      * @author Carolina
      */
-    public boolean checkCallerIdentity(ArtificialPlayer[] aiCaller) {
-        System.out.println("checkCallerIdentity");
+    public synchronized boolean checkCallerIdentity(ArtificialPlayer[] aiCaller) {
         return (aiCaller.length == 0) ? !(activePlayer instanceof ArtificialPlayer) : aiCaller[0].equals(activePlayer);
     }
 

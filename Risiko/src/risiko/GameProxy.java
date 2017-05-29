@@ -8,15 +8,14 @@ import risiko.players.ArtificialPlayerSettings;
 import risiko.players.Player;
 
 public interface GameProxy {
-        
+
     public Phase getPhase(ArtificialPlayer... aiCaller);
 
     public Player getActivePlayer(ArtificialPlayer... aiCaller);
 
     public String getActivePlayerMission(ArtificialPlayer... aiCaller);
-    
-    public void setPlayerSettings(ArtificialPlayerSettings aps, ArtificialPlayer... aiCaller);
 
+    public void setPlayerSettings(ArtificialPlayerSettings aps, ArtificialPlayer... aiCaller);
 
     //------------------------  Attacco  ------------------------------------//
     /**
@@ -56,14 +55,9 @@ public interface GameProxy {
      */
     public void attack(int nrA, int nrD, ArtificialPlayer... aiCaller);
 
-
-
     public int[] getResultsDiceAttack(ArtificialPlayer... aiCaller);
+
     public int[] getResultsDiceDefense(ArtificialPlayer... aiCaller);
-
-    
-
-    
 
     /**
      * setta il numero di armate con il quale si vuole difenders
@@ -107,6 +101,7 @@ public interface GameProxy {
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
     public void reinforce(String countryName, int nArmies, ArtificialPlayer... aiCaller);
+
     /**
      * Controlla se il giocatore può rinforzare del numero di armate
      * selezionato. (Previo controllo sul caller del metodo). (prima ci facevamo
@@ -131,8 +126,8 @@ public interface GameProxy {
      * successiva perché ci sono operazioni in sospeso.
      * @author Carolina
      */
-    public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException ;
-    
+    public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException;
+
     //-------------------- Carte / spostamento finale ----------------//
     /**
      * Ritorna il nome dell'ultima carta pescata dal giocatore di turno.
@@ -148,13 +143,12 @@ public interface GameProxy {
      */
     public boolean hasAlreadyDrawnCard(ArtificialPlayer... aiCaller);
 
-    
     /**
      * Ritorna un'arrayList contentente i nomi delle carte dell'active player.
      *
      * @return
      */
-    public List<String> getCardsNames(ArtificialPlayer... aiCaller) ;
+    public List<String> getCardsNames(ArtificialPlayer... aiCaller);
 
     /**
      * Ritorna una mappa che ha come key i nomi delle carte che compongono i
@@ -163,7 +157,7 @@ public interface GameProxy {
      *
      * @return
      */
-    public Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller) ;
+    public Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller);
 
     /**
      * Ritorna true se il giocatore può giocare il tris selezionato.
@@ -171,7 +165,8 @@ public interface GameProxy {
      * @param cards
      * @return
      */
-    public boolean canPlayThisTris(Card[] cards,ArtificialPlayer... aiCaller);
+    public boolean canPlayThisTris(Card[] cards, ArtificialPlayer... aiCaller);
+
     /**
      * Gioca il tris.
      *
@@ -205,7 +200,6 @@ public interface GameProxy {
      */
     public void move(String toCountryName, Integer i, ArtificialPlayer... aiCaller);
 
-    
     /**
      * Controlla che country sia dell'activePlayer e che si legale attaccare.
      * (Previo controllo sul caller del metodo).
@@ -214,7 +208,7 @@ public interface GameProxy {
      * @param aiCaller l'eventuale ArtificialPlayer che chiama il metodo
      * @return true se l'attacco è legale, false altrimenti.
      */
-    public boolean controlAttacker(String countryName, ArtificialPlayer... aiCaller) ;
+    public boolean controlAttacker(String countryName, ArtificialPlayer... aiCaller);
 
     /**
      * Controlla che country sia dell'activePlayer. (Previo controllo sul caller
@@ -225,6 +219,7 @@ public interface GameProxy {
      * @return true se la country è dell'active player, false altrimenti.
      */
     public boolean controlPlayer(String countryName, ArtificialPlayer... aiCaller);
+
     /**
      * Controlla che il territorio non sia dell'active player e che sia un
      * confinante dell'attacker.
@@ -251,7 +246,7 @@ public interface GameProxy {
      *
      * @return
      */
-    public Country[] getCountryList(ArtificialPlayer... aiCaller) ;
+    public Country[] getCountryList(ArtificialPlayer... aiCaller);
 
     /**
      * Ritorna la Map<Country,Player>. Utile per l'artificial player??
@@ -259,6 +254,7 @@ public interface GameProxy {
      * @return
      */
     public Map<Country, Player> getCountryPlayer(ArtificialPlayer... aiCaller);
+
     /**
      * Controlla se la Country ha armate sufficienti per attaccare (>=2).
      *
@@ -273,7 +269,7 @@ public interface GameProxy {
      *
      * @return
      */
-    public String getAttackerCountryName(ArtificialPlayer... aiCaller) ;
+    public String getAttackerCountryName(ArtificialPlayer... aiCaller);
 
     /**
      * Ritorna il nome della Country in difesa.
@@ -282,21 +278,20 @@ public interface GameProxy {
      */
     public String getDefenderCountryName(ArtificialPlayer... aiCaller);
 
-
     /**
      * Dice se game ha i parametri settati per fare un combattimento.
      *
      * @return true se sono stati settati tutti i parametri, false altrimenti.
      * @author Carolina
      */
-    public boolean isReadyToFight(ArtificialPlayer... aiCaller) ;
+    public boolean isReadyToFight(ArtificialPlayer... aiCaller);
 
-    public String[] getCountriesNames(ArtificialPlayer... aiCaller) ;
+    public String[] getCountriesNames(ArtificialPlayer... aiCaller);
 
-    public int[] getCountriesArmies(ArtificialPlayer... aiCaller) ;
+    public int[] getCountriesArmies(ArtificialPlayer... aiCaller);
 
     public String[] getCountriesColors(ArtificialPlayer... aiCaller);
-    
+
     /**
      * questo metodo serve per i giocatori artificiali per determinare quali
      * sono i suoi territori
@@ -314,6 +309,7 @@ public interface GameProxy {
      * @return i territori posseduti da player
      */
     public String[] getAllAttackers(ArtificialPlayer player, ArtificialPlayer... aiCaller);
+
     /**
      * restituisce tutti i territori che possono essere attaccati dal territorio
      * attacker
@@ -321,5 +317,7 @@ public interface GameProxy {
      * @param attacker
      * @return
      */
-    public String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller);    
+    public String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller);
+
+    //public boolean checkCallerIdentity(ArtificialPlayer[] aiCaller);
 }

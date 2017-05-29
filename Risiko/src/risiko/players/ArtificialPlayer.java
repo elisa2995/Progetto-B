@@ -1,33 +1,28 @@
 package risiko.players;
 
 import exceptions.PendingOperationsException;
-import utils.GameObserver;
-import java.awt.Color;
-import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import risiko.Action;
-import risiko.Game;
-import risiko.players.ArtificialPlayerSettings;
+import risiko.GameProxy;
 import utils.BasicGameObserver;
-
 
 public class ArtificialPlayer extends Player implements Runnable, BasicGameObserver {
 
-    private Game game;
+    private GameProxy game;
 
     int maxArmiesAttack;
     int maxArmiesDefense;
     boolean maxArmiesSet;
     boolean canAttack;
 
-    private int attackRate = 100;
+    private int attackRate = 2000;
     private Action currentAction;
-    private int reinforceSpeed = 100;
+    private int reinforceSpeed = 2000;
     private ArtificialPlayerSettings setting;
-    private int declareSpeed = 500;
-    private int attackSpeed = 500;
+    private int declareSpeed = 1000;
+    private int attackSpeed = 1000;
 
     public void setSetting(ArtificialPlayerSettings setting) {
         this.setting = setting;
@@ -46,8 +41,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
      *
      * @param name
      * @param color
+     * @param game
      */
-    public ArtificialPlayer(String name, String color, Game game) {
+    public ArtificialPlayer(String name, String color, GameProxy game) {
         super(name, color);
         this.game = game;
         currentAction = Action.NOACTION;
@@ -64,22 +60,33 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     private synchronized void randomReinforce() {
 
         String[] myCountries = game.getMyCountries(this);
-
-        while (game.canReinforce(1, this)) {
+        int index = new Random().nextInt(myCountries.length);
+            game.reinforce(myCountries[index], 1, this);
+            try {
+                this.wait(setting.getReinforceDelay());
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }  // NEW
+        /*while (game.canReinforce(1, this)) {
             int index = new Random().nextInt(myCountries.length);
             game.reinforce(myCountries[index], 1, this);
             try {
                 this.wait(setting.getReinforceDelay());
             } catch (InterruptedException ex) {
-
+                ex.printStackTrace();
             }
-        }
+        }*/
+        /*try {
+            game.nextPhase(this);
+        } catch (PendingOperationsException ex) {
+        }*/
     }
 
     /**
      * esegue un attacco
      */
     private synchronized void randomAttack() {
+        System.out.println("randomAttack");
         int i = setting.getBaseAttack();
 
         while (i > 0) {
@@ -87,18 +94,18 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             if (canAttack) {
                 randomSingleAttack();
                 i--;
-                
+
             }
             //se non può attaccare da nessun territorio viene fermato l'attacco
             if (game.getAllAttackers(this).length == 0) {
                 i = 0;
             }
         }
-        try {   // Carolina in modo che non continui a attaccare
+        /*try {   // Carolina in modo che non continui a attaccare
             game.nextPhase(this);
         } catch (PendingOperationsException ex) {
             Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 
     /**
@@ -114,10 +121,10 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
         do {
             //set country attacco
-            index = new Random().nextInt(myCountries.length);  
+            index = new Random().nextInt(myCountries.length);
             /* Dovrebbe esserci un check sul fatto che myCountries non sia vuoto,
             che se no dà un errore (fa nextInt(0)) // Carolina
-            */
+             */
             game.setAttackerCountry(myCountries[index], this);
 
             //set country difesa
@@ -131,7 +138,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             try {
                 this.wait(10);
             } catch (InterruptedException ex) {
-
+                ex.printStackTrace();
             }
 
             //set armate attacco
@@ -151,7 +158,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             try {
                 this.wait(setting.getAttackDeclarationDelay());
             } catch (InterruptedException ex) {
-
+                ex.printStackTrace();
             }
         }
     }
@@ -172,7 +179,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         try {
             this.wait(setting.getAttackDelay());
         } catch (InterruptedException ex) {
-
+            ex.printStackTrace();
         }
     }
 
@@ -184,30 +191,34 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         while (currentAction != Action.ENDGAME) {
             try {
                 if (game.getActivePlayer().equals(this)) {
+                    System.out.println(game.getPhase());
                     switch (game.getPhase()) {
                         case REINFORCE:
                             randomReinforce();
                             break;
                         case FIGHT:
                             canAttack = true;
-                            //this.randomSingleAttack();
                             this.randomAttack();
+                            game.nextPhase(this);
                             break;
                         case MOVE:
-                            game.nextPhase(this); // Carolina
+                            game.nextPhase(this);
                             break;
                     }
+                }else if(this.currentAction==Action.DEFEND){
+                    System.out.println(this.getName() + "in difesa");
+                    this.defend();
                 }
-                switch (this.currentAction) {
+                /*switch (this.currentAction) {
                     case DEFEND:
                         this.defend();
                         break;
-                }
+                }*/
 
-                if (!game.canReinforce(1, this)) {
+                /*if (!game.canReinforce(1, this)) {
                     //System.out.println("cambia fase");
                     game.nextPhase(this);
-                }
+                }*/
             } catch (PendingOperationsException ex) {
                 //l'eccezione delle armate ancora da assegnare viene data quando si sovrappongono le operazioni di 2 giocatori
                 Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
@@ -224,6 +235,10 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
     @Override
     public void updateOnAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice) {
+        if(this.currentAction==Action.DEFEND){ 
+        // Se ero in difesa una volta ricevuto il risultato dell'attacco, passo alla fase di no-action
+            this.currentAction=Action.NOACTION;
+        }
         canAttack = true;
     }
 
