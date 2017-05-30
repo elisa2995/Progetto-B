@@ -3,9 +3,7 @@ package risiko;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import risiko.players.ArtificialPlayer;
-import exceptions.*;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.UndeclaredThrowableException;
 
 public class GameInvocationHandler implements InvocationHandler {
 
@@ -15,9 +13,22 @@ public class GameInvocationHandler implements InvocationHandler {
         this.game = game;
     }
 
+    /**
+     * Metodo che intercetta tutte le chiamate ai metodi boolean e void di game. 
+     * Nel caso tali metodi siano dichiarati in GameProxy e non siano metodi
+     * di difesa, viene controllato il caller del metodo. Se il caller è il 
+     * giocatore di turno, viene invocato il metodo di game. 
+     * @param proxy
+     * @param method
+     * @param args
+     * @return
+     * @throws Throwable
+     * @throws Exception 
+     */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable, Exception {
-        if (method.getDeclaringClass() == GameProxy.class && !method.getName().equals("confirmAttack") && !method.getName().equals("setDefenderArmies") && (method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Void.TYPE))) {
+        boolean isDefenseMethod = method.getName().equals("confirmAttack") || method.getName().equals("setDefenderArmies");
+        if (method.getDeclaringClass() == GameProxy.class && !isDefenseMethod && (method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Void.TYPE))) {
             ArtificialPlayer[] player = (ArtificialPlayer[]) args[args.length - 1];
             if (!this.game.checkCallerIdentity(player)) {
                 return false;

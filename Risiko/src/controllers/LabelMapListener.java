@@ -52,9 +52,9 @@ public class LabelMapListener extends MouseInputAdapter {
                     PlayAudio.play("sounds/clickOff.wav");
                     return;
                 }
-                if (game.controlPlayer(countryName) && game.canReinforce(1)) {
+                if (game.controlPlayer(countryName) && game.canReinforce()) {
                     //Ho ancora bonus armies e sono su un mio territorio
-                    game.reinforce(countryName, 1);
+                    game.reinforce(countryName);
                     //reinforce chiama notify(), la gui si aggiorna
                     PlayAudio.play("sounds/clickOn.wav");
                     break;
@@ -130,7 +130,7 @@ public class LabelMapListener extends MouseInputAdapter {
         mapLabel.setToolTipText(countryName);
         switch (game.getPhase()) {
             case REINFORCE:
-                if (game.controlPlayer(countryName) && game.canReinforce(1)) {
+                if (game.controlPlayer(countryName) && game.canReinforce()) {
                     //Ho ancora bonus armies e sono su un mio territorio
                     setHandCursor(e.getComponent(), label);
                 } else {

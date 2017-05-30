@@ -100,7 +100,7 @@ public interface GameProxy {
      * @param nArmies numero di armate da aggiungere
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
-    public void reinforce(String countryName, int nArmies, ArtificialPlayer... aiCaller);
+    public void reinforce(String countryName, ArtificialPlayer... aiCaller);
 
     /**
      * Controlla se il giocatore può rinforzare del numero di armate
@@ -111,7 +111,7 @@ public interface GameProxy {
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo
      * @return
      */
-    public boolean canReinforce(int nArmies, ArtificialPlayer... aiCaller);
+    public boolean canReinforce(ArtificialPlayer... aiCaller);
 
     //--------------------- Gestione fasi / turni --------------------------//
     /**
@@ -241,19 +241,6 @@ public interface GameProxy {
     public boolean controlMovement(String toCountryName, ArtificialPlayer... aiCaller);
 
     //  M E T O D I   P E R   D A R E   I N F O
-    /**
-     * Ritorna l'array di countries. Utile per l'artificial player??
-     *
-     * @return
-     */
-    public Country[] getCountryList(ArtificialPlayer... aiCaller);
-
-    /**
-     * Ritorna la Map<Country,Player>. Utile per l'artificial player??
-     *
-     * @return
-     */
-    public Map<Country, Player> getCountryPlayer(ArtificialPlayer... aiCaller);
 
     /**
      * Controlla se la Country ha armate sufficienti per attaccare (>=2).
@@ -319,5 +306,6 @@ public interface GameProxy {
      */
     public String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller);
 
-    //public boolean checkCallerIdentity(ArtificialPlayer[] aiCaller);
+    public int getMaxArmies(String countryName, boolean isAttacker, ArtificialPlayer... aiCaller);
+
 }

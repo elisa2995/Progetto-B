@@ -444,7 +444,11 @@ public class RisikoMap {
     }
 
     public boolean canAttackFromCountry(Country country) {
-        return country.getArmies() > 1;
+        boolean can=false;
+        for(Country c : countryNeighbors.get(country)){
+            can = can || countryPlayer.get(c)!=countryPlayer.get(country);
+        }
+        return can & country.getArmies() > 1;
     }
 
     public Country getCountryByName(String countryName) {

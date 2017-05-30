@@ -49,17 +49,17 @@ public class Game extends Observable implements GameProxy {
     }
 
     @Override
-    public Phase getPhase(ArtificialPlayer... aiCaller) {
+    public synchronized Phase getPhase(ArtificialPlayer... aiCaller) {
         return this.phase;
     }
 
     @Override
-    public Player getActivePlayer(ArtificialPlayer... aiCaller) {
+    public synchronized Player getActivePlayer(ArtificialPlayer... aiCaller) {
         return activePlayer;
     }
 
     @Override
-    public String getActivePlayerMission(ArtificialPlayer... aiCaller) {
+    public synchronized String getActivePlayerMission(ArtificialPlayer... aiCaller) {
         return activePlayer.getMissionDescription();
     }
 
@@ -128,8 +128,8 @@ public class Game extends Observable implements GameProxy {
             switch (PlayerType.valueOf(playerType.getValue())) {
                 case ARTIFICIAL:
                     this.players.add(new ArtificialPlayer(playerType.getKey(), color, (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
-                new Class<?>[]{GameProxy.class},
-                new GameInvocationHandler(this))));
+                            new Class<?>[]{GameProxy.class},
+                            new GameInvocationHandler(this))));
                     break;
                 case NORMAL:
                 case LOGGED:
@@ -270,12 +270,12 @@ public class Game extends Observable implements GameProxy {
     }
 
     @Override
-    public int[] getResultsDiceAttack(ArtificialPlayer... aiCaller) {
+    public synchronized int[] getResultsDiceAttack(ArtificialPlayer... aiCaller) {
         return resultsDiceAttack;
     }
 
     @Override
-    public int[] getResultsDiceDefense(ArtificialPlayer... aiCaller) {
+    public synchronized int[] getResultsDiceDefense(ArtificialPlayer... aiCaller) {
         return resultsDiceDefense;
     }
 
@@ -426,18 +426,11 @@ public class Game extends Observable implements GameProxy {
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
     @Override
-    public void reinforce(String countryName, int nArmies, ArtificialPlayer... aiCaller) {
-        
-        if (!canReinforce(1, aiCaller)) {
-            try {
-                nextPhase();
-            } catch (PendingOperationsException ex) {
-            }
-            return;
-        }
+    public void reinforce(String countryName, ArtificialPlayer... aiCaller) {
+
         Country country = map.getCountryByName(countryName);
-        activePlayer.decrementBonusArmies(nArmies);
-        map.addArmies(country, nArmies);
+        activePlayer.decrementBonusArmies();
+        map.addArmies(country, 1);
 
         if (activePlayer.getBonusArmies() == 0) {
             try {
@@ -460,8 +453,8 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public boolean canReinforce(int nArmies, ArtificialPlayer... aiCaller) {
-        return activePlayer.getBonusArmies() - nArmies >= 0;
+    public boolean canReinforce(ArtificialPlayer... aiCaller) {
+        return activePlayer.getBonusArmies() > 0;
     }
 
     //--------------------- Gestione fasi / turni --------------------------//
@@ -538,7 +531,7 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public String getLastCardDrawn(ArtificialPlayer... aiCaller) {
+    public synchronized String getLastCardDrawn(ArtificialPlayer... aiCaller) {
         return activePlayer.getLastDrawnCard().name();
     }
 
@@ -571,7 +564,7 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public List<String> getCardsNames(ArtificialPlayer... aiCaller) {
+    public synchronized List<String> getCardsNames(ArtificialPlayer... aiCaller) {
         List<String> bonusCardsNames = new ArrayList<>();
         for (Card card : activePlayer.getBonusCards()) {
             bonusCardsNames.add(card.name());
@@ -587,7 +580,7 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller) {
+    public synchronized Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller) {
         Map<Card[], Integer> tris = activePlayer.getPlayableTris(deck.getTris());
         Map<String[], Integer> playableTrisNames = new HashMap<>();
         for (Map.Entry<Card[], Integer> entry : tris.entrySet()) {
@@ -630,7 +623,7 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public int getMaxArmiesForMovement(ArtificialPlayer... aiCaller) {
+    public synchronized int getMaxArmiesForMovement(ArtificialPlayer... aiCaller) {
         return attackerCountry.getArmies() - 1;
     }
 
@@ -739,26 +732,6 @@ public class Game extends Observable implements GameProxy {
 
     //  M E T O D I   P E R   D A R E   I N F O
     /**
-     * Ritorna l'array di countries. Utile per l'artificial player??
-     *
-     * @return
-     */
-    @Override
-    public Country[] getCountryList(ArtificialPlayer... aiCaller) {
-        return (Country[]) map.getCountriesList().toArray();
-    }
-
-    /**
-     * Ritorna la Map<Country,Player>. Utile per l'artificial player??
-     *
-     * @return
-     */
-    @Override
-    public Map<Country, Player> getCountryPlayer(ArtificialPlayer... aiCaller) {
-        return map.getCountryPlayer();
-    }
-
-    /**
      * Controlla se la Country ha armate sufficienti per attaccare (>=2).
      *
      * @param attackerCountryName
@@ -776,7 +749,7 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public String getAttackerCountryName(ArtificialPlayer... aiCaller) {
+    public synchronized String getAttackerCountryName(ArtificialPlayer... aiCaller) {
         return (attackerCountry == null) ? null : attackerCountry.getName();
     }
 
@@ -786,7 +759,7 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public String getDefenderCountryName(ArtificialPlayer... aiCaller) {
+    public synchronized String getDefenderCountryName(ArtificialPlayer... aiCaller) {
         return (defenderCountry == null) ? null : defenderCountry.getName();
     }
 
@@ -818,7 +791,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     @Override
-    public String[] getCountriesNames(ArtificialPlayer... aiCaller) {
+    public synchronized String[] getCountriesNames(ArtificialPlayer... aiCaller) {
 
         String[] countriesName = new String[map.getCountriesList().size()];
         int i = 0;
@@ -830,7 +803,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     @Override
-    public int[] getCountriesArmies(ArtificialPlayer... aiCaller) {
+    public synchronized int[] getCountriesArmies(ArtificialPlayer... aiCaller) {
         int[] countriesArmies = new int[map.getCountriesList().size()];
         int i = 0;
         for (Country country : map.getCountriesList()) {
@@ -841,14 +814,9 @@ public class Game extends Observable implements GameProxy {
     }
 
     @Override
-    public String[] getCountriesColors(ArtificialPlayer... aiCaller) {
+    public synchronized String[] getCountriesColors(ArtificialPlayer... aiCaller) {
         return map.getCountriesColors();
 
-    }
-
-    private void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
-        notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getPlayerColorByCountry(defenderCountry));
-        notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getPlayerColorByCountry(attackerCountry));
     }
 
     /**
@@ -859,7 +827,7 @@ public class Game extends Observable implements GameProxy {
      * @return i territori posseduti da player
      */
     @Override
-    public String[] getMyCountries(ArtificialPlayer player, ArtificialPlayer... aiCaller) {
+    public synchronized String[] getMyCountries(ArtificialPlayer player, ArtificialPlayer... aiCaller) {
         return this.map.getMyCountries(player).stream().map(element -> element.getName()).toArray(size -> new String[size]);
     }
 
@@ -871,7 +839,7 @@ public class Game extends Observable implements GameProxy {
      * @return i territori posseduti da player
      */
     @Override
-    public String[] getAllAttackers(ArtificialPlayer player, ArtificialPlayer... aiCaller) {
+    public synchronized String[] getAllAttackers(ArtificialPlayer player, ArtificialPlayer... aiCaller) {
         return this.map.getMyCountries(player).stream().filter(element -> this.canAttackFromCountry(element.getName(), player)).map(element -> element.getName()).toArray(size -> new String[size]);
     }
 
@@ -883,13 +851,22 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller) {
+    public synchronized  String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller) {
         String[] defenders = map.getNeighbors(map.getCountryByName(attacker)).stream().filter(element
                 -> {
             return map.controlDefender(map.getCountryByName(attacker), element, activePlayer);
         }).map(element -> element.getName()).toArray(size -> new String[size]);
 
         return defenders;
+    }
+
+    public synchronized int getMaxArmies(String countryName, boolean isAttacker, ArtificialPlayer... aiCaller) {
+        return map.getMaxArmies(map.getCountryByName(countryName), isAttacker);
+    }
+
+    private void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
+        notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getPlayerColorByCountry(defenderCountry));
+        notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getPlayerColorByCountry(attackerCountry));
     }
 
 }

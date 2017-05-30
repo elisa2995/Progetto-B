@@ -20,7 +20,7 @@ public class Player {
     //private Color color;
     private String color;
     //private int contaCarte[];
-    private int bonusArmies;
+    protected int bonusArmies;
     private boolean alreadyDrawnCard;
 
     public Player(String name, String color) {
@@ -49,8 +49,8 @@ public class Player {
         this.bonusArmies += bonusArmies;
     }
 
-    public void decrementBonusArmies(int bonusArmies) {
-        this.bonusArmies -= bonusArmies;
+    public void decrementBonusArmies() {
+        this.bonusArmies --;
     }
 
     public String getColor() {

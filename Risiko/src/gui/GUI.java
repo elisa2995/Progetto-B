@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -282,12 +281,7 @@ public class GUI extends JFrame implements GameObserver {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonMoreInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMoreInfoActionPerformed
-        String format = "%-30s %-15s %s";
-        String info = String.format(format, "territorio", "proprietario", "numero armate") + "\n";
-        for (Map.Entry<Country, Player> e : game.getCountryPlayer().entrySet()) {
-            info += String.format(format, e.getKey().getName(), e.getValue().getName(), e.getKey().getArmies()) + "\n";
-        }
-        JOptionPane.showMessageDialog(null, info);
+
     }//GEN-LAST:event_buttonMoreInfoActionPerformed
 
     private void buttonNextPhaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextPhaseActionPerformed
