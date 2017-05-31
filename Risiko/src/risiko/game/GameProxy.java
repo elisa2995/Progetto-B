@@ -1,8 +1,10 @@
-package risiko;
+package risiko.game;
 
 import exceptions.PendingOperationsException;
 import java.util.List;
 import java.util.Map;
+import risiko.Card;
+import risiko.Phase;
 import risiko.players.ArtificialPlayer;
 import risiko.players.ArtificialPlayerSettings;
 import risiko.players.Player;

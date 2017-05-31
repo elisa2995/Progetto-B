@@ -23,9 +23,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import risiko.Country;
 import risiko.Phase;
-import risiko.Game;
-import risiko.GameInvocationHandler;
-import risiko.GameProxy;
+import risiko.game.Game;
+import risiko.game.GameInvocationHandler;
+import risiko.game.GameProxy;
 import risiko.players.Player;
 
 /**

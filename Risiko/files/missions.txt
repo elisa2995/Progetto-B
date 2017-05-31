@@ -1,7 +1,7 @@
-1=Conquistare 24 territori-240
-2=Conquistare Nord America e Africa-150
-3=Conquistare Nord America e Oceania-130
-4=Conquistare Asia e Sud America-160
-5=Conquistare Asia e Africa-140
-6=Conquistare Europa e Sud America-110
-7=Conquistare Europa e Oceania-110
+Countries=Conquistare 24 territori-240
+Continents=Conquistare Nord America e Africa-150
+Continents=Conquistare Nord America e Oceania-130
+Continents=Conquistare Asia e Sud America-160
+Continents=Conquistare Asia e Africa-140
+Continents=Conquistare Europa e Sud America-110
+Continents=Conquistare Europa e Oceania-110

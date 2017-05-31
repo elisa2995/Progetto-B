@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import risiko.GameProxy;
+import risiko.game.GameProxy;
 
 public class AttackDialog extends JDialog {
 

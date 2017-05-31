@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
-import risiko.GameProxy;
+import risiko.game.GameProxy;
 
 /**
  *

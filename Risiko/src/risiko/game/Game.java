@@ -1,5 +1,7 @@
-package risiko;
+package risiko.game;
 
+import risiko.game.GameInvocationHandler;
+import risiko.game.GameProxy;
 import risiko.players.PlayerType;
 import risiko.players.Player;
 import risiko.players.ArtificialPlayer;
@@ -23,6 +25,12 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import risiko.AttackResult;
+import risiko.BonusDeck;
+import risiko.Card;
+import risiko.Country;
+import risiko.Phase;
+import risiko.RisikoMap;
 import risiko.players.ArtificialPlayerSettings;
 import risiko.players.LoggedPlayer;
 import utils.BasicObservable;

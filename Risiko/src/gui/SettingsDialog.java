@@ -6,7 +6,7 @@
 package gui;
 
 import risiko.players.ArtificialPlayerSettings;
-import risiko.GameProxy;
+import risiko.game.GameProxy;
 
 /**
  *

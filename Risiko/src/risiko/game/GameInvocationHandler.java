@@ -1,5 +1,6 @@
-package risiko;
+package risiko.game;
 
+import risiko.game.GameProxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import risiko.players.ArtificialPlayer;
