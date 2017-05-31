@@ -13,7 +13,7 @@ public interface BasicGameObserver {
 
     public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender);
 
-    public void updateOnVictory(String winner);
+    public void updateOnVictory(String winMessage);
 
     public void updateOnAttackResult(String attackResultInfo, boolean conquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice);
 

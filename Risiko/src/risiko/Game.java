@@ -5,6 +5,11 @@ import risiko.players.Player;
 import risiko.players.ArtificialPlayer;
 import exceptions.LastPhaseException;
 import exceptions.PendingOperationsException;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +21,10 @@ import utils.GameObserver;
 //import java.awt.Image;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import risiko.players.ArtificialPlayerSettings;
+import risiko.players.LoggedPlayer;
 import utils.BasicObservable;
 
 public class Game extends Observable implements GameProxy {
@@ -132,8 +140,10 @@ public class Game extends Observable implements GameProxy {
                             new GameInvocationHandler(this))));
                     break;
                 case NORMAL:
-                case LOGGED:
                     this.players.add(new Player(playerType.getKey(), color));
+                    break;
+                case LOGGED:
+                    this.players.add(new LoggedPlayer(playerType.getKey(), color));
                     break;
             }
             i++;
@@ -215,10 +225,11 @@ public class Game extends Observable implements GameProxy {
             }
             notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
             if (hasLost(defenderPlayer)) {
+                //notifyDefeat(defenderPlayer.getName()); TO DO
                 players.remove(defenderPlayer);
             }
             if (hasWon()) {
-                notifyVictory(activePlayer.getName());
+                recordGainedPoints();
                 return;
             }
         }
@@ -408,7 +419,7 @@ public class Game extends Observable implements GameProxy {
                 players.remove(defenderPlayer);
             }
             if (hasWon()) {
-                notifyVictory(activePlayer.getName());
+                notifyVictory("Complimenti" + activePlayer.getName() + " hai vinto!");
                 return;
             }
         }
@@ -851,7 +862,7 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public synchronized  String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller) {
+    public synchronized String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller) {
         String[] defenders = map.getNeighbors(map.getCountryByName(attacker)).stream().filter(element
                 -> {
             return map.controlDefender(map.getCountryByName(attacker), element, activePlayer);
@@ -867,6 +878,43 @@ public class Game extends Observable implements GameProxy {
     private void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
         notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getPlayerColorByCountry(defenderCountry));
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getPlayerColorByCountry(attackerCountry));
+    }
+
+    private void recordGainedPoints() {
+
+        String winMessage = "Complimenti " + activePlayer.getName() + " hai vinto!\n";
+        try {
+            LoggedPlayer player = (LoggedPlayer) activePlayer;
+            BufferedReader file = new BufferedReader(new FileReader("files/players.txt"));
+            String line;
+            StringBuilder inputBuffer = new StringBuilder();
+            int points;
+            while ((line = file.readLine()) != null) {
+                if (line.contains(player.getUsername())) {
+                    String[] tokens = line.split(";");
+                    points = Integer.parseInt(tokens[2]) + ((Player) player).getMission().getPoints();
+                    player.setPoints(points);
+                    tokens[2] = Integer.toString(points);
+                    line = tokens[0] + ";" + tokens[1] + ";" + tokens[2];
+                    winMessage += "Punti : " + points;
+                }
+                inputBuffer.append(line);
+                inputBuffer.append('\n');
+            }
+            String inputStr = inputBuffer.toString();
+            file.close();
+
+            // Scrivo la nuova stringa sullo stesso file di prima
+            FileOutputStream fileOut = new FileOutputStream("files/players.txt");
+            fileOut.write(inputStr.getBytes());
+            fileOut.close();
+        } catch (IOException ex) {
+            System.out.println("IOException in recordGainedPoints");
+        } catch (ClassCastException ex) {
+            // Non era un logged player, non faccio niente
+        }
+        notifyVictory(winMessage);
+
     }
 
 }

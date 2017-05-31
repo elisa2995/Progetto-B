@@ -261,8 +261,7 @@ public class UserDialog extends javax.swing.JDialog {
         byte[] encryptedBytes = encoder.encode(password.getBytes());
         String encryptedString = new String(encryptedBytes, "UTF-8");        
         try (PrintWriter out = new PrintWriter(new FileOutputStream("files/players.txt", true))) {
-            out.println(username + ";"+encryptedString);
-            
+            out.println(username + ";"+encryptedString+";0");           
         }
 
     }

@@ -481,8 +481,8 @@ public class GUI extends JFrame implements GameObserver {
      * ... @param winner
      */
     @Override
-    public void updateOnVictory(String winner) {
-        JOptionPane.showMessageDialog(null, "Complimenti " + winner + " hai vinto!");
+    public void updateOnVictory(String winMessage) {
+        JOptionPane.showMessageDialog(null, winMessage);
         //this.dispose();
         // etc
     }

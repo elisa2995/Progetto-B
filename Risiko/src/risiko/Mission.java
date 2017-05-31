@@ -16,9 +16,11 @@ public class Mission {
     private String description;
     private List<Country> targetList;
     private int nrCountryToConquer;
+    private int points;
     
-    public Mission(String description) {
+    public Mission(String description, int points) {
         this.description = description;
+        this.points = points;
         this.targetList = new ArrayList<>();
         this.nrCountryToConquer = 0;
     }
@@ -41,5 +43,9 @@ public class Mission {
 
     public void setNrCountryToConquer(int nrCountryToConquer) {
         this.nrCountryToConquer = nrCountryToConquer;
+    }
+    
+    public int getPoints(){
+        return this.points;
     }
 }

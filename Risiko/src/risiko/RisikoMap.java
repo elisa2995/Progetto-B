@@ -16,7 +16,6 @@ public class RisikoMap {
 
     private final int DEFAULT_ARMIES = 3;
     private final String urlCountries = "files/territori.txt";
-    //private final String urlCountries = "files/prova.txt";
     private final String urlMissions = "files/missions.txt";
     private Map<String, List<Country>> continentCountries;
     private Map<Country, List<Country>> countryNeighbors;
@@ -144,15 +143,19 @@ public class RisikoMap {
 
             String line;
             Mission mission;
+            String description;
+            int points;
             while ((line = br.readLine()) != null) {
-                String[] tokens = line.split("=");
-                mission = new Mission(tokens[1]);
+                String[] tokens = line.split("=")[1].split("-");
+                points = Integer.parseInt(tokens[1]);
+                description = tokens[0]+" \n("+points+" punti)";
+                mission = new Mission(description, points);
                 this.missions.add(mission);
                 buildTargetListForMission(mission);
             }
 
         } catch (Exception ex) {
-            System.out.println("File not found");
+            ex.printStackTrace();
         }
     }
 
