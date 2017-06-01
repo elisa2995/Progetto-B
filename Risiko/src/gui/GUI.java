@@ -38,6 +38,7 @@ public class GUI extends JFrame implements GameObserver {
     private DefenseDialog defenseArmies;
     //private AttackDialog inputArmies;
     private CardBonusDialog cardBonusDialog;
+    private TimerUpdater timer;
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         //initBackground();
@@ -81,6 +82,9 @@ public class GUI extends JFrame implements GameObserver {
         labelAdvice.setFont(new Font("Serif", Font.PLAIN, 13));
         Dimension dim=getToolkit().getScreenSize();
         this.setLocation(dim.width/2-this.getWidth()/2, dim.height/2-this.getHeight()/2);
+        
+        timer = new TimerUpdater(buttonNextPhase, game);
+        new Thread(timer).start();
     }
 
     /**
@@ -161,7 +165,6 @@ public class GUI extends JFrame implements GameObserver {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1400, 650));
-        setPreferredSize(new java.awt.Dimension(1400, 650));
 
         labelPlayerPhase.setBackground(new java.awt.Color(225, 207, 218));
         labelPlayerPhase.setForeground(new java.awt.Color(1, 1, 1));
@@ -483,6 +486,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnVictory(String winner) {
         JOptionPane.showMessageDialog(null, "Complimenti " + winner + " hai vinto!");
+        timer.setGameEnd(true);
         //this.dispose();
         // etc
     }

@@ -19,6 +19,15 @@ import risiko.BonusDeck;
 import risiko.Card;
 import risiko.players.ArtificialPlayerSettings;
 import utils.BasicObservable;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Game extends Observable {
 
@@ -28,6 +37,12 @@ public class Game extends Observable {
     private int defenderArmies;
     private boolean attackInProgress = false;
 
+    private ScheduledThreadPoolExecutor timeoutExecutor;
+    //private boolean isPlayerTimedOut = false;
+    private Semaphore timeoutSemaphore;
+    private Player playerToTimeout;
+    ScheduledFuture activeTimer;
+    
     private RisikoMap map;
     private BonusDeck deck;
     private List<Player> players;
@@ -68,6 +83,20 @@ public class Game extends Observable {
     public String getActivePlayerMission() {
         return activePlayer.getMissionDescription();
     }
+    
+    public void timeout() {
+        //this.isPlayerTimedOut = true;
+        timeoutSemaphore.tryAcquire();
+        if (playerToTimeout.equals(activePlayer)) {
+            System.out.println("timeout");
+            resetFightingCountries();
+            this.passTurn();
+            this.notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
+        }
+        timeoutSemaphore.release();
+
+        //this.isPlayerTimedOut = false;
+    }
 
     /**
      * Inizializza il gioco. Ovvero chiama il metodo della mappa per
@@ -80,7 +109,12 @@ public class Game extends Observable {
      * cui l'url del file dei territori fosse sbagliato.
      */
     private void init(Map<String, String> playersMap, Map<String, String> playersColor) throws Exception {
-
+//        this.turnTimeout = new Timer();
+        
+        timeoutExecutor = new ScheduledThreadPoolExecutor(1);
+        timeoutExecutor.setMaximumPoolSize(1);
+        timeoutSemaphore = new Semaphore(1 , false);
+        
         buildPlayers(playersMap, playersColor);
         map.assignCountriesToPlayers(players);
         map.assignMissionToPlayers(players);
@@ -480,6 +514,16 @@ public class Game extends Observable {
         if (!checkCallerIdentity(aiCaller)) {
             return;
         }
+        
+        //prova a eseguire il cambio di fase a meno che il timeout automatico non abbia già iniziato
+        try {
+            if(!timeoutSemaphore.tryAcquire(1, TimeUnit.SECONDS)){
+                return;
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
 
         if (phase == Phase.REINFORCE && activePlayer.getBonusArmies() != 0) {
@@ -496,6 +540,7 @@ public class Game extends Observable {
             passTurn();
         }
         notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
+        timeoutSemaphore.release();
     }
 
     /**
@@ -506,6 +551,7 @@ public class Game extends Observable {
      * @author Carolina
      */
     private void passTurn() {
+
         nextTurn();
         this.phase = Phase.values()[0];
         map.computeBonusArmies(activePlayer);
@@ -517,6 +563,20 @@ public class Game extends Observable {
      * @author Federico
      */
     private void nextTurn() {
+       
+//        this.timeoutExecutor.shutdown();
+        
+        //cancella tutti i task non ancora eseguiti
+        timeoutExecutor.getQueue().clear();
+
+        //aspetta che il timeout abbia finito la sua esecuzione nel caso sia già iniziato
+        try {
+            timeoutExecutor.awaitTermination(100, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            System.out.println("timeout still in progress");
+        }
+        
+        
         ListIterator<Player> iter = players.listIterator(players.indexOf(activePlayer) + 1);
 
         if (iter.hasNext()) {
@@ -524,11 +584,25 @@ public class Game extends Observable {
         } else {
             activePlayer = players.get(0);
         }
+        
+        //questo mi serve per non far saltare il turno al giocatore sbagliato
+        playerToTimeout = activePlayer;
+        
+        //attiva il timer per il turno
+        activeTimer = timeoutExecutor.schedule(() -> {timeout();}, 10, TimeUnit.SECONDS);
 
         //Devo resettare a false JustDrowCardBonus così che si possa pescare con map.updateOnConquer 
         activePlayer.setAlreadyDrawnCard(false);
         if (!activePlayer.getBonusCards().isEmpty()) {
             notifyNextTurn();
+        }
+    }
+    
+    public long getTimeRemaining(){
+        if (activeTimer != null) {
+            return activeTimer.getDelay(TimeUnit.SECONDS);
+        } else {
+            return 0;
         }
     }
 
@@ -793,7 +867,7 @@ public class Game extends Observable {
      * @return
      * @author Carolina
      */
-    private boolean checkCallerIdentity(ArtificialPlayer[] aiCaller) {
+    private boolean checkCallerIdentity(ArtificialPlayer[] aiCaller) {    
         return (aiCaller.length == 0) ? !(activePlayer instanceof ArtificialPlayer) : aiCaller[0].equals(activePlayer);
     }
 
