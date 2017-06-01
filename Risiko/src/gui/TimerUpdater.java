@@ -28,16 +28,34 @@ public class TimerUpdater implements Runnable{
         this.game = game;
     }
 
+    private String toMinutes(long seconds) {
+        long min, sec;
+        min = seconds / 60;
+        sec = seconds % 60;
+        if (sec < 10) {
+            return "" + min + ":0" + sec;
+        } else {
+            return "" + min + ":" + sec;
+        }
+    }
+    
     @Override
     public void run() {
-        while(!gameEnd){
-        nextTurn.setText("nextPhase - "+ game.getTimeRemaining());
-//        try {
-//          
-//            this.wait(1000);
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(TimerUpdater.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        //nextTurn.setText("nextPhase - " + game.getTimeRemaining());
+        while (!gameEnd) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    nextTurn.setText("nextPhase - " + toMinutes(game.getTimeRemaining()));
+                }
+            });
+            //senza un wait si blocca l'edt per le troppe richieste fatte 
+            synchronized (this) {
+                try {
+                    this.wait(800);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(TimerUpdater.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
     

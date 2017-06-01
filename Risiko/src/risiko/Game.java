@@ -42,6 +42,7 @@ public class Game extends Observable {
     private Semaphore timeoutSemaphore;
     private Player playerToTimeout;
     ScheduledFuture activeTimer;
+    private int timeoutTimeSeconds;
     
     private RisikoMap map;
     private BonusDeck deck;
@@ -90,12 +91,20 @@ public class Game extends Observable {
         if (playerToTimeout.equals(activePlayer)) {
             System.out.println("timeout");
             resetFightingCountries();
+            this.attackInProgress=false;
+            for(Player p:players){
+                p.decrementBonusArmies(p.getBonusArmies());
+            }
             this.passTurn();
             this.notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
         }
         timeoutSemaphore.release();
 
         //this.isPlayerTimedOut = false;
+    }
+
+    public void setTimeoutTimeSeconds(int timeoutTimeSeconds) {
+        this.timeoutTimeSeconds = timeoutTimeSeconds;
     }
 
     /**
@@ -114,6 +123,7 @@ public class Game extends Observable {
         timeoutExecutor = new ScheduledThreadPoolExecutor(1);
         timeoutExecutor.setMaximumPoolSize(1);
         timeoutSemaphore = new Semaphore(1 , false);
+        timeoutTimeSeconds=10;
         
         buildPlayers(playersMap, playersColor);
         map.assignCountriesToPlayers(players);
@@ -585,11 +595,11 @@ public class Game extends Observable {
             activePlayer = players.get(0);
         }
         
-        //questo mi serve per non far saltare il turno al giocatore sbagliato
+        //questo serve per non far saltare il turno al giocatore sbagliato
         playerToTimeout = activePlayer;
         
         //attiva il timer per il turno
-        activeTimer = timeoutExecutor.schedule(() -> {timeout();}, 10, TimeUnit.SECONDS);
+        activeTimer = timeoutExecutor.schedule(() -> {timeout();}, timeoutTimeSeconds, TimeUnit.SECONDS);
 
         //Devo resettare a false JustDrowCardBonus così che si possa pescare con map.updateOnConquer 
         activePlayer.setAlreadyDrawnCard(false);
