@@ -85,6 +85,9 @@ public class Game extends Observable {
         return activePlayer.getMissionDescription();
     }
     
+    /**
+     * metodo eseguito nel caso un giocatore finisse il tempo a disposizione, questo perde il suo turno. 
+     */
     public void timeout() {
         //this.isPlayerTimedOut = true;
         timeoutSemaphore.tryAcquire();
@@ -123,7 +126,7 @@ public class Game extends Observable {
         timeoutExecutor = new ScheduledThreadPoolExecutor(1);
         timeoutExecutor.setMaximumPoolSize(1);
         timeoutSemaphore = new Semaphore(1 , false);
-        timeoutTimeSeconds=10;
+        timeoutTimeSeconds=100;
         
         buildPlayers(playersMap, playersColor);
         map.assignCountriesToPlayers(players);
@@ -134,6 +137,9 @@ public class Game extends Observable {
         phase = Phase.REINFORCE;
         notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
         startArtificialPlayerThreads();
+        
+        playerToTimeout = activePlayer;
+        activeTimer = timeoutExecutor.schedule(() -> {timeout();}, timeoutTimeSeconds, TimeUnit.SECONDS);
     }
 
     /**
@@ -181,11 +187,19 @@ public class Game extends Observable {
      * @param aiCaller l'eventuale artificialPlayer caller del metodo.
      */
     public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
+        //se non ottengo il permesso di eseguire l'azione viene annullata l'esecuzione
+        if(!timeoutSemaphore.tryAcquire()){
+            return;
+        }
         if (!checkCallerIdentity(aiCaller)) {
+            //viene prima richiesto un certificato al semaforo per evitare che si eseguano operazioni 
+            //di un giocatore durante il turno di un'altro
+            timeoutSemaphore.release();
             return;
         }
         this.attackerCountry = map.getCountryByName(attackerCountryName);
         notifySetAttacker(attackerCountryName);
+        timeoutSemaphore.release();
     }
 
     /**
@@ -195,11 +209,16 @@ public class Game extends Observable {
      * @param aiCaller l'eventuale artificialPlayer caller del metodo.
      */
     public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller) {
+        if(!timeoutSemaphore.tryAcquire()){
+            return;
+        }
         if (!checkCallerIdentity(aiCaller)) {
+            timeoutSemaphore.release();
             return;
         }
         this.defenderCountry = map.getCountryByName(defenderCountryName);
         ((BasicObservable)this).notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false));
+        timeoutSemaphore.release();
     }
 
     /**
@@ -359,8 +378,12 @@ public class Game extends Observable {
      * @param aiCaller
      */
     public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller) {
+        if(!timeoutSemaphore.tryAcquire()){
+            return;
+        }
         if (aiCaller.length == 0) {
             if ((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)) {
+                timeoutSemaphore.release();
                 return;
             }
         } else if (!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))) {
@@ -372,10 +395,15 @@ public class Game extends Observable {
         } else {
             defenderArmies = nrD;
         }
+        timeoutSemaphore.release();
     }
 
     public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller) {
+        if(!timeoutSemaphore.tryAcquire()){
+            return;
+        }
         if (!checkCallerIdentity(aiCaller)) {
+            timeoutSemaphore.release();
             return;
         }
 
@@ -384,6 +412,7 @@ public class Game extends Observable {
         } else {
             attackerArmies = nrA;
         }
+        timeoutSemaphore.release();
     }
 
     /**
@@ -397,11 +426,15 @@ public class Game extends Observable {
      * @param aiCaller
      */
     public void declareAttack(ArtificialPlayer... aiCaller) {
-        attackInProgress = true;
-        if (!checkCallerIdentity(aiCaller)) {
+        if(!timeoutSemaphore.tryAcquire()){
             return;
         }
-
+        //attackInProgress = true;
+        if (!checkCallerIdentity(aiCaller)) {
+            timeoutSemaphore.release();
+            return;
+        }
+        attackInProgress = true;
         Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
         Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
         if (attackerArmies > 0) {
@@ -411,7 +444,8 @@ public class Game extends Observable {
                 notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, false);
             }
         }
-        this.resetFightingCountries();        
+        this.resetFightingCountries();  
+        timeoutSemaphore.release();
     }
 
     /**
@@ -422,7 +456,12 @@ public class Game extends Observable {
      * @param aiCaller
      */
     public void confirmAttack(ArtificialPlayer... aiCaller) {
+        if(!timeoutSemaphore.tryAcquire()){
+            return;
+        }
+        
         if (attackInProgress == false) {
+            timeoutSemaphore.release();
             return;
         }
 
@@ -461,6 +500,7 @@ public class Game extends Observable {
 
         notifyAttackResult(attackResult, conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense());
         attackInProgress = false;
+        timeoutSemaphore.release();
     }
 
     // ----------------------- Rinforzo ------------------------------------
@@ -473,9 +513,12 @@ public class Game extends Observable {
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
     public void reinforce(String countryName, int nArmies, ArtificialPlayer... aiCaller) {
-
+        if(!timeoutSemaphore.tryAcquire()){
+            return;
+        }
         // La seconda condizione sarà da cancellare in futuro perché in teoria sempre vera
         if (!checkCallerIdentity(aiCaller) || activePlayer.getBonusArmies() - nArmies < 0) {
+            timeoutSemaphore.release();
             return;
         }
         Country country = map.getCountryByName(countryName);
@@ -491,6 +534,7 @@ public class Game extends Observable {
 
         notifyReinforce(countryName, activePlayer.getBonusArmies());
         notifyArmiesChange(countryName, country.getArmies(), map.getPlayerColorByCountry(country));
+        timeoutSemaphore.release();
     }
 
     /**
@@ -520,19 +564,23 @@ public class Game extends Observable {
      * @author Carolina
      */
     public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
-
+        if(!timeoutSemaphore.tryAcquire()){
+            return;
+        }
+        
         if (!checkCallerIdentity(aiCaller)) {
+            timeoutSemaphore.release();
             return;
         }
         
         //prova a eseguire il cambio di fase a meno che il timeout automatico non abbia già iniziato
-        try {
-            if(!timeoutSemaphore.tryAcquire(1, TimeUnit.SECONDS)){
-                return;
-            }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            if(!timeoutSemaphore.tryAcquire(1, TimeUnit.SECONDS)){
+//                return;
+//            }
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         
         resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
 
@@ -573,18 +621,18 @@ public class Game extends Observable {
      * @author Federico
      */
     private void nextTurn() {
-       
-//        this.timeoutExecutor.shutdown();
-        
-        //cancella tutti i task non ancora eseguiti
+        //cancella tutti i task non ancora eseguiti in modo da non aver 2 timer nello stesso momento
         timeoutExecutor.getQueue().clear();
 
         //aspetta che il timeout abbia finito la sua esecuzione nel caso sia già iniziato
-        try {
-            timeoutExecutor.awaitTermination(100, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            System.out.println("timeout still in progress");
-        }
+        //questo non funziona dato che timeout utilizza nextTurn e quindi aspetta se stesso
+        //in ogni caso non dovrebbe essere necessario perchè l'utilizzo del semaforo e della variabile playertotimeout
+        //dovrebbero fare la stessa cosa
+//        try {
+//            timeoutExecutor.awaitTermination(100, TimeUnit.MILLISECONDS);
+//        } catch (InterruptedException e) {
+//            System.out.println("timeout still in progress");
+//        }
         
         
         ListIterator<Player> iter = players.listIterator(players.indexOf(activePlayer) + 1);
@@ -949,7 +997,7 @@ public class Game extends Observable {
      * attacker
      *
      * @param attacker
-     * @return
+     * @return la lista dei territori che può attaccare
      */
     public String[] getAllDefenders(String attacker) {
         String[] defenders = map.getNeighbors(map.getCountryByName(attacker)).stream().filter(element
