@@ -1,0 +1,42 @@
+61,49	Alaska
+139,49	Territori del Nord Ovest
+341,25	Groenlandia
+114,85	Alberta
+178,91	Ontario
+245,89	Quebec
+85,143	Stati Uniti Occidentali
+162,152	Stati Uniti Orientali
+110,217	America Centrale
+198,265	Venezuela
+213,346	Peru'
+271,337	Brasile
+230,427	Argentina
+411,53	Islanda
+438,86	Gran Bretagna
+498,53	Scandinavia
+437,135	Europa Occidentale
+490,98	Europa Settentrionale
+515,135	Europa Meridionale
+563,89	Ucraina
+640,63	Urali
+643,125	Afghanistan
+694,47	Siberia
+775,52	Jacuzia
+754,80	Cita
+776,120	Mongolia
+870,55	Kamchatka
+897,157	Giappone
+788,177	Cina
+787,235	Siam
+706,212	India
+587,189	Medio Oriente
+837,290	Indonesia
+930,308	Nuova Guinea
+928,379	Australia Orientale
+852,394	Australia Occidentale
+441,232	Africa del Nord
+519,188	Egitto
+568,266	Africa Orientale
+516,286	Congo
+523,374	Africa del Sud
+606,367	Madagascar
