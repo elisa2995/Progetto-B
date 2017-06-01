@@ -1,0 +1,331 @@
+package services;
+
+import exceptions.FileManagerException;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Classe che si occupa di gestire tutte le letture/scritture da/su file.
+ * (Oggetto singleton)??
+ */
+public class FileManager {
+
+    private final String PLAYERS = "files/players.txt";
+    // url file che fa da db per le info dei giocatori
+    private final String COUNTRIES = "files/countries.txt";
+    private final String MISSIONS = "files/missions.txt";
+    private final String LABELS = "files/countriesLabels.txt";
+    private final String COLORS = "files/countriesColors.txt";
+    private final String TRIS = "files/bonusTris.txt";
+
+    //----------------------- countries.txt ----------------------------------//
+    /**
+     * Legge il file countries.txt per ricavare la lista di territori.
+     *
+     * @return una List contenente i nomi dei territori.
+     */
+    public List<String> getCountries() {
+        List<String> countries = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(COUNTRIES))) {
+            String line;
+            String countryName;
+            while ((line = br.readLine()) != null) {
+                if (!line.startsWith("-")) {
+                    countryName = line.split(",")[0];
+                    countries.add(countryName);
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return countries;
+    }
+
+    /**
+     * Legge il file countries.txt per ricavare da ogni country la lista dei
+     * suoi vicini.
+     *
+     * @return una Map che mappa un territorio con la lista dei suoi vicini.
+     */
+    public Map<String, List<String>> getCountryNeighbors() {
+
+        Map<String, List<String>> countryNeighbors = new HashMap();
+        try (BufferedReader br = new BufferedReader(new FileReader(COUNTRIES))) {
+            String line;
+            String subject;
+            String[] tokens;
+            while ((line = br.readLine()) != null) {
+                if (!line.startsWith("-")) {
+                    tokens = line.split(",");
+                    subject = tokens[0];
+                    countryNeighbors.put(subject, Arrays.asList(Arrays.copyOfRange(tokens, 1, tokens.length)));
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return countryNeighbors;
+    }
+
+    /**
+     * Legge il file countries.txt per ricavare i continenti.
+     *
+     * @return una List di Map, di cui ogni elemento corrisponde a un
+     * continente. La Map ha tre entrate: §1 name -> String - nome del
+     * continente §2 countries -> List<String> - di territori che appartengono a
+     * quel continente §3 bonus -> Integer - bonusArmies
+     */
+    public List<Map<String, Object>> getContinents() {
+
+        List<Map<String, Object>> continents = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(COUNTRIES))) {
+            String line;
+            Map<String, Object> row;
+            List<String> countries = new ArrayList<>();
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith("-")) { // Nuovo continente
+                    row = new HashMap<>();
+                    String tokens[] = line.split("-");     //tokens[] sarà un array di 3 stringhe, la prima sarà vuota, questo perchè line inizia con "-"
+                    row.put("name", tokens[1]);
+                    row.put("bonus", Integer.parseInt(tokens[2]));
+                    row.put("countries", countries);
+                    continents.add(row);
+                    countries = new ArrayList<>();
+                } else {
+                    countries.add(line.split(",")[0]);
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return continents;
+    }
+
+    //------------------------ missions.txt ----------------------------------//
+    /**
+     * Legge il file missions.txt.
+     *
+     * @return una List di Map, di cui ogni elemento corrisponde a una missione.
+     * La Map ha tre entrate: §1 type -> String - tipo di missione ("Continent"
+     * se consiste nel conquistre di continenti, "Countries" altrimenti) §2
+     * points -> Integer - punti che si guadagnano nel caso la missione venga
+     * completata. §3 description -> String - descrizione
+     */
+    public List<Map<String, Object>> getMissions() {
+
+        List<Map<String, Object>> missions = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(MISSIONS))) {
+            Map<String, Object> mission;
+            String line;
+            String[] tokens;
+
+            while ((line = br.readLine()) != null) {
+                mission = new HashMap<>();
+                tokens = line.split("=")[1].split("-");
+                mission.put("type", line.split("=")[0]);
+                mission.put("points", Integer.parseInt(tokens[1]));
+                mission.put("description", tokens[0]);
+                missions.add(mission);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return missions;
+
+    }
+
+    //------------------------ players.txt -----------------------------------//
+    /**
+     * Aggiorna il file players.txt.
+     *
+     * @param username l'username del giocatore che ha vinto la partita
+     * @param missionPoints i punti della missione completata.
+     */
+    public void recordGainedPoints(String username, int missionPoints) {
+
+        String inputStr = readPlayersFile(username, missionPoints);
+        writePlayersFile(inputStr);
+
+    }
+
+    /**
+     * Legge il file dei players da cui costruisce una stringa. Aggiorna il
+     * punteggio di player.
+     *
+     * @param player il giocatore che ha vinto la partita
+     * @return il contenuto del file sotto forma di stringa.
+     */
+    private String readPlayersFile(String username, int missionPoints) {
+
+        String inputStr = "";
+        try (BufferedReader file = new BufferedReader(new FileReader(PLAYERS))) {
+            String line;
+            StringBuilder inputBuffer = new StringBuilder();
+            int points;
+            while ((line = file.readLine()) != null) {
+                if (line.contains(username)) {
+                    String[] tokens = line.split(";");
+                    points = Integer.parseInt(tokens[2]) + missionPoints;
+                    tokens[2] = Integer.toString(points);
+                    line = tokens[0] + ";" + tokens[1] + ";" + tokens[2];
+                }
+                inputBuffer.append(line);
+                inputBuffer.append('\n');
+            }
+            inputStr = inputBuffer.toString();
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return inputStr;
+    }
+
+    /**
+     * Riscrive il file <code>urlFile</code> con i dati aggiornati.
+     *
+     * @param urlFile il file players.txt
+     * @param player il giocatore che ha vinto la partita
+     */
+    private void writePlayersFile(String content) {
+        FileOutputStream fileOut;
+        try {
+            fileOut = new FileOutputStream(PLAYERS);
+            fileOut.write(content.getBytes());
+            fileOut.close();
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Restituisce i punti di un giocatore.
+     *
+     * @param username
+     * @return
+     * @throws FileManagerException
+     */
+    public int getPlayerPoints(String username) throws FileManagerException {
+        try (BufferedReader file = new BufferedReader(new FileReader(PLAYERS))) {
+            String line;
+            while ((line = file.readLine()) != null) {
+                if (line.contains(username)) {
+                    String[] tokens = line.split(";");
+                    return Integer.parseInt(tokens[2]);
+                }
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
+        throw new FileManagerException("No user found with username " + username);
+    }
+
+    //----------------------------- countriesLabels.txt-------------------------//
+    /**
+     * Ritorna una List di Map, di cui ogni elemento contiene le proprietà di
+     * una Label. La Map ha tre entrate: §1 country -> String - nome della
+     * country §2 x -> Integer - la coordinata x della label §3 y -> Integer -
+     * la coordinata y della label.
+     *
+     * @return
+     */
+    public List<Map<String, Object>> getLabelsProperties() {
+        List<Map<String, Object>> labels = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(LABELS))) {
+            Map<String, Object> row;
+            String[] tokens;
+            String line;
+            while ((line = br.readLine()) != null) {
+                row = new HashMap<>();
+                tokens = line.split("\t");
+                row.put("country", tokens[1]);
+                row.put("x", Integer.parseInt(tokens[0].split(",")[0]));
+                row.put("y", Integer.parseInt(tokens[0].split(",")[1]));
+                labels.add(row);
+            }
+
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found");
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return labels;
+    }
+
+    //------------------------- countriesColors.txt --------------------------//
+    /**
+     * Legge il file countriesColors.txt.
+     *
+     * @return una lista di Map in cui ogni elemento corrisponde a un
+     * territorio. La Map ha 4 entrate: 
+     * § 1 - key : "country" -> String nome della country 
+     * § 2 - key : "R" -> Integer numero da 0 a 255 che rappresenta il valore 
+     * di Rosso nell'RGB della Country 
+     * § 3 - key : "G" -> Integer numero da 0 a 255 che rappresenta il valore
+     * di Verde nell'RGB della country 
+     * § 4 - key : "B" -> Integer numero da 0 a 255 che rappresenta il valore 
+     * di Blu nell'RGB della country
+     * @throws FileNotFoundException
+     */
+    public List<Map<String, Object>> getCountriesColors() throws FileNotFoundException {
+
+        List<Map<String, Object>> countriesColors = new ArrayList();
+        try (BufferedReader br = new BufferedReader(new FileReader(COLORS))) {
+            Map<String, Object> row;
+            String[] tokens, RGB;
+            String line;
+            while ((line = br.readLine()) != null) {
+                row = new HashMap<>();
+                tokens = line.split("=");
+                RGB = tokens[1].split(",");
+                row.put("country", tokens[0]);
+                row.put("R", Integer.parseInt(RGB[0].trim()));
+                row.put("G", Integer.parseInt(RGB[1].trim()));
+                row.put("B", Integer.parseInt(RGB[2].trim()));
+                countriesColors.add(row);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return countriesColors;
+    }
+    
+    //--------------------------- bonusTris.txt ------------------------------//
+    
+    /**
+     * Legge il file bonusTris.txt.
+     * @return una List di Map, in cui ogni elemento corrisponde a un tris.
+     * La Map ha 2 entrate:
+     * § key : "cards" -> String[] cards, le carte che compongono il tris
+     * § key : "bonus" -> Integer bonus, il bonus di armate per quel tris.
+     */
+    public List<Map<String, Object>> getTris(){
+        
+        List<Map<String, Object>> tris = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(TRIS))) {
+            String line;
+            HashMap<String, Object> row;
+            while ((line = br.readLine()) != null) {
+                row = new HashMap<>();
+                row.put("cards", line.split("\t")[0].split(","));
+                row.put("bonus", Integer.parseInt(line.split("\t")[1]));
+                tris.add(row);
+            }
+        } catch (Exception ex) {
+            System.out.println("Error in buildTris");
+        }
+        
+        return tris;
+    
+    }
+
+}

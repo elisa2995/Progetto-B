@@ -13,9 +13,9 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
-import risiko.Game;
+import risiko.game.Game;
 import gui.PlayAudio;
-import risiko.GameProxy;
+import risiko.game.GameProxy;
 
 /**
  *

@@ -4,8 +4,7 @@ import exceptions.PendingOperationsException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import risiko.Action;
-import risiko.GameProxy;
+import risiko.game.GameProxy;
 import utils.BasicGameObserver;
 
 public class ArtificialPlayer extends Player implements Runnable, BasicGameObserver {
@@ -46,9 +45,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         currentAction = Action.NOACTION;
         setting = new ArtificialPlayerSettings();
         setting.setBaseAttack(5);
-        setting.setAttackDeclarationDelay(1000);
-        setting.setReinforceDelay(1000);
-        setting.setAttackDelay(1000);
+        setting.setAttackDeclarationDelay(100);
+        setting.setReinforceDelay(100);
+        setting.setAttackDelay(100);
     }
 
     /**
@@ -59,7 +58,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             try {
                 game.nextPhase(this);
             } catch (PendingOperationsException ex) {
-                Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         int index;
@@ -175,24 +174,24 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                     //System.out.println(game.getPhase() + " " + this.getName());
                     switch (game.getPhase()) {
                         case REINFORCE:
-                            System.out.println(game.getPhase() + " " + this.getName());
+                            //System.out.println(game.getPhase() + " " + this.getName());
                             randomReinforce();
                             break;
                         case FIGHT:
-                            System.out.println(game.getPhase() + " " + this.getName());
+                            //System.out.println(game.getPhase() + " " + this.getName());
                             canAttack = true;
                             this.randomAttack();
                             game.nextPhase(this);
                             break;
                         case MOVE:
-                            System.out.println(game.getPhase() + " " + this.getName());
-                            System.out.println("--------------------------------------------");
+                            //System.out.println(game.getPhase() + " " + this.getName());
+                            //System.out.println("--------------------------------------------");
                             game.nextPhase(this);
                             break;
                     }
                 } else if (this.currentAction == Action.DEFEND) {
 
-                    System.out.println(Action.DEFEND + " " + this.getName());
+                    //System.out.println(Action.DEFEND + " " + this.getName());
                     this.defend();
                 }
             } catch (PendingOperationsException ex) {

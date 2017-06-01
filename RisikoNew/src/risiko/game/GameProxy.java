@@ -1,8 +1,10 @@
-package risiko;
+package risiko.game;
 
 import exceptions.PendingOperationsException;
 import java.util.List;
 import java.util.Map;
+import risiko.Card;
+import risiko.Phase;
 import risiko.players.ArtificialPlayer;
 import risiko.players.ArtificialPlayerSettings;
 import risiko.players.Player;
@@ -10,6 +12,8 @@ import risiko.players.Player;
 public interface GameProxy {
 
     public Phase getPhase(ArtificialPlayer... aiCaller);
+    
+    public String getPhaseName(ArtificialPlayer... aiCaller);
 
     public Player getActivePlayer(ArtificialPlayer... aiCaller);
 

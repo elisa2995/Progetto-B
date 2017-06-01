@@ -1,5 +1,6 @@
-package risiko;
+package risiko.game;
 
+import exceptions.FileManagerException;
 import risiko.players.PlayerType;
 import risiko.players.Player;
 import risiko.players.ArtificialPlayer;
@@ -8,8 +9,8 @@ import exceptions.PendingOperationsException;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import services.FileManager;
 import java.util.ListIterator;
 import java.util.Map;
 import utils.Observable;
@@ -17,7 +18,16 @@ import utils.GameObserver;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import risiko.AttackResult;
+import risiko.BonusDeck;
+import risiko.Card;
+import risiko.Country;
+import risiko.Phase;
+import risiko.RisikoMap;
 import risiko.players.ArtificialPlayerSettings;
+import risiko.players.LoggedPlayer;
 import utils.BasicObservable;
 
 public class Game extends Observable implements GameProxy {
@@ -37,6 +47,7 @@ public class Game extends Observable implements GameProxy {
     private int resultsDiceAttack[];
     private int resultsDiceDefense[];
     private boolean reattack;
+    private FileManager fileManager;
 
     public Game(Map<String, String> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
 
@@ -45,6 +56,7 @@ public class Game extends Observable implements GameProxy {
         this.deck = new BonusDeck();
         this.map = new RisikoMap();
         this.addObserver(observer);
+        this.fileManager = new FileManager();
         initInvocationHandler();
         init(playersMap, playersColor);
 
@@ -58,6 +70,15 @@ public class Game extends Observable implements GameProxy {
     @Override
     public synchronized Phase getPhase(ArtificialPlayer... aiCaller) {
         return this.phase;
+    }
+    
+    /**
+     * Ridà il nome della fase di gioco corrente.
+     * @param aiCaller
+     * @return 
+     */
+    public synchronized String getPhaseName(ArtificialPlayer... aiCaller){
+        return this.phase.toString();
     }
 
     /**
@@ -397,7 +418,7 @@ public class Game extends Observable implements GameProxy {
                 players.remove(defenderPlayer);
             }
             if (hasWon()) {
-                notifyVictory(activePlayer.getName());
+                recordGainedPoints();
                 return;
             }
 
@@ -408,6 +429,27 @@ public class Game extends Observable implements GameProxy {
 
         notifyAttackResult(attackResult, conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense(), artificialAttack, hasAlreadyDrawnCard);
         attackInProgress = false;
+
+    }
+
+    /**
+     * Registra i punti guadagnati dal giocatore che ha vinto il gioco e notifica
+     * la vittoria.
+     */
+    private void recordGainedPoints() {
+
+        String winMessage = "Complimenti " + activePlayer.getName() + " hai vinto!\n";
+        if (activePlayer instanceof LoggedPlayer) {
+            String username = ((LoggedPlayer) activePlayer).getUsername();
+            fileManager.recordGainedPoints(username, activePlayer.getMission().getPoints());
+            try {
+                winMessage += "Punti : " + fileManager.getPlayerPoints(username);
+            } catch (FileManagerException ex) {
+                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        notifyVictory(winMessage);
 
     }
 
@@ -495,7 +537,7 @@ public class Game extends Observable implements GameProxy {
      */
     private void passTurn() {
         ListIterator<Player> iter = players.listIterator(players.indexOf(activePlayer) + 1);
-        
+
         if (iter.hasNext()) {
             activePlayer = iter.next();
         } else {
@@ -532,8 +574,6 @@ public class Game extends Observable implements GameProxy {
      *
      * @author Federico
      */
-    
-
     //-------------------- Carte / spostamento finale ----------------//
     /**
      * Ritorna il nome dell'ultima carta pescata dal giocatore di turno.
@@ -898,21 +938,21 @@ public class Game extends Observable implements GameProxy {
 
         List<Card[]> playableTris = new ArrayList<>();
         Card[] cards = new Card[3];
-        
+
         for (int i = 0; i < cardNames.length; i++) {
-            cards[i] = Card.valueOf(cardNames[i].toUpperCase());            
+            cards[i] = Card.valueOf(cardNames[i].toUpperCase());
         }
-                
+
         playableTris.addAll((Set) deck.getTris().keySet());
-        
+
         for (Card[] cardArray : playableTris) {
-            List<Card> cardList=Arrays.asList(cardArray);
+            List<Card> cardList = Arrays.asList(cardArray);
             if (cardList.contains(cards[0]) && cardList.contains(cards[1]) && cardList.contains(cards[2])) {
                 return true;
             }
         }
         return false;
-     
+
     }
 
 }

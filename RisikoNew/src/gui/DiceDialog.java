@@ -11,8 +11,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import risiko.Game;
-import risiko.GameProxy;
+import risiko.game.Game;
+import risiko.game.GameProxy;
 
 /**
  *
