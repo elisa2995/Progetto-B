@@ -89,8 +89,12 @@ public class Game extends Observable {
      * metodo eseguito nel caso un giocatore finisse il tempo a disposizione, questo perde il suo turno. 
      */
     public void timeout() {
-        //this.isPlayerTimedOut = true;
-        timeoutSemaphore.tryAcquire();
+        try {
+            //this.isPlayerTimedOut = true;
+            timeoutSemaphore.acquire();
+        } catch (InterruptedException ex) {
+            //il trhead viene interrotto
+        }
         if (playerToTimeout.equals(activePlayer)) {
             System.out.println("timeout");
             resetFightingCountries();
