@@ -495,7 +495,7 @@ public class Game extends Observable implements GameProxy {
      */
     private void passTurn() {
         ListIterator<Player> iter = players.listIterator(players.indexOf(activePlayer) + 1);
-        
+
         if (iter.hasNext()) {
             activePlayer = iter.next();
         } else {
@@ -532,8 +532,6 @@ public class Game extends Observable implements GameProxy {
      *
      * @author Federico
      */
-    
-
     //-------------------- Carte / spostamento finale ----------------//
     /**
      * Ritorna il nome dell'ultima carta pescata dal giocatore di turno.
@@ -889,7 +887,8 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     *
+     * Controlla se le 3 carte contenute in <code>cardNames</code> forma un tris 
+     * giocabile
      * @param cardNames
      * @param aiCaller
      * @return
@@ -898,21 +897,26 @@ public class Game extends Observable implements GameProxy {
 
         List<Card[]> playableTris = new ArrayList<>();
         Card[] cards = new Card[3];
-        
+
         for (int i = 0; i < cardNames.length; i++) {
-            cards[i] = Card.valueOf(cardNames[i].toUpperCase());            
+            cards[i] = Card.valueOf(cardNames[i].toUpperCase());
         }
-                
+
         playableTris.addAll((Set) deck.getTris().keySet());
         
         for (Card[] cardArray : playableTris) {
-            List<Card> cardList=Arrays.asList(cardArray);
-            if (cardList.contains(cards[0]) && cardList.contains(cards[1]) && cardList.contains(cards[2])) {
-                return true;
+            List<Card> cardList = Arrays.asList(cardArray);
+            boolean success = true;
+            for (Card card : cardList) {
+                success = success && (Collections.frequency(cardList, card)) == (Collections.frequency(Arrays.asList(cards), card));
             }
+            if (success) {
+                return success;
+            }
+
         }
         return false;
-     
+
     }
 
 }
