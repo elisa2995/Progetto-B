@@ -8,7 +8,7 @@ package gui;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
-import risiko.Game;
+import risiko.game.GameProxy;
 
 /**
  *
@@ -16,14 +16,14 @@ import risiko.Game;
  */
 public class TimerUpdater implements Runnable{
     JButton nextTurn;
-    Game game;
+    GameProxy game;
     boolean gameEnd = false;
 
     public void setGameEnd(boolean gameEnd) {
         this.gameEnd = gameEnd;
     }
 
-    public TimerUpdater(JButton nextTurn, Game game) {
+    public TimerUpdater(JButton nextTurn, GameProxy game) {
         this.nextTurn = nextTurn;
         this.game = game;
     }

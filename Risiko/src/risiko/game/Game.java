@@ -23,6 +23,10 @@ import utils.GameObserver;
 //import java.awt.Image;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import risiko.AttackResult;
@@ -51,6 +55,12 @@ public class Game extends Observable implements GameProxy {
     private Phase phase;
     private int resultsDiceAttack[];
     private int resultsDiceDefense[];
+    
+    private ScheduledThreadPoolExecutor timeoutExecutor;
+    private Semaphore timeoutSemaphore;
+    private Player playerToTimeout;
+    ScheduledFuture activeTimer;
+    private int timeoutTimeSeconds;
 
     public Game(Map<String, String> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
 
@@ -97,7 +107,11 @@ public class Game extends Observable implements GameProxy {
      * cui l'url del file dei territori fosse sbagliato.
      */
     private void init(Map<String, String> playersMap, Map<String, String> playersColor) throws Exception {
-
+        timeoutExecutor = new ScheduledThreadPoolExecutor(1);
+        timeoutExecutor.setMaximumPoolSize(1);
+        timeoutSemaphore = new Semaphore(1 , false);
+        timeoutTimeSeconds=5;
+        
         buildPlayers(playersMap, playersColor);
         map.assignCountriesToPlayers(players);
         map.assignMissionToPlayers(players);
@@ -107,6 +121,9 @@ public class Game extends Observable implements GameProxy {
         phase = Phase.REINFORCE;
         notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
         startArtificialPlayerThreads();
+        
+        playerToTimeout = activePlayer;
+        activeTimer = timeoutExecutor.schedule(() -> {timeout();}, timeoutTimeSeconds, TimeUnit.SECONDS);
     }
 
     /**
@@ -517,9 +534,18 @@ public class Game extends Observable implements GameProxy {
      * @author Carolina
      */
     private void passTurn() {
+        //cancella tutti i task non ancora eseguiti in modo da non aver 2 timer nello stesso momento
+        timeoutExecutor.getQueue().clear();
+        
         nextTurn();
         this.phase = Phase.values()[0];
         map.computeBonusArmies(activePlayer);
+        
+        //questo serve per non far saltare il turno al giocatore sbagliato
+        playerToTimeout = activePlayer;
+        
+        //attiva il timer per il turno
+        activeTimer = timeoutExecutor.schedule(() -> {timeout();}, timeoutTimeSeconds, TimeUnit.SECONDS);
     }
 
     /**
@@ -923,6 +949,58 @@ public class Game extends Observable implements GameProxy {
         }
         notifyVictory(winMessage);
 
+    }
+    
+    /**
+     * metodo eseguito nel caso un giocatore finisse il tempo a disposizione, questo perde il suo turno. 
+     */
+    private void timeout() {
+        try {
+            timeoutSemaphore.acquire();
+        } catch (InterruptedException ex) {
+            //questo thread non dovrebbe essere interrotto
+        }
+        if (playerToTimeout.equals(activePlayer)) {
+            System.out.println("timeout");
+            resetFightingCountries();
+            this.attackInProgress=false;
+            for(Player p : players){
+                while(p.getBonusArmies()>0){
+                    p.decrementBonusArmies();
+                }
+            }
+            this.passTurn();
+            this.notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
+        }
+        timeoutSemaphore.release();
+    }
+    
+    /**
+     * cerca di ottenere un permesso per agire dal semaforo
+     * @return vero se il permesso è stato ottenuto, altrimenti falso.
+     */
+    public boolean tryToAcquirePermit(){
+        return timeoutSemaphore.tryAcquire();
+    }
+    
+    /**
+     * rilascia il permesso ottenuto
+     */
+    public void releasePermit(){
+        timeoutSemaphore.release();
+    }
+    
+    /**
+     * ottiene il tempo rimanente prima il processo in activeTimer venga eseguito
+     * @return il tempo in secondi
+     */
+    @Override
+    public long getTimeRemaining(){
+        if (activeTimer != null) {
+            return activeTimer.getDelay(TimeUnit.SECONDS);
+        } else {
+            return 0;
+        }
     }
 
 }
