@@ -324,6 +324,7 @@ public class UserDialog extends javax.swing.JDialog {
      */
     private boolean checkUsername(String username) {
         for (String s : players) {
+            System.out.println(s);
             if (s.equals(username)) {
                 return false;
             }

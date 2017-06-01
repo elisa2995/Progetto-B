@@ -1,21 +1,17 @@
-ELISA
--colori invertiti se li cambio
--metti che non si pox mettere utenti con lo stesso nome
--metti freccia per indicare il vincitore dei dadi 
-
-CAROLINA
--quando metto ultima armata di rinforzo passo direttamente a attack
-
-FEDERICO
--guarda il progetti di poker e sette e mezzo per come vedono le carte
--togliere che se schiaccio fuori durante rinforzo fa sparire la scritta
--in labelmap listener cambia controlAttacker nella reinforce con un controlIfMyCountry
-
-ANDREA
--carte bonus:
-	-togliere da game(observer)
-	-mostra la carta all'inizio dell a fase di spostamento
--fase di spostamento
-
-ALESSANDRO
--finire giocatore artificiale
+- nome attaccante e difensore nelle dialog
+- mettere nella gui nomi cose in italiano
+- mettere action.endgame alla fine del gioco
+- gestire mouse move: cache o in un update facciamo passare una mappa
+- finire la visualizzazione delle carte
+- carte per giocatore artificiale
+- move per giocatore artificiale
+- centrare dialog move
+- DOCUMENTAZIONE (javaDoc + wiki)
+- in startGameGUI mettere tipo di giocatore sopra normale ecc, mettere colore armata sopra combobox colori
+- in startGameGUI mettere giocatore1, giocatore2 ecc sulle righe
+- mettere tooltip dsul tasto >>
+- sistemare mongolia-giappone(non confinanti) [anche un altro?]
+- cambiare immagine dei coni con gif esplosione/colpo di cannone
+- diceDialog: metter ritorna al gioco invece di chiudi la finestra
+- quando si conclude il turno, farlo capire: Jdialog che si chiudono da soli? musica? 
+- quando conquisti un continente si dice nel jdialog che dice che lo hai conquistato  
