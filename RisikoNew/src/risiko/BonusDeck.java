@@ -13,12 +13,10 @@ public class BonusDeck {
 
     private List<Card> cards;
     private Map<Card[], Integer> tris;
-    private FileManager fileManager;
 
     public BonusDeck() {
         cards = new ArrayList<>();
         tris = new HashMap<>();
-        fileManager = new FileManager();
         buildDeck();
         buildTris();
     }
@@ -50,7 +48,7 @@ public class BonusDeck {
      */
     private void buildTris() {
         
-        List<Map<String, Object>> combinations = fileManager.getTris();
+        List<Map<String, Object>> combinations = FileManager.getInstance().getTris();
         String[] cardsNames;
         int bonus;
         

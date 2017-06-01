@@ -196,7 +196,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                 }
             } catch (PendingOperationsException ex) {
                 //l'eccezione delle armate ancora da assegnare viene data quando si sovrappongono le operazioni di 2 giocatori
-                Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

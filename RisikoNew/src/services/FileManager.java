@@ -16,10 +16,11 @@ import java.util.logging.Logger;
 
 /**
  * Classe che si occupa di gestire tutte le letture/scritture da/su file.
- * (Oggetto singleton)??
+ * Implementato secondo il pattern singleton con una lazy initialization.
  */
 public class FileManager {
 
+    private static volatile FileManager instance;
     private final String PLAYERS = "files/players.txt";
     // url file che fa da db per le info dei giocatori
     private final String COUNTRIES = "files/countries.txt";
@@ -27,7 +28,25 @@ public class FileManager {
     private final String LABELS = "files/countriesLabels.txt";
     private final String COLORS = "files/countriesColors.txt";
     private final String TRIS = "files/bonusTris.txt";
+    
+    private FileManager() {}
 
+    /**
+     * Ritorna l'istanza di FileManager. 
+     * (Se non è ancora stata creata, la crea - lazy initialization)
+     * @return 
+     */
+    public static FileManager getInstance() {
+        if (instance == null) {
+            synchronized(FileManager.class) {
+                if (instance == null) {
+                    instance = new FileManager();
+                }
+            }
+        }
+        return instance;
+    }
+    
     //----------------------- countries.txt ----------------------------------//
     /**
      * Legge il file countries.txt per ricavare la lista di territori.
@@ -191,7 +210,7 @@ public class FileManager {
     }
 
     /**
-     * Riscrive il file <code>urlFile</code> con i dati aggiornati.
+     * Riscrive il contenuto del file player.txt con i dati aggioranti.
      *
      * @param urlFile il file players.txt
      * @param player il giocatore che ha vinto la partita
@@ -320,8 +339,8 @@ public class FileManager {
                 row.put("bonus", Integer.parseInt(line.split("\t")[1]));
                 tris.add(row);
             }
-        } catch (Exception ex) {
-            System.out.println("Error in buildTris");
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return tris;

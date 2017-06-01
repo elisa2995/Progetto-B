@@ -23,7 +23,6 @@ public class RisikoMap {
     private Map<String, Integer> continentBonus;
     private Map<Country, Player> countryPlayer;
     private Map<String, Country> nameCountry;
-    private FileManager fileManager;
 
     public Map<Country, Player> getCountryPlayer() {
         return countryPlayer;
@@ -36,7 +35,6 @@ public class RisikoMap {
         this.countryPlayer = new HashMap<>();
         this.nameCountry = new HashMap<>();
         this.missions = new ArrayList<>();
-        this.fileManager = new FileManager();
         init();
     }
 
@@ -62,7 +60,7 @@ public class RisikoMap {
      */
     private void buildCountryPlayer() {
 
-        List<String> countries = fileManager.getCountries();
+        List<String> countries = FileManager.getInstance().getCountries();
 
         for (String countryName : countries) {
             Country country = new Country(countryName);
@@ -80,7 +78,7 @@ public class RisikoMap {
      * @author Elisa
      */
     private void buildCountryNeighbors() {
-        Map<String, List<String>> countryNeighborsNames = fileManager.getCountryNeighbors();
+        Map<String, List<String>> countryNeighborsNames = FileManager.getInstance().getCountryNeighbors();
         Country subject;
         List<Country> neighbors;
         for (Map.Entry<String, List<String>> row : countryNeighborsNames.entrySet()) {
@@ -99,7 +97,7 @@ public class RisikoMap {
     private void buildContinentCountries() {
 
         List<Country> countries;
-        for (Map<String, Object> continent : fileManager.getContinents()) {
+        for (Map<String, Object> continent : FileManager.getInstance().getContinents()) {
             countries = new ArrayList<>();
             String continentName = (String) continent.get("name");
             // Buildo continentCountries
@@ -127,7 +125,7 @@ public class RisikoMap {
         String description;
         int points;
         String packagePath = "risiko.missions.";
-        for (Map<String, Object> mission : fileManager.getMissions()) {
+        for (Map<String, Object> mission : FileManager.getInstance().getMissions()) {
             try {
                 points = (Integer) mission.get("points");
                 description = (String) mission.get("description") + "\n (" + points + "punti)";

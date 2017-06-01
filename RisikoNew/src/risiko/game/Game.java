@@ -37,17 +37,15 @@ public class Game extends Observable implements GameProxy {
     private int attackerArmies;
     private int defenderArmies;
     private boolean attackInProgress = false;
-    private GameProxy proxy;
     private RisikoMap map;
     private BonusDeck deck;
     private List<Player> players;
     private Player activePlayer;
-    //private Player winner; serve??
     private Phase phase;
     private int resultsDiceAttack[];
     private int resultsDiceDefense[];
     private boolean reattack;
-    private FileManager fileManager;
+    private GameProxy proxy;
 
     public Game(Map<String, String> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
 
@@ -56,7 +54,6 @@ public class Game extends Observable implements GameProxy {
         this.deck = new BonusDeck();
         this.map = new RisikoMap();
         this.addObserver(observer);
-        this.fileManager = new FileManager();
         initInvocationHandler();
         init(playersMap, playersColor);
 
@@ -441,9 +438,9 @@ public class Game extends Observable implements GameProxy {
         String winMessage = "Complimenti " + activePlayer.getName() + " hai vinto!\n";
         if (activePlayer instanceof LoggedPlayer) {
             String username = ((LoggedPlayer) activePlayer).getUsername();
-            fileManager.recordGainedPoints(username, activePlayer.getMission().getPoints());
+            FileManager.getInstance().recordGainedPoints(username, activePlayer.getMission().getPoints());
             try {
-                winMessage += "Punti : " + fileManager.getPlayerPoints(username);
+                winMessage += "Punti : " + FileManager.getInstance().getPlayerPoints(username);
             } catch (FileManagerException ex) {
                 Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
             }

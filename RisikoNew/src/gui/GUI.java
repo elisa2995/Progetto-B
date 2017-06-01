@@ -39,14 +39,12 @@ public class GUI extends JFrame implements GameObserver {
     private CardBonusDialog cardBonusDialog;
     private AttackerDialog attackerDialog;
     private DiceDialog diceDialog;
-    private FileManager fileManager;
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         initBackground();
         initComponents();
         labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko.png"))));
         countryLabelMap = new HashMap<>();
-        fileManager = new FileManager();
         initColorCountryNameMap();
         init(players, playersColor);
     }
@@ -103,7 +101,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     private void initLabels() throws IOException {
 
-        List<Map<String, Object>> labels = fileManager.getLabelsProperties();
+        List<Map<String, Object>> labels = FileManager.getInstance().getLabelsProperties();
         String country;
         int x, y;
         for (Map<String, Object> label : labels) {
@@ -352,7 +350,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     private void initColorCountryNameMap() throws FileNotFoundException {
 
-        List<Map<String, Object>> countriesColors = fileManager.getCountriesColors();
+        List<Map<String, Object>> countriesColors = FileManager.getInstance().getCountriesColors();
         colorCountryNameMap = new HashMap<>();
         Color color;
         int R, G, B;
