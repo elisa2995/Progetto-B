@@ -11,7 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import risiko.BonusDeck;
 import risiko.Card;
-import risiko.Mission;
+import risiko.missions.Mission;
 
 public class PlayerTest {
 

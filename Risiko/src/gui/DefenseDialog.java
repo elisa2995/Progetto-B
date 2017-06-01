@@ -7,8 +7,7 @@ package gui;
 
 import javax.swing.JDialog;
 import javax.swing.SpinnerNumberModel;
-import risiko.players.ArtificialPlayer;
-import risiko.Game;
+import risiko.game.GameProxy;
 
 /**
  *
@@ -17,9 +16,9 @@ import risiko.Game;
 public class DefenseDialog extends JDialog {
 
     //int maxArmiesDefender;
-    private Game game;     
+    private GameProxy game;     
 
-    public DefenseDialog(Game game, java.awt.Frame parent,boolean modal) {
+    public DefenseDialog(GameProxy game, java.awt.Frame parent,boolean modal) {
         super(parent, modal);
         initComponents();
         this.game = game;

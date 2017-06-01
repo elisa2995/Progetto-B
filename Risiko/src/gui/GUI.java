@@ -7,12 +7,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -23,7 +23,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import risiko.Country;
 import risiko.Phase;
-import risiko.Game;
+import risiko.game.Game;
+import risiko.game.GameInvocationHandler;
+import risiko.game.GameProxy;
 import risiko.players.Player;
 
 /**
@@ -31,7 +33,8 @@ import risiko.players.Player;
  */
 public class GUI extends JFrame implements GameObserver {
 
-    private Game game;
+    //private Game game;
+    private GameProxy game;
     private final Map<Color, String> colorCountryNameMap;
     private final Map<String, JLabel> countryLabelMap;
     private FightDialog inputArmies;
@@ -68,7 +71,9 @@ public class GUI extends JFrame implements GameObserver {
     private void init(Map<String, String> players, Map<String, String> playersColor) throws IOException, Exception {
         initLabels("files/labelsTerritori.txt");
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
-        game = new Game(players, playersColor, this);
+        game = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
+                new Class<?>[]{GameProxy.class},
+                new GameInvocationHandler(new Game(players, playersColor, this)));
         LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game, this);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
@@ -279,12 +284,7 @@ public class GUI extends JFrame implements GameObserver {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonMoreInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonMoreInfoActionPerformed
-        String format = "%-30s %-15s %s";
-        String info = String.format(format, "territorio", "proprietario", "numero armate") + "\n";
-        for (Map.Entry<Country, Player> e : game.getCountryPlayer().entrySet()) {
-            info += String.format(format, e.getKey().getName(), e.getValue().getName(), e.getKey().getArmies()) + "\n";
-        }
-        JOptionPane.showMessageDialog(null, info);
+
     }//GEN-LAST:event_buttonMoreInfoActionPerformed
 
     private void buttonNextPhaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextPhaseActionPerformed

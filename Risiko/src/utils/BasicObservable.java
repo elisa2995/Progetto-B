@@ -63,10 +63,10 @@ public class BasicObservable {
      *
      * @param winner
      */
-    public void notifyVictory(String winner) {
+    public void notifyVictory(String winMessage) {
         
         for (BasicGameObserver ob : this.obs) {
-            ob.updateOnVictory(winner);
+            ob.updateOnVictory(winMessage);
         }
     }
 

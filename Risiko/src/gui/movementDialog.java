@@ -8,7 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import risiko.Game;
+import risiko.game.GameProxy;
 
 /**
  *
@@ -23,7 +23,7 @@ public class movementDialog extends JDialog {
     /**
      * Inizializzazione
      */
-    public movementDialog(Game game,String countryName) {
+    public movementDialog(GameProxy game,String countryName) {
         int tmp        = game.getMaxArmiesForMovement();
         movementText   = new JLabel("Quante armate vuoi spostare?");
         movementModel  = new SpinnerNumberModel(tmp, 1, tmp, 1);

@@ -13,8 +13,9 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
-import risiko.Game;
+import risiko.game.Game;
 import gui.PlayAudio;
+import risiko.game.GameProxy;
 
 /**
  *
@@ -22,13 +23,13 @@ import gui.PlayAudio;
  */
 public class LabelMapListener extends MouseInputAdapter {
 
-    private Game game;
+    private GameProxy game;
     private final BufferedImage bufferedImage;
     private final Map<Color, String> ColorNameCountry;
     private JLabel mapLabel;
     private GUI gui;
 
-    public LabelMapListener(JLabel mapLabel, Map<Color, String> ColorNameCountry, Game game, GUI gui) {
+    public LabelMapListener(JLabel mapLabel, Map<Color, String> ColorNameCountry, GameProxy game, GUI gui) {
         this.game = game;
         this.gui = gui;
         this.mapLabel = mapLabel;
@@ -51,9 +52,9 @@ public class LabelMapListener extends MouseInputAdapter {
                     PlayAudio.play("sounds/clickOff.wav");
                     return;
                 }
-                if (game.controlPlayer(countryName) && game.canReinforce(1)) {
+                if (game.controlPlayer(countryName) && game.canReinforce()) {
                     //Ho ancora bonus armies e sono su un mio territorio
-                    game.reinforce(countryName, 1);
+                    game.reinforce(countryName);
                     //reinforce chiama notify(), la gui si aggiorna
                     PlayAudio.play("sounds/clickOn.wav");
                     break;
@@ -129,7 +130,7 @@ public class LabelMapListener extends MouseInputAdapter {
         mapLabel.setToolTipText(countryName);
         switch (game.getPhase()) {
             case REINFORCE:
-                if (game.controlPlayer(countryName) && game.canReinforce(1)) {
+                if (game.controlPlayer(countryName) && game.canReinforce()) {
                     //Ho ancora bonus armies e sono su un mio territorio
                     setHandCursor(e.getComponent(), label);
                 } else {

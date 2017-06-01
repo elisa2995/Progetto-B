@@ -7,10 +7,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import risiko.Card;
-import risiko.Mission;
+import risiko.Country;
+import risiko.missions.Mission;
 
 public class Player {
 
@@ -20,7 +22,7 @@ public class Player {
     //private Color color;
     private String color;
     //private int contaCarte[];
-    private int bonusArmies;
+    protected int bonusArmies;
     private boolean alreadyDrawnCard;
 
     public Player(String name, String color) {
@@ -49,8 +51,8 @@ public class Player {
         this.bonusArmies += bonusArmies;
     }
 
-    public void decrementBonusArmies(int bonusArmies) {
-        this.bonusArmies -= bonusArmies;
+    public void decrementBonusArmies() {
+        this.bonusArmies --;
     }
 
     public String getColor() {
@@ -136,5 +138,9 @@ public class Player {
 
     public String getMissionDescription() {
         return mission.getDescription();
+    }
+    
+    public boolean checkIfWinner(List<Country> myCountries){
+        return mission.isCompleted(myCountries);
     }
 }
