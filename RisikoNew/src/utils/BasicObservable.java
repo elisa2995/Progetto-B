@@ -6,7 +6,9 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import risiko.players.ArtificialPlayer;
 
 /**
  *
@@ -65,7 +67,16 @@ public class BasicObservable {
      * @param winner
      */
     public void notifyVictory(String winner) {
+        this.obs.sort(new Comparator(){
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(o1 instanceof ArtificialPlayer){
+                    return -1;
+                }
+                return 1;
+            }
         
+        });
         for (BasicGameObserver ob : this.obs) {
             ob.updateOnVictory(winner);
         }
@@ -83,6 +94,12 @@ public class BasicObservable {
     public void notifySetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender, boolean reattack) {
         for (BasicGameObserver ob : this.obs) {            
             ob.updateOnSetDefender(countryAttackerName, countryDefenderName, defenderPlayer, maxArmiesAttacker, maxArmiesDefender, reattack);
+        }
+    }
+    
+    public void notifyElimination(String defenderName, boolean artificialAttack){
+        for (BasicGameObserver ob : this.obs) {            
+            ob.updateOnElimination(defenderName, artificialAttack);
         }
     }
 

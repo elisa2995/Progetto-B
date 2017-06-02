@@ -28,6 +28,7 @@ import risiko.Game;
 import risiko.GameInvocationHandler;
 import risiko.GameProxy;
 import risiko.players.Player;
+import utils.BasicGameObserver;
 
 /**
  * @author andrea
@@ -79,7 +80,7 @@ public class GUI extends JFrame implements GameObserver {
         game = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
                 new Class<?>[]{GameProxy.class},
                 new GameInvocationHandler(new Game(players, playersColor, this)));
-        
+
         // Mouse Listeners
         LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game, this);
         labelMap.addMouseListener(labelMapListener);
@@ -539,7 +540,7 @@ public class GUI extends JFrame implements GameObserver {
     public void updateOnVictory(String winner) {
         JOptionPane.showMessageDialog(null, "Complimenti " + winner + " hai vinto!");
         this.dispose();
-        System.exit(1);
+        System.exit(0);
         // etc
         // bisogna bloccare i run dei giocatori artificiali
     }
@@ -628,6 +629,14 @@ public class GUI extends JFrame implements GameObserver {
         if (!isArtificialPlayer) {
             this.defenseArmies.setVisible(true);
         }
+    }
+
+    @Override
+    public void updateOnElimination(String defenderName, boolean artificialAttack) {
+        if (!artificialAttack) {
+            JOptionPane.showMessageDialog(null, defenderName + " sei stato eliminato dal gioco");
+        }
+
     }
 
 

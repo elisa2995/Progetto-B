@@ -15,11 +15,10 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     private int maxArmiesAttack;
     private int maxArmiesDefense;
     private boolean maxArmiesSet;
-    private boolean canAttack;    
-    private Action currentAction;    
+    private boolean canAttack;
+    private Action currentAction;
     private ArtificialPlayerSettings setting;
     private int reinforceSpeed;
-   
 
     public void setSetting(ArtificialPlayerSettings setting) {
         this.setting = setting;
@@ -46,9 +45,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         currentAction = Action.NOACTION;
         setting = new ArtificialPlayerSettings();
         setting.setBaseAttack(5);
-        setting.setAttackDeclarationDelay(1000);
-        setting.setReinforceDelay(1000);
-        setting.setAttackDelay(1000);
+        setting.setAttackDeclarationDelay(100);
+        setting.setReinforceDelay(100);
+        setting.setAttackDelay(100);
     }
 
     /**
@@ -67,7 +66,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         for (int i = 0; i < bonusArmies; i++) {
             index = new Random().nextInt(myCountries.length);
             game.reinforce(myCountries[index], this);
-                
+
             try {
                 this.wait(setting.getReinforceDelay());
             } catch (InterruptedException ex) {
@@ -169,30 +168,31 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     @Override
     public void run() {
         while (currentAction != Action.ENDGAME) {
+
             try {
                 if (game.getActivePlayer().equals(this)) {
-
+                    //System.out.println(currentAction);
                     //System.out.println(game.getPhase() + " " + this.getName());
                     switch (game.getPhase()) {
                         case REINFORCE:
-                            System.out.println(game.getPhase() + " " + this.getName());
+                            //System.out.println(game.getPhase() + " " + this.getName());
                             randomReinforce();
                             break;
                         case FIGHT:
-                            System.out.println(game.getPhase() + " " + this.getName());
+                            //System.out.println(game.getPhase() + " " + this.getName());
                             canAttack = true;
                             this.randomAttack();
                             game.nextPhase(this);
                             break;
                         case MOVE:
-                            System.out.println(game.getPhase() + " " + this.getName());
-                            System.out.println("--------------------------------------------");
+                            //System.out.println(game.getPhase() + " " + this.getName());
+                            //System.out.println("--------------------------------------------");
                             game.nextPhase(this);
                             break;
                     }
                 } else if (this.currentAction == Action.DEFEND) {
 
-                    System.out.println(Action.DEFEND + " " + this.getName());
+                    //System.out.println(Action.DEFEND + " " + this.getName());
                     this.defend();
                 }
             } catch (PendingOperationsException ex) {
@@ -220,14 +220,22 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
     @Override
     public void updateOnVictory(String winner) {
-        this.currentAction = Action.ENDGAME;
+        this.currentAction = Action.ENDGAME;        
     }
 
+    @Override
     public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {
         if (this.getName().equals(defender)) {
             this.currentAction = Action.DEFEND;
         }
 
+    }
+
+    @Override
+    public void updateOnElimination(String defenderName, boolean artificialAttack) {
+        if (this.getName().equals(defenderName)) {
+            this.currentAction = Action.ENDGAME;
+        }
     }
 
 }

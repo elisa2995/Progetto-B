@@ -44,9 +44,8 @@ public class Game extends Observable implements GameProxy {
         this.activePlayer = null;
         this.deck = new BonusDeck();
         this.map = new RisikoMap();
-        this.addObserver(observer);
         initInvocationHandler();
-        init(playersMap, playersColor);
+        init(playersMap, playersColor, observer);
 
     }
 
@@ -99,9 +98,10 @@ public class Game extends Observable implements GameProxy {
      * @throws rilancia l'eccezione che potrebbe lanciare la mappa nel caso in
      * cui l'url del file dei territori fosse sbagliato.
      */
-    private void init(Map<String, String> playersMap, Map<String, String> playersColor) throws Exception {
+    private void init(Map<String, String> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
 
-        buildPlayers(playersMap, playersColor);
+        buildPlayers(playersMap, playersColor);        
+        this.addObserver(observer);
         map.assignCountriesToPlayers(players);
         map.assignMissionToPlayers(players);
         notifyCountryAssignment(getCountriesNames(), getCountriesArmies(), getCountriesColors());
@@ -142,8 +142,6 @@ public class Game extends Observable implements GameProxy {
      * @param colors una Map nomePlayer - colorePlayer
      */
     private void buildPlayers(Map<String, String> playersTypeMap, Map<String, String> playersColor) {
-
-        int i = 0;
         for (Map.Entry<String, String> playerType : playersTypeMap.entrySet()) {
             String color = playersColor.get(playerType.getKey());
             switch (PlayerType.valueOf(playerType.getValue())) {
@@ -157,7 +155,6 @@ public class Game extends Observable implements GameProxy {
                     this.players.add(new Player(playerType.getKey(), color));
                     break;
             }
-            i++;
 
         }
     }
@@ -385,6 +382,9 @@ public class Game extends Observable implements GameProxy {
                 defenderPlayer, nrA, nrD,
                 lostArmies, conquered)).toString();
         boolean hasAlreadyDrawnCard = activePlayer.hasAlreadyDrawnCard();
+        boolean[] artificialAttack = new boolean[2];
+        artificialAttack[0] = defenderPlayer instanceof ArtificialPlayer && attackerPlayer instanceof ArtificialPlayer;
+        artificialAttack[1] = attackerPlayer instanceof ArtificialPlayer;
 
         if (conquered) {
             map.updateOnConquer(attackerCountry, defenderCountry, nrA);
@@ -395,6 +395,7 @@ public class Game extends Observable implements GameProxy {
             notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
             if (hasLost(defenderPlayer)) {
                 players.remove(defenderPlayer);
+                notifyElimination(defenderPlayer.getName(), artificialAttack[0]);
             }
             if (hasWon()) {
                 notifyVictory(activePlayer.getName());
@@ -402,10 +403,7 @@ public class Game extends Observable implements GameProxy {
             }
 
         }
-        boolean[] artificialAttack = new boolean[2];
-        artificialAttack[0] = defenderPlayer instanceof ArtificialPlayer && attackerPlayer instanceof ArtificialPlayer;
-        artificialAttack[1] = attackerPlayer instanceof ArtificialPlayer;
-
+        
         notifyAttackResult(attackResult, conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense(), artificialAttack, hasAlreadyDrawnCard);
         attackInProgress = false;
 

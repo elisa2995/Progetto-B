@@ -264,7 +264,7 @@ public class DiceDialog extends javax.swing.JDialog {
 
         jLabel2.setText("Difensore:");
 
-        exit.setText("Chiudi la finestra");
+        exit.setText("Ritorna al gioco");
         exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitActionPerformed(evt);
