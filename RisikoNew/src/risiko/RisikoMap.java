@@ -294,6 +294,24 @@ public class RisikoMap {
 
     }
 
+    /**
+     * Controlla che il territorio sia dell'attaccante, abbia più di un armata e 
+     * abbia territori vicini in cui spostare le armate
+     * @param country
+     * @param player
+     * @return 
+     */
+    public boolean controlFromCountryPlayer(Country country, Player player){  
+        List<Country> neighbors=countryNeighbors.get(country);
+        boolean canMove=false;
+        for(Country c:neighbors){
+            if(this.getPlayerByCountry(c).equals(getPlayerByCountry(country))){
+                canMove=true;
+            }
+        }
+        return controlAttacker(country, player) && canMove;
+    }
+
     public boolean controlPlayer(Country country, Player player) {
         return this.countryPlayer.get(country).equals(player);
 
@@ -313,8 +331,7 @@ public class RisikoMap {
      * dell'fromCountry
      */
     public boolean controlMovement(Country fromCountry, Country toCountry, Player player) {
-
-        return this.countryPlayer.get(toCountry).equals(player) && this.getNeighbors(fromCountry).contains(toCountry);
+        return this.countryPlayer.get(toCountry).equals(player) && this.getNeighbors(fromCountry).contains(toCountry) && !toCountry.getName().equals(fromCountry.getName());
     }
 
     public void move(Country fromCountry, Country toCountry, int nrArmies) {

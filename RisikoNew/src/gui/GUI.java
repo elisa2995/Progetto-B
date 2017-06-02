@@ -479,6 +479,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnSetFromCountry(String countryName) {
         //((GraphicsJLabel) labelMap).Cone();
+        this.labelMapListener.resetCache();
         if (countryName != null) {
             this.textAreaInfo.setText("Territorio di partenza : " + countryName);
             labelAdvice.setText("Clicca su un territorio confinante per sceglierlo come destinazione");

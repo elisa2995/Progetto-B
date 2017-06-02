@@ -55,7 +55,7 @@ public class LabelMapListener extends MouseInputAdapter {
                     PlayAudio.play("sounds/clickOff.wav");
                     return;
                 }
-                               
+
                 if (cache.containsKey(countryName) && cache.get(countryName)) {
                     //Ho ancora bonus armies e sono su un mio territorio
                     game.reinforce(countryName);
@@ -63,18 +63,17 @@ public class LabelMapListener extends MouseInputAdapter {
                     PlayAudio.play("sounds/clickOn.wav");
                     break;
                 }
-                
+
                 PlayAudio.play("sounds/clickOff.wav");
                 break;
-            case FIGHT:                
+            case FIGHT:
                 if (countryName == null) {
                     PlayAudio.play("sounds/clickOff.wav");
                     game.resetFightingCountries();
                     resetCache();
                     return;
                 }
-                
-                
+
                 if (game.getAttackerCountryName() == null && cache.containsKey(countryName) && cache.get(countryName)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
                     game.setAttackerCountry(countryName);
@@ -178,7 +177,7 @@ public class LabelMapListener extends MouseInputAdapter {
                 cache.put(countryName, false);
                 break;
             case MOVE:
-                if ((cache.containsKey(countryName) && cache.get(countryName)) || game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
+                if ((cache.containsKey(countryName) && cache.get(countryName)) || game.getAttackerCountryName() == null && game.controlFromCountryPlayer(countryName)) {
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
                     setHandCursor(e.getComponent(), label);
                     cache.put(countryName, true);

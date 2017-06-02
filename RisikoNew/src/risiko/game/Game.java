@@ -741,6 +741,19 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
+     * Controlla che il territorio sia dell'attaccante, abbia più di un armata e
+     * abbia territori vicini in cui spostare le armate
+     *
+     * @param countryName
+     * @param aiCaller
+     * @return
+     */
+    @Override
+    public boolean controlFromCountryPlayer(String countryName, ArtificialPlayer... aiCaller) {
+        return map.controlFromCountryPlayer(map.getCountryByName(countryName), activePlayer);
+    }
+
+    /**
      * Controlla che country sia dell'activePlayer. (Previo controllo sul caller
      * del metodo). // mmh
      *
@@ -939,7 +952,7 @@ public class Game extends Observable implements GameProxy {
         Card[] cards = new Card[3];
 
         for (int i = 0; i < cardNames.length; i++) {
-            cards[i] = Card.valueOf(cardNames[i].toUpperCase());            
+            cards[i] = Card.valueOf(cardNames[i].toUpperCase());
         }
 
         playableTris.addAll((Set) deck.getTris().keySet());

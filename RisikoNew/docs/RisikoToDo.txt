@@ -1,7 +1,7 @@
 - X nome attaccante e difensore nelle dialog
 - mettere nella gui nomi cose in italiano
 - X mettere action.endgame alla fine del gioco
-- gestire mouse move: cache o in un update facciamo passare una mappa
+- X gestire mouse move: cache o in un update facciamo passare una mappa
 - finire la visualizzazione delle carte
 - carte per giocatore artificiale
 - move per giocatore artificiale
@@ -10,7 +10,7 @@
 - X in startGameGUI mettere tipo di giocatore sopra normale ecc, mettere colore armata sopra combobox colori
 - X in startGameGUI mettere giocatore1, giocatore2 ecc sulle righe
 - X mettere tooltip sul tasto >>
-- sistemare mongolia-giappone(non confinanti) [anche un altro?]
+- sistemare mongolia-giappone(non confinanti) [anche un altro?] (ELISA: da me confinano)
 - cambiare immagine dei coni con gif esplosione/colpo di cannone
 - X diceDialog: mettere ritorna al gioco invece di chiudi la finestra 
 - quando si conclude il turno, farlo capire: Jdialog che si chiudono da soli? musica? 

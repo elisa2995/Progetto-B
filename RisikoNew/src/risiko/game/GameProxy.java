@@ -216,6 +216,15 @@ public interface GameProxy {
     public boolean controlAttacker(String countryName, ArtificialPlayer... aiCaller);
 
     /**
+     * Controlla che il territorio sia dell'attaccante, abbia più di un armata e 
+     * abbia territori vicini in cui spostare le armate
+     * @param countryName
+     * @param aiCaller
+     * @return true se è possibile compiere uno spostamento da quel territorio
+     */
+    public boolean controlFromCountryPlayer(String countryName, ArtificialPlayer... aiCaller);
+    
+    /**
      * Controlla che country sia dell'activePlayer. (Previo controllo sul caller
      * del metodo). // mmh
      *
