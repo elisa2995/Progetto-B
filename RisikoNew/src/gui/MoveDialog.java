@@ -6,6 +6,7 @@
 package gui;
 
 import static java.awt.Dialog.DEFAULT_MODALITY_TYPE;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +37,10 @@ public class MoveDialog extends JDialog {
         movementArmies = new JSpinner(movementModel);
         execute        = new JButton("Esegui");
         MoveDialog moveDialog=this;
+        
+        Dimension dim = getToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
+        
 
         execute.addActionListener(new ActionListener() {
             @Override

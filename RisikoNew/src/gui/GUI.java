@@ -324,8 +324,8 @@ public class GUI extends JFrame implements GameObserver {
         // controllo in game per il giocatore artificiale??
         if (game.getPhase().equals(Phase.FIGHT)) {
             if (game.getAttackerCountryName() != null && game.getDefenderCountryName() != null) {
+                attackerDialog.setAttackerCountry(game.getAttackerCountryName());
                 attackerDialog.setVisible(true);
-                //diceDialog.setVisible(false);
             }
         }
     }//GEN-LAST:event_buttonAttackActionPerformed
@@ -627,6 +627,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {
         if (!isArtificialPlayer) {
+            defenseArmies.setDefenderCountryName(game.getDefenderCountryName());
             this.defenseArmies.setVisible(true);
         }
     }

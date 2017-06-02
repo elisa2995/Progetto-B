@@ -18,7 +18,8 @@ import risiko.GameProxy;
  */
 public class AttackerDialog extends javax.swing.JDialog {
 
-    private GameProxy game;
+    private GameProxy game;    
+    private String attackerCountry;
 
     /**
      * Crea un nuovo AttackerDialog
@@ -39,8 +40,10 @@ public class AttackerDialog extends javax.swing.JDialog {
     private void init() {
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
+        
         AttackerDialog attackerDialog=this;
-        attackerArmies.setModel(new SpinnerNumberModel(1, 1, 1, 1));        
+        attackerArmies.setModel(new SpinnerNumberModel(1, 1, 1, 1)); 
+                
         declare.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,6 +54,14 @@ public class AttackerDialog extends javax.swing.JDialog {
             }
         });
 
+    }
+    
+    public void setAttackerCountry(String attackerCountryName){
+        this.attackerCountryName.setText(attackerCountryName);
+    }
+    
+    public void setAttackerColor(String color){
+        this.attackerCountryName.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
     }
 
     /**
@@ -76,6 +87,8 @@ public class AttackerDialog extends javax.swing.JDialog {
         attackerArmies = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         declare = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        attackerCountryName = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -83,13 +96,22 @@ public class AttackerDialog extends javax.swing.JDialog {
 
         declare.setText("Dichiara l'attacco");
 
+        jLabel2.setText("Attaccante:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(212, Short.MAX_VALUE)
-                .addComponent(declare, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(attackerCountryName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(212, Short.MAX_VALUE)
+                        .addComponent(declare, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(50, 50, 50))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -102,7 +124,11 @@ public class AttackerDialog extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(120, 120, 120)
+                .addGap(46, 46, 46)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(attackerCountryName, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(51, 51, 51)
                 .addComponent(declare, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(146, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,7 +145,9 @@ public class AttackerDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner attackerArmies;
+    private javax.swing.JLabel attackerCountryName;
     private javax.swing.JButton declare;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }

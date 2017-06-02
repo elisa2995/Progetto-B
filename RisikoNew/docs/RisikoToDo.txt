@@ -1,11 +1,11 @@
 - nome attaccante e difensore nelle dialog
 - mettere nella gui nomi cose in italiano
-- mettere action.endgame alla fine del gioco
+- X mettere action.endgame alla fine del gioco
 - gestire mouse move: cache o in un update facciamo passare una mappa
 - finire la visualizzazione delle carte
 - carte per giocatore artificiale
 - move per giocatore artificiale
-- centrare dialog move
+- X centrare dialog move
 - DOCUMENTAZIONE (javaDoc + wiki)
 - in startGameGUI mettere tipo di giocatore sopra normale ecc, mettere colore armata sopra combobox colori
 - in startGameGUI mettere giocatore1, giocatore2 ecc sulle righe
