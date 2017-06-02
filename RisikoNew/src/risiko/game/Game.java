@@ -20,7 +20,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import risiko.AttackResult;
 import risiko.BonusDeck;
 import risiko.Card;
 import risiko.Country;
@@ -127,7 +126,7 @@ public class Game extends Observable implements GameProxy {
         map.computeBonusArmies(activePlayer);
         phase = Phase.REINFORCE;
         reattack = false;
-        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
+        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor(), activePlayer.getBonusArmies());
         startArtificialPlayerThreads();
     }
 
@@ -239,17 +238,15 @@ public class Game extends Observable implements GameProxy {
      * @param countries
      * @param nrA
      * @param nrD
-     * @return armiesLost necessario per istanziare attackResult nel metodo
      * attack
      * @author Andrea
      */
-    private int[] fight(Country attackerCountry, Country defenderCountry, int nrA, int nrD) {
+    private void fight(Country attackerCountry, Country defenderCountry, int nrA, int nrD) {
         int lostArmies[] = computeLostArmies(nrA, nrD);
         map.removeArmies(attackerCountry, lostArmies[0]);
         map.removeArmies(defenderCountry, lostArmies[1]);
 
         notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
-        return lostArmies;
     }
 
     /**
@@ -397,11 +394,9 @@ public class Game extends Observable implements GameProxy {
 
         Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
         Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
-        int lostArmies[] = fight(attackerCountry, defenderCountry, nrA, nrD);
+        fight(attackerCountry, defenderCountry, nrA, nrD);
         boolean conquered = map.isConquered(defenderCountry);
-        String attackResult = (new AttackResult(attackerPlayer,
-                defenderPlayer, nrA, nrD,
-                lostArmies, conquered)).toString();
+
         boolean hasAlreadyDrawnCard = activePlayer.hasAlreadyDrawnCard();
 
         if (conquered) {
@@ -424,7 +419,7 @@ public class Game extends Observable implements GameProxy {
         artificialAttack[0] = defenderPlayer instanceof ArtificialPlayer && attackerPlayer instanceof ArtificialPlayer;
         artificialAttack[1] = attackerPlayer instanceof ArtificialPlayer;
 
-        notifyAttackResult(attackResult, conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense(), artificialAttack, hasAlreadyDrawnCard);
+        notifyAttackResult(conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense(), artificialAttack, hasAlreadyDrawnCard);
         attackInProgress = false;
 
     }
@@ -466,6 +461,8 @@ public class Game extends Observable implements GameProxy {
         activePlayer.decrementBonusArmies();
         map.addArmies(country, 1);
 
+        notifyReinforce(countryName, activePlayer.getBonusArmies());
+        
         if (activePlayer.getBonusArmies() == 0) {
             try {
                 nextPhase();
@@ -473,7 +470,6 @@ public class Game extends Observable implements GameProxy {
             }
         }
 
-        notifyReinforce(countryName, activePlayer.getBonusArmies());
         notifyArmiesChange(countryName, country.getArmies(), map.getPlayerColorByCountry(country));
     }
 
@@ -522,7 +518,7 @@ public class Game extends Observable implements GameProxy {
             //System.out.println(this.phase);
             passTurn();
         }
-        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
+        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor(), activePlayer.getBonusArmies());
     }
 
     /**
@@ -701,7 +697,7 @@ public class Game extends Observable implements GameProxy {
         notifyArmiesChange(toCountryName, toCountry.getArmies(), activePlayer.getColor());
         notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), activePlayer.getColor());
         passTurn();
-        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor());
+        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor(), activePlayer.getBonusArmies());
     }
 
     //  M E T O D I   R I P R E S I   D A   M A P

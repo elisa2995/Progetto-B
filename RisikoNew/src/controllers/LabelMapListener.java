@@ -1,6 +1,7 @@
 package controllers;
 
 import gui.GUI;
+import gui.GraphicsJLabel;
 import gui.MoveDialog;
 import java.awt.Color;
 import java.awt.Component;
@@ -15,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
 import risiko.game.Game;
 import gui.PlayAudio;
+import java.awt.Rectangle;
 import risiko.game.GameProxy;
 
 /**
@@ -77,19 +79,22 @@ public class LabelMapListener extends MouseInputAdapter {
                     //Devo scegliere il difensore, sono su un territorio confinante attaccabile
                     game.setDefenderCountry(countryName);
                     PlayAudio.play("sounds/clickOn.wav");
+                    gui.setVisibleAttackerDialog(true);
+                    game.resetFightingCountries();
                     break;
                 }
                 //Sono su un territorio non valido per attaccare nè per difendere
                 PlayAudio.play("sounds/clickOff.wav");
                 game.resetFightingCountries();
                 break;
+
             case MOVE:
                 if (countryName == null) {
                     PlayAudio.play("sounds/clickOff.wav");
                     game.resetFightingCountries();
                     return;
                 }
-                
+
                 if (game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
                     game.setFromCountry(countryName);
@@ -98,7 +103,7 @@ public class LabelMapListener extends MouseInputAdapter {
                 }
                 if (game.getAttackerCountryName() != null && game.controlMovement(countryName)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
-                    MoveDialog movementDialog=new MoveDialog(game, countryName);
+                    new MoveDialog(game, countryName);
                     PlayAudio.play("sounds/clickOn.wav");
                     break;
                 }
@@ -136,7 +141,7 @@ public class LabelMapListener extends MouseInputAdapter {
                 } else {
                     //Non ho più bonusArmies oppure non sono sul mio territorio
                     setDefaultCursor(e.getComponent(), label);
-                    
+
                 }
                 break;
             case FIGHT:
@@ -144,6 +149,10 @@ public class LabelMapListener extends MouseInputAdapter {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
                     setHandCursor(e.getComponent(), label);
                     break;
+                }
+                if (game.getAttackerCountryName() != null) {
+                    //imposto il cono di luce dall'attackerCountry alla posizione del Mouse
+                    ((GraphicsJLabel) mapLabel).drawCone(gui.getAttackerCountryBounds(), new Rectangle(e.getX(), e.getY(), 2, 2));
                 }
                 if (game.getAttackerCountryName() != null && game.controlDefender(countryName)) {
                     //Devo scegliere il difensore, sono su un territorio confinante attaccabile
@@ -158,6 +167,10 @@ public class LabelMapListener extends MouseInputAdapter {
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
                     setHandCursor(e.getComponent(), label);
                     break;
+                }
+                if (game.getAttackerCountryName() != null) {
+                    //imposto il cono di luce dall'attackerCountry alla posizione del Mouse
+                    ((GraphicsJLabel) mapLabel).drawCone(gui.getAttackerCountryBounds(), new Rectangle(e.getX(), e.getY(), 2, 2));
                 }
                 if (game.getAttackerCountryName() != null && game.controlMovement(countryName)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
