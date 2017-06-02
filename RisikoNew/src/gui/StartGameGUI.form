@@ -36,21 +36,28 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace min="-2" pref="159" max="-2" attributes="0"/>
-              <Component id="registrationButton" min="-2" pref="139" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="startButton" min="-2" pref="152" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="177" max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="commentsLabel" min="-2" pref="508" max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" attributes="0">
-              <EmptySpace min="162" pref="162" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="157" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                      <Component id="jLabel4" min="-2" pref="81" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jLabel3" min="-2" pref="108" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="player1Label" min="-2" max="-2" attributes="0"/>
+                          <Component id="player5Label" min="-2" max="-2" attributes="0"/>
+                          <Component id="player4Label" min="-2" max="-2" attributes="0"/>
+                          <Component id="player3Label" min="-2" max="-2" attributes="0"/>
+                          <Component id="player2Label" min="-2" max="-2" attributes="0"/>
+                          <Component id="player6Label" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="playerText2" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
                           <Component id="playerText3" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
@@ -69,141 +76,159 @@
                           <Component id="playerType6" min="-2" pref="60" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="changeType6" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="colorBox6" min="-2" pref="92" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="login5" min="-2" pref="72" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="login6" min="-2" pref="72" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="changeType2" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="colorBox2" min="-2" pref="92" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="login2" min="-2" pref="72" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="changeType3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="colorBox3" min="-2" pref="92" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="login3" min="-2" pref="72" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="changeType4" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="colorBox4" min="-2" pref="92" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="login4" min="-2" pref="72" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="changeType5" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="colorBox5" min="-2" pref="92" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="login6" min="-2" pref="72" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="login5" min="-2" pref="72" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="changeType1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="colorBox1" min="-2" pref="92" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="login1" max="32767" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="login1" min="-2" pref="72" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="253" pref="264" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="addButton" min="-2" pref="149" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="211" max="-2" attributes="0"/>
                       <Component id="removeButton" min="-2" pref="150" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="178" max="-2" attributes="0"/>
                   </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="registrationButton" min="-2" pref="139" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="startButton" min="-2" pref="152" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="commentsLabel" alignment="0" min="-2" pref="510" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace pref="179" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace min="-2" pref="160" max="-2" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" pref="152" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="addButton" min="-2" pref="44" max="-2" attributes="0"/>
                   <Component id="removeButton" min="-2" pref="44" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="playerText1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="playerText2" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                              <Component id="playerType2" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                              <Component id="changeType2" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="colorBox2" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="login2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="playerText3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="playerType3" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                          <Component id="changeType3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="colorBox3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="login3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="playerText4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="playerType4" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                          <Component id="changeType4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="colorBox4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="login4" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="playerText5" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="playerType5" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                          <Component id="changeType5" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="colorBox5" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="login6" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="playerText6" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="playerType6" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="changeType6" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="colorBox6" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="login5" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="playerText1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="player1Label" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="login1" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                       <Component id="playerType1" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
                       <Component id="changeType1" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="colorBox1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="login1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="51" max="32767" attributes="0"/>
-              <Component id="commentsLabel" min="-2" pref="32" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                      <Component id="playerText2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="player2Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                      <Component id="playerType2" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                      <Component id="changeType2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="colorBox2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="login2" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="playerText3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="playerType3" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                  <Component id="changeType3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="colorBox3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="login3" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="player3Label" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="playerText4" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="playerType4" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                  <Component id="changeType4" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="colorBox4" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="login4" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="player4Label" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="playerText5" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="playerType5" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                  <Component id="changeType5" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="colorBox5" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="login5" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="player5Label" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="registrationButton" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="playerText6" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="playerType6" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                          <Component id="player6Label" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                      <Component id="changeType6" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="colorBox6" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="login6" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+              <Component id="commentsLabel" min="-2" pref="21" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="registrationButton" min="-2" pref="40" max="-2" attributes="0"/>
                   <Component id="startButton" alignment="1" min="-2" pref="40" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -222,6 +247,11 @@
     <Component class="javax.swing.JTextField" name="playerText6">
     </Component>
     <Component class="javax.swing.JButton" name="startButton">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Calibri Light" size="14" style="1"/>
+        </Property>
+      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startButtonActionPerformed"/>
       </Events>
@@ -267,6 +297,11 @@
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="registrationButton">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Calibri Light" size="14" style="1"/>
+        </Property>
+      </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registrationButtonActionPerformed"/>
       </Events>
@@ -274,19 +309,25 @@
     <Component class="javax.swing.JButton" name="login1">
     </Component>
     <Component class="javax.swing.JButton" name="login2">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="login2ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="login3">
     </Component>
     <Component class="javax.swing.JButton" name="login4">
     </Component>
-    <Component class="javax.swing.JButton" name="login5">
-    </Component>
     <Component class="javax.swing.JButton" name="login6">
     </Component>
+    <Component class="javax.swing.JButton" name="login5">
+    </Component>
     <Component class="javax.swing.JLabel" name="commentsLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Calibri Light" size="14" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="33" green="33" red="ff" type="rgb"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="playerType1">
       <Properties>
@@ -346,6 +387,72 @@
     <Component class="javax.swing.JButton" name="changeType6">
       <Properties>
         <Property name="text" type="java.lang.String" value="&gt;&gt;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="player1Label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Giocatore 1"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="player2Label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Giocatore 2"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="player3Label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Giocatore 3"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="player4Label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Giocatore 4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="player5Label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Giocatore 5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="player6Label">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Giocatore 6"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Calibri" size="16" style="1"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Giocatore"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel2">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Calibri" size="16" style="1"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Tipo di giocatore"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel3">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Calibri" size="16" style="1"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Colore armate"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel4">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Calibri" size="16" style="1"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Nome"/>
       </Properties>
     </Component>
   </SubComponents>

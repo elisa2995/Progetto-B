@@ -8,27 +8,23 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import risiko.Country;
-import risiko.Phase;
-import risiko.Game;
-import risiko.GameInvocationHandler;
-import risiko.GameProxy;
-import risiko.players.Player;
-import utils.BasicGameObserver;
+import risiko.game.Game;
+import risiko.game.GameInvocationHandler;
+import risiko.game.GameProxy;
+import services.FileManager;
 
 /**
  * @author andrea
@@ -37,7 +33,7 @@ public class GUI extends JFrame implements GameObserver {
 
     //private Game game;
     private GameProxy game;
-    private final Map<Color, String> colorCountryNameMap;
+    private Map<Color, String> colorCountryNameMap;
     private final Map<String, JLabel> countryLabelMap;
     private DefenseDialog defenseArmies;
     private CardBonusDialog cardBonusDialog;
@@ -49,7 +45,7 @@ public class GUI extends JFrame implements GameObserver {
         initComponents();
         labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko.png"))));
         countryLabelMap = new HashMap<>();
-        colorCountryNameMap = readColorTextMap("files/ColorCountry.txt");
+        initColorCountryNameMap();
         init(players, playersColor);
     }
 
@@ -71,7 +67,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     private void init(Map<String, String> players, Map<String, String> playersColor) throws IOException, Exception {
         // Labels
-        initLabels("files/labelsTerritori.txt");
+        initLabels();
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
         labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
         labelAdvice.setFont(new Font("Serif", Font.PLAIN, 13));
@@ -103,20 +99,16 @@ public class GUI extends JFrame implements GameObserver {
      * @param src
      * @throws IOException
      */
-    private void initLabels(String src) throws IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader(src))) {
-            String line;
-            String[] tokens;
-            int x, y;
-            while ((line = br.readLine()) != null) {
-                tokens = line.split("\t");
-                x = Integer.parseInt(tokens[0].split(",")[0]);
-                y = Integer.parseInt(tokens[0].split(",")[1]);
-                createLabel(tokens[1], x, y);
-            }
+    private void initLabels() throws IOException {
 
-        } catch (FileNotFoundException ex) {
-            System.out.println("File not found");
+        List<Map<String, Object>> labels = FileManager.getInstance().getLabelsProperties();
+        String country;
+        int x, y;
+        for (Map<String, Object> label : labels) {
+            country = (String) label.get("country");
+            x = (Integer) label.get("x");
+            y = (Integer) label.get("y");
+            createLabel(country, x, y);
         }
     }
 
@@ -322,7 +314,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     private void buttonAttackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAttackActionPerformed
         // controllo in game per il giocatore artificiale??
-        if (game.getPhase().equals(Phase.FIGHT)) {
+        if (game.getPhaseName().equals("FIGHT")) {
             if (game.getAttackerCountryName() != null && game.getDefenderCountryName() != null) {
                 attackerDialog.setAttackerCountry(game.getAttackerCountryName());
                 attackerDialog.setVisible(true);
@@ -356,21 +348,22 @@ public class GUI extends JFrame implements GameObserver {
      * da 0 a 255 [G] -> un numero intero da 0 a 255 [B] -> un numero intero da
      * 0 a 255.
      */
-    private static Map<Color, String> readColorTextMap(String relativeURL) throws FileNotFoundException {
-        Map<Color, String> map = new HashMap<>();
-        try (Scanner scanner = new Scanner(new FileReader(relativeURL))) {
-            while (scanner.hasNextLine()) {
-                String[] tokens = scanner.nextLine().split("=");
-                String[] RGB = tokens[1].split(",");
-                String country = tokens[0];
-                int R = Integer.parseInt(RGB[0].trim());
-                int G = Integer.parseInt(RGB[1].trim());
-                int B = Integer.parseInt(RGB[2].trim());
-                Color color = new Color(R, G, B);
-                map.put(color, country);
-            }
+    private void initColorCountryNameMap() throws FileNotFoundException {
+
+        List<Map<String, Object>> countriesColors = FileManager.getInstance().getCountriesColors();
+        colorCountryNameMap = new HashMap<>();
+        Color color;
+        int R, G, B;
+        String country;
+        for (Map<String, Object> row : countriesColors) {
+            country = (String) row.get("country");
+            R = (Integer) row.get("R");
+            G = (Integer) row.get("G");
+            B = (Integer) row.get("B");
+            color = new Color(R, G, B);
+            colorCountryNameMap.put(color, country);
         }
-        return map;
+
     }
 
     /**

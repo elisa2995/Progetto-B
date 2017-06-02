@@ -15,7 +15,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
-import risiko.GameProxy;
+import risiko.game.GameProxy;
 
 /**
  *

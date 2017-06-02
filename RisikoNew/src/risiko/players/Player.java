@@ -7,10 +7,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import risiko.Card;
-import risiko.Mission;
+import risiko.Country;
+import risiko.missions.Mission;
 
 public class Player {
 
@@ -50,7 +52,7 @@ public class Player {
     }
 
     public void decrementBonusArmies() {
-        this.bonusArmies --;
+        this.bonusArmies--;
     }
 
     public String getColor() {
@@ -106,12 +108,12 @@ public class Player {
      */
     public Map<Card[], Integer> getPlayableTris(Map<Card[], Integer> tris) {
         Map<Card[], Integer> playable = new HashMap<>(tris);
-        for(Card[] cards : tris.keySet()){
-            if(!(canPlayThisTris(cards))){
+        for (Card[] cards : tris.keySet()) {
+            if (!(canPlayThisTris(cards))) {
                 playable.remove(cards);
             }
         }
-        
+
         /*Predicate <Card[]> cantPlay = cards -> !canPlayThisTris(cards);
             tris.keySet().removeIf(cantPlay);*/
         return playable;
@@ -136,5 +138,9 @@ public class Player {
 
     public String getMissionDescription() {
         return mission.getDescription();
+    }
+
+    public boolean checkIfWinner(List<Country> myCountries) {
+        return mission.isCompleted(myCountries);
     }
 }

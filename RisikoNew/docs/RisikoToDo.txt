@@ -1,4 +1,4 @@
-- nome attaccante e difensore nelle dialog
+- X nome attaccante e difensore nelle dialog
 - mettere nella gui nomi cose in italiano
 - X mettere action.endgame alla fine del gioco
 - gestire mouse move: cache o in un update facciamo passare una mappa
@@ -7,9 +7,9 @@
 - move per giocatore artificiale
 - X centrare dialog move
 - DOCUMENTAZIONE (javaDoc + wiki)
-- in startGameGUI mettere tipo di giocatore sopra normale ecc, mettere colore armata sopra combobox colori
-- in startGameGUI mettere giocatore1, giocatore2 ecc sulle righe
-- mettere tooltip sul tasto >>
+- X in startGameGUI mettere tipo di giocatore sopra normale ecc, mettere colore armata sopra combobox colori
+- X in startGameGUI mettere giocatore1, giocatore2 ecc sulle righe
+- X mettere tooltip sul tasto >>
 - sistemare mongolia-giappone(non confinanti) [anche un altro?]
 - cambiare immagine dei coni con gif esplosione/colpo di cannone
 - X diceDialog: mettere ritorna al gioco invece di chiudi la finestra 

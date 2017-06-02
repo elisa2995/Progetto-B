@@ -7,12 +7,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import services.FileManager;
 
 public class BonusDeck {
 
     private List<Card> cards;
     private Map<Card[], Integer> tris;
-    
+
     public BonusDeck() {
         cards = new ArrayList<>();
         tris = new HashMap<>();
@@ -41,21 +42,21 @@ public class BonusDeck {
             cards.add(getCardByName(card.toString()));
         }
     }
-    
+
     /**
      * Costruisce una mappa con i tris giocabili e i corrispettivi bonus.
      */
-    private void buildTris(){
-    try (BufferedReader br = new BufferedReader(new FileReader("files/bonusTris.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] cardsNames = line.split("\t")[0].split(",");
-                int bonus = Integer.parseInt(line.split("\t")[1]);
-                Card[] c = {getCardByName(cardsNames[0]),getCardByName(cardsNames[1]),getCardByName(cardsNames[2])};
-                tris.put(c, bonus);
-            }
-        } catch (Exception ex) {
-            System.out.println("Error in buildTris");
+    private void buildTris() {
+        
+        List<Map<String, Object>> combinations = FileManager.getInstance().getTris();
+        String[] cardsNames;
+        int bonus;
+        
+        for(Map<String, Object> combo : combinations){
+            cardsNames = (String[])combo.get("cards");
+            bonus = (Integer)combo.get("bonus");
+            Card[] c = {getCardByName(cardsNames[0]), getCardByName(cardsNames[1]), getCardByName(cardsNames[2])};
+            tris.put(c, bonus);
         }
     }
 
@@ -85,24 +86,25 @@ public class BonusDeck {
         }
         return set;
     }
-    
+
     /**
      * Ritorna la carta con nome <code>name</code>.
+     *
      * @param name
-     * @return 
+     * @return
      */
-    private Card getCardByName(String name){
+    private Card getCardByName(String name) {
         return Card.valueOf(Card.class, name);
     }
-    
+
     /**
      * Ritorna una mappa con le combinazioni di carte giocabili e i rispettivi
      * bonus.
-     * @return 
+     *
+     * @return
      */
-    public Map<Card[], Integer> getTris(){
+    public Map<Card[], Integer> getTris() {
         return this.tris;
     }
 
-    
 }

@@ -4,8 +4,7 @@ import exceptions.PendingOperationsException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import risiko.Action;
-import risiko.GameProxy;
+import risiko.game.GameProxy;
 import utils.BasicGameObserver;
 
 public class ArtificialPlayer extends Player implements Runnable, BasicGameObserver {
@@ -58,7 +57,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             try {
                 game.nextPhase(this);
             } catch (PendingOperationsException ex) {
-                Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         int index;
@@ -197,7 +196,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                 }
             } catch (PendingOperationsException ex) {
                 //l'eccezione delle armate ancora da assegnare viene data quando si sovrappongono le operazioni di 2 giocatori
-                Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

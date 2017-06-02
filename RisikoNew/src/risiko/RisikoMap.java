@@ -1,23 +1,22 @@
 package risiko;
 
 import risiko.players.Player;
-import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import services.FileManager;
+import risiko.missions.Mission;
 
 public class RisikoMap {
 
     private final int DEFAULT_ARMIES = 3;
-    private final String urlCountries = "files/territori.txt";
-    //private final String urlCountries = "files/prova.txt";
-    private final String urlMissions = "files/missions.txt";
     private Map<String, List<Country>> continentCountries;
     private Map<Country, List<Country>> countryNeighbors;
     private List<Mission> missions;
@@ -48,133 +47,95 @@ public class RisikoMap {
     private void init() {
         buildCountryPlayer();
         buildCountryNeighbors();
-        buildContinentCountry();
+        buildContinentCountries();
         buildMissions();
     }
 
     /**
-     * Legge il file specificato a urlCountries, di ogni riga letta prende solo
-     * il primo token e builda la Country relativa e la mette in CountryPlayer,
-     * crea anche l'ashMap nameCountry.
+     * Costruisce le countries, la mappa countryPlayer (player è inizializzato a
+     * null) e l'HashMap nameCountry.
      *
      * @author Elisa
      * @throws qualche eccezione legata alla lettura del file
      */
     private void buildCountryPlayer() {
-        try (BufferedReader br = new BufferedReader(new FileReader(urlCountries))) {
-            String line;
 
-            while ((line = br.readLine()) != null) {
+        List<String> countries = FileManager.getInstance().getCountries();
 
-                if (!line.startsWith("-")) {
-
-                    String str[] = line.split(",");
-
-                    Country country = new Country(str[0]);
-                    country.setArmies(DEFAULT_ARMIES);
-                    countryPlayer.put(country, null);
-                    nameCountry.put(country.getName(), country);
-                }
-            }
-        } catch (Exception ex) {
-            System.out.println("Error in buildCountryPlayer");
+        for (String countryName : countries) {
+            Country country = new Country(countryName);
+            country.setArmies(DEFAULT_ARMIES);
+            countryPlayer.put(country, null);
+            nameCountry.put(countryName, country);
         }
     }
 
     /**
-     * Legge il file specificato da urlCountries, per ogni country costruisce
-     * una List di vicini, salva in CountryNeighbor il territorio e la lista di
-     * vicini.
+     * Traduce la Map <code>countryNeighborsNames</code> (Map di String - nomi
+     * dei territori) nella mappa <Country, List<Country>> corrispondente,
+     * recuperando dal nome del territorio l'oggetto Country corrispondente.
      *
-     * @throws qualche eccezione legata alla lettura del file
      * @author Elisa
      */
     private void buildCountryNeighbors() {
-        try (BufferedReader br = new BufferedReader(new FileReader(urlCountries))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-
-                if (!line.startsWith("-")) {
-                    String str[] = line.split(",");
-
-                    List<Country> neighbours = new ArrayList<>();
-                    for (int j = 1; j < str.length; j++) {
-                        neighbours.add(nameCountry.get(str[j]));
-                    }
-
-                    countryNeighbors.put(nameCountry.get(str[0]), neighbours);
-                }
+        Map<String, List<String>> countryNeighborsNames = FileManager.getInstance().getCountryNeighbors();
+        Country subject;
+        List<Country> neighbors;
+        for (Map.Entry<String, List<String>> row : countryNeighborsNames.entrySet()) {
+            subject = nameCountry.get(row.getKey());
+            neighbors = new ArrayList<>();
+            for (String neighbor : row.getValue()) {
+                neighbors.add(nameCountry.get(neighbor));
             }
-        } catch (Exception ex) {
-            System.out.println("Error in buildCountryNeighbors");
-        }
-    }
-
-    private void buildContinentCountry() {
-        try (BufferedReader br = new BufferedReader(new FileReader(urlCountries))) {
-            String line;
-            List<Country> countries = new ArrayList<>();
-            while ((line = br.readLine()) != null) {
-
-                if (line.startsWith("-")) {
-                    String str[] = line.split("-");     //str[] sarà un'array di 3 stringhe, la prima sarà vuota, questo perchè line inizia con "-"
-                    continentCountries.put(str[1], countries);
-                    continentBonus.put(str[1], new Integer(str[2]));
-                    countries = new ArrayList<>();
-                } else {
-                    String str[] = line.split(",");
-                    countries.add(getCountryByName(str[0]));
-                }
-            }
-        } catch (Exception ex) {
-            System.out.println("Error in buildContinentCountry");
+            countryNeighbors.put(subject, neighbors);
         }
     }
 
     /**
-     * Legge il file specificato da urlMissions, da ogni riga estrae la
-     * description di un obiettivo e crea gli oggetti Mission
+     * Builda le Map ContinentCountries e continentBonus.
+     */
+    private void buildContinentCountries() {
+
+        List<Country> countries;
+        for (Map<String, Object> continent : FileManager.getInstance().getContinents()) {
+            countries = new ArrayList<>();
+            String continentName = (String) continent.get("name");
+            // Buildo continentCountries
+            for (String countryName : (List<String>) continent.get("countries")) {
+                countries.add(nameCountry.get(countryName));
+            }
+            continentCountries.put(continentName, countries);
+
+            // ContinentBonus
+            continentBonus.put(continentName, (Integer) continent.get("bonus"));
+        }
+    }
+
+    /**
+     * Traduce la List di Map <code>fileManager.getMissions()</code>, in cui
+     * ogni elemento corrispone a una missione, negli oggetti Mission
+     * corrisponenti.
      *
-     * @throws qualche eccezione legata alla lettura del file
      * @author Federico
      */
     private void buildMissions() {
 
-        try (BufferedReader br = new BufferedReader(new FileReader(urlMissions))) {
-
-            String line;
-            Mission mission;
-            while ((line = br.readLine()) != null) {
-                String[] tokens = line.split("=");
-                mission = new Mission(tokens[1]);
-                this.missions.add(mission);
-                buildTargetListForMission(mission);
+        Constructor constructor;
+        Mission m;
+        String description;
+        int points;
+        String packagePath = "risiko.missions.";
+        for (Map<String, Object> mission : FileManager.getInstance().getMissions()) {
+            try {
+                points = (Integer) mission.get("points");
+                description = (String) mission.get("description") + "\n (" + points + "punti)";
+                constructor = Class.forName(packagePath + (String) mission.get("type") + "Mission").getConstructor(String.class, Integer.TYPE);
+                m = (Mission) constructor.newInstance(description, points);
+                this.missions.add(m);
+                m.buildTarget(continentCountries);
+            } catch (Exception ex) {
+                Logger.getLogger(RisikoMap.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        } catch (Exception ex) {
-            System.out.println("File not found");
-        }
-    }
-
-    /**
-     * Costruisce la targetList (contenente i country da conquistare) di una
-     * mission
-     *
-     * @param mission
-     * @author Federico
-     *
-     */
-    private void buildTargetListForMission(Mission mission) {
-
-        String description = mission.getDescription();
-        List<String> continents = new ArrayList<>(continentCountries.keySet());
-        for (int i = 0; i < continents.size(); i++) {
-            if (description.contains(continents.get(i))) {
-                mission.setTargetList(continentCountries.get(continents.get(i)));
-            }
-        }
-        if (mission.getTargetList().isEmpty()) {
-            mission.setNrCountryToConquer(24);
         }
     }
 
@@ -256,7 +217,7 @@ public class RisikoMap {
      * @param player il giocatore di turno
      * @author Elisa
      */
-    void computeBonusArmies(Player player) {
+    public void computeBonusArmies(Player player) {
         int bonus = 0;
         List<Country> countryOfThatPlayer = getMyCountries(player);
         Set<String> continentSet = continentCountries.keySet();
@@ -399,20 +360,7 @@ public class RisikoMap {
      * @author Federico
      */
     public boolean checkIfWinner(Player player) {
-
-        boolean result = false;
-
-        if (!player.getMission().getTargetList().isEmpty()) {
-
-            if (getMyCountries(player).containsAll(player.getMission().getTargetList())) {
-                result = true;
-            }
-
-        } else if (getMyCountries(player).size() == player.getMission().getNrCountryToConquer()) {
-            result = true;
-        }
-
-        return result;
+        return player.checkIfWinner(getMyCountries(player));
     }
 
     /**
@@ -444,9 +392,9 @@ public class RisikoMap {
     }
 
     public boolean canAttackFromCountry(Country country) {
-        boolean can=false;
-        for(Country c : countryNeighbors.get(country)){
-            can = can || countryPlayer.get(c)!=countryPlayer.get(country);
+        boolean can = false;
+        for (Country c : countryNeighbors.get(country)) {
+            can = can || countryPlayer.get(c) != countryPlayer.get(country);
         }
         return can & country.getArmies() > 1;
     }
