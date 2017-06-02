@@ -39,6 +39,7 @@ public class GUI extends JFrame implements GameObserver {
     private CardBonusDialog cardBonusDialog;
     private AttackerDialog attackerDialog;
     private DiceDialog diceDialog;
+    private LabelMapListener labelMapListener;
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         initBackground();
@@ -78,7 +79,7 @@ public class GUI extends JFrame implements GameObserver {
                 new GameInvocationHandler(new Game(players, playersColor, this)));
 
         // Mouse Listeners
-        LabelMapListener labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game, this);
+        labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game, this);
         labelMap.addMouseListener(labelMapListener);
         labelMap.addMouseMotionListener(labelMapListener);
 
@@ -399,6 +400,9 @@ public class GUI extends JFrame implements GameObserver {
         this.labelPlayerPhase.setText(player + " " + phase);
         this.labelPlayerPhase.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
         this.textAreaInfo.setText("");
+        if (labelMapListener != null) {
+            labelMapListener.resetCache(); // cioè non è l'inizio del gioco
+        }
         switch (phase) {
             case "REINFORCE":
                 labelAdvice.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
@@ -421,6 +425,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnSetAttacker(String countryName, int maxArmiesAttacker) {
         ((GraphicsJLabel) labelMap).resetCone();
+        labelMapListener.resetCache();
         if (countryName != null) {
             this.textAreaInfo.setText("Attaccante : " + countryName);
             labelAdvice.setText("Clicca su un territorio confinante per sceglierlo come difensore");
@@ -446,7 +451,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender, boolean reattack) {
         ((GraphicsJLabel) labelMap).drawCone(countryLabelMap.get(countryAttackerName).getBounds(), countryLabelMap.get(countryDefenderName).getBounds());
-
+        //labelMapListener.resetCaches();
         if (countryDefenderName != null) {
             String s = "Attaccante : " + countryAttackerName + "\n";
             s += "Difensore : " + countryDefenderName + " ( " + defenderPlayer + " ).\n";
@@ -513,7 +518,9 @@ public class GUI extends JFrame implements GameObserver {
         textAreaInfo.setText(attackResultInfo);
         defenseArmies.setMaxArmies(maxArmiesDefender);
         labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
-
+        if (isConquered || !canAttackFromCountry) {
+            labelMapListener.resetCache();
+        }
     }
 
     /**
