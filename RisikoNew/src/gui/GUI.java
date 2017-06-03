@@ -450,7 +450,6 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, boolean hasAlreadyDrawnCard) {
         if (!artificialAttack[0]) {
-            System.out.println("per aprire diceDialog");
             diceDialog.setHasAlreadyDrawnCard(hasAlreadyDrawnCard);
             diceDialog.setArtificialAttacker(artificialAttack[1]);
             diceDialog.setIsConquered(isConquered);
@@ -602,7 +601,7 @@ public class GUI extends JFrame implements GameObserver {
                 return "RINFORZO";
             case "FIGHT":
                 return "COMBATTIMENTO";
-            case "MOVEMENT":
+            case "MOVE":
                 return "SPOSTAMENTO";
             default:
                 return "";

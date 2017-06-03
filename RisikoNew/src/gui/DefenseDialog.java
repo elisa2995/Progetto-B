@@ -101,6 +101,7 @@ public class DefenseDialog extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmAttackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmAttackButtonActionPerformed
+        PlayAudio.play("sounds/tank.wav");                
         game.setDefenderArmies((int)this.defenderArmies.getValue());
         this.setVisible(false);
         game.confirmAttack();        

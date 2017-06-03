@@ -247,6 +247,32 @@ public class FileManager {
         }
         throw new FileManagerException("No user found with username " + username);
     }
+    
+    /**
+     * Legge il file players.txt e controla se lo username è presente 
+     * tra quelli dei giocatori già registrati
+     * @param username
+     * @return true se lo username è presente nel file
+     */
+    public boolean checkUsernameInFile(String username) {
+        try (BufferedReader br = new BufferedReader(new FileReader(PLAYERS))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] tmp = line.split(";");
+                if (tmp[0].equals(username)) {
+                    return false;
+                }
+
+            }
+
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found");
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return true;
+    }
 
     //----------------------------- countriesLabels.txt-------------------------//
     /**

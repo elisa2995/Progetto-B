@@ -6,6 +6,7 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import services.FileManager;
 
 /**
  *
@@ -38,8 +40,8 @@ public class UserDialog extends javax.swing.JDialog {
     public UserDialog(StartGameGUI gui) {
         this.gui = gui;
         initComponents();
-        commentsText.setEditable(false);
         commentsText.setBackground(new Color(240, 240, 240));
+
         this.addWindowListener(new WindowListener() {
             @Override
             public void windowClosed(WindowEvent e) {
@@ -86,13 +88,11 @@ public class UserDialog extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         password2Label = new javax.swing.JLabel();
-        titleLabel = new javax.swing.JLabel();
         saveUserButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        commentsText = new javax.swing.JTextArea();
         loginButton = new javax.swing.JButton();
         passwordText = new javax.swing.JPasswordField();
         password2Text = new javax.swing.JPasswordField();
+        commentsText = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -102,18 +102,12 @@ public class UserDialog extends javax.swing.JDialog {
 
         password2Label.setText("Ripeti la password");
 
-        titleLabel.setText("Registrazione utente");
-
         saveUserButton.setText("Registra");
         saveUserButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveUserButtonActionPerformed(evt);
             }
         });
-
-        commentsText.setColumns(20);
-        commentsText.setRows(5);
-        jScrollPane1.setViewportView(commentsText);
 
         loginButton.setText("Login");
         loginButton.addActionListener(new java.awt.event.ActionListener() {
@@ -127,55 +121,42 @@ public class UserDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(52, 52, 52)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(password2Label)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1)
-                            .addComponent(usernameText, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                            .addComponent(password2Text)
-                            .addComponent(passwordText))
-                        .addGap(46, 46, 46)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(saveUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1)
-                            .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 28, Short.MAX_VALUE))
-                    .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(saveUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(password2Label)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel1)
+                        .addComponent(usernameText, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                        .addComponent(passwordText)
+                        .addComponent(password2Text)
+                        .addComponent(commentsText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(28, 28, 28)
                 .addComponent(jLabel1)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(usernameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(passwordText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(loginButton)
-                        .addGap(9, 9, 9)
-                        .addComponent(saveUserButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(8, 8, 8)
-                        .addComponent(password2Label)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(password2Text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(36, 36, 36))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(usernameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(passwordText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(password2Label)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(password2Text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(commentsText, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(loginButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(saveUserButton)
+                .addGap(30, 30, 30))
         );
 
         pack();
@@ -183,21 +164,22 @@ public class UserDialog extends javax.swing.JDialog {
 
     /**
      * Bottone per salvare il nuovo utente
-     * @param evt 
+     *
+     * @param evt
      */
     private void saveUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveUserButtonActionPerformed
-        if (usernameText.getText().length() == 0 || passwordText.getText().length() == 0 || password2Text.getText().length() == 0) {
-            commentsText.setText("Per registrare il giocatore è necessario\ncompilare tutti i campi");
+        if (usernameText.getText().length() == 0 || passwordText.getPassword().length == 0 || password2Text.getPassword().length == 0) {
+            commentsText.setText("Compila tutti i campi");
             return;
-        } 
-        if (!passwordText.getText().equals(password2Text.getText())) {
-            commentsText.setText("Le password inserite non coincidono");
+        }
+        if (!String.valueOf(passwordText.getPassword()).equals(String.valueOf(password2Text.getPassword()))) {            
+            commentsText.setText("Le password non coincidono");
             return;
-        } 
-        
-        if (checkUsernameInFile(usernameText.getText())) {
+        }
+
+        if (FileManager.getInstance().checkUsernameInFile(usernameText.getText())) {
             try {
-                registerUser(usernameText.getText(), passwordText.getText());
+                registerUser(usernameText.getText(), String.valueOf(passwordText.getPassword()));
             } catch (IOException ex) {
                 Logger.getLogger(UserDialog.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
@@ -213,12 +195,13 @@ public class UserDialog extends javax.swing.JDialog {
 
     /**
      * Bottone per fare la login
-     * @param evt 
+     *
+     * @param evt
      */
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         String url = "files/players.txt";
         String username = usernameText.getText();
-        String password = passwordText.getText();
+        String password = String.valueOf(passwordText.getPassword());
         if (checkUsername(username)) {
             try (BufferedReader br = new BufferedReader(new FileReader(url))) {
                 String line;
@@ -251,41 +234,47 @@ public class UserDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_loginButtonActionPerformed
 
     /**
-     * Salva nel file players.txt lo username e la password criptata 
+     * Salva nel file players.txt lo username e la password criptata
+     *
      * @param username
      * @param password
-     * @throws IOException 
+     * @throws IOException
      */
     private void registerUser(String username, String password) throws IOException {
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encryptedBytes = encoder.encode(password.getBytes());
-        String encryptedString = new String(encryptedBytes, "UTF-8");        
+        String encryptedString = new String(encryptedBytes, "UTF-8");
         try (PrintWriter out = new PrintWriter(new FileOutputStream("files/players.txt", true))) {
-            out.println(username + ";"+encryptedString);
-            
+            out.println(username + ";" + encryptedString);
+
         }
 
     }
 
     /**
-     * Imposta il JDialog in modo che si vedano le informazioni relative alla 
+     * Imposta il JDialog in modo che si vedano le informazioni relative alla
      * registrazione o alla login
-     * @param isRegistration 
+     *
+     * @param isRegistration
      */
     public void setRegistrationMode(boolean isRegistration) {
         if (isRegistration) {
+            this.setTitle("Registrazione");
             password2Text.setVisible(true);
             loginButton.setVisible(false);
             password2Label.setVisible(true);
             saveUserButton.setVisible(true);
-            titleLabel.setText("Registrazione");
         } else {
+            this.setTitle("Login");
             password2Text.setVisible(false);
             password2Label.setVisible(false);
             saveUserButton.setVisible(false);
             loginButton.setVisible(true);
-            titleLabel.setText("Login");
         }
+        
+        
+        Dimension dim = getToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
         commentsText.setText("");
         passwordText.setText("");
         password2Text.setText("");
@@ -294,7 +283,8 @@ public class UserDialog extends javax.swing.JDialog {
 
     /**
      * Setta l'indice del player da cui è stata richiesta la login
-     * @param index 
+     *
+     * @param index
      */
     public void setIndex(int index) {
         this.index = index;
@@ -302,7 +292,8 @@ public class UserDialog extends javax.swing.JDialog {
 
     /**
      * Ritorna l'indice del player che ha richiesto la login
-     * @return 
+     *
+     * @return
      */
     private int getIndex() {
         return index;
@@ -310,7 +301,8 @@ public class UserDialog extends javax.swing.JDialog {
 
     /**
      * Setta la lista dei players già loggati nel gioco
-     * @param list 
+     *
+     * @param list
      */
     public void setPlayers(List<String> list) {
         this.players = list;
@@ -319,12 +311,12 @@ public class UserDialog extends javax.swing.JDialog {
     /**
      * Controlla se lo username inserito è già presente tra quelli degli utenti
      * loggati; se si ritorna false
+     *
      * @param username
-     * @return 
+     * @return
      */
     private boolean checkUsername(String username) {
         for (String s : players) {
-            System.out.println(s);
             if (s.equals(username)) {
                 return false;
             }
@@ -332,44 +324,15 @@ public class UserDialog extends javax.swing.JDialog {
         return true;
     }
 
-    /**
-     * Controlla se lo username scelto per registrarsi è già stato inserito
-     * nel file dei players
-     * @param username
-     * @return 
-     */
-    private boolean checkUsernameInFile(String username) {
-        String url = "files/players.txt";
-        try (BufferedReader br = new BufferedReader(new FileReader(url))) {
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                String[] tmp = line.split(";");
-                if (tmp[0].equals(username)) {
-                    return false;
-                }
-
-            }
-
-        } catch (FileNotFoundException ex) {
-            System.out.println("File not found");
-        } catch (IOException ex) {
-            Logger.getLogger(UserDialog.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return true;
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea commentsText;
+    private javax.swing.JLabel commentsText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loginButton;
     private javax.swing.JLabel password2Label;
     private javax.swing.JPasswordField password2Text;
     private javax.swing.JPasswordField passwordText;
     private javax.swing.JButton saveUserButton;
-    private javax.swing.JLabel titleLabel;
     private javax.swing.JTextField usernameText;
     // End of variables declaration//GEN-END:variables
 
