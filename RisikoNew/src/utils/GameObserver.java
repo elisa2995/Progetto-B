@@ -34,8 +34,10 @@ public interface GameObserver extends BasicGameObserver {
      * Metodo chiamato quando viene settato l'attaccante
      * @param countryName 
      * @param maxArmiesAttacker 
+     * @param attacker 
+     * @param color 
      */
-    public void updateOnSetAttacker(String countryName, int maxArmiesAttacker);
+    public void updateOnSetAttacker(String countryName, int maxArmiesAttacker, String attacker, String color);
 
     
     /**

@@ -78,7 +78,7 @@ public class LabelMapListener extends MouseInputAdapter {
 
                 if (game.getAttackerCountryName() == null && cache.containsKey(countryName) && cache.get(countryName)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
-                    game.setAttackerCountry(countryName);
+                    game.setAttackerCountry(countryName);                    
                     PlayAudio.play("sounds/clickOn.wav");
                     break;
                 }
@@ -102,7 +102,6 @@ public class LabelMapListener extends MouseInputAdapter {
                     resetCache();
                     return;
                 }
-
 
                 if (game.getAttackerCountryName() == null && (cache.containsKey(countryName) && cache.get(countryName))) {
 

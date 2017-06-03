@@ -409,12 +409,13 @@ public class GUI extends JFrame implements GameObserver {
      * @param countryName
      */
     @Override
-    public void updateOnSetAttacker(String countryName, int maxArmiesAttacker) {
+    public void updateOnSetAttacker(String countryName, int maxArmiesAttacker, String attacker, String color) {
         ((GraphicsJLabel) labelMap).resetCone();
         labelMapListener.resetCache();
         if (countryName != null) {
             textAreaInfo.setText("Clicca su un territorio nemico confinante per attaccarlo");
             attackerDialog.setMaxArmies(maxArmiesAttacker);
+            attackerDialog.setAttackerCountry(attacker,color);
         } else {
             textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
@@ -628,7 +629,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnEndGame() {
         this.setVisible(false);
-        StartGameGUI startGui=new StartGameGUI();
+        StartGameGUI startGui = new StartGameGUI();
         startGui.setVisible(true);
     }
 

@@ -37,10 +37,10 @@ public class Observable extends BasicObservable {
      * @param countryName
      * @param maxArmiesAttacker
      */
-    public void notifySetAttacker(String countryName, int maxArmiesAttacker) {
+    public void notifySetAttacker(String countryName, int maxArmiesAttacker, String attacker, String color) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnSetAttacker(countryName, maxArmiesAttacker);
+                ((GameObserver) ob).updateOnSetAttacker(countryName, maxArmiesAttacker, attacker, color);
             }
         }
 

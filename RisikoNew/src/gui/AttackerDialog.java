@@ -19,7 +19,6 @@ import risiko.game.GameProxy;
 public class AttackerDialog extends javax.swing.JDialog {
 
     private GameProxy game;    
-    private String attackerCountry;
 
     /**
      * Crea un nuovo AttackerDialog
@@ -40,6 +39,7 @@ public class AttackerDialog extends javax.swing.JDialog {
     private void init() {
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
+        this.setTitle("Attacco");
         
         AttackerDialog attackerDialog=this;
         attackerArmies.setModel(new SpinnerNumberModel(1, 1, 1, 1)); 
@@ -56,8 +56,9 @@ public class AttackerDialog extends javax.swing.JDialog {
 
     }
     
-    public void setAttackerCountry(String attackerCountryName){
-        this.attackerCountryName.setText(attackerCountryName);
+    public void setAttackerCountry(String attackerCountryName, String color){
+        this.attackerCountryName.setText(attackerCountryName);        
+        this.attackerCountryName.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
     }
     
     public void setAttackerColor(String color){
@@ -130,14 +131,14 @@ public class AttackerDialog extends javax.swing.JDialog {
                     .addComponent(attackerCountryName, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(51, 51, 51)
                 .addComponent(declare, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(110, 110, 110)
                     .addComponent(jLabel1)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(attackerArmies, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(150, Short.MAX_VALUE)))
+                    .addContainerGap(42, Short.MAX_VALUE)))
         );
 
         pack();
