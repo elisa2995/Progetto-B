@@ -25,8 +25,10 @@ public interface GameObserver extends BasicGameObserver {
      * Metodo chiamato al cambiamento della fase di gioco
      * @param player
      * @param phase 
+     * @param color 
+     * @param bonusArmies 
      */
-    public void updateOnPhaseChange(String player, String phase, String color);
+    public void updateOnPhaseChange(String player, String phase, String color, int bonusArmies);
 
     /**
      * Metodo chiamato quando viene settato l'attaccante
