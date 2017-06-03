@@ -15,3 +15,4 @@
 - X diceDialog: mettere ritorna al gioco invece di chiudi la finestra 
 - quando si conclude il turno, farlo capire: Jdialog che si chiudono da soli? musica? 
 - quando conquisti un continente si dice nel jdialog che dice che lo hai conquistato  
+- controllare suoni per i giocatori artificiali

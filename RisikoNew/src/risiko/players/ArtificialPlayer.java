@@ -209,7 +209,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     @Override
-    public void updateOnAttackResult(String attackResultInfo, boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, boolean hasAlreadyDrawnCard) {
+    public void updateOnAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, boolean hasAlreadyDrawnCard) {
         if (this.currentAction == Action.DEFEND) {
             // Se ero in difesa una volta ricevuto il risultato dell'attacco, passo alla fase di no-action
             this.currentAction = Action.NOACTION;

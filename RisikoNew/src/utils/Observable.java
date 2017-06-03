@@ -67,10 +67,10 @@ public class Observable extends BasicObservable {
      * @param phase
      * @param color
      */
-    public void notifyPhaseChange(String player, String phase, String color) {
+    public void notifyPhaseChange(String player, String phase, String color, int bonusArmies) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnPhaseChange(player, phase, color);
+                ((GameObserver) ob).updateOnPhaseChange(player, phase, color, bonusArmies);
             }
         }
     }
