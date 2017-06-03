@@ -102,6 +102,22 @@ public class BasicObservable {
             ob.updateOnElimination(defenderName, artificialAttack);
         }
     }
+    
+    public void notifyEndGame(){
+        this.obs.sort(new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if (o1 instanceof ArtificialPlayer) {
+                    return -1;
+                }
+                return 1;
+            }
+
+        });
+        for (BasicGameObserver ob : this.obs) {
+            ob.updateOnEndGame();
+        }
+    }
 
     /**
      * Adds an observer to the set of observers for this object, provided that
@@ -146,5 +162,7 @@ public class BasicObservable {
     public synchronized int countObservers() {
         return obs.size();
     }
+    
+    
 
 }

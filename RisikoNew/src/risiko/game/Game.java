@@ -966,5 +966,9 @@ public class Game extends Observable implements GameProxy {
         return false;
 
     }
+    
+    public void endGame(){
+        notifyEndGame();        
+    }
 
 }

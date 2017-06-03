@@ -11,5 +11,7 @@ public interface BasicGameObserver {
     public void updateOnDefend(String defender, String defenderCountry, String attacker, String attackerCountry, int nrA, boolean artificialPlayer);
 
     public void updateOnElimination(String defenderName, boolean artificialAttack);
+
+    public void updateOnEndGame();
         
 }

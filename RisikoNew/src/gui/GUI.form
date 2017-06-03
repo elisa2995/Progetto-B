@@ -54,7 +54,7 @@
               <Component id="mapLayeredPane" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="labelPlayerPhase" min="-2" pref="320" max="-2" attributes="0"/>
+                  <Component id="phaseLabel" min="-2" pref="320" max="-2" attributes="0"/>
                   <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                       <Group type="102" attributes="0">
                           <Component id="buttonShowMission" min="-2" pref="151" max="-2" attributes="0"/>
@@ -63,6 +63,8 @@
                       </Group>
                       <Component id="jScrollPane1" alignment="0" min="-2" pref="312" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="playerLabel" alignment="0" min="-2" pref="320" max="-2" attributes="0"/>
+                  <Component id="exitButton" min="-2" pref="151" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -74,14 +76,18 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="labelPlayerPhase" min="-2" pref="26" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" pref="62" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                      <Component id="phaseLabel" min="-2" pref="26" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="playerLabel" min="-2" pref="26" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" min="-2" pref="100" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="buttonShowMission" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
                           <Component id="buttonNextPhase" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="exitButton" min="-2" pref="50" max="-2" attributes="0"/>
                   </Group>
                   <Component id="mapLayeredPane" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -91,7 +97,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="labelPlayerPhase">
+    <Component class="javax.swing.JLabel" name="phaseLabel">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="da" green="cf" red="e1" type="rgb"/>
@@ -101,7 +107,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="labelPlayerPhase.setFont(new Font(&quot;Serif&quot;, Font.BOLD, 24));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="phaseLabel.setFont(new Font(&quot;Calibri&quot;, Font.BOLD, 24));"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="buttonNextPhase">
@@ -182,5 +188,26 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JLabel" name="playerLabel">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="da" green="cf" red="e1" type="rgb"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="1" green="1" red="1" type="rgb"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="phaseLabel.setFont(new Font(&quot;Serif&quot;, Font.BOLD, 24));"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="exitButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Termina partita"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exitButtonActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

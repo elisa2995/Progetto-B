@@ -252,7 +252,7 @@ public class StartGameGUI extends JFrame {
         });
 
         commentsLabel.setFont(new java.awt.Font("Calibri Light", 1, 14)); // NOI18N
-        commentsLabel.setForeground(new java.awt.Color(255, 51, 51));
+        commentsLabel.setForeground(new java.awt.Color(153, 0, 0));
         commentsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         playerType1.setText("Normale");

@@ -219,7 +219,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
     @Override
     public void updateOnVictory(String winner) {
-        this.currentAction = Action.ENDGAME;        
+        this.currentAction = Action.ENDGAME;
     }
 
     @Override
@@ -235,6 +235,11 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         if (this.getName().equals(defenderName)) {
             this.currentAction = Action.ENDGAME;
         }
+    }
+
+    @Override
+    public void updateOnEndGame() {
+        this.currentAction = Action.ENDGAME;
     }
 
 }

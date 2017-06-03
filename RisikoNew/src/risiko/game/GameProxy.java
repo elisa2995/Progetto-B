@@ -321,5 +321,9 @@ public interface GameProxy {
     public String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller);
 
     public int getMaxArmies(String countryName, boolean isAttacker, ArtificialPlayer... aiCaller);
+    
+    public boolean canPlayThisTris(String[] cardNames, ArtificialPlayer[] aiCaller);
+    
+    public void endGame();
 
 }

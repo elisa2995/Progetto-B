@@ -11,7 +11,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
@@ -72,6 +71,9 @@ public class GUI extends JFrame implements GameObserver {
         initLabels();
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
         textAreaInfo.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
+
+        playerLabel.setFont(new Font("Calibri", Font.BOLD, 24));
+        phaseLabel.setFont(new Font("Calibri", Font.BOLD, 24));
 
         // Game
         game = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
@@ -152,13 +154,15 @@ public class GUI extends JFrame implements GameObserver {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        labelPlayerPhase = new javax.swing.JLabel();
+        phaseLabel = new javax.swing.JLabel();
         buttonNextPhase = new javax.swing.JButton();
         buttonShowMission = new javax.swing.JButton();
         mapLayeredPane = new javax.swing.JLayeredPane();
         labelMap = new GraphicsJLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textAreaInfo = new javax.swing.JTextArea();
+        playerLabel = new javax.swing.JLabel();
+        exitButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         settingsItem = new javax.swing.JMenuItem();
@@ -166,9 +170,9 @@ public class GUI extends JFrame implements GameObserver {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        labelPlayerPhase.setBackground(new java.awt.Color(225, 207, 218));
-        labelPlayerPhase.setForeground(new java.awt.Color(1, 1, 1));
-        labelPlayerPhase.setFont(new Font("Serif", Font.BOLD, 24));
+        phaseLabel.setBackground(new java.awt.Color(225, 207, 218));
+        phaseLabel.setForeground(new java.awt.Color(1, 1, 1));
+        phaseLabel.setFont(new Font("Calibri", Font.BOLD, 24));
 
         buttonNextPhase.setText("Cambia fase");
         buttonNextPhase.addActionListener(new java.awt.event.ActionListener() {
@@ -217,6 +221,17 @@ public class GUI extends JFrame implements GameObserver {
         textAreaInfo.setFont(new Font("Serif", Font.BOLD, 16));
         textAreaInfo.setEditable(false);
 
+        playerLabel.setBackground(new java.awt.Color(225, 207, 218));
+        playerLabel.setForeground(new java.awt.Color(1, 1, 1));
+        phaseLabel.setFont(new Font("Serif", Font.BOLD, 24));
+
+        exitButton.setText("Termina partita");
+        exitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitButtonActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("Settings");
 
         settingsItem.setText("AISettings");
@@ -240,13 +255,15 @@ public class GUI extends JFrame implements GameObserver {
                 .addComponent(mapLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelPlayerPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(phaseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(buttonShowMission, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(buttonNextPhase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -255,13 +272,17 @@ public class GUI extends JFrame implements GameObserver {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(labelPlayerPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
+                        .addComponent(phaseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(buttonShowMission, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(buttonNextPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(buttonNextPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(mapLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -303,6 +324,13 @@ public class GUI extends JFrame implements GameObserver {
         SettingsDialog settings = new SettingsDialog(this, true, game);
         settings.setVisible(true);
     }//GEN-LAST:event_settingsItemActionPerformed
+
+    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+        if (JOptionPane.showConfirmDialog(this, "Sei sicuro di voler abbandonare la partita?") == 0) {
+            game.endGame();
+        }
+
+    }//GEN-LAST:event_exitButtonActionPerformed
 
     /**
      * Creazione di una map<Color,String> a partire da un file di testo
@@ -353,8 +381,10 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnPhaseChange(String player, String phase, String color, int bonusArmies) {
         ((GraphicsJLabel) labelMap).resetCone();
-        this.labelPlayerPhase.setText(player + " " + getFormattedPhase(phase));
-        this.labelPlayerPhase.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
+        this.phaseLabel.setText("FASE DI " + getFormattedPhase(phase));
+        this.playerLabel.setText(player);
+        this.phaseLabel.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
+        this.playerLabel.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
         this.textAreaInfo.setText("");
         if (labelMapListener != null) {
             labelMapListener.resetCache(); // cioè non è l'inizio del gioco
@@ -595,6 +625,13 @@ public class GUI extends JFrame implements GameObserver {
 
     }
 
+    @Override
+    public void updateOnEndGame() {
+        this.setVisible(false);
+        StartGameGUI startGui=new StartGameGUI();
+        startGui.setVisible(true);
+    }
+
     private String getFormattedPhase(String phase) {
         switch (phase) {
             case "REINFORCE":
@@ -612,12 +649,14 @@ public class GUI extends JFrame implements GameObserver {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonNextPhase;
     private javax.swing.JButton buttonShowMission;
+    private javax.swing.JButton exitButton;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelMap;
-    private javax.swing.JLabel labelPlayerPhase;
     private javax.swing.JLayeredPane mapLayeredPane;
+    private javax.swing.JLabel phaseLabel;
+    private javax.swing.JLabel playerLabel;
     private javax.swing.JMenuItem settingsItem;
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables

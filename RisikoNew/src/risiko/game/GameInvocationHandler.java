@@ -29,7 +29,8 @@ public class GameInvocationHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable, Exception {
         boolean isDefenseMethod = method.getName().equals("confirmAttack") || method.getName().equals("setDefenderArmies");
-        if (method.getDeclaringClass() == GameProxy.class && !isDefenseMethod && (method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Void.TYPE))) {
+        boolean isEndGame= method.getName().equals("endGame");
+        if (method.getDeclaringClass() == GameProxy.class && !isDefenseMethod && !isEndGame && (method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Void.TYPE))) {
             ArtificialPlayer[] player = (ArtificialPlayer[]) args[args.length - 1];
             if (!this.game.checkCallerIdentity(player)) {
                 return false;
