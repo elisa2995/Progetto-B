@@ -22,3 +22,4 @@
 - Aggiungi e rimuovi vicino al giocatore
 - Tendina per tipo giocatori
 - Rendere tutto non resizible
+- Rendere il tutto proporzionale alla dimmensione dello schermo
