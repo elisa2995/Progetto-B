@@ -1,18 +1,24 @@
-- X nome attaccante e difensore nelle dialog
-- mettere nella gui nomi cose in italiano
-- X mettere action.endgame alla fine del gioco
-- X gestire mouse move: cache o in un update facciamo passare una mappa
 - finire la visualizzazione delle carte
 - carte per giocatore artificiale
 - move per giocatore artificiale
-- X centrare dialog move
-- DOCUMENTAZIONE (javaDoc + wiki)
-- X in startGameGUI mettere tipo di giocatore sopra normale ecc, mettere colore armata sopra combobox colori
-- X in startGameGUI mettere giocatore1, giocatore2 ecc sulle righe
-- X mettere tooltip sul tasto >>
-- sistemare mongolia-giappone(non confinanti) [anche un altro?] (ELISA: da me confinano)
-- cambiare immagine dei coni con gif esplosione/colpo di cannone
-- X diceDialog: mettere ritorna al gioco invece di chiudi la finestra 
-- quando si conclude il turno, farlo capire: Jdialog che si chiudono da soli? musica? 
+- DOCUMENTAZIONE (javaDoc + wiki) 
 - quando conquisti un continente si dice nel jdialog che dice che lo hai conquistato  
 - controllare suoni per i giocatori artificiali
+- togliere cono in movimento quando giocatore artificiale
+- sistemare startgamegui
+- sistemare dimensioni finestre attacco
+- cosa continenti 
+- contintenti come oggetti con dentro nome, bonus armies e lista countries
+- mettere i neghbors nel country
+- immagine per cambio fase che appare e scompare
+- bottone cambia fase: farlo vedere solo in fase di attacco con passa a spostamento e in fase di spostameneto con passa turno
+- finire carte
+- eliminare 1 solo giocatore
+- carte giocatore artificiale
+- move giocatore artificiale
+- legenda giocatori a fianco
+- controllare suoni
+- Metti le finestre grandi uguali per attacco
+- Aggiungi e rimuovi vicino al giocatore
+- Tendina per tipo giocatori
+- Rendere tutto non resizible
