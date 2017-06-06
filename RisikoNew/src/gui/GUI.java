@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import risiko.game.Game;
 import risiko.game.GameInvocationHandler;
@@ -40,6 +41,7 @@ public class GUI extends JFrame implements GameObserver {
     private AttackerDialog attackerDialog;
     private DiceDialog diceDialog;
     private LabelMapListener labelMapListener;
+    private FadeOutLabel fadeOutLabel;
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         initBackground();
@@ -67,11 +69,18 @@ public class GUI extends JFrame implements GameObserver {
      * @throws Exception
      */
     private void init(Map<String, String> players, Map<String, String> playersColor) throws IOException, Exception {
+
+        // Image fading out
+        fadeOutLabel = new FadeOutLabel();
+        fadeOutLabel.setOpaque(true);
+        fadeOutLabel.setBounds(400, 120, 186, 250);
+        mapLayeredPane.add(fadeOutLabel, 1000);
+        
+
         // Labels
         initLabels();
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
         textAreaInfo.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
-
         playerLabel.setFont(new Font("Calibri", Font.BOLD, 24));
         phaseLabel.setFont(new Font("Calibri", Font.BOLD, 24));
 
@@ -94,6 +103,7 @@ public class GUI extends JFrame implements GameObserver {
         // Setting
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
+
     }
 
     /**
@@ -381,6 +391,15 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnPhaseChange(String player, String phase, String color, int bonusArmies) {
         ((GraphicsJLabel) labelMap).resetCone();
+        //fadeOutLabel.setImage("images/CAVALRY.png");
+        //mapLayeredPane.moveToFront(fadeOutLabel);
+        //fadeOutLabel.setIcon(new ImageIcon("images/WILD.png"));
+        //fadeOutLabel.setBounds(100,100,1000,512);
+        //fadeOutLabel.setVisible(true);
+        //mapLayeredPane.add(new JLabel("CAISOD"),200);
+        fadeOutLabel.setVisible(true);
+        this.mapLayeredPane.moveToFront(fadeOutLabel);
+        fadeOutLabel.startFadeOut();
         this.phaseLabel.setText("FASE DI " + getFormattedPhase(phase));
         this.playerLabel.setText(player);
         this.phaseLabel.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
@@ -400,6 +419,7 @@ public class GUI extends JFrame implements GameObserver {
                 textAreaInfo.setText("Scegli un tuo territorio da cui spostare una o più armate");
                 break;
         }
+
     }
 
     /**
@@ -415,7 +435,7 @@ public class GUI extends JFrame implements GameObserver {
         if (countryName != null) {
             textAreaInfo.setText("Clicca su un territorio nemico confinante per attaccarlo");
             attackerDialog.setMaxArmies(maxArmiesAttacker);
-            attackerDialog.setAttackerCountry(attacker,color);
+            attackerDialog.setAttackerCountry(attacker, color);
         } else {
             textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
@@ -491,7 +511,6 @@ public class GUI extends JFrame implements GameObserver {
             diceDialog.showDice();
             diceDialog.setVisible(true);
         }
-        // resetFightingCountruiesd se artificial attack
 
         defenseArmies.setMaxArmies(maxArmiesDefender);
         //labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
