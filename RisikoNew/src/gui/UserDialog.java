@@ -172,7 +172,7 @@ public class UserDialog extends javax.swing.JDialog {
             commentsText.setText("Compila tutti i campi");
             return;
         }
-        if (!String.valueOf(passwordText.getPassword()).equals(String.valueOf(password2Text.getPassword()))) {            
+        if (!String.valueOf(passwordText.getPassword()).equals(String.valueOf(password2Text.getPassword()))) {
             commentsText.setText("Le password non coincidono");
             return;
         }
@@ -230,7 +230,6 @@ public class UserDialog extends javax.swing.JDialog {
         } else {
             commentsText.setText("Giocatore già presente nel gioco");
         }
-
     }//GEN-LAST:event_loginButtonActionPerformed
 
     /**
@@ -271,8 +270,7 @@ public class UserDialog extends javax.swing.JDialog {
             saveUserButton.setVisible(false);
             loginButton.setVisible(true);
         }
-        
-        
+
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
         commentsText.setText("");
@@ -323,7 +321,6 @@ public class UserDialog extends javax.swing.JDialog {
         }
         return true;
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel commentsText;
     private javax.swing.JLabel jLabel1;
