@@ -24,3 +24,4 @@ x togliere cono in movimento quando giocatore artificiale
 - Rendere tutto non resizible
 - Rendere il tutto proporzionale alla dimmensione dello schermo
 - fare una classe stringhiFile
+-

@@ -24,13 +24,15 @@ public class RisikoMap {
     private Map<String, Integer> continentBonus;
     private Map<Country, Player> countryPlayer;
     private Map<String, Country> nameCountry;
-    
+    private List<Continent> continents;
+            
     public Map<Country, Player> getCountryPlayer() {
         return countryPlayer;
     }
 
     public RisikoMap() {      
         this.countries = new ArrayList<>();
+        this.continents = new ArrayList<>();
         this.continentCountries = new HashMap<>();
         this.countryNeighbors = new HashMap<>();
         this.continentBonus = new HashMap<>();
@@ -90,6 +92,8 @@ public class RisikoMap {
                 neighbors.add(nameCountry.get(neighbor));
             }
             countryNeighbors.put(country, neighbors);
+            
+            //ANDREA
             country.setNeighbors(neighbors);    //Setto i neighbors ai Countries contenuti in countryNeighbors
             countries.add(country);
         }
@@ -103,18 +107,23 @@ public class RisikoMap {
 
         List<Country> countries;
         //Itero su ogni continente
-        for (Map<String, Object> continent : FileManager.getInstance().getContinents()) {
+        for (Map<String, Object> tmpContinent : FileManager.getInstance().getContinents()) {
             countries = new ArrayList<>();
-            String continentName = (String) continent.get("name");  //Prendo il nome del continente
+            String continentName = (String) tmpContinent.get("name");  //Prendo il nome del continente
             //Buildo continentCountries
             //Itero su ogni countries del continente
-            for (String countryName : (List<String>) continent.get("countries")) {
+            for (String countryName : (List<String>) tmpContinent.get("countries")) {
                 countries.add(nameCountry.get(countryName));
             }
             continentCountries.put(continentName, countries);
 
             // ContinentBonus
-            continentBonus.put(continentName, (Integer) continent.get("bonus"));
+            Integer bonus =(Integer) tmpContinent.get("bonus");
+            continentBonus.put(continentName,bonus);
+            
+            //ANDREA
+            Continent continent= new Continent(continentName,countries,bonus);
+            continents.add(continent);
         }
     }
 
@@ -139,7 +148,7 @@ public class RisikoMap {
                 constructor = Class.forName(packagePath + (String) mission.get("type") + "Mission").getConstructor(String.class, Integer.TYPE);
                 m = (Mission) constructor.newInstance(description, points);
                 this.missions.add(m);
-                m.buildTarget(continentCountries);
+                m.buildTarget(continents);
             } catch (Exception ex) {
                 Logger.getLogger(RisikoMap.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -227,10 +236,12 @@ public class RisikoMap {
     public void computeBonusArmies(Player player) {
         int bonus = 0;
         List<Country> countryOfThatPlayer = getMyCountries(player);
-        Set<String> continentSet = continentCountries.keySet();
-        for (String continent : continentSet) {
-            if (countryOfThatPlayer.containsAll(continentCountries.get(continent))) {
-                bonus += continentBonus.get(continent);
+        
+        for (Continent continent : continents) {
+            List<Country> countryOfThatContinent=continent.getCountries();
+            
+            if (countryOfThatPlayer.containsAll(countryOfThatContinent)) {
+                bonus += continent.getBonus();
             }
         }
         bonus += (int) Math.floor(getMyCountries(player).size() / 3);
@@ -438,11 +449,17 @@ public class RisikoMap {
         return getPlayerByCountry(country).getColor();
     }
 
-    public Map<String, List<Country>> getContinentCountries() {
-        return continentCountries;
-    }
+//    public Map<String, List<Country>> getContinentCountries() {
+//        return continentCountries;
+//    }
 
     public List<Country> getCountries() {
         return countries;
     }    
+
+    public List<Continent> getContinents() {
+        return continents;
+    }
+    
+    
 }

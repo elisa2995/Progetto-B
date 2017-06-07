@@ -1,5 +1,6 @@
 
 import java.util.List;
+import risiko.Continent;
 import risiko.Country;
 import risiko.RisikoMap;
 
@@ -20,15 +21,27 @@ public class Test {
      */
     public static void main(String[] args) {
         RisikoMap risikoMap = new RisikoMap();
-        List<Country> countries = risikoMap.getCountries();
-        for (Country country : countries) {
-            System.out.println(country);
-            for (Country neighbor : country.getNeighbors()) {
-                System.out.println("--"+neighbor);               
+        
+        //TESTO COUNTRIES
+//        List<Country> countries = risikoMap.getCountries();
+//        for (Country country : countries) {
+//            System.out.println(country);
+//            for (Country neighbor : country.getNeighbors()) {
+//                System.out.println("--"+neighbor);               
+//            }
+//            
+//        }
+        
+        //TESTO CONTINENT
+        List<Continent> continents = risikoMap.getContinents();
+        for (Continent continent : continents) {
+            System.out.println(continent.getName());
+            System.out.println(continent.getBonus());
+            for (Country country : continent.getCountries()) {
+                System.out.println("--"+country);               
             }
             
         }
-
     }
     
 }
