@@ -9,8 +9,8 @@
 - sistemare startgamegui
 - sistemare dimensioni finestre attacco
 - cosa continenti 
-- contintenti come oggetti con dentro nome, bonus armies e lista countries
-- mettere i neghbors nel country
+x contintenti come oggetti con dentro nome, bonus armies e lista countries
+x mettere i neghbors nel country
 - immagine per cambio fase che appare e scompare
 - bottone cambia fase: farlo vedere solo in fase di attacco con passa a spostamento e in fase di spostameneto con passa turno
 - finire carte

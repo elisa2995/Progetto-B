@@ -203,7 +203,6 @@ public class RisikoMap {
     public void computeBonusArmies(Player player) {
         int bonus = 0;
         List<Country> countryOfThatPlayer = getMyCountries(player);
-
         for (Continent continent : continents) {
             List<Country> countryOfThatContinent = continent.getCountries();
 
@@ -211,7 +210,11 @@ public class RisikoMap {
                 bonus += continent.getBonus();
             }
         }
+
         bonus += (int) Math.floor(getMyCountries(player).size() / 3);
+        for (Country country : countryOfThatPlayer) {
+            System.out.println(country);
+        }
         player.addBonusArmies(bonus);
     }
 
@@ -223,7 +226,12 @@ public class RisikoMap {
      * @author Alessandro
      */
     public List<Country> getMyCountries(Player player) {
-        return this.countryPlayer.entrySet().stream().filter(mapEntry -> mapEntry.getValue().equals(player)).map(mapE -> mapE.getKey()).collect(Collectors.toList());
+        List<Country> myCountry = new ArrayList<>();
+        for (Country country : countries) {
+            if(countryPlayer.get(country).equals(player))
+                myCountry.add(country);
+        }
+        return myCountry;
     }
 
     /**
