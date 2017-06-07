@@ -1,15 +1,28 @@
 package risiko;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Country implements Comparable<Country>{
     
     private final String name;
     private int armies;
+    private List<Country> neighbors;
     
     public Country(String name){
         this.name= name;
+        this.neighbors=new ArrayList<>();
     }
-  
+
+    public List<Country> getNeighbors() {
+        return neighbors;
+    }
+    
+    public void setNeighbors(List<Country> neighbors){
+        this.neighbors = neighbors;
+    }
+    
     public String getName(){
         return this.name;
     }

@@ -19,16 +19,18 @@ public class RisikoMap {
     private final int DEFAULT_ARMIES = 3;
     private Map<String, List<Country>> continentCountries;
     private Map<Country, List<Country>> countryNeighbors;
+    private List<Country> countries;
     private List<Mission> missions;
     private Map<String, Integer> continentBonus;
     private Map<Country, Player> countryPlayer;
     private Map<String, Country> nameCountry;
-
+    
     public Map<Country, Player> getCountryPlayer() {
         return countryPlayer;
     }
 
-    public RisikoMap() {
+    public RisikoMap() {      
+        this.countries = new ArrayList<>();
         this.continentCountries = new HashMap<>();
         this.countryNeighbors = new HashMap<>();
         this.continentBonus = new HashMap<>();
@@ -79,16 +81,19 @@ public class RisikoMap {
      */
     private void buildCountryNeighbors() {
         Map<String, List<String>> countryNeighborsNames = FileManager.getInstance().getCountryNeighbors();
-        Country subject;
+        Country country;
         List<Country> neighbors;
         for (Map.Entry<String, List<String>> row : countryNeighborsNames.entrySet()) {
-            subject = nameCountry.get(row.getKey());
+            country = nameCountry.get(row.getKey());
             neighbors = new ArrayList<>();
             for (String neighbor : row.getValue()) {
                 neighbors.add(nameCountry.get(neighbor));
             }
-            countryNeighbors.put(subject, neighbors);
+            countryNeighbors.put(country, neighbors);
+            country.setNeighbors(neighbors);    //Setto i neighbors ai Countries contenuti in countryNeighbors
+            countries.add(country);
         }
+        
     }
 
     /**
@@ -97,10 +102,12 @@ public class RisikoMap {
     private void buildContinentCountries() {
 
         List<Country> countries;
+        //Itero su ogni continente
         for (Map<String, Object> continent : FileManager.getInstance().getContinents()) {
             countries = new ArrayList<>();
-            String continentName = (String) continent.get("name");
-            // Buildo continentCountries
+            String continentName = (String) continent.get("name");  //Prendo il nome del continente
+            //Buildo continentCountries
+            //Itero su ogni countries del continente
             for (String countryName : (List<String>) continent.get("countries")) {
                 countries.add(nameCountry.get(countryName));
             }
@@ -247,7 +254,7 @@ public class RisikoMap {
      * @param country
      */
     public List<Country> getNeighbors(Country country) {
-        return countryNeighbors.get(country);
+        return country.getNeighbors();
     }
 
     /**
@@ -390,10 +397,6 @@ public class RisikoMap {
         return country.isConquered();
     }
 
-    public Map<Country, List<Country>> getCountryNeighbors() {
-        return this.countryNeighbors;
-    }
-
     /*
      *   controlla se il difensore non ha più territori
      */
@@ -411,7 +414,7 @@ public class RisikoMap {
 
     public boolean canAttackFromCountry(Country country) {
         boolean can = false;
-        for (Country c : countryNeighbors.get(country)) {
+        for (Country c : country.getNeighbors()) {
             can = can || countryPlayer.get(c) != countryPlayer.get(country);
         }
         return can & country.getArmies() > 1;
@@ -439,13 +442,7 @@ public class RisikoMap {
         return continentCountries;
     }
 
-    /**
-     * Ritorna la lista delle countries che compongono un continent.
-     *
-     * @param continent
-     * @return
-     */
-    public List<Country> getCountriesByContinet(String continent) {
-        return countryNeighbors.get(continent);
-    }
+    public List<Country> getCountries() {
+        return countries;
+    }    
 }

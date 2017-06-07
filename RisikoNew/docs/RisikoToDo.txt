@@ -4,7 +4,7 @@
 - DOCUMENTAZIONE (javaDoc + wiki) 
 - quando conquisti un continente si dice nel jdialog che dice che lo hai conquistato  
 - controllare suoni per i giocatori artificiali
-- togliere cono in movimento quando giocatore artificiale
+x togliere cono in movimento quando giocatore artificiale
 - sistemare startgamegui
 - sistemare dimensioni finestre attacco
 - cosa continenti 
@@ -23,3 +23,4 @@
 - Tendina per tipo giocatori
 - Rendere tutto non resizible
 - Rendere il tutto proporzionale alla dimmensione dello schermo
+- fare una classe stringhiFile
