@@ -496,7 +496,6 @@ public class GUI extends JFrame implements GameObserver {
             //diceDialog.initMoveDialog(maxArmiesAttacker, attackerCountryName, game.getDefenderCountryName());
             diceDialog.showDice();
             diceDialog.setVisible(true);
-            diceDialog.showResults();
         }
 
         //mi accerto che l'attaccante non sia artificiale

@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -17,27 +16,15 @@ import risiko.missions.Mission;
 public class RisikoMap {
 
     private final int DEFAULT_ARMIES = 3;
-    private Map<String, List<Country>> continentCountries;
-    private Map<Country, List<Country>> countryNeighbors;
-    private List<Country> countries;
-    private List<Mission> missions;
-    private Map<String, Integer> continentBonus;
-    private Map<Country, Player> countryPlayer;
-    private Map<String, Country> nameCountry;
-    private List<Continent> continents;
-            
-    public Map<Country, Player> getCountryPlayer() {
-        return countryPlayer;
-    }
+    private final List<Mission> missions;
+    private final Map<Country, Player> countryPlayer;
+    private final List<Continent> continents;
+    private final List<Country> countries;
 
-    public RisikoMap() {      
+    public RisikoMap() {
         this.countries = new ArrayList<>();
         this.continents = new ArrayList<>();
-        this.continentCountries = new HashMap<>();
-        this.countryNeighbors = new HashMap<>();
-        this.continentBonus = new HashMap<>();
         this.countryPlayer = new HashMap<>();
-        this.nameCountry = new HashMap<>();
         this.missions = new ArrayList<>();
         init();
     }
@@ -50,8 +37,8 @@ public class RisikoMap {
      */
     private void init() {
         buildCountryPlayer();
-        buildCountryNeighbors();
-        buildContinentCountries();
+        buildCountries();
+        buildContinent();
         buildMissions();
     }
 
@@ -63,14 +50,11 @@ public class RisikoMap {
      * @throws qualche eccezione legata alla lettura del file
      */
     private void buildCountryPlayer() {
-
-        List<String> countries = FileManager.getInstance().getCountries();
-
-        for (String countryName : countries) {
+        for (String countryName : FileManager.getInstance().getCountries()) {
             Country country = new Country(countryName);
             country.setArmies(DEFAULT_ARMIES);
             countryPlayer.put(country, null);
-            nameCountry.put(countryName, country);
+            countries.add(country);
         }
     }
 
@@ -81,48 +65,36 @@ public class RisikoMap {
      *
      * @author Elisa
      */
-    private void buildCountryNeighbors() {
+    private void buildCountries() {
         Map<String, List<String>> countryNeighborsNames = FileManager.getInstance().getCountryNeighbors();
-        Country country;
-        List<Country> neighbors;
         for (Map.Entry<String, List<String>> row : countryNeighborsNames.entrySet()) {
-            country = nameCountry.get(row.getKey());
-            neighbors = new ArrayList<>();
+
+            List<Country> neighbors = new ArrayList<>();
             for (String neighbor : row.getValue()) {
-                neighbors.add(nameCountry.get(neighbor));
+                neighbors.add(getCountryByName(neighbor));
             }
-            countryNeighbors.put(country, neighbors);
-            
-            //ANDREA
+
+            Country country = getCountryByName(row.getKey());
             country.setNeighbors(neighbors);    //Setto i neighbors ai Countries contenuti in countryNeighbors
             countries.add(country);
         }
-        
     }
 
     /**
      * Builda le Map ContinentCountries e continentBonus.
      */
-    private void buildContinentCountries() {
-
-        List<Country> countries;
+    private void buildContinent() {
         //Itero su ogni continente
         for (Map<String, Object> tmpContinent : FileManager.getInstance().getContinents()) {
-            countries = new ArrayList<>();
-            String continentName = (String) tmpContinent.get("name");  //Prendo il nome del continente
-            //Buildo continentCountries
-            //Itero su ogni countries del continente
-            for (String countryName : (List<String>) tmpContinent.get("countries")) {
-                countries.add(nameCountry.get(countryName));
-            }
-            continentCountries.put(continentName, countries);
 
-            // ContinentBonus
-            Integer bonus =(Integer) tmpContinent.get("bonus");
-            continentBonus.put(continentName,bonus);
-            
-            //ANDREA
-            Continent continent= new Continent(continentName,countries,bonus);
+            List<Country> countriesOfThatContinent = new ArrayList<>();
+            for (String countryName : (List<String>) tmpContinent.get("countries")) {
+                countriesOfThatContinent.add(getCountryByName(countryName));
+            }
+
+            String continentName = (String) tmpContinent.get("name");  //Prendo il nome del continente
+            Integer bonus = (Integer) tmpContinent.get("bonus");
+            Continent continent = new Continent(continentName, countriesOfThatContinent, bonus);
             continents.add(continent);
         }
     }
@@ -135,7 +107,6 @@ public class RisikoMap {
      * @author Federico
      */
     private void buildMissions() {
-
         Constructor constructor;
         Mission m;
         String description;
@@ -175,7 +146,6 @@ public class RisikoMap {
      * @author Elisa
      */
     public void assignCountriesToPlayers(List<Player> players) throws Exception {
-
         List<Country> countries = getCountriesList();
         Collections.shuffle(countries);
         int nCountries = this.countryPlayer.size();
@@ -186,7 +156,6 @@ public class RisikoMap {
             round++;
             nCountries--;
         }
-
     }
 
     /**
@@ -199,9 +168,7 @@ public class RisikoMap {
      * @author Elisa
      */
     private Player nextPlayer(List<Player> players, int round) {
-
         return players.get(round % (players.size()));
-
     }
 
     /**
@@ -236,10 +203,10 @@ public class RisikoMap {
     public void computeBonusArmies(Player player) {
         int bonus = 0;
         List<Country> countryOfThatPlayer = getMyCountries(player);
-        
+
         for (Continent continent : continents) {
-            List<Country> countryOfThatContinent=continent.getCountries();
-            
+            List<Country> countryOfThatContinent = continent.getCountries();
+
             if (countryOfThatPlayer.containsAll(countryOfThatContinent)) {
                 bonus += continent.getBonus();
             }
@@ -288,28 +255,11 @@ public class RisikoMap {
     }
 
     /**
-     * Controlla che l'attacco sia valido. return true se Country[0] è del
-     * giocatore di turno e ha di un'armata, Country[1] è di un altro giocatore,
-     * e i due territori sono confinanti, false altrimenti.
-     *
-     * @param countries array di territori, [0] attaccante, [1] attaccato
-     * @param player il giocatore di turno.
-     * @author Alessandro
-     */
-    /*public boolean verifyAttack(Country[] countries, Player player) {
-        if (this.countryPlayer.get(countries[0]) != null && this.countryPlayer.get(countries[0]).equals(player) && countries[0].getArmies() > 1) {
-            if (this.countryPlayer.get(countries[1]) != null && !this.countryPlayer.get(countries[1]).equals(player) ) {
-                return true;
-            }
-        }
-        return false;
-    }*/
- /*
-        Controlla che il territorio sia dell'active player e che si legale attaccare
+     * Controlla che il territorio sia dell'active player e che si legale
+     * attaccare
      */
     public boolean controlAttacker(Country country, Player player) {
         return this.countryPlayer.get(country).equals(player) && country.getArmies() > 1;
-
     }
 
     /**
@@ -321,7 +271,7 @@ public class RisikoMap {
      * @return
      */
     public boolean controlFromCountryPlayer(Country country, Player player) {
-        List<Country> neighbors = countryNeighbors.get(country);
+        List<Country> neighbors = getNeighbors(country);
         boolean canMove = false;
         for (Country c : neighbors) {
             if (this.getPlayerByCountry(c).equals(getPlayerByCountry(country))) {
@@ -333,7 +283,6 @@ public class RisikoMap {
 
     public boolean controlPlayer(Country country, Player player) {
         return this.countryPlayer.get(country).equals(player);
-
     }
 
     /**
@@ -341,7 +290,6 @@ public class RisikoMap {
      * confinante dell'attacker
      */
     public boolean controlDefender(Country attacker, Country defender, Player player) {
-
         return !this.countryPlayer.get(defender).equals(player) && this.getNeighbors(attacker).contains(defender);
     }
 
@@ -362,7 +310,6 @@ public class RisikoMap {
         Ridà il massimo numero di armate per lo spinner rispetto al tipo di country
      */
     public int getMaxArmies(Country country, boolean isAttacker) {
-
         if (isAttacker) {
             return Math.min(3, country.getArmies() - 1);
         }
@@ -408,7 +355,7 @@ public class RisikoMap {
         return country.isConquered();
     }
 
-    /*
+    /**
      *   controlla se il difensore non ha più territori
      */
     public boolean hasLost(Player defenderPlayer) {
@@ -432,7 +379,12 @@ public class RisikoMap {
     }
 
     public Country getCountryByName(String countryName) {
-        return nameCountry.get(countryName);
+        for (Country country : countries) {
+            if (country.getName().equals(countryName)) {
+                return country;
+            }
+        }
+        return null;
     }
 
     public String[] getCountriesColors() {
@@ -448,18 +400,4 @@ public class RisikoMap {
     public String getPlayerColorByCountry(Country country) {
         return getPlayerByCountry(country).getColor();
     }
-
-//    public Map<String, List<Country>> getContinentCountries() {
-//        return continentCountries;
-//    }
-
-    public List<Country> getCountries() {
-        return countries;
-    }    
-
-    public List<Continent> getContinents() {
-        return continents;
-    }
-    
-    
 }
