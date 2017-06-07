@@ -365,8 +365,8 @@ public class RisikoMap {
     public void updateOnConquer(Country attackerCountry, Country defenderCountry, int armies) {
         Player attacker = this.countryPlayer.get(attackerCountry);
         this.countryPlayer.put(defenderCountry, attacker);
-        attackerCountry.removeArmies(armies);
-        defenderCountry.setArmies(armies);
+        //attackerCountry.removeArmies(armies);
+        //defenderCountry.setArmies(armies);
     }
 
     /**

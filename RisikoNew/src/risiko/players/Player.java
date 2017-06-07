@@ -24,6 +24,7 @@ public class Player {
     //private int contaCarte[];
     protected int bonusArmies;
     private boolean alreadyDrawnCard;
+    private boolean conqueredACountry;
 
     public Player(String name, String color) {
         this.alreadyDrawnCard = false;
@@ -124,14 +125,6 @@ public class Player {
         this.alreadyDrawnCard = true;
     }
 
-    public boolean hasAlreadyDrawnCard() {
-        return alreadyDrawnCard;
-    }
-
-    public void setAlreadyDrawnCard(boolean alreadyDrawn) {
-        this.alreadyDrawnCard = alreadyDrawn;
-    }
-
     public Card getLastDrawnCard() {
         return bonusCards.get(bonusCards.size() - 1);
     }
@@ -142,5 +135,13 @@ public class Player {
 
     public boolean checkIfWinner(List<Country> myCountries) {
         return mission.isCompleted(myCountries);
+    }
+
+    public void setConqueredACountry(boolean flag) {
+        conqueredACountry = flag;
+    }
+
+    public boolean hasConqueredACountry() {
+        return conqueredACountry;
     }
 }

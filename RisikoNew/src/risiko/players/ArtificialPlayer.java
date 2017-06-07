@@ -44,9 +44,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         currentAction = Action.NOACTION;
         setting = new ArtificialPlayerSettings();
         setting.setBaseAttack(5);
-        setting.setAttackDeclarationDelay(100);
+        setting.setAttackDeclarationDelay(500);
         setting.setReinforceDelay(100);
-        setting.setAttackDelay(100);
+        setting.setAttackDelay(500);
     }
 
     /**
@@ -159,6 +159,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+        maxArmiesSet=false;
     }
 
     /**
@@ -186,6 +187,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                         case MOVE:
                             //System.out.println(game.getPhase() + " " + this.getName());
                             //System.out.println("--------------------------------------------");
+                            synchronized(this) {
+                                this.wait(2000);
+                            }
                             game.nextPhase(this);
                             break;
                     }
@@ -197,6 +201,8 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             } catch (PendingOperationsException ex) {
                 //l'eccezione delle armate ancora da assegnare viene data quando si sovrappongono le operazioni di 2 giocatori
                 //Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -209,10 +215,13 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     @Override
-    public void updateOnAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, boolean hasAlreadyDrawnCard) {
+    public void updateOnAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, String attackerCountryName, String defenderCountryName) {
         if (this.currentAction == Action.DEFEND) {
             // Se ero in difesa una volta ricevuto il risultato dell'attacco, passo alla fase di no-action
             this.currentAction = Action.NOACTION;
+        }
+        if(isConquered){
+            game.move(attackerCountryName, defenderCountryName, maxArmiesAttacker, this);
         }
         canAttack = true;
     }

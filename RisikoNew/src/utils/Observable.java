@@ -122,10 +122,10 @@ public class Observable extends BasicObservable {
     /**
      * Notifica il............... di una carta.
      */
-    public void notifyDrawnCard(String cardName) {
+    public void notifyDrawnCard(String cardName, boolean isArtificialPlayer) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnDrawnCard(cardName);
+                ((GameObserver) ob).updateOnDrawnCard(cardName, isArtificialPlayer);
             }
         }
     }

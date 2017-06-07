@@ -26,14 +26,12 @@ public class DiceDialog extends javax.swing.JDialog {
     private JLabel[] diceR;
     private JLabel[] diceB;
     private JLabel[] cones;
-    private String drawnCard;
     private String defenderCountryName;
     private boolean canAttackFromCountry;
     private boolean isConquered;
     private String attackerCountryName;
     private boolean artificialAttacker;
     private final GUI gui;
-    private boolean hasAlreadyDrawnCard;
 
     /**
      * Creates new form DiceDialog
@@ -93,9 +91,8 @@ public class DiceDialog extends javax.swing.JDialog {
         }
 
         boolean visible = !(isConquered || !canAttackFromCountry) && !artificialAttacker;
-        reattack.setVisible(visible);
-        showResults();
-
+        
+        reattack.setVisible(visible);         
     }
 
     /**
@@ -104,34 +101,13 @@ public class DiceDialog extends javax.swing.JDialog {
      * territorio
      */
     public void showResults() {
-
-        //MessageDialog msgDialog = new MessageDialog(this, true);
-        if (isConquered && !artificialAttacker) {
-            PlayAudio.play("sounds/conquest.wav");
-            //Informa il player della conquista del nuovo territorio, 
-            //nel caso fosse la prima conquista del turno informa anche il player della cardBonus pescata
-            
-            if (hasAlreadyDrawnCard) {
-                //msgDialog.showMessage("Complimenti, hai conquistato " + getDefenderCountryName());
-                JOptionPane.showMessageDialog(null, "Complimenti, hai conquistato " + getDefenderCountryName());
-            } else {
-                /*msgDialog.showImage(new ImageIcon("images/" + drawnCard + ".png"), "Complimenti,\nhai conquistato " + getDefenderCountryName()
-                        + ",\ne pescato questa carta.");*/
-                JOptionPane.showMessageDialog(null, "Complimenti,\nhai conquistato " + getDefenderCountryName()
-                        + ",\ne pescato questa carta.", "Conquered",
-                        JOptionPane.INFORMATION_MESSAGE, new ImageIcon("images/" + drawnCard + ".png"));
-            }
-            this.setVisible(false);
-            return;
-        }
         if (!canAttackFromCountry && !artificialAttacker) {
-            //msgDialog.showMessage("Non è più possibile effettuare attacchi da questo territorio.");
             JOptionPane.showMessageDialog(null, "Non è più possibile effettuare attacchi da questo territorio.");
             this.setVisible(false);
-
         }
-
     }
+    
+
 
     /**
      * Resetta le icone dei dadi e i coni
@@ -145,18 +121,6 @@ public class DiceDialog extends javax.swing.JDialog {
 
     }
 
-    public void setHasAlreadyDrawnCard(boolean hasAlreadyDrawnCard) {
-        this.hasAlreadyDrawnCard=hasAlreadyDrawnCard;
-    }
-
-    /**
-     * Setta la carta appena pescata.
-     *
-     * @param card
-     */
-    public void setDrawnCard(String card) {
-        this.drawnCard = card;
-    }
 
     /**
      * Setta se il territorio difensore è stato conquistato
