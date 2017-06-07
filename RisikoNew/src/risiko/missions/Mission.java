@@ -2,6 +2,7 @@ package risiko.missions;
 
 import java.util.List;
 import java.util.Map;
+import risiko.Continent;
 import risiko.Country;
 
 public abstract class Mission {
@@ -32,5 +33,5 @@ public abstract class Mission {
      * @author Federico
      *
      */
-    public abstract void buildTarget(Map<String, List<Country>> continentCountries);
+    public abstract void buildTarget(List<Continent> continents);
 }

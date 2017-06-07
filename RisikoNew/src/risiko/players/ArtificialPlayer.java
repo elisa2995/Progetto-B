@@ -44,9 +44,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         currentAction = Action.NOACTION;
         setting = new ArtificialPlayerSettings();
         setting.setBaseAttack(5);
-        setting.setAttackDeclarationDelay(500);
+        setting.setAttackDeclarationDelay(100);
         setting.setReinforceDelay(100);
-        setting.setAttackDelay(500);
+        setting.setAttackDelay(100);
     }
 
     /**

@@ -96,20 +96,6 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Nel caso di giocatore umano come attaccante, mostra un JOptionPane se il
-     * territorio è stato conquistato o non è più possibile attaccare da quel
-     * territorio
-     */
-    public void showResults() {
-        if (!canAttackFromCountry && !artificialAttacker) {
-            JOptionPane.showMessageDialog(null, "Non è più possibile effettuare attacchi da questo territorio.");
-            this.setVisible(false);
-        }
-    }
-    
-
-
-    /**
      * Resetta le icone dei dadi e i coni
      */
     private void resetLabels() {

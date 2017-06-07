@@ -873,7 +873,6 @@ public class Game extends Observable implements GameProxy {
     @Override
     public synchronized String[] getCountriesColors(ArtificialPlayer... aiCaller) {
         return map.getCountriesColors();
-
     }
 
     /**
