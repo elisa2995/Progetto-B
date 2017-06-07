@@ -42,6 +42,7 @@ public class MoveDialog extends javax.swing.JDialog {
     }
 
     private void init(GameProxy game, String fromCountryName, String toCountryName) {
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.game=game;
         this.fromCountryName = fromCountryName;
         this.toCountryName = toCountryName;

@@ -172,8 +172,9 @@ public class Game extends Observable implements GameProxy {
                             new GameInvocationHandler(this))));
                     break;
                 case NORMAL:
-                case LOGGED:
                     this.players.add(new Player(playerType.getKey(), color));
+                case LOGGED:
+                    this.players.add(new LoggedPlayer(playerType.getKey(), color));
                     break;
             }
             i++;
@@ -191,7 +192,7 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
         this.attackerCountry = map.getCountryByName(attackerCountryName);
-        notifySetAttacker(attackerCountryName, map.getMaxArmies(attackerCountry, true),attackerCountry.getName(),map.getPlayerColorByCountry(attackerCountry));
+        notifySetAttacker(attackerCountryName, map.getMaxArmies(attackerCountry, true), attackerCountry.getName(), map.getPlayerColorByCountry(attackerCountry));
     }
 
     /**
@@ -203,7 +204,7 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller) {
         this.defenderCountry = map.getCountryByName(defenderCountryName);
-                
+
         ((BasicObservable) this).notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), reattack);
     }
 
@@ -404,7 +405,7 @@ public class Game extends Observable implements GameProxy {
             notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
             //
             activePlayer.setConqueredACountry(true);
-            
+
             if (hasLost(defenderPlayer)) {
                 players.remove(defenderPlayer);
             }
@@ -509,8 +510,8 @@ public class Game extends Observable implements GameProxy {
         if (phase == Phase.FIGHT && attackInProgress) {
             throw new PendingOperationsException("Attacco ancora in corso!");
         }
-        
-        if (phase==Phase.FIGHT && activePlayer.hasConqueredACountry() ){
+
+        if (phase == Phase.FIGHT && activePlayer.hasConqueredACountry()) {
             this.drawBonusCard(aiCaller);
         }
 
@@ -587,9 +588,9 @@ public class Game extends Observable implements GameProxy {
     private void drawBonusCard(ArtificialPlayer... aiCaller) {
         Card card = deck.drawCard();
         activePlayer.addCard(card);
-        
-        boolean isArtificialPlayer= activePlayer instanceof ArtificialPlayer;
-        notifyDrawnCard(card.name(),isArtificialPlayer);
+
+        boolean isArtificialPlayer = activePlayer instanceof ArtificialPlayer;
+        notifyDrawnCard(card.name(), isArtificialPlayer);
     }
 
     /**
@@ -659,8 +660,8 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public synchronized int getMaxArmiesForMovement(String fromCountryName,ArtificialPlayer... aiCaller) {
-        Country fromCountry=map.getCountryByName(fromCountryName);
+    public synchronized int getMaxArmiesForMovement(String fromCountryName, ArtificialPlayer... aiCaller) {
+        Country fromCountry = map.getCountryByName(fromCountryName);
         return fromCountry.getArmies() - 1;
     }
 
@@ -691,8 +692,8 @@ public class Game extends Observable implements GameProxy {
         map.move(fromCountry, toCountry, i);
         notifyArmiesChange(toCountryName, toCountry.getArmies(), activePlayer.getColor());
         notifyArmiesChange(fromCountryName, fromCountry.getArmies(), activePlayer.getColor());
-        
-        if(phase==phase.MOVE){
+
+        if (phase == phase.MOVE) {
             passTurn();
             notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor(), activePlayer.getBonusArmies());
         }
@@ -962,8 +963,8 @@ public class Game extends Observable implements GameProxy {
         return false;
 
     }
-    
-    public void endGame(){
-        notifyEndGame();        
+
+    public void endGame() {
+        notifyEndGame();
     }
 }
