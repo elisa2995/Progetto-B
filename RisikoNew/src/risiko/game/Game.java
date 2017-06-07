@@ -173,6 +173,7 @@ public class Game extends Observable implements GameProxy {
                     break;
                 case NORMAL:
                     this.players.add(new Player(playerType.getKey(), color));
+                    break;
                 case LOGGED:
                     this.players.add(new LoggedPlayer(playerType.getKey(), color));
                     break;
