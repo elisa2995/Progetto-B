@@ -385,9 +385,6 @@ public class Game extends Observable implements GameProxy {
                 return;
             }
         } else if (!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))) {
-            System.out.println("!aiCallerEquals");
-            System.out.println(defenderCountry.getName());
-            System.out.println(map.getPlayerByCountry(defenderCountry).getName());
             return;
         }
 

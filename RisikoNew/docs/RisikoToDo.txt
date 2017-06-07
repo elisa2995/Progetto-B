@@ -22,3 +22,7 @@
 - Tendina per tipo giocatori
 - Rendere tutto non resizible
 - Rendere il tutto proporzionale alla dimmensione dello schermo
+- Ombra continenti
+- spostamento iniziale
+- classe che fa trasforma liste, mappe di oggetti in altrettante di stringhe
+- mettere file scrittura giocatori in filemanager (caro)

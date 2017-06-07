@@ -159,6 +159,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+        maxArmiesSet=false;
     }
 
     /**

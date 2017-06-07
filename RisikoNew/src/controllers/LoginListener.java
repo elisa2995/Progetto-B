@@ -44,7 +44,9 @@ public class LoginListener implements ActionListener {
             regDialog.setIndex(index);
             regDialog.setPlayers(getPlayers());
             regDialog.setVisible(true);
-            gui.setVisible(false);
+            gui.setEnabled(false);
+            gui.setAlwaysOnTop(false);
+                
         } else {
             logins[index].putClientProperty("value", "login");
             logins[index].setIcon(new ImageIcon("images/loginButton.png"));

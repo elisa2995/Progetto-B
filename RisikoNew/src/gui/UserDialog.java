@@ -45,6 +45,7 @@ public class UserDialog extends javax.swing.JDialog {
         this.addWindowListener(new WindowListener() {
             @Override
             public void windowClosed(WindowEvent e) {
+                gui.setEnabled(true);
                 gui.setVisible(true);
             }
 
@@ -183,9 +184,10 @@ public class UserDialog extends javax.swing.JDialog {
             } catch (IOException ex) {
                 Logger.getLogger(UserDialog.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                JOptionPane.showMessageDialog(null, "Utente " + usernameText.getText() + " inserito correttamente");
+                JOptionPane.showMessageDialog(null, "Utente " + usernameText.getText() + " registrato correttamente");
                 this.setVisible(false);
                 gui.setVisible(true);
+                gui.setEnabled(true);
             }
         } else {
             commentsText.setText("Username già presente nel gioco");
@@ -212,9 +214,12 @@ public class UserDialog extends javax.swing.JDialog {
                     byte[] decryptedBytes = Base64.getDecoder().decode(encryptedBytes);
                     String decryptedString = new String(decryptedBytes, "UTF-8");
                     if (tmp[0].equals(username) && decryptedString.equals(password)) {
+                        JOptionPane.showMessageDialog(null, "Utente " + usernameText.getText() + " inserito correttamente");
                         this.setVisible(false);
+
                         gui.setPlayerName(username, getIndex());
                         gui.setVisible(true);
+                        gui.setEnabled(true);
                         return;
                     }
 
