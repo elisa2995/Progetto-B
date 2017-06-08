@@ -40,6 +40,8 @@ public class GUI extends JFrame implements GameObserver {
     private AttackerDialog attackerDialog;
     private DiceDialog diceDialog;
     private LabelMapListener labelMapListener;
+    private final int PREFERRED_WIDTH=400;
+    private final int PREFERRED_HEIGHT=192;
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         initBackground();
@@ -88,6 +90,7 @@ public class GUI extends JFrame implements GameObserver {
         // Dialogs
         defenseArmies = new DefenseDialog(game, this, true);
         attackerDialog = new AttackerDialog(game, this, true);
+        attackerDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
         diceDialog = new DiceDialog(game, this, true);
         cardBonusDialog = new CardBonusDialog(game);
 
@@ -505,6 +508,7 @@ public class GUI extends JFrame implements GameObserver {
                 info+="Ora possiedi "+conqueredContinent;
             }
             MoveDialog moveDialog = new MoveDialog(game, attackerCountryName, defenderCountryName, info, maxArmiesAttacker);
+            moveDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
             PlayAudio.play("sounds/conquest.wav");
             moveDialog.setVisible(true);
         }
