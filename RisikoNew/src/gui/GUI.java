@@ -484,7 +484,7 @@ public class GUI extends JFrame implements GameObserver {
      * @param defenderDice
      */
     @Override
-    public void updateOnAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, String attackerCountryName, String defenderCountryName) {
+    public void updateOnAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, String attackerCountryName, String defenderCountryName, String conqueredContinent) {
         //mi accerto che non siano entrambi artificiali
         if (!artificialAttack[0]) {
             diceDialog.setAttackerCountryName(attackerCountryName);
@@ -500,7 +500,10 @@ public class GUI extends JFrame implements GameObserver {
 
         //mi accerto che l'attaccante non sia artificiale
         if (isConquered && !artificialAttack[1]) {
-            String info = "Complimenti, hai conquistato " + defenderCountryName;
+            String info = "Complimenti, hai conquistato " + defenderCountryName+".\n";
+            if(conqueredContinent != null){
+                info+="Ora possiedi "+conqueredContinent;
+            }
             MoveDialog moveDialog = new MoveDialog(game, attackerCountryName, defenderCountryName, info, maxArmiesAttacker);
             PlayAudio.play("sounds/conquest.wav");
             moveDialog.setVisible(true);

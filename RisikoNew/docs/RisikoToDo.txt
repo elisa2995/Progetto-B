@@ -2,12 +2,13 @@
 - carte per giocatore artificiale
 - move per giocatore artificiale
 - DOCUMENTAZIONE (javaDoc + wiki) 
-- quando conquisti un continente si dice nel jdialog che dice che lo hai conquistato  
-- controllare suoni per i giocatori artificiali
+x quando conquisti un continente si dice nel jdialog che dice che lo hai conquistato
+- controllare suoni per i giocatori artificiali 
 - risolvere il problema dei coni tra la chiusura del dicedialog e la movedialog
 - controllare il resetCone
 - sistemare startgamegui
-- sistemare dimensioni finestre attacco
+- sistemare dimensioni finestre attacco move, confirm, attack 
+Metti sia nella finestra dell'attaccante che nella finestra del difensore entrambi i nomi con i colori
 - cosa continenti 
 x contintenti come oggetti con dentro nome, bonus armies e lista countries
 x mettere i neghbors nel country

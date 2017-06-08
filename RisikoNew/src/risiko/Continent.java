@@ -1,4 +1,3 @@
-
 package risiko;
 
 import java.util.List;
@@ -7,13 +6,13 @@ import java.util.List;
  * @author andrea
  */
 public class Continent {
-    private String name;
-    private List<Country> Countries; 
-    private int bonus; 
-    
 
-    public Continent(String name, List<Country> Countries, int bonus) {     
-        this.name=name;
+    private String name;
+    private List<Country> Countries;
+    private int bonus;
+
+    public Continent(String name, List<Country> Countries, int bonus) {
+        this.name = name;
         this.bonus = bonus;
         this.Countries = Countries;
     }
@@ -41,10 +40,14 @@ public class Continent {
     public void setName(String name) {
         this.name = name;
     }
+
+    public boolean containsCountry(Country country) {
+        return this.getCountries().contains(country);
+    }
     
-    
-    
-    
-    
-    
+    @Override
+    public String toString(){
+        return this.name;
+    }
+
 }

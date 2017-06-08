@@ -55,9 +55,9 @@ public class BasicObservable {
      * @param defenderDice
      * @param artificialAttack
      */
-    public void notifyAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, String attackerCountryName, String defenderCountryName) {
+    public void notifyAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, String attackerCountryName, String defenderCountryName, String conqueredContinent) {
         for (BasicGameObserver ob : this.obs) {
-            ob.updateOnAttackResult(isConquered, canAttackFromCountry, maxArmiesAttacker, maxArmiesDefender, attackerDice, defenderDice, artificialAttack,attackerCountryName, defenderCountryName);
+            ob.updateOnAttackResult(isConquered, canAttackFromCountry, maxArmiesAttacker, maxArmiesDefender, attackerDice, defenderDice, artificialAttack,attackerCountryName, defenderCountryName, conqueredContinent);
         }
     }
 

@@ -200,12 +200,10 @@ public class RisikoMap {
      * @author Elisa
      */
     public void computeBonusArmies(Player player) {
+        
         int bonus = 0;
-        List<Country> countryOfThatPlayer = getMyCountries(player);
-        for (Continent continent : continents) {
-            List<Country> countryOfThatContinent = continent.getCountries();
-
-            if (countryOfThatPlayer.containsAll(countryOfThatContinent)) {
+        for (Continent continent : continents) {            
+            if (ownsContinent(player, continent)) {
                 bonus += continent.getBonus();
             }
         }
@@ -213,7 +211,43 @@ public class RisikoMap {
         bonus += (int) Math.floor(getMyCountries(player).size() / 3);
         player.addBonusArmies(bonus);
     }
-
+    
+    /**
+     * Ritorna true se il player possiede il continente.
+     * @param player
+     * @param continent
+     * @return 
+     */
+    private boolean ownsContinent(Player player, Continent continent){
+        return getMyCountries(player).containsAll(continent.getCountries());
+    }
+    
+    /**
+     * Ritorna true se il player dopo la conquiesta della Country 
+     * <code>justConqueredCountry</code> possiede l'intero continente.
+     * @param player
+     * @param justConqueredCountry
+     * @return 
+     */
+    public boolean hasConqueredContinent(Player player, Country justConqueredCountry){
+        return ownsContinent(player, getContinentByCountry(justConqueredCountry));
+    }
+    
+    /**
+     * Ritorna il continente a cui appartiene una country.
+     * @param country
+     * @return 
+     */
+    public Continent getContinentByCountry(Country country){
+        
+        for(Continent continent: continents){
+            if(continent.containsCountry(country)){
+                return continent;
+            }
+        }
+        return null; //non dovrebbe mai arrivarci
+   
+    }
     /**
      * Ritorna una lista dei territori del giocatore
      *

@@ -395,6 +395,7 @@ public class Game extends Observable implements GameProxy {
 
         int nrA = this.attackerArmies;
         int nrD = this.defenderArmies;
+        String continent=null;
 
         Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
         Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
@@ -403,6 +404,9 @@ public class Game extends Observable implements GameProxy {
 
         if (conquered) {
             map.updateOnConquer(attackerCountry, defenderCountry, nrA);
+            if(map.hasConqueredContinent(activePlayer, defenderCountry)){
+                continent = map.getContinentByCountry(defenderCountry).toString();
+            }
             notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
             //
             activePlayer.setConqueredACountry(true);
@@ -419,7 +423,7 @@ public class Game extends Observable implements GameProxy {
         boolean[] artificialAttack = new boolean[2];
         artificialAttack[0] = defenderPlayer instanceof ArtificialPlayer && attackerPlayer instanceof ArtificialPlayer;
         artificialAttack[1] = attackerPlayer instanceof ArtificialPlayer;
-        notifyAttackResult(conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense(), artificialAttack, attackerCountry.getName(), defenderCountry.getName());
+        notifyAttackResult(conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense(), artificialAttack, attackerCountry.getName(), defenderCountry.getName(), continent);
         attackInProgress = false;
 
     }
