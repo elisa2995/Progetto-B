@@ -1,5 +1,6 @@
 package gui;
 
+import gui.startGameGUI.StartGameGUI;
 import controllers.LabelMapListener;
 import utils.GameObserver;
 import exceptions.PendingOperationsException;
@@ -8,6 +9,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,7 +73,7 @@ public class GUI extends JFrame implements GameObserver {
     private void init(Map<String, String> players, Map<String, String> playersColor) throws IOException, Exception {
 
         // Image fading out
-        fadeOutLabel = new FadeOutLabel();
+        fadeOutLabel = new FadeOutLabel(this);
         fadeOutLabel.setOpaque(true);
         fadeOutLabel.setBounds(400, 120, 186, 250);
         mapLayeredPane.add(fadeOutLabel, 1000);
@@ -419,7 +421,7 @@ public class GUI extends JFrame implements GameObserver {
                 textAreaInfo.setText("Scegli un tuo territorio da cui spostare una o più armate");
                 break;
         }
-
+        
     }
 
     /**
@@ -680,5 +682,9 @@ public class GUI extends JFrame implements GameObserver {
     private javax.swing.JMenuItem settingsItem;
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables
+
+    void moveToBack() {
+        mapLayeredPane.moveToBack(fadeOutLabel);
+    }
 
 }

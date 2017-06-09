@@ -33,8 +33,10 @@ public class FadeOutLabel extends JLabel {
     private float alpha = 0f;
     private long startTime = -1;
     private final Timer timer;
+    private final GUI gui;
 
-    public FadeOutLabel() {
+    public FadeOutLabel(GUI gui) {
+        this.gui=gui;
         String url="images/CAVALRY.png";
         FadeOutLabel fadeOutLabel=this;
         try {
@@ -57,7 +59,7 @@ public class FadeOutLabel extends JLabel {
                         startTime = -1;
                         ((Timer) e.getSource()).stop();
                         alpha = 1f;
-                        //fadeOutLabel.setOpaque(false);
+                        gui.moveToBack();
                     } else {
                         alpha = ((float) duration / (float) RUNNING_TIME);
                     }
