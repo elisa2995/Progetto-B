@@ -1,6 +1,8 @@
 package risiko.players;
 
 import exceptions.PendingOperationsException;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,10 +35,10 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     *
-     * @param name
-     * @param color
-     * @param game
+     * create a new artificial player
+     * @param name name of the player
+     * @param color color assigned to the player
+     * @param game proxy used to call the various action
      */
     public ArtificialPlayer(String name, String color, GameProxy game) {
         super(name, color);
@@ -50,7 +52,39 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * aggiunge armate ai territori posseduti fino a che non sono esaurite
+     * tries to play a tris from the best to the worst
+     */
+    private synchronized void playHighestTris() {
+        int max = -1;
+        String[] trisToPlay = null;
+
+        Map<String[], Integer> playableTris = game.getPlayableTris();
+        if(playableTris.size()>0){
+            int k=0;
+        }
+        for (Map.Entry<String[], Integer> entry : playableTris.entrySet()) {
+            if (max < entry.getValue()) {
+                max = entry.getValue();
+                trisToPlay = entry.getKey();
+            }
+        }
+        if (trisToPlay != null) {
+            game.playTris(trisToPlay, max, this);
+        }
+
+    }
+
+    private synchronized void moveArmies(){
+        int moves=10;
+        for(int i =0;i<moves;i++){
+            String[] myCountries = game.getMyCountries(this);
+            
+        }
+    }
+    
+
+    /**
+     * add armies to the territories until the are exhausted
      */
     private synchronized void randomReinforce() {
         if (bonusArmies == 0) {
@@ -75,7 +109,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * esegue un attacco
+     * executes a series of attacks
      */
     private synchronized void randomAttack() {
         int i = setting.getBaseAttack();
@@ -87,7 +121,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * esegue un attacco per turno
+     * execute a single attack
      */
     private synchronized void randomSingleAttack() {
         maxArmiesSet = false;
@@ -139,6 +173,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         }
     }
 
+    /**
+     * let the artificial player defend itself from an attack
+     */
     private synchronized void defend() {
         if (!maxArmiesSet) {
             return;
@@ -163,7 +200,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * esegue il turno del giocatore artificiale
+     * contains the loop for the artificial player to act
      */
     @Override
     public void run() {
@@ -176,6 +213,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                     switch (game.getPhase()) {
                         case REINFORCE:
                             //System.out.println(game.getPhase() + " " + this.getName());
+                            playHighestTris();
                             randomReinforce();
                             break;
                         case FIGHT:
