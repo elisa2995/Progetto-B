@@ -179,7 +179,10 @@ public class Game extends Observable implements GameProxy {
                     }
                     this.players.add(player);
                     //this.players.add(new Player(playerType.getKey(), color));
+
+                    //this.players.add(new Player(playerType.getKey(), color));
                     break;
+
             }
             //i++;
 
@@ -398,21 +401,22 @@ public class Game extends Observable implements GameProxy {
 
         int nrA = this.attackerArmies;
         int nrD = this.defenderArmies;
+        String continent = null;
 
         Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
         Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
         fight(attackerCountry, defenderCountry, nrA, nrD);
         boolean conquered = map.isConquered(defenderCountry);
 
-        boolean hasAlreadyDrawnCard = activePlayer.hasAlreadyDrawnCard();
-
         if (conquered) {
             map.updateOnConquer(attackerCountry, defenderCountry, nrA);
-
-            if (!activePlayer.hasAlreadyDrawnCard()) {
-                drawBonusCard();
+            if (map.hasConqueredContinent(activePlayer, defenderCountry)) {
+                continent = map.getContinentByCountry(defenderCountry).toString();
             }
             notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
+            //
+            activePlayer.setConqueredACountry(true);
+
             if (hasLost(defenderPlayer)) {
                 players.remove(defenderPlayer);
             }
@@ -425,8 +429,7 @@ public class Game extends Observable implements GameProxy {
         boolean[] artificialAttack = new boolean[2];
         artificialAttack[0] = defenderPlayer instanceof ArtificialPlayer && attackerPlayer instanceof ArtificialPlayer;
         artificialAttack[1] = attackerPlayer instanceof ArtificialPlayer;
-
-        notifyAttackResult(conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense(), artificialAttack, hasAlreadyDrawnCard);
+        notifyAttackResult(conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense(), artificialAttack, attackerCountry.getName(), defenderCountry.getName(), continent);
         attackInProgress = false;
 
     }
@@ -519,6 +522,10 @@ public class Game extends Observable implements GameProxy {
             throw new PendingOperationsException("Attacco ancora in corso!");
         }
 
+        if (phase == Phase.FIGHT && activePlayer.hasConqueredACountry()) {
+            this.drawBonusCard(aiCaller);
+        }
+
         try {
             this.phase = phase.next();
         } catch (LastPhaseException ex) {
@@ -551,10 +558,11 @@ public class Game extends Observable implements GameProxy {
                 cards.add(card.toString().toLowerCase());
             }
             notifyNextTurn(cards);
-        }
-        this.phase = Phase.values()[0];
-        map.computeBonusArmies(activePlayer);
-        /*ListIterator<Player> iter = players.listIterator(players.indexOf(activePlayer) + 1);
+            //Devo resettare a false ConqueredACountry così che si possa pescare quando clicco nextphase dopo aver conquistato 
+            activePlayer.setConqueredACountry(false);
+            this.phase = Phase.values()[0];
+            map.computeBonusArmies(activePlayer);
+            /*ListIterator<Player> iter = players.listIterator(players.indexOf(activePlayer) + 1);
         Player newActivePlayer;
         if (iter.hasNext()) {
             newActivePlayer = iter.next();
@@ -570,6 +578,7 @@ public class Game extends Observable implements GameProxy {
         activePlayer=newActivePlayer;
         phase = Phase.values()[0];
         map.computeBonusArmies(activePlayer);*/
+        }
     }
 
     /**
@@ -607,7 +616,8 @@ public class Game extends Observable implements GameProxy {
         Card card = deck.drawCard();
         activePlayer.addCard(card);
 
-        notifyDrawnCard(card.name());
+        boolean isArtificialPlayer = activePlayer instanceof ArtificialPlayer;
+        notifyDrawnCard(card.name(), isArtificialPlayer);
     }
 
     /**
@@ -678,8 +688,9 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public synchronized int getMaxArmiesForMovement(ArtificialPlayer... aiCaller) {
-        return attackerCountry.getArmies() - 1;
+    public synchronized int getMaxArmiesForMovement(String fromCountryName, ArtificialPlayer... aiCaller) {
+        Country fromCountry = map.getCountryByName(fromCountryName);
+        return fromCountry.getArmies() - 1;
     }
 
     /**
@@ -698,17 +709,22 @@ public class Game extends Observable implements GameProxy {
      * Sposta il numero di armate <code>i</code> da <code>attackerCountry</code>
      * alla country con name <code>toCountryName</code>
      *
+     * @param fromCountry
      * @param toCountryName
      * @param i
      */
     @Override
-    public void move(String toCountryName, Integer i, ArtificialPlayer... aiCaller) {
+    public void move(String fromCountryName, String toCountryName, Integer i, ArtificialPlayer... aiCaller) {
         Country toCountry = map.getCountryByName(toCountryName);
-        map.move(attackerCountry, toCountry, i);
+        Country fromCountry = map.getCountryByName(fromCountryName);
+        map.move(fromCountry, toCountry, i);
         notifyArmiesChange(toCountryName, toCountry.getArmies(), activePlayer.getColor());
-        notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), activePlayer.getColor());
-        passTurn();
-        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor(), activePlayer.getBonusArmies());
+        notifyArmiesChange(fromCountryName, fromCountry.getArmies(), activePlayer.getColor());
+
+        if (phase == phase.MOVE) {
+            passTurn();
+            notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor(), activePlayer.getBonusArmies());
+        }
     }
 
     //  M E T O D I   R I P R E S I   D A   M A P
@@ -884,7 +900,6 @@ public class Game extends Observable implements GameProxy {
     @Override
     public synchronized String[] getCountriesColors(ArtificialPlayer... aiCaller) {
         return map.getCountriesColors();
-
     }
 
     /**
@@ -947,6 +962,7 @@ public class Game extends Observable implements GameProxy {
 
     /**
      * Controlla se il tris in cardNames è un tris giocabile.
+     *
      * @param cardNames
      * @param aiCaller
      * @return
@@ -977,21 +993,22 @@ public class Game extends Observable implements GameProxy {
         return false;
 
     }
-    
+
     /**
      * Ritorna il valore del bonus per il tris giocato.
+     *
      * @param cardNames
-     * @return 
+     * @return
      */
-    public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller){
-        
+    public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller) {
+
         Card[] cards = new Card[3];
         for (int i = 0; i < cardNames.length; i++) {
             //System.out.println(cardNames[i].toUpperCase());
             cards[i] = Card.valueOf(cardNames[i].toUpperCase());
             //System.out.println(cards[i]);
         }
-        
+
         return deck.getBonusForTris(cards);
     }
 

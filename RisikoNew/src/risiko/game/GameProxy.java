@@ -184,9 +184,10 @@ public interface GameProxy {
     /**
      * Ritorna il massimo numero di armate per lo spostamento finale.
      *
+     * @param aiCaller
      * @return
      */
-    public int getMaxArmiesForMovement(ArtificialPlayer... aiCaller);
+    public int getMaxArmiesForMovement(String fromCountryName, ArtificialPlayer... aiCaller);
 
     /**
      * Setta il territorio da cui effettuare lo spostamento.
@@ -200,10 +201,12 @@ public interface GameProxy {
      * Sposta il numero di armate <code>i</code> da <code>attackerCountry</code>
      * alla country con name <code>toCountryName</code>
      *
+     * @param fromCountry
      * @param toCountryName
      * @param i
+     * @param aiCaller
      */
-    public void move(String toCountryName, Integer i, ArtificialPlayer... aiCaller);
+    public void move(String fromCountry,String toCountryName, Integer i, ArtificialPlayer... aiCaller);
 
     /**
      * Controlla che country sia dell'activePlayer e che si legale attaccare.

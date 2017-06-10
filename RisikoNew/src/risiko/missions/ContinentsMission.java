@@ -3,6 +3,7 @@ package risiko.missions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import risiko.Continent;
 import risiko.Country;
 
 /**
@@ -32,11 +33,10 @@ public class ContinentsMission extends Mission {
     }
 
     @Override
-    public void buildTarget(Map<String, List<Country>> continentCountries) {
-        List<String> continents = new ArrayList<>(continentCountries.keySet());
-        for (String continent : continents) {
-            if (description.contains(continent)) {
-                this.setTargetList(continentCountries.get(continent));
+    public void buildTarget(List<Continent> continents) {
+        for (Continent continent : continents) {
+            if (description.contains(continent.getName())) {
+                this.setTargetList(continent.getCountries());
             }
         }
     }

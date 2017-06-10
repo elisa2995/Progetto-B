@@ -2,6 +2,7 @@ package risiko.missions;
 
 import java.util.List;
 import java.util.Map;
+import risiko.Continent;
 import risiko.Country;
 
 /**
@@ -27,7 +28,7 @@ public class CountriesMission extends Mission {
     }
 
     @Override
-    public void buildTarget(Map<String, List<Country>> continentCountries) {
+    public void buildTarget(List<Continent> continents) {
         this.nrCountriesToConquer = Integer.parseInt(description.split(" ")[1]);
     }
 }

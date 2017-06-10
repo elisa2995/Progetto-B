@@ -40,8 +40,10 @@ public class GUI extends JFrame implements GameObserver {
     private AttackerDialog attackerDialog;
     private DiceDialog diceDialog;
     private LabelMapListener labelMapListener;
-    private CardPanel cardPanel;
-    
+    private CardPanel cardPanel;    
+    private final int PREFERRED_WIDTH=400;
+    private final int PREFERRED_HEIGHT=192;
+
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         initBackground();
         initComponents();
@@ -89,6 +91,7 @@ public class GUI extends JFrame implements GameObserver {
         // Dialogs
         defenseArmies = new DefenseDialog(game, this, true);
         attackerDialog = new AttackerDialog(game, this, true);
+        attackerDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
         diceDialog = new DiceDialog(game, this, true);
         cardBonusDialog = new CardBonusDialog(game);
 
@@ -404,6 +407,7 @@ public class GUI extends JFrame implements GameObserver {
                 textAreaInfo.setText("Scegli un tuo territorio da cui spostare una o più armate");
                 break;
         }
+
     }
 
     /**
@@ -416,10 +420,11 @@ public class GUI extends JFrame implements GameObserver {
     public void updateOnSetAttacker(String countryName, int maxArmiesAttacker, String attacker, String color) {
         ((GraphicsJLabel) labelMap).resetCone();
         labelMapListener.resetCache();
+        //diceDialog.setVisible(false);
         if (countryName != null) {
             textAreaInfo.setText("Clicca su un territorio nemico confinante per attaccarlo");
             attackerDialog.setMaxArmies(maxArmiesAttacker);
-            attackerDialog.setAttackerCountry(attacker,color);
+            attackerDialog.setAttackerCountry(attacker, color);
         } else {
             textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
@@ -436,17 +441,19 @@ public class GUI extends JFrame implements GameObserver {
      * @param defenderPlayer
      * @param maxArmiesAttacker
      * @param maxArmiesDefender
+     * @param reattack
      */
     @Override
     public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender, boolean reattack) {
         ((GraphicsJLabel) labelMap).drawCone(countryLabelMap.get(countryAttackerName).getBounds(), countryLabelMap.get(countryDefenderName).getBounds());
-
         if (countryDefenderName == null) {
             textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
 
-        //this.inputArmies.setMaxArmies(maxArmiesAttacker, maxArmiesDefender);
-        this.defenseArmies.setMaxArmies(maxArmiesDefender);
+        //ERRORE reattack è true ma maxArmiesDefender è 0.
+        //System.out.println("maxArmiesDefender="+maxArmiesDefender + " updateOnSetDefender");
+        defenseArmies.setMaxArmies(maxArmiesDefender);
+
         if (reattack) {
             this.attackerDialog.setVisible(true);
         }
@@ -483,21 +490,37 @@ public class GUI extends JFrame implements GameObserver {
      * @param defenderDice
      */
     @Override
-    public void updateOnAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, boolean hasAlreadyDrawnCard) {
+    public void updateOnAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, String attackerCountryName, String defenderCountryName, String conqueredContinent) {
+        //mi accerto che non siano entrambi artificiali
         if (!artificialAttack[0]) {
-            diceDialog.setHasAlreadyDrawnCard(hasAlreadyDrawnCard);
+            diceDialog.setAttackerCountryName(attackerCountryName);
             diceDialog.setArtificialAttacker(artificialAttack[1]);
             diceDialog.setIsConquered(isConquered);
             diceDialog.setCanAttackFromCountry(canAttackFromCountry);
-            diceDialog.setDefenderCountryName(game.getDefenderCountryName());
+            diceDialog.setDefenderCountryName(defenderCountryName);
             diceDialog.updateDice(attackerDice, defenderDice);
-            diceDialog.setAttackerCountryName(game.getAttackerCountryName());
+            //diceDialog.initMoveDialog(maxArmiesAttacker, attackerCountryName, game.getDefenderCountryName());
             diceDialog.showDice();
             diceDialog.setVisible(true);
         }
-        // resetFightingCountruiesd se artificial attack
 
-        defenseArmies.setMaxArmies(maxArmiesDefender);
+        //mi accerto che l'attaccante non sia artificiale
+        if (isConquered && !artificialAttack[1]) {
+            String info = "Complimenti, hai conquistato " + defenderCountryName+".\n";
+            if(conqueredContinent != null){
+                info+="Ora possiedi "+conqueredContinent;
+            }
+            MoveDialog moveDialog = new MoveDialog(game, attackerCountryName, defenderCountryName, info, maxArmiesAttacker);
+            moveDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
+            PlayAudio.play("sounds/conquest.wav");
+            moveDialog.setVisible(true);
+        }
+
+        // resetFightingCountruiesd se artificial attack
+        if (!isConquered) {
+            defenseArmies.setMaxArmies(maxArmiesDefender);
+        }
+
         //labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         if (isConquered || !canAttackFromCountry) {
             labelMapListener.resetCache();
@@ -580,8 +603,11 @@ public class GUI extends JFrame implements GameObserver {
      * @param cardName
      */
     @Override
-    public void updateOnDrawnCard(String cardName) {
-        diceDialog.setDrawnCard(cardName);
+    public void updateOnDrawnCard(String cardName, boolean isArtificialPlayer) {
+        if (!isArtificialPlayer) {
+            JOptionPane.showMessageDialog(null, "Complimenti,\nhai pescato questa carta.", null,
+                    JOptionPane.INFORMATION_MESSAGE, new ImageIcon("images/" + cardName + ".png"));
+        }
     }
 
     /**

@@ -9,12 +9,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Base64;
 import java.util.List;
 import java.util.logging.Level;
@@ -172,7 +167,7 @@ public class UserDialog extends javax.swing.JDialog {
             commentsText.setText("Compila tutti i campi");
             return;
         }
-        if (!String.valueOf(passwordText.getPassword()).equals(String.valueOf(password2Text.getPassword()))) {            
+        if (!String.valueOf(passwordText.getPassword()).equals(String.valueOf(password2Text.getPassword()))) {
             commentsText.setText("Le password non coincidono");
             return;
         }
@@ -199,33 +194,16 @@ public class UserDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        String url = "files/players.txt";
+
         String username = usernameText.getText();
         String password = String.valueOf(passwordText.getPassword());
         if (checkUsername(username)) {
-            try (BufferedReader br = new BufferedReader(new FileReader(url))) {
-                String line;
-
-                while ((line = br.readLine()) != null) {
-                    String[] tmp = line.split(";");
-                    byte[] encryptedBytes = tmp[1].getBytes();
-                    byte[] decryptedBytes = Base64.getDecoder().decode(encryptedBytes);
-                    String decryptedString = new String(decryptedBytes, "UTF-8");
-                    if (tmp[0].equals(username) && decryptedString.equals(password)) {
-                        this.setVisible(false);
-                        gui.setPlayerName(username, getIndex());
-                        gui.setVisible(true);
-                        return;
-                    }
-
-                }
-
-            } catch (FileNotFoundException ex) {
-                System.out.println("File not found");
-            } catch (IOException ex) {
-                Logger.getLogger(UserDialog.class.getName()).log(Level.SEVERE, null, ex);
+            if (FileManager.getInstance().checkCredentials(username, password)) {
+                this.setVisible(false);
+                gui.setPlayerName(username, getIndex());
+                gui.setVisible(true);
+                return;
             }
-
             commentsText.setText("Nome giocatore o password errati");
         } else {
             commentsText.setText("Giocatore già presente nel gioco");
@@ -244,11 +222,7 @@ public class UserDialog extends javax.swing.JDialog {
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encryptedBytes = encoder.encode(password.getBytes());
         String encryptedString = new String(encryptedBytes, "UTF-8");
-        try (PrintWriter out = new PrintWriter(new FileOutputStream("files/players.txt", true))) {
-            out.println(username + ";" + encryptedString);
-
-        }
-
+        FileManager.getInstance().registerUser(username, encryptedString);
     }
 
     /**
@@ -271,8 +245,7 @@ public class UserDialog extends javax.swing.JDialog {
             saveUserButton.setVisible(false);
             loginButton.setVisible(true);
         }
-        
-        
+
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
         commentsText.setText("");

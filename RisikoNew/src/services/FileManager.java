@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,17 +29,19 @@ public class FileManager {
     private final String LABELS = "files/countriesLabels.txt";
     private final String COLORS = "files/countriesColors.txt";
     private final String TRIS = "files/bonusTris.txt";
-    
-    private FileManager() {}
+
+    private FileManager() {
+    }
 
     /**
-     * Ritorna l'istanza di FileManager. 
-     * (Se non è ancora stata creata, la crea - lazy initialization)
-     * @return 
+     * Ritorna l'istanza di FileManager. (Se non è ancora stata creata, la crea
+     * - lazy initialization)
+     *
+     * @return
      */
     public static FileManager getInstance() {
         if (instance == null) {
-            synchronized(FileManager.class) {
+            synchronized (FileManager.class) {
                 if (instance == null) {
                     instance = new FileManager();
                 }
@@ -46,7 +49,7 @@ public class FileManager {
         }
         return instance;
     }
-    
+
     //----------------------- countries.txt ----------------------------------//
     /**
      * Legge il file countries.txt per ricavare la lista di territori.
@@ -247,10 +250,56 @@ public class FileManager {
         }
         throw new FileManagerException("No user found with username " + username);
     }
+
+    /**
+     * Controlla se le credenziali inserite sono corrette.
+     *
+     * @param username
+     * @param password
+     * @return true se sono corrette, false altrimenti.
+     */
+    public boolean checkCredentials(String username, String password) {
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(PLAYERS))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] tmp = line.split(";");
+                byte[] encryptedBytes = tmp[1].getBytes();
+                byte[] decryptedBytes = Base64.getDecoder().decode(encryptedBytes);
+                String decryptedString = new String(decryptedBytes, "UTF-8");
+                if (tmp[0].equals(username) && decryptedString.equals(password)) {
+                    return true;
+                }
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
     
     /**
-     * Legge il file players.txt e controla se lo username è presente 
-     * tra quelli dei giocatori già registrati
+     * Registra l'utente nel file players.txt.
+     * @param username
+     * @param encryptedPassword 
+     */
+    public void registerUser(String username, String encryptedPassword){
+        
+        String line = username+";"+encryptedPassword+";"+"0";
+        FileOutputStream fileOut;
+        try {
+            fileOut = new FileOutputStream(PLAYERS, true);
+            fileOut.write(line.getBytes());
+            fileOut.close();
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Legge il file players.txt e controla se lo username è presente tra quelli
+     * dei giocatori già registrati
+     *
      * @param username
      * @return true se lo username è presente nel file
      */
@@ -311,14 +360,12 @@ public class FileManager {
      * Legge il file countriesColors.txt.
      *
      * @return una lista di Map in cui ogni elemento corrisponde a un
-     * territorio. La Map ha 4 entrate: 
-     * § 1 - key : "country" -> String nome della country 
-     * § 2 - key : "R" -> Integer numero da 0 a 255 che rappresenta il valore 
-     * di Rosso nell'RGB della Country 
-     * § 3 - key : "G" -> Integer numero da 0 a 255 che rappresenta il valore
-     * di Verde nell'RGB della country 
-     * § 4 - key : "B" -> Integer numero da 0 a 255 che rappresenta il valore 
-     * di Blu nell'RGB della country
+     * territorio. La Map ha 4 entrate: § 1 - key : "country" -> String nome
+     * della country § 2 - key : "R" -> Integer numero da 0 a 255 che
+     * rappresenta il valore di Rosso nell'RGB della Country § 3 - key : "G" ->
+     * Integer numero da 0 a 255 che rappresenta il valore di Verde nell'RGB
+     * della country § 4 - key : "B" -> Integer numero da 0 a 255 che
+     * rappresenta il valore di Blu nell'RGB della country
      * @throws FileNotFoundException
      */
     public List<Map<String, Object>> getCountriesColors() throws FileNotFoundException {
@@ -343,18 +390,18 @@ public class FileManager {
         }
         return countriesColors;
     }
-    
+
     //--------------------------- bonusTris.txt ------------------------------//
-    
     /**
      * Legge il file bonusTris.txt.
-     * @return una List di Map, in cui ogni elemento corrisponde a un tris.
-     * La Map ha 2 entrate:
-     * § key : "cards" -> String[] cards, le carte che compongono il tris
-     * § key : "bonus" -> Integer bonus, il bonus di armate per quel tris.
+     *
+     * @return una List di Map, in cui ogni elemento corrisponde a un tris. La
+     * Map ha 2 entrate: § key : "cards" -> String[] cards, le carte che
+     * compongono il tris § key : "bonus" -> Integer bonus, il bonus di armate
+     * per quel tris.
      */
-    public List<Map<String, Object>> getTris(){
-        
+    public List<Map<String, Object>> getTris() {
+
         List<Map<String, Object>> tris = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(TRIS))) {
             String line;
@@ -368,9 +415,9 @@ public class FileManager {
         } catch (IOException ex) {
             Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return tris;
-    
+
     }
 
 }
