@@ -78,7 +78,7 @@ public class CardBonusDialog extends JDialog {
         buttonTris.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.playTris(cards, bonusArmiesTris);
+                game.playTris(cards);
                 dialog.setVisible(false);
             }
         });

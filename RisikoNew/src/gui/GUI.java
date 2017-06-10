@@ -40,7 +40,8 @@ public class GUI extends JFrame implements GameObserver {
     private AttackerDialog attackerDialog;
     private DiceDialog diceDialog;
     private LabelMapListener labelMapListener;
-
+    private CardPanel cardPanel;
+    
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         initBackground();
         initComponents();
@@ -91,6 +92,10 @@ public class GUI extends JFrame implements GameObserver {
         diceDialog = new DiceDialog(game, this, true);
         cardBonusDialog = new CardBonusDialog(game);
 
+        cardPanel = new CardPanel(game);
+        this.add(cardPanel);
+        cardPanel.setBounds(0, 530, 1200, 300);
+        cardPanel.setOpaque(false);
         // Setting
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
@@ -168,7 +173,6 @@ public class GUI extends JFrame implements GameObserver {
         settingsItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
 
         phaseLabel.setBackground(new java.awt.Color(225, 207, 218));
         phaseLabel.setForeground(new java.awt.Color(1, 1, 1));
@@ -284,7 +288,7 @@ public class GUI extends JFrame implements GameObserver {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(mapLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(233, Short.MAX_VALUE))
         );
 
         pack();
@@ -562,10 +566,12 @@ public class GUI extends JFrame implements GameObserver {
      * Mostra la finestra di gestione delle carte
      */
     @Override
-    public void updateOnNextTurn() {
+    public void updateOnNextTurn(List<String> cards) {
+        System.out.println(cards);
         cardBonusDialog.initImagesPanel();
         cardBonusDialog.initButtonPanel();
         cardBonusDialog.setVisible(true);
+        cardPanel.setCards(cards);
     }
 
     /**

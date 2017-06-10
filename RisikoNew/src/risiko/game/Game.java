@@ -162,7 +162,7 @@ public class Game extends Observable implements GameProxy {
      */
     private void buildPlayers(Map<String, String> playersTypeMap, Map<String, String> playersColor) {
 
-        int i = 0;
+        //int i = 0;
         for (Map.Entry<String, String> playerType : playersTypeMap.entrySet()) {
             String color = playersColor.get(playerType.getKey());
             switch (PlayerType.valueOf(playerType.getValue())) {
@@ -173,10 +173,15 @@ public class Game extends Observable implements GameProxy {
                     break;
                 case NORMAL:
                 case LOGGED:
-                    this.players.add(new Player(playerType.getKey(), color));
+                    Player player = new Player(playerType.getKey(), color);
+                    for (int i = 0; i < 4; i++) {
+                        player.addCard(deck.drawCard());
+                    }
+                    this.players.add(player);
+                    //this.players.add(new Player(playerType.getKey(), color));
                     break;
             }
-            i++;
+            //i++;
 
         }
     }
@@ -191,7 +196,7 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
         this.attackerCountry = map.getCountryByName(attackerCountryName);
-        notifySetAttacker(attackerCountryName, map.getMaxArmies(attackerCountry, true),attackerCountry.getName(),map.getPlayerColorByCountry(attackerCountry));
+        notifySetAttacker(attackerCountryName, map.getMaxArmies(attackerCountry, true), attackerCountry.getName(), map.getPlayerColorByCountry(attackerCountry));
     }
 
     /**
@@ -540,8 +545,12 @@ public class Game extends Observable implements GameProxy {
 
         //Devo resettare a false JustDrowCardBonus così che si possa pescare con map.updateOnConquer 
         activePlayer.setAlreadyDrawnCard(false);
-        if (!activePlayer.getBonusCards().isEmpty() && !(activePlayer instanceof ArtificialPlayer)) {
-            notifyNextTurn();
+        if (!(activePlayer instanceof ArtificialPlayer)) {
+            List<String> cards = new ArrayList();
+            for (Card card : activePlayer.getBonusCards()) {
+                cards.add(card.toString().toLowerCase());
+            }
+            notifyNextTurn(cards);
         }
         this.phase = Phase.values()[0];
         map.computeBonusArmies(activePlayer);
@@ -655,11 +664,12 @@ public class Game extends Observable implements GameProxy {
      * @param aiCaller
      */
     @Override
-    public void playTris(String[] cardsNames, int bonusArmiesTris, ArtificialPlayer... aiCaller) {
+    public void playTris(String[] cardsNames, ArtificialPlayer... aiCaller) {
         if (cardsNames == null) {
             return;
         }
-        activePlayer.playTris(deck.getCardsByNames(cardsNames), bonusArmiesTris);
+        activePlayer.playTris(deck.getCardsByNames(cardsNames), getBonusForTris(cardsNames));
+        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor(), activePlayer.getBonusArmies());
     }
 
     /**
@@ -936,12 +946,13 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     *
+     * Controlla se il tris in cardNames è un tris giocabile.
      * @param cardNames
      * @param aiCaller
      * @return
      */
-    public boolean canPlayThisTris(String[] cardNames, ArtificialPlayer[] aiCaller) {
+    @Override
+    public boolean canPlayThisTris(String[] cardNames, ArtificialPlayer... aiCaller) {
 
         List<Card[]> playableTris = new ArrayList<>();
         Card[] cards = new Card[3];
@@ -967,8 +978,25 @@ public class Game extends Observable implements GameProxy {
 
     }
     
-    public void endGame(){
-        notifyEndGame();        
+    /**
+     * Ritorna il valore del bonus per il tris giocato.
+     * @param cardNames
+     * @return 
+     */
+    public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller){
+        
+        Card[] cards = new Card[3];
+        for (int i = 0; i < cardNames.length; i++) {
+            //System.out.println(cardNames[i].toUpperCase());
+            cards[i] = Card.valueOf(cardNames[i].toUpperCase());
+            //System.out.println(cards[i]);
+        }
+        
+        return deck.getBonusForTris(cards);
+    }
+
+    public void endGame() {
+        notifyEndGame();
     }
 
 }

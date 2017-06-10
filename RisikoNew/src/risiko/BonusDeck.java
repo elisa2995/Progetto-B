@@ -3,6 +3,7 @@ package risiko;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -47,14 +48,14 @@ public class BonusDeck {
      * Costruisce una mappa con i tris giocabili e i corrispettivi bonus.
      */
     private void buildTris() {
-        
+
         List<Map<String, Object>> combinations = FileManager.getInstance().getTris();
         String[] cardsNames;
         int bonus;
-        
-        for(Map<String, Object> combo : combinations){
-            cardsNames = (String[])combo.get("cards");
-            bonus = (Integer)combo.get("bonus");
+
+        for (Map<String, Object> combo : combinations) {
+            cardsNames = (String[]) combo.get("cards");
+            bonus = (Integer) combo.get("bonus");
             Card[] c = {getCardByName(cardsNames[0]), getCardByName(cardsNames[1]), getCardByName(cardsNames[2])};
             tris.put(c, bonus);
         }
@@ -105,6 +106,21 @@ public class BonusDeck {
      */
     public Map<Card[], Integer> getTris() {
         return this.tris;
+    }
+
+    public int getBonusForTris(Card[] cards) {
+
+        for (Card[] set : tris.keySet()) {
+            boolean success = true;
+            for (Card card : set) {
+                success = success && (Collections.frequency(Arrays.asList(set), card)) == (Collections.frequency(Arrays.asList(cards), card));
+            }
+            if(success){
+                return tris.get(set);
+            }
+        }
+        //System.out.println(this.tris.get(tris));
+        return 0; // non dovrebbe mai arrivarci
     }
 
 }

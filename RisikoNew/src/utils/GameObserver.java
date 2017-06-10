@@ -2,6 +2,7 @@
 package utils;
 
 import java.awt.Color;
+import java.util.List;
 import risiko.players.Player;
 
 /**
@@ -56,7 +57,7 @@ public interface GameObserver extends BasicGameObserver {
      */
     public void updateOnArmiesChange(String country, int armies, String color);    
     
-    public void updateOnNextTurn();
+    public void updateOnNextTurn(List<String> cards);
 
     public void updateOnSetFromCountry(String countryName);
 

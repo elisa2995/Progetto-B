@@ -111,10 +111,10 @@ public class Observable extends BasicObservable {
      * Notifica all'observable che il giocatore del nuovo turno ha delle carte
      * da giocare.
      */
-    public void notifyNextTurn() {
+    public void notifyNextTurn(List<String> cards) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnNextTurn();
+                ((GameObserver) ob).updateOnNextTurn(cards);
             }
         }
     }

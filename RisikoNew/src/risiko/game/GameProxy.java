@@ -12,7 +12,7 @@ import risiko.players.Player;
 public interface GameProxy {
 
     public Phase getPhase(ArtificialPlayer... aiCaller);
-    
+
     public String getPhaseName(ArtificialPlayer... aiCaller);
 
     public Player getActivePlayer(ArtificialPlayer... aiCaller);
@@ -38,7 +38,8 @@ public interface GameProxy {
      */
     public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller);
 
-    public void setReattack(boolean reattack,ArtificialPlayer... aiCaller);
+    public void setReattack(boolean reattack, ArtificialPlayer... aiCaller);
+
     /**
      * Resetta le countries dell'attacco. (Previo controllo sul caller del
      * metodo).
@@ -59,7 +60,6 @@ public interface GameProxy {
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
     //public void attack(int nrA, int nrD, ArtificialPlayer... aiCaller);
-
     public int[] getResultsDiceAttack(ArtificialPlayer... aiCaller);
 
     public int[] getResultsDiceDefense(ArtificialPlayer... aiCaller);
@@ -179,7 +179,7 @@ public interface GameProxy {
      * @param bonusArmiesTris
      * @param aiCaller
      */
-    public void playTris(String[] cardsNames, int bonusArmiesTris, ArtificialPlayer... aiCaller);
+    public void playTris(String[] cardsNames, ArtificialPlayer... aiCaller);
 
     /**
      * Ritorna il massimo numero di armate per lo spostamento finale.
@@ -216,14 +216,15 @@ public interface GameProxy {
     public boolean controlAttacker(String countryName, ArtificialPlayer... aiCaller);
 
     /**
-     * Controlla che il territorio sia dell'attaccante, abbia più di un armata e 
+     * Controlla che il territorio sia dell'attaccante, abbia più di un armata e
      * abbia territori vicini in cui spostare le armate
+     *
      * @param countryName
      * @param aiCaller
      * @return true se è possibile compiere uno spostamento da quel territorio
      */
     public boolean controlFromCountryPlayer(String countryName, ArtificialPlayer... aiCaller);
-    
+
     /**
      * Controlla che country sia dell'activePlayer. (Previo controllo sul caller
      * del metodo). // mmh
@@ -255,7 +256,6 @@ public interface GameProxy {
     public boolean controlMovement(String toCountryName, ArtificialPlayer... aiCaller);
 
     //  M E T O D I   P E R   D A R E   I N F O
-
     /**
      * Controlla se la Country ha armate sufficienti per attaccare (>=2).
      *
@@ -321,9 +321,11 @@ public interface GameProxy {
     public String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller);
 
     public int getMaxArmies(String countryName, boolean isAttacker, ArtificialPlayer... aiCaller);
-    
-    public boolean canPlayThisTris(String[] cardNames, ArtificialPlayer[] aiCaller);
-    
+
+    public boolean canPlayThisTris(String[] cardNames, ArtificialPlayer... aiCaller);
+
+    public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller);
+
     public void endGame();
 
 }
