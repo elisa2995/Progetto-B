@@ -6,10 +6,10 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.SpinnerNumberModel;
-import risiko.game.Game;
 import risiko.game.GameProxy;
 
 /**
@@ -26,7 +26,7 @@ public class AttackerDialog extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public AttackerDialog(GameProxy game, java.awt.Frame parent, boolean modal) {
+    public AttackerDialog(GameProxy game, Frame parent, boolean modal) {
         super(parent, modal);
         this.game = game;        
         initComponents();

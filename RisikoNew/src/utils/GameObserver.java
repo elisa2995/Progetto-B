@@ -1,8 +1,5 @@
-
 package utils;
 
-import java.awt.Color;
-import risiko.players.Player;
 
 /**
  * A class can implement the <code>Observer</code> interface when it

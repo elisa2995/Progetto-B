@@ -442,7 +442,6 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender, boolean reattack) {
         ((GraphicsJLabel) labelMap).drawCone(countryLabelMap.get(countryAttackerName).getBounds(), countryLabelMap.get(countryDefenderName).getBounds());
-
         if (countryDefenderName == null) {
             textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }

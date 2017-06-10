@@ -1,0 +1,35 @@
+Urgenti: 
+- finire la visualizzazione delle carte - (FEDERICO)
+- uscita dal gioco -> da giocatore normale ad artificiale - (ALESSANDRO?)
+- DOCUMENTAZIONE (javaDoc) (possiamo spartirci le classi da documentare..?)
+- testare qualche classe (tipo player e map ... o qualsiasi altra cosa - se nessuno ha voglia di farlo possiamo spartirci i metodi).
+- spostare le immagini/files ecc in resources e cambiare i metodi di lettura/scrittura accordingly 
+- sistemare startgamegui - (ELISA)
+- Metti sia nella finestra dell'attaccante che nella finestra del difensore entrambi i nomi con i colori
+- immagine per cambio fase che appare e scompare (servono solo le immagini, il codice lo abbiamo)
+- rendere tutto non resizable
+- fare in modo che la finestra di move non si possa chiudere
+- Refactoring comunicazione observable - observer con classi dedicate - (CAROLINA)
+- Spostare game su un thread diverso rispetto alla gui: 
+( idea : nel main si crea game (costruttore senza parametri) e startGameGUI (con invokelater), quando 
+startGameGUI ha i parametri per game, glieli setta. Il contenuto di tutti gli update va messo nell'EventQueue
+con invokeLater ( EventQueue.invokeLater(new Runnable() {....}) riga 56 GraphicsJLabel) 
+devono essere messi in invokelater perch� a questo punto appartengono a thread diversi. )
+- Visualizzazione della classifica
+
+In un'altra vita : 
+- fare una classe che si occupi di trasformare in stringhe gli oggetti e viceversa (per la comunicazione game-gui)
+- rendere il tutto proporzionale alla dimmensione dello schermo
+- ombre continenti 
+- controllare il resetCone
+- risolvere il problema dei coni tra la chiusura del dicedialog e la movedialog
+- controllare suoni per i giocatori artificiali 
+
+
+x quando conquisti un continente si dice nel jdialog che dice che lo hai conquistato
+x sistemare dimensioni finestre attacco move, confirm, attack 
+x contintenti come oggetti con dentro nome, bonus armies e lista countries
+x mettere i neghbors nel country
+x bottone cambia fase: farlo vedere solo in fase di attacco con passa a spostamento e in fase di spostameneto con passa turno
+x legenda giocatori a fianco
+x Metti le finestre grandi uguali per attacco
