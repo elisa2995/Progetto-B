@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import risiko.game.GameProxy;
+import shared.CountryInfo;
 import utils.BasicGameObserver;
 
 public class ArtificialPlayer extends Player implements Runnable, BasicGameObserver {
@@ -246,9 +247,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     @Override
-    public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender, boolean reattack) {
-        this.maxArmiesAttack = maxArmiesAttacker;
-        this.maxArmiesDefense = maxArmiesDefender;
+    public void updateOnSetDefender(CountryInfo[] countries, boolean reattack) {
+        this.maxArmiesAttack = countries[0].getArmies();
+        this.maxArmiesDefense = countries[1].getArmies();
         this.maxArmiesSet = true;
     }
 

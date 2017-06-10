@@ -30,7 +30,6 @@ public class Player {
         this.alreadyDrawnCard = false;
         this.bonusArmies = 0;
         this.mission = null;
-        //this.contaCarte = new int[4];
         this.bonusCards = new ArrayList<>();
         this.color = color;
         this.name = name;
@@ -114,9 +113,6 @@ public class Player {
                 playable.remove(cards);
             }
         }
-
-        /*Predicate <Card[]> cantPlay = cards -> !canPlayThisTris(cards);
-            tris.keySet().removeIf(cantPlay);*/
         return playable;
     }
 
@@ -143,5 +139,10 @@ public class Player {
 
     public boolean hasConqueredACountry() {
         return conqueredACountry;
+    }
+    
+    @Override
+    public String toString(){
+        return name;
     }
 }

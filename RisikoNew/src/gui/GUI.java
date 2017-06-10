@@ -25,6 +25,7 @@ import risiko.game.Game;
 import risiko.game.GameInvocationHandler;
 import risiko.game.GameProxy;
 import services.FileManager;
+import shared.CountryInfo;
 
 /**
  * @author andrea
@@ -40,8 +41,8 @@ public class GUI extends JFrame implements GameObserver {
     private AttackerDialog attackerDialog;
     private DiceDialog diceDialog;
     private LabelMapListener labelMapListener;
-    private final int PREFERRED_WIDTH=400;
-    private final int PREFERRED_HEIGHT=192;
+    private final int PREFERRED_WIDTH = 400;
+    private final int PREFERRED_HEIGHT = 192;
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         initBackground();
@@ -71,6 +72,7 @@ public class GUI extends JFrame implements GameObserver {
     private void init(Map<String, String> players, Map<String, String> playersColor) throws IOException, Exception {
         // Labels
         initLabels();
+        ((GraphicsJLabel) labelMap).setCountryLabel(countryLabelMap);
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
         textAreaInfo.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
 
@@ -366,11 +368,10 @@ public class GUI extends JFrame implements GameObserver {
      * Aggiorna <code> textAreaInfo</code> e <code>labelAdvice</code> dopo che
      * la country <code>countryName</code> è stata rinforzata.
      *
-     * @param countryName
      * @param bonusArmies
      */
     @Override
-    public void updateOnReinforce(String countryName, int bonusArmies) {
+    public void updateOnReinforce(int bonusArmies) {
         textAreaInfo.setText("Clicca su un tuo territorio per rinforzarlo con un'armata.\nHai " + bonusArmies + " armate bonus.");
     }
 
@@ -432,28 +433,26 @@ public class GUI extends JFrame implements GameObserver {
      * massimo numero di armate dell'attaccante/difensore per preparare il
      * jspinner dell'AttackDialog.
      *
-     * @param countryAttackerName
-     * @param countryDefenderName
-     * @param defenderPlayer
-     * @param maxArmiesAttacker
-     * @param maxArmiesDefender
+     * @param fightingCountries
      * @param reattack
      */
     @Override
-    public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender, boolean reattack) {
-        ((GraphicsJLabel) labelMap).drawCone(countryLabelMap.get(countryAttackerName).getBounds(), countryLabelMap.get(countryDefenderName).getBounds());
-        if (countryDefenderName == null) {
+    public void updateOnSetDefender(CountryInfo[] fightingCountries, boolean reattack) {
+
+        CountryInfo attacker = fightingCountries[0];
+        CountryInfo defender = fightingCountries[1];
+
+        ((GraphicsJLabel) labelMap).drawCone(attacker.getName(), defender.getName());
+        if (fightingCountries[1].getName() == null) {
             textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
 
         //ERRORE reattack è true ma maxArmiesDefender è 0.
-        //System.out.println("maxArmiesDefender="+maxArmiesDefender + " updateOnSetDefender");
-        defenseArmies.setMaxArmies(maxArmiesDefender);
+        defenseArmies.setMaxArmies(fightingCountries[1].getArmies());
 
         if (reattack) {
             this.attackerDialog.setVisible(true);
         }
-        //repaint();
         repaint(textAreaInfo);
     }
 
@@ -502,9 +501,9 @@ public class GUI extends JFrame implements GameObserver {
 
         //mi accerto che l'attaccante non sia artificiale
         if (isConquered && !artificialAttack[1]) {
-            String info = "Complimenti, hai conquistato " + defenderCountryName+".\n";
-            if(conqueredContinent != null){
-                info+="Ora possiedi "+conqueredContinent;
+            String info = "Complimenti, hai conquistato " + defenderCountryName + ".\n";
+            if (conqueredContinent != null) {
+                info += "Ora possiedi " + conqueredContinent;
             }
             MoveDialog moveDialog = new MoveDialog(game, attackerCountryName, defenderCountryName, info, maxArmiesAttacker);
             moveDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
@@ -639,9 +638,8 @@ public class GUI extends JFrame implements GameObserver {
         attackerDialog.setVisible(visible);
     }
 
-    public Rectangle getAttackerCountryBounds() {
-        String attackerCountryName = game.getAttackerCountryName();
-        return countryLabelMap.get(attackerCountryName).getBounds();
+    public String getAttackerCountry() {
+        return game.getAttackerCountryName();
     }
 
     @Override

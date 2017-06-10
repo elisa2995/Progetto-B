@@ -22,10 +22,10 @@ public class Observable extends BasicObservable {
      * @param countryName
      * @param bonusArmies
      */
-    public void notifyReinforce(String countryName, int bonusArmies) {
+    public void notifyReinforce(int bonusArmies) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnReinforce(countryName, bonusArmies);
+                ((GameObserver) ob).updateOnReinforce(bonusArmies);
             }
         }
 

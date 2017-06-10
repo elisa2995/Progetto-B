@@ -28,6 +28,8 @@ import risiko.Phase;
 import risiko.RisikoMap;
 import risiko.players.ArtificialPlayerSettings;
 import risiko.players.LoggedPlayer;
+import shared.CountryInfo;
+import shared.PlayerInfo;
 import utils.BasicObservable;
 
 public class Game extends Observable implements GameProxy {
@@ -197,7 +199,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Setta il defender.
+     * Sets the defender.
      *
      * @param defenderCountryName
      * @param aiCaller l'eventuale artificialPlayer caller del metodo.
@@ -205,8 +207,30 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller) {
         this.defenderCountry = map.getCountryByName(defenderCountryName);
+        ((BasicObservable) this).notifySetDefender(new CountryInfo[]{buildCountryInfo(true), buildCountryInfo(false)}, reattack);
+    }
 
-        ((BasicObservable) this).notifySetDefender(getAttackerCountryName(), defenderCountryName, map.getPlayerByCountry(defenderCountry).getName(), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), reattack);
+    /**
+     * Builds an object <code>CountryInfo</code> which contains the info about
+     * the attacker/defender.
+     *
+     * @param isAttacker
+     * @return
+     */
+    private CountryInfo buildCountryInfo(boolean isAttacker) {
+        Country country = (isAttacker) ? attackerCountry : defenderCountry;
+        Player player = map.getPlayerByCountry(country);
+        return new CountryInfo(country.toString(), map.getMaxArmies(country, isAttacker), buildPlayerInfo(player));
+    }
+
+    /**
+     * Builds an object <code>PlayerInfo</code> which containts the info about
+     * a certain player.
+     * @param player
+     * @return 
+     */
+    private PlayerInfo buildPlayerInfo(Player player) {
+        return new PlayerInfo(player.toString(), player.getColor());
     }
 
     @Override
@@ -395,7 +419,7 @@ public class Game extends Observable implements GameProxy {
 
         int nrA = this.attackerArmies;
         int nrD = this.defenderArmies;
-        String continent=null;
+        String continent = null;
 
         Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
         Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
@@ -404,7 +428,7 @@ public class Game extends Observable implements GameProxy {
 
         if (conquered) {
             map.updateOnConquer(attackerCountry, defenderCountry, nrA);
-            if(map.hasConqueredContinent(activePlayer, defenderCountry)){
+            if (map.hasConqueredContinent(activePlayer, defenderCountry)) {
                 continent = map.getContinentByCountry(defenderCountry).toString();
             }
             notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
@@ -465,7 +489,7 @@ public class Game extends Observable implements GameProxy {
         activePlayer.decrementBonusArmies();
         map.addArmies(country, 1);
 
-        notifyReinforce(countryName, activePlayer.getBonusArmies());
+        notifyReinforce(activePlayer.getBonusArmies());
 
         if (activePlayer.getBonusArmies() == 0) {
             try {
