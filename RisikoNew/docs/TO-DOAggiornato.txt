@@ -1,20 +1,20 @@
 Urgenti: 
-- finire la visualizzazione delle carte - (FEDERICO)
-- uscita dal gioco -> da giocatore normale ad artificiale - (ALESSANDRO?)
+- finire la visualizzazione delle carte (FEDERICO)
+- uscita dal gioco -> da giocatore normale ad artificiale (ALESSANDRO?)
 - DOCUMENTAZIONE (javaDoc) (possiamo spartirci le classi da documentare..?)
 - testare qualche classe (tipo player e map ... o qualsiasi altra cosa - se nessuno ha voglia di farlo possiamo spartirci i metodi).
 - spostare le immagini/files ecc in resources e cambiare i metodi di lettura/scrittura accordingly 
-- sistemare startgamegui - (ELISA)
+- sistemare startgamegui - ELISA
 - Metti sia nella finestra dell'attaccante che nella finestra del difensore entrambi i nomi con i colori
 - immagine per cambio fase che appare e scompare (servono solo le immagini, il codice lo abbiamo)
 - rendere tutto non resizable
-- fare in modo che la finestra di move non si possa chiudere
-- Refactoring comunicazione observable - observer con classi dedicate - (CAROLINA)
+- non si può chiudere la finestra di move
+- Refactoring comunicazione observable - observer con classi dedicate - CAROLINA
 - Spostare game su un thread diverso rispetto alla gui: 
 ( idea : nel main si crea game (costruttore senza parametri) e startGameGUI (con invokelater), quando 
 startGameGUI ha i parametri per game, glieli setta. Il contenuto di tutti gli update va messo nell'EventQueue
 con invokeLater ( EventQueue.invokeLater(new Runnable() {....}) riga 56 GraphicsJLabel) 
-devono essere messi in invokelater perchï¿½ a questo punto appartengono a thread diversi. )
+devono essere messi in invokelater perché a questo punto appartengono a thread diversi. )
 - Visualizzazione della classifica
 
 In un'altra vita : 

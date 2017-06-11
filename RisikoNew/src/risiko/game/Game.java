@@ -28,6 +28,7 @@ import risiko.Phase;
 import risiko.RisikoMap;
 import risiko.players.ArtificialPlayerSettings;
 import risiko.players.LoggedPlayer;
+import shared.AttackResultInfo;
 import shared.CountryInfo;
 import shared.PlayerInfo;
 import utils.BasicObservable;
@@ -44,8 +45,7 @@ public class Game extends Observable implements GameProxy {
     private List<Player> players;
     private Player activePlayer;
     private Phase phase;
-    private int resultsDiceAttack[];
-    private int resultsDiceDefense[];
+    private int[] attackDice, defenseDice;
     private boolean reattack;
     private GameProxy proxy;
 
@@ -207,7 +207,20 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller) {
         this.defenderCountry = map.getCountryByName(defenderCountryName);
-        ((BasicObservable) this).notifySetDefender(new CountryInfo[]{buildCountryInfo(true), buildCountryInfo(false)}, reattack);
+        ((BasicObservable) this).notifySetDefender(buildFightingCountriesInfo(), reattack);
+    }
+
+    /**
+     * Builds an array of 2 elements of <code>CountryInfo</code>. The element at
+     * index 0 represent the attacker, the one at index 1 the defender.
+     *
+     * @return
+     */
+    private CountryInfo[] buildFightingCountriesInfo() {
+        CountryInfo attackerCountryInfo = buildCountryInfo(true);
+        attackerCountryInfo.canAttackFromHere(map.canAttackFromCountry(attackerCountry));
+        CountryInfo defenderCountryInfo = buildCountryInfo(false);
+        return new CountryInfo[]{attackerCountryInfo, defenderCountryInfo};
     }
 
     /**
@@ -224,10 +237,11 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Builds an object <code>PlayerInfo</code> which containts the info about
-     * a certain player.
+     * Builds an object <code>PlayerInfo</code> which containts the info about a
+     * certain player.
+     *
      * @param player
-     * @return 
+     * @return
      */
     private PlayerInfo buildPlayerInfo(Player player) {
         return new PlayerInfo(player.toString(), player.getColor());
@@ -268,11 +282,10 @@ public class Game extends Observable implements GameProxy {
      * @param nrD attack
      * @author Andrea
      */
-    private void fight(Country attackerCountry, Country defenderCountry, int nrA, int nrD) {
-        int lostArmies[] = computeLostArmies(nrA, nrD);
+    private void fight() {
+        int lostArmies[] = computeLostArmies(attackerArmies, defenderArmies);
         map.removeArmies(attackerCountry, lostArmies[0]);
         map.removeArmies(defenderCountry, lostArmies[1]);
-
         notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
     }
 
@@ -284,12 +297,12 @@ public class Game extends Observable implements GameProxy {
      * @author Andrea
      */
     private int[] computeLostArmies(int nrA, int nrD) {
-        resultsDiceAttack = rollDice(nrA);
-        resultsDiceDefense = rollDice(nrD);
+        attackDice = rollDice(nrA);
+        defenseDice = rollDice(nrD);
         int armiesLost[] = new int[2];
         int min = (nrA > nrD) ? nrD : nrA;
         for (int i = 0; i < min; i++) {
-            if (resultsDiceAttack[i] > resultsDiceDefense[i]) {
+            if (attackDice[i] > defenseDice[i]) {
                 armiesLost[1]++;
             } else {
                 armiesLost[0]++;
@@ -298,14 +311,8 @@ public class Game extends Observable implements GameProxy {
         return armiesLost;
     }
 
-    @Override
-    public synchronized int[] getResultsDiceAttack(ArtificialPlayer... aiCaller) {
-        return resultsDiceAttack;
-    }
-
-    @Override
-    public synchronized int[] getResultsDiceDefense(ArtificialPlayer... aiCaller) {
-        return resultsDiceDefense;
+    private int[][] getDice() {
+        return new int[][]{attackDice, defenseDice};
     }
 
     /**
@@ -317,18 +324,18 @@ public class Game extends Observable implements GameProxy {
      * @author Andrea
      */
     private int[] rollDice(int nrDice) {
-        int dices[] = new int[nrDice];
+        int dice[] = new int[nrDice];
         int tmp;
         for (int i = 0; i < nrDice; i++) {
-            dices[i] = rollDice();
+            dice[i] = rollDie();
         }
-        Arrays.sort(dices);
+        Arrays.sort(dice);
         if (nrDice > 1) {
-            tmp = dices[0];
-            dices[0] = dices[nrDice - 1];
-            dices[nrDice - 1] = tmp;
+            tmp = dice[0];
+            dice[0] = dice[nrDice - 1];
+            dice[nrDice - 1] = tmp;
         }
-        return dices;
+        return dice;
     }
 
     /**
@@ -337,7 +344,7 @@ public class Game extends Observable implements GameProxy {
      * @return un numero random da 1 a 6
      * @author Andrea
      */
-    private int rollDice() {
+    private int rollDie() {
         return (int) (Math.random() * 6) + 1;
     }
 
@@ -393,63 +400,91 @@ public class Game extends Observable implements GameProxy {
                 notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, false);
             }
         }
-        //this.resetFightingCountries();        
     }
 
     /**
-     * Esegue l'attacco
+     * Performs the attack.
      *
      * @param aiCaller
      */
     @Override
     public void confirmAttack(ArtificialPlayer... aiCaller) {
-        if (attackInProgress == false) {
-            return;
-        }
-        if (aiCaller.length == 0) {
-            if ((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)) {
-                return;
-            }
-        } else if (!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))) {
-            System.out.println("!aiCallerEquals");
-            System.out.println(defenderCountry.getName());
-            System.out.println(map.getPlayerByCountry(defenderCountry).getName());
+
+        if (!canConfirmAttack(aiCaller)) {
             return;
         }
 
-        int nrA = this.attackerArmies;
-        int nrD = this.defenderArmies;
-        String continent = null;
+        fight();
+        checkCountryConquest();
+        checkLostAndWon();
 
-        Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
-        Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
-        fight(attackerCountry, defenderCountry, nrA, nrD);
-        boolean conquered = map.isConquered(defenderCountry);
+        notifyAttackResult(new AttackResultInfo(buildFightingCountriesInfo(), getDice(), map.isConquered(defenderCountry), checkContinentConquest(), isArtificialAttack()));
 
-        if (conquered) {
-            map.updateOnConquer(attackerCountry, defenderCountry, nrA);
-            if (map.hasConqueredContinent(activePlayer, defenderCountry)) {
-                continent = map.getContinentByCountry(defenderCountry).toString();
-            }
-            notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
-            //
-            activePlayer.setConqueredACountry(true);
-
-            if (hasLost(defenderPlayer)) {
-                players.remove(defenderPlayer);
-            }
-            if (hasWon()) {
-                recordGainedPoints();
-                return;
-            }
-
-        }
-        boolean[] artificialAttack = new boolean[2];
-        artificialAttack[0] = defenderPlayer instanceof ArtificialPlayer && attackerPlayer instanceof ArtificialPlayer;
-        artificialAttack[1] = attackerPlayer instanceof ArtificialPlayer;
-        notifyAttackResult(conquered, map.canAttackFromCountry(attackerCountry), map.getMaxArmies(attackerCountry, true), map.getMaxArmies(defenderCountry, false), this.getResultsDiceAttack(), this.getResultsDiceDefense(), artificialAttack, attackerCountry.getName(), defenderCountry.getName(), continent);
         attackInProgress = false;
+    }
 
+    /**
+     * Tells wether the caller of the method has the right to confirm the attack
+     * (it has to be the owner of defenderCountry).
+     *
+     * @param aiCaller
+     * @return true if it has the right to call confirmAttack, false otherwise.
+     */
+    private boolean canConfirmAttack(ArtificialPlayer... aiCaller) {
+
+        boolean artificialDefender = map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer;
+        boolean rightCaller = (aiCaller.length == 0) ? !artificialDefender : artificialDefender && aiCaller[0].equals(map.getPlayerByCountry(defenderCountry));;
+        return attackInProgress && rightCaller;
+    }
+
+    /**
+     * Checks if the country in defense has been conquered and acts accordingly.
+     */
+    private void checkCountryConquest() {
+
+        if (map.isConquered(defenderCountry)) {
+            map.updateOnConquer(attackerCountry, defenderCountry, attackerArmies);
+            notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
+            activePlayer.setConqueredACountry(true);
+        }
+    }
+
+    /**
+     * Checks if the <code>activePlayer</code> has won or the defender has lost
+     * and acts accordingly.
+     */
+    private void checkLostAndWon() {
+        if (hasWon()) {
+            recordGainedPoints();
+        }
+        if (hasLost(map.getPlayerByCountry(defenderCountry))) {
+            players.remove(map.getPlayerByCountry(defenderCountry));
+        }
+    }
+
+    /**
+     * Returns the name of the contintnet that has just been conquered (or null
+     * if no continent was conquered).
+     *
+     * @return
+     */
+    private String checkContinentConquest() {
+        String continent = null;
+        if (map.hasConqueredContinent(activePlayer, defenderCountry)) {
+            continent = map.getContinentByCountry(defenderCountry).toString();
+        }
+        return continent;
+    }
+
+    /**
+     * Returns an array of booleans, of which the first element is true if the
+     * attacker is an artificial player, the second one is true if the defender
+     * is an artificialPlayer.
+     *
+     * @return
+     */
+    private boolean[] isArtificialAttack() {
+        return new boolean[]{activePlayer instanceof ArtificialPlayer, map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer};
     }
 
     /**

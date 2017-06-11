@@ -12,15 +12,13 @@ public class AttackResultInfo {
     private final int[][] dice;
     private final boolean conquered;
     private final String conqueredContinent;
-    private final boolean canAttackFromCountry; // true if the attacker can fire another attack from the same country
     private final boolean[] artificialAttack;
 
-    public AttackResultInfo(CountryInfo[] countries, int[][] dice, boolean conquered, String conqueredContinent, boolean canAttackFromCountry, boolean[] artificialAttack) {
+    public AttackResultInfo(CountryInfo[] countries, int[][] dice, boolean conquered, String conqueredContinent, boolean[] artificialAttack) {
         this.countries = countries;
         this.dice = dice;
         this.conquered = conquered;
         this.conqueredContinent = conqueredContinent;
-        this.canAttackFromCountry = canAttackFromCountry;
         this.artificialAttack = artificialAttack;
     }
     
@@ -32,27 +30,27 @@ public class AttackResultInfo {
         return countries[1];
     }
     
-    public String getAttackerName(){
+    public String getAttackerCountryName(){
         return getAttackerInfo().getName();
     }
     
-    public String getDefenderName(){
+    public String getDefenderCountryName(){
         return getDefenderInfo().getName();
     }
     
     public int getMaxArmiesAttacker(){
-        return getAttackerInfo().getArmies();
+        return getAttackerInfo().getMaxArmies();
     }
     
     public int getMaxArmiesDefender(){
-        return getDefenderInfo().getArmies();
+        return getDefenderInfo().getMaxArmies();
     }
 
     public int[][] getDice() {
         return dice;
     }
 
-    public boolean isConquered() {
+    public boolean hasConquered() {
         return conquered;
     }
 
@@ -60,12 +58,19 @@ public class AttackResultInfo {
         return conqueredContinent;
     }
 
-    public boolean isCanAttackFromCountry() {
-        return canAttackFromCountry;
-    }
-
     public boolean[] getArtificialAttack() {
         return artificialAttack;
     }
-
+    
+    public boolean areBothArtificial(){
+        return artificialAttack[0] && artificialAttack[1];
+    }
+    
+    public boolean isAttackerArtificial(){
+        return artificialAttack[0];
+    }
+    
+    public boolean canAttackFromCountry(){
+        return countries[0].canAttackFromHere();
+    }
 }

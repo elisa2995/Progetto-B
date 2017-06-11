@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import risiko.players.ArtificialPlayer;
+import shared.AttackResultInfo;
 import shared.CountryInfo;
 
 /**
@@ -56,9 +57,9 @@ public class BasicObservable {
      * @param defenderDice
      * @param artificialAttack
      */
-    public void notifyAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, String attackerCountryName, String defenderCountryName, String conqueredContinent) {
+    public void notifyAttackResult(AttackResultInfo attackResult) {
         for (BasicGameObserver ob : this.obs) {
-            ob.updateOnAttackResult(isConquered, canAttackFromCountry, maxArmiesAttacker, maxArmiesDefender, attackerDice, defenderDice, artificialAttack, attackerCountryName, defenderCountryName, conqueredContinent);
+            ob.updateOnAttackResult(attackResult);
         }
     }
 

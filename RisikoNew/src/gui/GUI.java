@@ -25,6 +25,7 @@ import risiko.game.Game;
 import risiko.game.GameInvocationHandler;
 import risiko.game.GameProxy;
 import services.FileManager;
+import shared.AttackResultInfo;
 import shared.CountryInfo;
 
 /**
@@ -448,7 +449,7 @@ public class GUI extends JFrame implements GameObserver {
         }
 
         //ERRORE reattack è true ma maxArmiesDefender è 0.
-        defenseArmies.setMaxArmies(fightingCountries[1].getArmies());
+        defenseArmies.setMaxArmies(fightingCountries[1].getMaxArmies());
 
         if (reattack) {
             this.attackerDialog.setVisible(true);
@@ -464,7 +465,6 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnSetFromCountry(String countryName) {
-        //((GraphicsJLabel) labelMap).Cone();
         this.labelMapListener.resetCache();
         if (countryName != null) {
             textAreaInfo.setText("Clicca su un tuo territorio confinante per sceglierlo come destinazione");
@@ -474,52 +474,62 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Aggiorna  <code>textAreaInfo</code> e <code>labelAdvice</code> una volta
-     * concluso l'attacco e mostra la <code>diceDialog</code>
+     * Shows the information of an attackResult.
      *
-     * @param isConquered
-     * @param canAttackFromCountry
-     * @param maxArmiesAttacker
-     * @param maxArmiesDefender
-     * @param attackerDice
-     * @param defenderDice
+     * @param ar
      */
     @Override
-    public void updateOnAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, String attackerCountryName, String defenderCountryName, String conqueredContinent) {
-        //mi accerto che non siano entrambi artificiali
-        if (!artificialAttack[0]) {
-            diceDialog.setAttackerCountryName(attackerCountryName);
-            diceDialog.setArtificialAttacker(artificialAttack[1]);
-            diceDialog.setIsConquered(isConquered);
-            diceDialog.setCanAttackFromCountry(canAttackFromCountry);
-            diceDialog.setDefenderCountryName(defenderCountryName);
-            diceDialog.updateDice(attackerDice, defenderDice);
-            //diceDialog.initMoveDialog(maxArmiesAttacker, attackerCountryName, game.getDefenderCountryName());
-            diceDialog.showDice();
-            diceDialog.setVisible(true);
+    public void updateOnAttackResult(AttackResultInfo ar) {
+        if (!ar.areBothArtificial()) {
+            showDiceDialog(ar);
         }
 
-        //mi accerto che l'attaccante non sia artificiale
-        if (isConquered && !artificialAttack[1]) {
-            String info = "Complimenti, hai conquistato " + defenderCountryName + ".\n";
-            if (conqueredContinent != null) {
-                info += "Ora possiedi " + conqueredContinent;
-            }
-            MoveDialog moveDialog = new MoveDialog(game, attackerCountryName, defenderCountryName, info, maxArmiesAttacker);
-            moveDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
-            PlayAudio.play("sounds/conquest.wav");
-            moveDialog.setVisible(true);
+        if (ar.hasConquered() && !ar.isAttackerArtificial()) {
+            showCongratsForConquest(ar);
         }
 
-        // resetFightingCountruiesd se artificial attack
-        if (!isConquered) {
-            defenseArmies.setMaxArmies(maxArmiesDefender);
+        if (!ar.hasConquered()) {
+            defenseArmies.setMaxArmies(ar.getMaxArmiesDefender());
         }
 
-        //labelAdvice.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
-        if (isConquered || !canAttackFromCountry) {
+        if (ar.hasConquered() || !ar.canAttackFromCountry()) {
             labelMapListener.resetCache();
         }
+    }
+
+    /**
+     * Sets and shows <code>DiceDialog</code>.
+     *
+     * @param ar
+     */
+    private void showDiceDialog(AttackResultInfo ar) {
+        diceDialog.setAttackerCountryName(ar.getAttackerCountryName());
+        diceDialog.setArtificialAttacker(ar.isAttackerArtificial());
+        diceDialog.setIsConquered(ar.hasConquered());
+        diceDialog.setCanAttackFromCountry(ar.canAttackFromCountry());
+        diceDialog.setDefenderCountryName(ar.getDefenderCountryName());
+        diceDialog.updateDice(ar.getDice()[0], ar.getDice()[1]);
+        diceDialog.showDice();
+        diceDialog.setVisible(true);
+    }
+
+    /**
+     * Shows a dialog with a congrats message for the conquest. This dialog can
+     * be used to move armies from tbe attacker's country to the country that's
+     * just been conquered.
+     *
+     * @param ar
+     */
+    private void showCongratsForConquest(AttackResultInfo ar) {
+        String info = "Complimenti, hai conquistato " + ar.getDefenderCountryName() + ".\n";
+        if (ar.getConqueredContinent() != null) {
+            info += "Ora possiedi " + ar.getConqueredContinent();
+        }
+
+        MoveDialog moveDialog = new MoveDialog(game, ar.getAttackerCountryName(), ar.getDefenderCountryName(), info, ar.getMaxArmiesAttacker());
+        moveDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
+        PlayAudio.play("sounds/conquest.wav");
+        moveDialog.setVisible(true);
     }
 
     /**

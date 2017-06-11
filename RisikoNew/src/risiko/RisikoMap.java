@@ -410,11 +410,11 @@ public class RisikoMap {
     }
 
     public boolean canAttackFromCountry(Country country) {
-        boolean can = false;
+        boolean canAttack = false;
         for (Country c : country.getNeighbors()) {
-            can = can || countryPlayer.get(c) != countryPlayer.get(country);
+            canAttack = canAttack || countryPlayer.get(c) != countryPlayer.get(country);
         }
-        return can & country.getArmies() > 1;
+        return canAttack & country.getArmies() > 1;
     }
 
     public Country getCountryByName(String countryName) {
