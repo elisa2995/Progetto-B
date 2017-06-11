@@ -24,7 +24,7 @@ public class CountriesMission extends Mission {
 
     @Override
     public boolean isCompleted(List<Country> countries) {
-        return countries.size() == nrCountriesToConquer;
+        return countries.size() >= nrCountriesToConquer;
     }
 
     @Override

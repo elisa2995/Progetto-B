@@ -34,13 +34,16 @@ public class LabelMapListener extends MouseInputAdapter {
     private GUI gui;
     private Map<String, Boolean> cache;
 
-    public LabelMapListener(JLabel mapLabel, Map<Color, String> ColorNameCountry, GameProxy game, GUI gui) {
-        this.game = game;
+    public LabelMapListener(JLabel mapLabel, Map<Color, String> ColorNameCountry, GUI gui) {
         this.gui = gui;
         this.mapLabel = mapLabel;
         this.bufferedImage = convertToBufferedImage(mapLabel);
         this.ColorNameCountry = ColorNameCountry;
         this.cache = new HashMap<>();
+    }
+    
+    public void setGame(GameProxy game){
+        this.game = game;
     }
 
     /**
@@ -270,7 +273,7 @@ public class LabelMapListener extends MouseInputAdapter {
     public void drowCone(MouseEvent e) {
         if (game.getAttackerCountryName() != null) {
             //imposto il cono di luce dall'attackerCountry alla posizione del Mouse
-            ((GraphicsJLabel) mapLabel).drawCone(gui.getAttackerCountryBounds(), new Rectangle(e.getX(), e.getY(), 2, 2));
+            ((GraphicsJLabel) mapLabel).drawCone(gui.getAttackerCountry(), new Rectangle(e.getX(), e.getY(), 2, 2));
         }
     }
 

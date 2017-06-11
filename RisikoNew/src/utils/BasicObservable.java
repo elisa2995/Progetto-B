@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import risiko.players.ArtificialPlayer;
+import shared.AttackResultInfo;
+import shared.CountryInfo;
 
 /**
  *
@@ -30,15 +32,10 @@ public class BasicObservable {
      * notificha che chi viene attaccato deve scegliere con quante armate deve
      * difendersi
      *
-     * @param defender giocatore attaccato
-     * @param defenderCountry territorio attaccato
-     * @param attacker attaccante
-     * @param attackerCountry territorio attaccante
-     * @param nrA numero di armate da cui si viene attaccati
      */
-    public void notifyDefender(String defender, String defenderCountry, String attacker, String attackerCountry, int nrA, boolean isArtificialPlayer) {
+    public void notifyDefender(CountryInfo defenderCountryInfo) {
         for (BasicGameObserver ob : this.obs) {
-            ob.updateOnDefend(defender, defenderCountry, attacker, attackerCountry, nrA, isArtificialPlayer);
+            ob.updateOnDefend(defenderCountryInfo);
         }
 
     }
@@ -55,9 +52,9 @@ public class BasicObservable {
      * @param defenderDice
      * @param artificialAttack
      */
-    public void notifyAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, String attackerCountryName, String defenderCountryName, String conqueredContinent) {
+    public void notifyAttackResult(AttackResultInfo attackResult) {
         for (BasicGameObserver ob : this.obs) {
-            ob.updateOnAttackResult(isConquered, canAttackFromCountry, maxArmiesAttacker, maxArmiesDefender, attackerDice, defenderDice, artificialAttack,attackerCountryName, defenderCountryName, conqueredContinent);
+            ob.updateOnAttackResult(attackResult);
         }
     }
 
@@ -83,27 +80,31 @@ public class BasicObservable {
     }
 
     /**
-     * Notifica un cambiamento dopo che il difensore è stato settato
+     * Notifies the observer that the defender has chosen how many armies to use
+     * for the defense.
      *
-     * @param countryAttackerName
-     * @param countryDefenderName
-     * @param defenderPlayer
-     * @param maxArmiesAttacker
-     * @param maxArmiesDefender
+     * @param attacker
+     * @param defender
+     * @param reattack
      */
-    public void notifySetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender, boolean reattack) {
+    public void notifySetDefender(CountryInfo[] fightingCountries, boolean reattack) {
         for (BasicGameObserver ob : this.obs) {
-            ob.updateOnSetDefender(countryAttackerName, countryDefenderName, defenderPlayer, maxArmiesAttacker, maxArmiesDefender, reattack);
+            ob.updateOnSetDefender(fightingCountries, reattack);
         }
     }
 
+    /*public void notifySetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender, boolean reattack) {
+        for (BasicGameObserver ob : this.obs) {
+            ob.updateOnSetDefender(countryAttackerName, countryDefenderName, defenderPlayer, maxArmiesAttacker, maxArmiesDefender, reattack);
+        }
+    }*/
     public void notifyElimination(String defenderName, boolean artificialAttack) {
         for (BasicGameObserver ob : this.obs) {
             ob.updateOnElimination(defenderName, artificialAttack);
         }
     }
-    
-    public void notifyEndGame(){
+
+    public void notifyEndGame() {
         this.obs.sort(new Comparator() {
             @Override
             public int compare(Object o1, Object o2) {
@@ -162,7 +163,5 @@ public class BasicObservable {
     public synchronized int countObservers() {
         return obs.size();
     }
-    
-    
 
 }

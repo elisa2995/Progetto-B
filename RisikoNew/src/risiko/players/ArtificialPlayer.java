@@ -1,12 +1,13 @@
 package risiko.players;
 
 import exceptions.PendingOperationsException;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import risiko.game.GameProxy;
+import shared.AttackResultInfo;
+import shared.CountryInfo;
 import utils.BasicGameObserver;
 
 public class ArtificialPlayer extends Player implements Runnable, BasicGameObserver {
@@ -259,20 +260,20 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     @Override
-    public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender, boolean reattack) {
-        this.maxArmiesAttack = maxArmiesAttacker;
-        this.maxArmiesDefense = maxArmiesDefender;
+    public void updateOnSetDefender(CountryInfo[] countries, boolean reattack) {
+        this.maxArmiesAttack = countries[0].getMaxArmies();
+        this.maxArmiesDefense = countries[1].getMaxArmies();
         this.maxArmiesSet = true;
     }
 
     @Override
-    public void updateOnAttackResult(boolean isConquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, String attackerCountryName, String defenderCountryName, String conqueredContinent) {
+    public void updateOnAttackResult(AttackResultInfo ar) {
         if (this.currentAction == Action.DEFEND) {
             // Se ero in difesa una volta ricevuto il risultato dell'attacco, passo alla fase di no-action
             this.currentAction = Action.NOACTION;
         }
-        if(isConquered){
-            game.move(attackerCountryName, defenderCountryName, maxArmiesAttacker, this);
+        if(ar.hasConquered()){
+            game.move(ar.getAttackerCountryName(), ar.getDefenderCountryName(), ar.getMaxArmiesAttacker(), this);
         }
         canAttack = true;
     }
@@ -283,8 +284,8 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     @Override
-    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {
-        if (this.getName().equals(defender)) {
+    public void updateOnDefend(CountryInfo defenderCountryInfo) {
+        if (this.getName().equals(defenderCountryInfo.getPlayerName())) {
             this.currentAction = Action.DEFEND;
         }
 

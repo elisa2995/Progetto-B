@@ -60,9 +60,6 @@ public interface GameProxy {
      */
     //public void attack(int nrA, int nrD, ArtificialPlayer... aiCaller);
 
-    public int[] getResultsDiceAttack(ArtificialPlayer... aiCaller);
-
-    public int[] getResultsDiceDefense(ArtificialPlayer... aiCaller);
 
     /**
      * setta il numero di armate con il quale si vuole difenders
