@@ -126,7 +126,6 @@ public class Game extends Observable implements GameProxy {
         map.assignCountriesToPlayers(players);
         map.assignMissionToPlayers(players);
         notifyCountriesAssignment(buildAllCountryInfo());
-        //notifyCountryAssignment(getCountriesNames(), getCountriesArmies(), getCountriesColors());
         activePlayer = players.get(new Random().nextInt(players.size()));
         map.computeBonusArmies(activePlayer);
         phase = Phase.REINFORCE;
@@ -134,14 +133,20 @@ public class Game extends Observable implements GameProxy {
         notifyPhaseChange(buildPlayerInfo(activePlayer), phase.name());
         startArtificialPlayerThreads();
     }
-    
-    private CountryInfo[] buildAllCountryInfo(){
+
+    /**
+     * Builds an array of CountryInfo, containing the info about every country
+     * on the map.
+     *
+     * @return
+     */
+    private CountryInfo[] buildAllCountryInfo() {
         Country country;
         List<Country> countries = map.getCountriesList();
         CountryInfo[] countriesInfo = new CountryInfo[countries.size()];
-        for(int i = 0; i<countriesInfo.length; i++){
+        for (int i = 0; i < countriesInfo.length; i++) {
             country = countries.get(i);
-            countriesInfo[i] =new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.getName(), country.getArmies()); 
+            countriesInfo[i] = new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.getName(), country.getArmies());
         }
         return countriesInfo;
     }
@@ -246,6 +251,17 @@ public class Game extends Observable implements GameProxy {
         Country country = (isAttacker) ? attackerCountry : defenderCountry;
         Player player = map.getPlayerByCountry(country);
         return new CountryInfo(country.toString(), map.getMaxArmies(country, isAttacker), buildPlayerInfo(player));
+    }
+
+    /**
+     * Builds an object <code>CountryInfo</code> from an object of type
+     * <code>Country</code>.
+     *
+     * @param country
+     * @return
+     */
+    private CountryInfo buildCountryInfo(Country country) {
+        return new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.toString(), country.getArmies());
     }
 
     /**
@@ -531,7 +547,7 @@ public class Game extends Observable implements GameProxy {
             }
         }
 
-        notifyArmiesChange(countryName, country.getArmies(), map.getPlayerColorByCountry(country));
+        notifyArmiesChange(buildCountryInfo(country));
     }
 
     /**
@@ -582,7 +598,7 @@ public class Game extends Observable implements GameProxy {
         } catch (LastPhaseException ex) {
             passTurn();
         }
-        notifyPhaseChange(buildPlayerInfo(activePlayer),phase.name());
+        notifyPhaseChange(buildPlayerInfo(activePlayer), phase.name());
     }
 
     /**
@@ -752,8 +768,8 @@ public class Game extends Observable implements GameProxy {
         Country toCountry = map.getCountryByName(toCountryName);
         Country fromCountry = map.getCountryByName(fromCountryName);
         map.move(fromCountry, toCountry, i);
-        notifyArmiesChange(toCountryName, toCountry.getArmies(), activePlayer.getColor());
-        notifyArmiesChange(fromCountryName, fromCountry.getArmies(), activePlayer.getColor());
+        notifyArmiesChange(buildCountryInfo(toCountry));
+        notifyArmiesChange(buildCountryInfo(fromCountry));
 
         if (phase == Phase.MOVE) {
             passTurn();
@@ -990,8 +1006,8 @@ public class Game extends Observable implements GameProxy {
     }
 
     private void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
-        notifyArmiesChange(defenderCountry.getName(), defenderCountry.getArmies(), map.getPlayerColorByCountry(defenderCountry));
-        notifyArmiesChange(attackerCountry.getName(), attackerCountry.getArmies(), map.getPlayerColorByCountry(attackerCountry));
+        notifyArmiesChange(buildCountryInfo(defenderCountry));
+        notifyArmiesChange(buildCountryInfo(attackerCountry));
     }
 
     /**

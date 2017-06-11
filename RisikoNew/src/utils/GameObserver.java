@@ -39,7 +39,7 @@ public interface GameObserver extends BasicGameObserver {
     /**
      * Method called whenever the number of armies of a country changes.
      */
-    public void updateOnArmiesChange(String country, int armies, String color);
+    public void updateOnArmiesChange(CountryInfo country);
 
     /**
      * Updates the observer when the activePlayer passes its turn.

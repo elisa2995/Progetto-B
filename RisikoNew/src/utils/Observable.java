@@ -97,10 +97,10 @@ public class Observable extends BasicObservable {
      * @param armies
      * @param color
      */
-    public void notifyArmiesChange(String country, int armies, String color) {
+    public void notifyArmiesChange(CountryInfo countryInfo) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnArmiesChange(country, armies, color);
+                ((GameObserver) ob).updateOnArmiesChange(countryInfo);
             }
         }
 

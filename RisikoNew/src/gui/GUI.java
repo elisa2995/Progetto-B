@@ -575,7 +575,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnCountriesAssignment(CountryInfo[] countriesInfo) {
         for (CountryInfo country : countriesInfo) {
-            updateOnArmiesChange(country.getName(), country.getArmies(), country.getPlayerColor());
+            updateOnArmiesChange(country);
         }
     }
 
@@ -588,13 +588,13 @@ public class GUI extends JFrame implements GameObserver {
      * @param color
      */
     @Override
-    public void updateOnArmiesChange(String country, int armies, String color) {
-        String colorToString = color;
-        JLabel label = countryLabelMap.get(country);
+    public void updateOnArmiesChange(CountryInfo countryInfo) {
+        
+        JLabel label = countryLabelMap.get(countryInfo.getName());
         label.setForeground(Color.WHITE);
-        label.setText(Integer.toString(armies));
+        label.setText(Integer.toString(countryInfo.getArmies()));
         label.setHorizontalTextPosition(JLabel.CENTER);
-        label.setIcon(new ImageIcon("files/images/labelCountry/" + colorToString + "label1.png"));
+        label.setIcon(new ImageIcon("files/images/labelCountry/" + countryInfo.getPlayerColor() + "label1.png"));
 
         repaint(label);
     }
