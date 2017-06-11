@@ -568,18 +568,14 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Aggiorna le etichette dei dopo l'assegnazione iniziale delle armate.
+     * Updates the coutries' labels after the initial assignment.
      *
-     * @param countries
-     * @param armies
-     * @param colors
+     * @param countriesInfo
      */
     @Override
-    public void updateOnCountryAssignment(String[] countries, int[] armies, String[] colors) {
-        int i = 0;
-        for (String country : countries) {
-            updateOnArmiesChange(country, armies[i], colors[i]);
-            i++;
+    public void updateOnCountriesAssignment(CountryInfo[] countriesInfo) {
+        for (CountryInfo country : countriesInfo) {
+            updateOnArmiesChange(country.getName(), country.getArmies(), country.getPlayerColor());
         }
     }
 

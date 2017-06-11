@@ -79,14 +79,12 @@ public class Observable extends BasicObservable {
     /**
      * Notifica un cambiamento dopo l'asseganzione dei territori
      *
-     * @param countries
-     * @param armies
-     * @param colors
+     * @param countriesInfo
      */
-    public void notifyCountryAssignment(String[] countries, int[] armies, String[] colors) {
+    public void notifyCountriesAssignment(CountryInfo[] countriesInfo) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnCountryAssignment(countries, armies, colors);
+                ((GameObserver) ob).updateOnCountriesAssignment(countriesInfo);
             }
         }
 

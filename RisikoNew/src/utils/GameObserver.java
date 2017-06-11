@@ -32,8 +32,9 @@ public interface GameObserver extends BasicGameObserver {
 
     /**
      * Informs the observer of the initial country assignment.
+     * @param countriesInfo
      */
-    public void updateOnCountryAssignment(String[] countries, int[] armies, String[] colors);
+    public void updateOnCountriesAssignment(CountryInfo[] countriesInfo);
 
     /**
      * Method called whenever the number of armies of a country changes.

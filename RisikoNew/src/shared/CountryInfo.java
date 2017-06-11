@@ -27,10 +27,11 @@ public class CountryInfo {
         this.player = player;
     }
 
-    /*public CountryInfo(String name, int armies) {
+    public CountryInfo(PlayerInfo player, String name, int armies) {
+        this.player = player;
         this.name = name;
         this.armies = armies;
-    }*/
+    }
 
     public String getName() {
         return name;
@@ -40,13 +41,9 @@ public class CountryInfo {
         this.name = name;
     }
 
-    /*public int getArmies() {
+    public int getArmies() {
         return armies;
     }
-
-    public void setArmies(int armies) {
-        this.armies = armies;
-    }*/
     
     public int getMaxArmies(){
         return maxArmies;

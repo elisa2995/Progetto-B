@@ -125,13 +125,25 @@ public class Game extends Observable implements GameProxy {
         buildPlayers(playersMap, playersColor);
         map.assignCountriesToPlayers(players);
         map.assignMissionToPlayers(players);
-        notifyCountryAssignment(getCountriesNames(), getCountriesArmies(), getCountriesColors());
+        notifyCountriesAssignment(buildAllCountryInfo());
+        //notifyCountryAssignment(getCountriesNames(), getCountriesArmies(), getCountriesColors());
         activePlayer = players.get(new Random().nextInt(players.size()));
         map.computeBonusArmies(activePlayer);
         phase = Phase.REINFORCE;
         reattack = false;
         notifyPhaseChange(buildPlayerInfo(activePlayer), phase.name());
         startArtificialPlayerThreads();
+    }
+    
+    private CountryInfo[] buildAllCountryInfo(){
+        Country country;
+        List<Country> countries = map.getCountriesList();
+        CountryInfo[] countriesInfo = new CountryInfo[countries.size()];
+        for(int i = 0; i<countriesInfo.length; i++){
+            country = countries.get(i);
+            countriesInfo[i] =new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.getName(), country.getArmies()); 
+        }
+        return countriesInfo;
     }
 
     /**
