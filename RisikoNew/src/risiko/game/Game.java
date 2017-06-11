@@ -195,7 +195,7 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
         this.attackerCountry = map.getCountryByName(attackerCountryName);
-        notifySetAttacker(attackerCountryName, map.getMaxArmies(attackerCountry, true), attackerCountry.getName(), map.getPlayerColorByCountry(attackerCountry));
+        notifySetAttacker(buildCountryInfo(true));
     }
 
     /**
@@ -265,7 +265,7 @@ public class Game extends Observable implements GameProxy {
         this.attackerCountry = null;
         switch (getPhase()) {
             case FIGHT:
-                notifySetAttacker(null, 0, null, null);
+                notifySetAttacker(null);
                 break;
             case MOVE:
                 notifySetFromCountry(null);

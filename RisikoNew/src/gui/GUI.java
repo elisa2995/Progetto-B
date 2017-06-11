@@ -422,20 +422,23 @@ public class GUI extends JFrame implements GameObserver {
      * Aggiorna <code>textAreaInfo</code> e <code>labelAdvice</code> quando è
      * stato scelto il territorio da cui attaccare.
      *
-     * @param countryName
+     * @param attackerInfo
      */
     @Override
-    public void updateOnSetAttacker(String countryName, int maxArmiesAttacker, String attacker, String color) {
+    public void updateOnSetAttacker(CountryInfo attackerInfo) {
+
         ((GraphicsJLabel) labelMap).resetCone();
         labelMapListener.resetCache();
-        //diceDialog.setVisible(false);
-        if (countryName != null) {
-            textAreaInfo.setText("Clicca su un territorio nemico confinante per attaccarlo");
-            attackerDialog.setMaxArmies(maxArmiesAttacker);
-            attackerDialog.setAttackerCountry(attacker, color);
-        } else {
+
+        if (attackerInfo == null) {
             textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
+            return;
         }
+
+        textAreaInfo.setText("Clicca su un territorio nemico confinante per attaccarlo");
+        attackerDialog.setMaxArmies(attackerInfo.getMaxArmies());
+        attackerDialog.setAttackerCountry(attackerInfo.getName(), attackerInfo.getPlayerColor());
+
     }
 
     /**

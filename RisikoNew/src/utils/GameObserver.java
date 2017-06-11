@@ -1,5 +1,6 @@
 package utils;
 
+import shared.CountryInfo;
 import shared.PlayerInfo;
 
 /**
@@ -25,12 +26,9 @@ public interface GameObserver extends BasicGameObserver {
     /**
      * Updates the observer whenever the active player chooses the attacker for
      * a fight.
-     * @param countryName
-     * @param maxArmiesAttacker
-     * @param attacker
-     * @param color
+     * @param attackerInfo
      */
-    public void updateOnSetAttacker(String countryName, int maxArmiesAttacker, String attacker, String color);
+    public void updateOnSetAttacker(CountryInfo attackerInfo);
 
     /**
      * Informs the observer of the initial country assignment.

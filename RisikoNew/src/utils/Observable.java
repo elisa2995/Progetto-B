@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import risiko.players.Player;
+import shared.CountryInfo;
 import shared.PlayerInfo;
 
 public class Observable extends BasicObservable {
@@ -35,13 +36,12 @@ public class Observable extends BasicObservable {
     /**
      * Notifica un cambiamento dopo che l'attaccante è stato settato
      *
-     * @param countryName
-     * @param maxArmiesAttacker
+     * @param attackerInfo
      */
-    public void notifySetAttacker(String countryName, int maxArmiesAttacker, String attacker, String color) {
+    public void notifySetAttacker(CountryInfo attackerInfo) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnSetAttacker(countryName, maxArmiesAttacker, attacker, color);
+                ((GameObserver) ob).updateOnSetAttacker(attackerInfo);
             }
         }
 
