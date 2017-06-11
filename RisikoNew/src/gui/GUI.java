@@ -45,13 +45,13 @@ public class GUI extends JFrame implements GameObserver {
     private LabelMapListener labelMapListener;
     private FadeOutLabel fadeOutLabel;
 
-    public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
+    public GUI(List<String> playerNames, List<String> colors, List<String> types) throws Exception {
         initBackground();
         initComponents();
         labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko.png"))));
         countryLabelMap = new HashMap<>();
         initColorCountryNameMap();
-        init(players, playersColor);
+        init(playerNames,colors, types);
     }
 
     private void initBackground() {
@@ -70,7 +70,7 @@ public class GUI extends JFrame implements GameObserver {
      * @throws IOException
      * @throws Exception
      */
-    private void init(Map<String, String> players, Map<String, String> playersColor) throws IOException, Exception {
+    private void init(List<String> playerNames, List<String> colors, List<String> types) throws IOException, Exception {
 
         // Image fading out
         fadeOutLabel = new FadeOutLabel(this);
@@ -89,7 +89,7 @@ public class GUI extends JFrame implements GameObserver {
         // Game
         game = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
                 new Class<?>[]{GameProxy.class},
-                new GameInvocationHandler(new Game(players, playersColor, this)));
+                new GameInvocationHandler(new Game(playerNames,colors, types, this)));
 
         // Mouse Listeners
         labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game, this);

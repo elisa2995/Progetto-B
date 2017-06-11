@@ -2,7 +2,7 @@ package risiko;
 
 import gui.GUI;
 import exceptions.LastPhaseException;
-import gui.StartGameGUI;
+import gui.startGameGUI.StartGameGUI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

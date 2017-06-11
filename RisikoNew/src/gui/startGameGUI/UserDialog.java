@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package gui;
+package gui.startGameGUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,54 +18,50 @@ import javax.swing.JOptionPane;
 import services.FileManager;
 
 /**
- *
- * @author Elisa
+ * Dialog for registration and login.
+ * In the registration mode it allows to register a new loggable player while in
+ * the login mode it allow to login
+ * 
  */
 public class UserDialog extends javax.swing.JDialog {
 
-    private StartGameGUI gui;
+    private final StartGameGUI gui;
     private int index;
     private List<String> players;
+    private List<PlayerInfo> playerRows;
+    private boolean isRegistration;
 
     /**
-     * Creates new form RegistrationDialog
+     * It creates new form RegistrationDialog
      *
      * @param gui
+     * @param playerRows
+     * @param isRegistration
      */
-    public UserDialog(StartGameGUI gui) {
-        this.gui = gui;
+    public UserDialog(StartGameGUI gui,List<PlayerInfo> playerRows, boolean isRegistration) {
         initComponents();
+        this.gui = gui;
+        this.playerRows=playerRows;        
+        this.isRegistration = isRegistration;
+        setWindowSettings();
+        setMode(isRegistration);
+    }
+    
+    
+    /**
+     * It sets the dimensions of the window, the background of <code>commentsText</code>
+     * and the behavior when the window is closed
+     */
+    private void setWindowSettings() {
+        Dimension dim = getToolkit().getScreenSize();
+        this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
+        this.setResizable(false);
+        
         commentsText.setBackground(new Color(240, 240, 240));
-
-        this.addWindowListener(new WindowListener() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                gui.setEnabled(true);
-                gui.setVisible(true);
-            }
-
-            @Override
-            public void windowOpened(WindowEvent e) {
-            }
-
+        this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-            }
-
-            @Override
-            public void windowIconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
+                closeDialog();
             }
 
         });
@@ -164,7 +155,8 @@ public class UserDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Bottone per salvare il nuovo utente
+     * It registers a new loggable player if all the fields are filled, the inserted passwords matched and 
+     * the username choosen is not already used.
      *
      * @param evt
      */
@@ -181,22 +173,35 @@ public class UserDialog extends javax.swing.JDialog {
         if (FileManager.getInstance().checkUsernameInFile(usernameText.getText())) {
             try {
                 registerUser(usernameText.getText(), String.valueOf(passwordText.getPassword()));
+                JOptionPane.showMessageDialog(null, "Utente " + usernameText.getText() + " registrato correttamente");
             } catch (IOException ex) {
                 Logger.getLogger(UserDialog.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                JOptionPane.showMessageDialog(null, "Utente " + usernameText.getText() + " registrato correttamente");
-                this.setVisible(false);
-                gui.setVisible(true);
-                gui.setEnabled(true);
+                closeDialog();
             }
         } else {
-            commentsText.setText("Username già presente nel gioco");
+            commentsText.setText("Username già usato");
         }
 
     }//GEN-LAST:event_saveUserButtonActionPerformed
 
     /**
-     * Bottone per fare la login
+     * It closes the dialog and makes the gui visible again; if the closing operation is done
+     * after an attempt of login, it resets the type of the player
+     */
+    private void closeDialog() {
+        if(!isRegistration){
+            playerRows.get(index).setType("Normale");
+        }
+        this.dispose();
+        gui.setVisible(true);
+        gui.setEnabled(true);
+    }
+
+    /**
+     * It insertes in <code>playerRow</code> a logged player if 
+     * the player is not already logged and the inserted username and password
+     * are correct
      *
      * @param evt
      */
@@ -216,8 +221,8 @@ public class UserDialog extends javax.swing.JDialog {
                     if (tmp[0].equals(username) && decryptedString.equals(password)) {
                         JOptionPane.showMessageDialog(null, "Utente " + usernameText.getText() + " inserito correttamente");
                         this.setVisible(false);
-
-                        gui.setPlayerName(username, getIndex());
+                        playerRows.get(index).setPlayerName(username);
+                        playerRows.get(index).setLogged(true);
                         gui.setVisible(true);
                         gui.setEnabled(true);
                         return;
@@ -238,7 +243,8 @@ public class UserDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_loginButtonActionPerformed
 
     /**
-     * Salva nel file players.txt lo username e la password criptata
+     * It saves in the players.txt the username and the encripted password 
+     * of the player 
      *
      * @param username
      * @param password
@@ -250,42 +256,26 @@ public class UserDialog extends javax.swing.JDialog {
         String encryptedString = new String(encryptedBytes, "UTF-8");
         try (PrintWriter out = new PrintWriter(new FileOutputStream("files/players.txt", true))) {
             out.println(username + ";" + encryptedString);
-
         }
-
     }
 
     /**
-     * Imposta il JDialog in modo che si vedano le informazioni relative alla
-     * registrazione o alla login
+     * it sets the dialog components depending on the purpose of the 
+     * dialog(registration of a new user or login)
      *
      * @param isRegistration
      */
-    public void setRegistrationMode(boolean isRegistration) {
-        if (isRegistration) {
-            this.setTitle("Registrazione");
-            password2Text.setVisible(true);
-            loginButton.setVisible(false);
-            password2Label.setVisible(true);
-            saveUserButton.setVisible(true);
-        } else {
-            this.setTitle("Login");
-            password2Text.setVisible(false);
-            password2Label.setVisible(false);
-            saveUserButton.setVisible(false);
-            loginButton.setVisible(true);
-        }
-
-        Dimension dim = getToolkit().getScreenSize();
-        this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
-        commentsText.setText("");
-        passwordText.setText("");
-        password2Text.setText("");
-        usernameText.setText("");
+    private void setMode(boolean isRegistration) {
+        String title = isRegistration ? "Registrazione" : "Login";
+        setTitle(title);
+        password2Text.setVisible(isRegistration);
+        loginButton.setVisible(!isRegistration);
+        password2Label.setVisible(isRegistration);
+        saveUserButton.setVisible(isRegistration);
     }
 
     /**
-     * Setta l'indice del player da cui è stata richiesta la login
+     * It sets the index of the playerRow from which the login is requested
      *
      * @param index
      */
@@ -293,17 +283,9 @@ public class UserDialog extends javax.swing.JDialog {
         this.index = index;
     }
 
+    
     /**
-     * Ritorna l'indice del player che ha richiesto la login
-     *
-     * @return
-     */
-    private int getIndex() {
-        return index;
-    }
-
-    /**
-     * Setta la lista dei players già loggati nel gioco
+     * It saves the list of the already logged players
      *
      * @param list
      */
@@ -312,11 +294,10 @@ public class UserDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Controlla se lo username inserito è già presente tra quelli degli utenti
-     * loggati; se si ritorna false
+     * It checks if the chosen username has already been used to login
      *
      * @param username
-     * @return
+     * @return false if the username is already used
      */
     private boolean checkUsername(String username) {
         for (String s : players) {

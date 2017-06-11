@@ -47,7 +47,7 @@ public class Game extends Observable implements GameProxy {
     private boolean reattack;
     private GameProxy proxy;
 
-    public Game(Map<String, String> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
+    public Game(List<String> playerNames, List<String> colors, List<String> types, GameObserver observer) throws Exception {
 
         this.players = new ArrayList<>();
         this.activePlayer = null;
@@ -55,7 +55,7 @@ public class Game extends Observable implements GameProxy {
         this.map = new RisikoMap();
         this.addObserver(observer);
         initInvocationHandler();
-        init(playersMap, playersColor);
+        init(playerNames, colors, types);
 
     }
 
@@ -118,9 +118,9 @@ public class Game extends Observable implements GameProxy {
      * @throws rilancia l'eccezione che potrebbe lanciare la mappa nel caso in
      * cui l'url del file dei territori fosse sbagliato.
      */
-    private void init(Map<String, String> playersMap, Map<String, String> playersColor) throws Exception {
+    private void init(List<String> playerNames, List<String> colors, List<String> types) throws Exception {
 
-        buildPlayers(playersMap, playersColor);
+        buildPlayers(playerNames, colors, types);
         map.assignCountriesToPlayers(players);
         map.assignMissionToPlayers(players);
         notifyCountryAssignment(getCountriesNames(), getCountriesArmies(), getCountriesColors());
@@ -160,23 +160,20 @@ public class Game extends Observable implements GameProxy {
      * @param playersMap una Map nomePlayer - tipoPlayer
      * @param colors una Map nomePlayer - colorePlayer
      */
-    private void buildPlayers(Map<String, String> playersTypeMap, Map<String, String> playersColor) {
+    private void buildPlayers(List<String> playerNames, List<String> colors, List<String> types) {
 
-        int i = 0;
-        for (Map.Entry<String, String> playerType : playersTypeMap.entrySet()) {
-            String color = playersColor.get(playerType.getKey());
-            switch (PlayerType.valueOf(playerType.getValue())) {
+        for (int i=0; i<playerNames.size(); i++) {
+            switch (PlayerType.valueOf(types.get(i))) {
                 case ARTIFICIAL:
-                    this.players.add(new ArtificialPlayer(playerType.getKey(), color, (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
+                    this.players.add(new ArtificialPlayer(playerNames.get(i), colors.get(i), (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
                             new Class<?>[]{GameProxy.class},
                             new GameInvocationHandler(this))));
                     break;
                 case NORMAL:
                 case LOGGED:
-                    this.players.add(new Player(playerType.getKey(), color));
+                    this.players.add(new Player(playerNames.get(i), colors.get(i)));
                     break;
             }
-            i++;
 
         }
     }
