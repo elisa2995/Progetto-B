@@ -73,13 +73,25 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         }
 
     }
-
+    
+    /**
+     * moves armies between territories
+     */
     private synchronized void moveArmies(){
-        int moves=10;
-        for(int i =0;i<moves;i++){
-            String[] myCountries = game.getMyCountries(this);
-            
+        String[] myCountries = game.getMyCountries(this);
+        int from = new Random().nextInt(myCountries.length);
+        int to = new Random().nextInt(myCountries.length);
+
+        if (from != to) {
+            int max = game.getMaxArmiesForMovement(myCountries[from], this);
+            if (max > 0) {
+                int nArmies = new Random().nextInt(max);
+                if(nArmies != 0){
+                    game.move(myCountries[from], myCountries[to], nArmies, this);
+                }
+            }
         }
+
     }
     
 
@@ -225,8 +237,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                         case MOVE:
                             //System.out.println(game.getPhase() + " " + this.getName());
                             //System.out.println("--------------------------------------------");
+                            moveArmies();
                             synchronized(this) {
-                                this.wait(2000);
+                                this.wait(100);
                             }
                             game.nextPhase(this);
                             break;
