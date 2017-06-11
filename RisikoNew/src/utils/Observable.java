@@ -91,11 +91,9 @@ public class Observable extends BasicObservable {
     }
 
     /**
-     * Notifica un cambiamento dopo uno spostamento
+     * Notifies that the number of armies of a country has changed.
      *
-     * @param country
-     * @param armies
-     * @param color
+     * @param countryInfo
      */
     public void notifyArmiesChange(CountryInfo countryInfo) {
         for (BasicGameObserver ob : this.obs) {

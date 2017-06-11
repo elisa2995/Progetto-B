@@ -38,6 +38,7 @@ public interface GameObserver extends BasicGameObserver {
 
     /**
      * Method called whenever the number of armies of a country changes.
+     * @param country
      */
     public void updateOnArmiesChange(CountryInfo country);
 
@@ -49,12 +50,14 @@ public interface GameObserver extends BasicGameObserver {
     /**
      * Updates the observer when the activePlayer has chosen from which country
      * to move its armies.
+     * @param country
      */
     public void updateOnSetFromCountry(String country);
     
     /**
      * Tells the observer which card has just been drawn.
-     * @param cardName 
+     * @param card
+     * @param isArtificialPlayer 
      */
     public void updateOnDrawnCard(String card, boolean isArtificialPlayer);
 }

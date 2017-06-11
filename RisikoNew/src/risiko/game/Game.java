@@ -40,14 +40,14 @@ public class Game extends Observable implements GameProxy {
     private int attackerArmies;
     private int defenderArmies;
     private boolean attackInProgress = false;
-    private RisikoMap map;
-    private BonusDeck deck;
+    private final RisikoMap map;
+    private final BonusDeck deck;
     private List<Player> players;
     private Player activePlayer;
     private Phase phase;
     private int[] attackDice, defenseDice;
     private boolean reattack;
-    private GameProxy proxy;
+    //private final GameProxy proxy;
 
     public Game(Map<String, String> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
 
@@ -56,14 +56,18 @@ public class Game extends Observable implements GameProxy {
         this.deck = new BonusDeck();
         this.map = new RisikoMap();
         this.addObserver(observer);
-        initInvocationHandler();
+        /*this.proxy = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
+                new Class<?>[]{GameProxy.class},
+                new GameInvocationHandler(this));*/
         init(playersMap, playersColor);
+        this.reattack = false;
 
     }
 
     /**
-     * Ridà la fase di gioco corrente
+     * Returns the current game phase.
      *
+     * @param aiCaller
      * @return
      */
     @Override
@@ -72,46 +76,38 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Ridà il nome della fase di gioco corrente.
+     * Returns the name of the cuurent game phase.
      *
      * @param aiCaller
      * @return
      */
+    @Override
     public synchronized String getPhaseName(ArtificialPlayer... aiCaller) {
         return this.phase.toString();
     }
 
     /**
-     * Ridà il giocatore di turno
+     * Returns the active player.
      *
      * @return
      */
     @Override
     public synchronized Player getActivePlayer(ArtificialPlayer... aiCaller) {
-
         return activePlayer;
     }
 
     /**
-     * Ridà la missione del giocatore di turno
+     * Returns the active player's mission.
      *
      * @return
      */
     @Override
     public synchronized String getActivePlayerMission(ArtificialPlayer... aiCaller) {
-
         return activePlayer.getMissionDescription();
     }
 
-    private void initInvocationHandler() {
-
-        this.proxy = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
-                new Class<?>[]{GameProxy.class},
-                new GameInvocationHandler(this));
-    }
-
     /**
-     * Inizializza il gioco. Ovvero chiama il metodo della mappa per
+     * Initializes the game. Ovvero chiama il metodo della mappa per
      * l'assegnazione iniziale dei territori ai giocatori -
      * assignCountriesToPlayers() - , setta un giocatore a caso come
      * activePlayer
@@ -121,41 +117,21 @@ public class Game extends Observable implements GameProxy {
      * cui l'url del file dei territori fosse sbagliato.
      */
     private void init(Map<String, String> playersMap, Map<String, String> playersColor) throws Exception {
-
         buildPlayers(playersMap, playersColor);
-        map.assignCountriesToPlayers(players);
-        map.assignMissionToPlayers(players);
+        map.initGame(players);
         notifyCountriesAssignment(buildAllCountryInfo());
         activePlayer = players.get(new Random().nextInt(players.size()));
         map.computeBonusArmies(activePlayer);
         phase = Phase.REINFORCE;
-        reattack = false;
         notifyPhaseChange(buildPlayerInfo(activePlayer), phase.name());
-        startArtificialPlayerThreads();
-    }
-
-    /**
-     * Builds an array of CountryInfo, containing the info about every country
-     * on the map.
-     *
-     * @return
-     */
-    private CountryInfo[] buildAllCountryInfo() {
-        Country country;
-        List<Country> countries = map.getCountriesList();
-        CountryInfo[] countriesInfo = new CountryInfo[countries.size()];
-        for (int i = 0; i < countriesInfo.length; i++) {
-            country = countries.get(i);
-            countriesInfo[i] = new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.getName(), country.getArmies());
-        }
-        return countriesInfo;
+        startArtificialPlayersThreads();
     }
 
     /**
      * Aggiunge i giocatori artificiali come observers e inizializza i loro
      * threads
      */
-    private void startArtificialPlayerThreads() {
+    private void startArtificialPlayersThreads() {
         for (Player playerThread : this.players) {
             if (playerThread instanceof ArtificialPlayer) {
                 this.addObserver((ArtificialPlayer) playerThread);
@@ -164,6 +140,12 @@ public class Game extends Observable implements GameProxy {
         }
     }
 
+    /**
+     * Sets artificial players' settings.
+     *
+     * @param aps
+     * @param aiCaller
+     */
     @Override
     public void setPlayerSettings(ArtificialPlayerSettings aps, ArtificialPlayer... aiCaller) {
         for (Player p : players) {
@@ -174,14 +156,14 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Costruisce i <code>players</code>
+     * Builds the list of players.
      *
-     * @param playersMap una Map nomePlayer - tipoPlayer
-     * @param colors una Map nomePlayer - colorePlayer
+     * @param playersMap maps the name of the player (String) on its type
+     * (String)
+     * @param colors mapst the name of the player (String) on its color.
      */
     private void buildPlayers(Map<String, String> playersTypeMap, Map<String, String> playersColor) {
 
-        int i = 0;
         for (Map.Entry<String, String> playerType : playersTypeMap.entrySet()) {
             String color = playersColor.get(playerType.getKey());
             switch (PlayerType.valueOf(playerType.getValue())) {
@@ -197,14 +179,12 @@ public class Game extends Observable implements GameProxy {
                     this.players.add(new LoggedPlayer(playerType.getKey(), color));
                     break;
             }
-            i++;
-
         }
     }
 
-    //------------------------  Attacco  ------------------------------------//
+    //------------------------  Attack  ------------------------------------//
     /**
-     * Setta l'attacker.
+     * Sets the attacker.
      *
      * @param attackerCountryName
      * @param aiCaller l'eventuale artificialPlayer caller del metodo.
@@ -228,53 +208,11 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Builds an array of 2 elements of <code>CountryInfo</code>. The element at
-     * index 0 represent the attacker, the one at index 1 the defender.
+     * Sets the attribute <code>reattack</code>.
      *
-     * @return
+     * @param reattack
+     * @param aiCaller
      */
-    private CountryInfo[] buildFightingCountriesInfo() {
-        CountryInfo attackerCountryInfo = buildCountryInfo(true);
-        attackerCountryInfo.canAttackFromHere(map.canAttackFromCountry(attackerCountry));
-        CountryInfo defenderCountryInfo = buildCountryInfo(false);
-        return new CountryInfo[]{attackerCountryInfo, defenderCountryInfo};
-    }
-
-    /**
-     * Builds an object <code>CountryInfo</code> which contains the info about
-     * the attacker/defender.
-     *
-     * @param isAttacker
-     * @return
-     */
-    private CountryInfo buildCountryInfo(boolean isAttacker) {
-        Country country = (isAttacker) ? attackerCountry : defenderCountry;
-        Player player = map.getPlayerByCountry(country);
-        return new CountryInfo(country.toString(), map.getMaxArmies(country, isAttacker), buildPlayerInfo(player));
-    }
-
-    /**
-     * Builds an object <code>CountryInfo</code> from an object of type
-     * <code>Country</code>.
-     *
-     * @param country
-     * @return
-     */
-    private CountryInfo buildCountryInfo(Country country) {
-        return new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.toString(), country.getArmies());
-    }
-
-    /**
-     * Builds an object <code>PlayerInfo</code> which containts the info about a
-     * certain player.
-     *
-     * @param player
-     * @return
-     */
-    private PlayerInfo buildPlayerInfo(Player player) {
-        return new PlayerInfo(player.toString(), player.getColor(), player.getBonusArmies(), player instanceof ArtificialPlayer);
-    }
-
     @Override
     public void setReattack(boolean reattack, ArtificialPlayer... aiCaller) {
         this.reattack = reattack;
@@ -282,8 +220,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Resetta le countries dell'attacco. (Previo controllo sul caller del
-     * metodo).
+     * Resets the fighting countries.
      *
      * @param aiCaller
      */
@@ -302,13 +239,9 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Simula lo scontro tra due eserciti, eliminado le armate perse da ogni
-     * Country.
+     * Simulates a battle between 2 armies. It removes the armies lost from each
+     * country.
      *
-     * @param countries
-     * @param nrA
-     * @param nrD attack
-     * @author Andrea
      */
     private void fight() {
         int lostArmies[] = computeLostArmies(attackerArmies, defenderArmies);
@@ -318,38 +251,40 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Genera il numero di armate perse per giocatore durante uno scontro.
+     * Computes the number of lost armies during a battle.
      *
-     * @return array da 2 elementi, il primo valore è il numero di armate perse
-     * dall'attaccante, il secondo il numero di armate perse dal difensore.
-     * @author Andrea
+     * @return 2 elements array of which the first one represents the number of
+     * armies lost by the attacker, while the second one represents the number
+     * of armies lost by the defende.
      */
     private int[] computeLostArmies(int nrA, int nrD) {
         attackDice = rollDice(nrA);
         defenseDice = rollDice(nrD);
-        int armiesLost[] = new int[2];
-        int min = (nrA > nrD) ? nrD : nrA;
-        for (int i = 0; i < min; i++) {
+        int lostArmies[] = new int[2];
+        for (int i = 0; i < Math.min(nrA, nrD); i++) {
             if (attackDice[i] > defenseDice[i]) {
-                armiesLost[1]++;
+                lostArmies[1]++;
             } else {
-                armiesLost[0]++;
+                lostArmies[0]++;
             }
         }
-        return armiesLost;
+        return lostArmies;
     }
 
+    /**
+     * Returns both the set of attackDice and defenseDice.
+     *
+     * @return
+     */
     private int[][] getDice() {
         return new int[][]{attackDice, defenseDice};
     }
 
     /**
-     * Lancia una serie di dadi e restituisce i loro valori in ordine
-     * decrescente.
+     * Rolls <code>nrDice</code> dice and returns their value in descending
+     * order.
      *
-     * @param nrDice numero di dadi da tirare
-     * @return un array[nrDadi]con i risultati del lancio in ordine decrescente
-     * @author Andrea
+     * @param nrDice
      */
     private int[] rollDice(int nrDice) {
         int dice[] = new int[nrDice];
@@ -367,29 +302,24 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Lancia il dado e ritorna il suo risultato.
+     * Rolls a die and returns its result.
      *
-     * @return un numero random da 1 a 6
+     * @return a random number between 1 and 6 (inclusive).
      * @author Andrea
      */
     private int rollDie() {
-        return (int) (Math.random() * 6) + 1;
+        return 1 + new Random().nextInt(6);
     }
 
     /**
-     * setta il numero di armate con il quale si vuole difenders
+     * Sets the number of armies for the defense.
      *
-     * @param nrD numero di armate, se il valore è -1 allore verrà settato il
-     * numero di armate massimo
+     * @param nrD
      * @param aiCaller
      */
     @Override
     public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller) {
-        if (aiCaller.length == 0) {
-            if ((map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer)) {
-                return;
-            }
-        } else if (!aiCaller[0].equals(map.getPlayerByCountry(defenderCountry))) {
+        if (!canCallDefenseMethods(aiCaller)) {
             return;
         }
 
@@ -400,6 +330,12 @@ public class Game extends Observable implements GameProxy {
         }
     }
 
+    /**
+     * Sets the number of armies for the attack.
+     *
+     * @param nrA
+     * @param aiCaller
+     */
     @Override
     public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller) {
         if (nrA == -1) {
@@ -410,20 +346,17 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * dichiara un attacco che parte da attacker al territorio defender con nrA
-     * numero di armate l'attacco non viene portato a termine finchè il
-     * difensore non ha scelto con quante armate difendersi
+     * Declares an attack from <code>attackerCountry</code> to
+     * <code>defenderCountry</code>. Notifies the defender so that it can choose
+     * the number of armies for the defense.
      *
      * @param aiCaller
      */
     @Override
     public void declareAttack(ArtificialPlayer... aiCaller) {
         attackInProgress = true;
-        Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
-        Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
         if (attackerArmies > 0) {
             notifyDefender(buildCountryInfo(false));
-            //notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), defenderPlayer instanceof ArtificialPlayer);
         }
     }
 
@@ -435,7 +368,7 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void confirmAttack(ArtificialPlayer... aiCaller) {
 
-        if (!canConfirmAttack(aiCaller)) {
+        if (!canCallDefenseMethods(aiCaller)) {
             return;
         }
 
@@ -455,7 +388,7 @@ public class Game extends Observable implements GameProxy {
      * @param aiCaller
      * @return true if it has the right to call confirmAttack, false otherwise.
      */
-    private boolean canConfirmAttack(ArtificialPlayer... aiCaller) {
+    private boolean canCallDefenseMethods(ArtificialPlayer... aiCaller) {
 
         boolean artificialDefender = map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer;
         boolean rightCaller = (aiCaller.length == 0) ? !artificialDefender : artificialDefender && aiCaller[0].equals(map.getPlayerByCountry(defenderCountry));;
@@ -475,8 +408,8 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Checks if the <code>activePlayer</code> has won or the defender has lost
-     * and acts accordingly.
+     * Checks if <code>activePlayer</code> has won or the defender has lost and
+     * acts accordingly.
      */
     private void checkLostAndWon() {
         if (hasWon()) {
@@ -502,8 +435,8 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Registra i punti guadagnati dal giocatore che ha vinto il gioco e
-     * notifica la vittoria.
+     * Records the points gained by the player that has completed its mission
+     * and notifies the victory.
      */
     private void recordGainedPoints() {
 
@@ -522,14 +455,14 @@ public class Game extends Observable implements GameProxy {
 
     }
 
-    // ----------------------- Rinforzo ------------------------------------
+    // ----------------------- Reinforce ------------------------------------
     /**
-     * Controlla e aggiunge le armate al territorio. Queste vengono prese dal
-     * campo bonusArmies del giocatore fino ad esaurimento.
+     * Reinforces the country whose name is <code>countryName</code> with one
+     * army. When the active player runs out of bonus armies, the phase is
+     * changed.
      *
      * @param countryName
-     * @param nArmies numero di armate da aggiungere
-     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
+     * @param aiCaller
      */
     @Override
     public void reinforce(String countryName, ArtificialPlayer... aiCaller) {
@@ -551,11 +484,8 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Controlla se il giocatore può rinforzare del numero di armate
-     * selezionato. (Previo controllo sul caller del metodo). (prima ci facevamo
-     * passare CountryName, perché??)
+     * Checks wether the active player has at least 1 bonus army.
      *
-     * @param nArmies
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo
      * @return
      */
@@ -566,20 +496,14 @@ public class Game extends Observable implements GameProxy {
 
     //--------------------- Gestione fasi / turni --------------------------//
     /**
-     * Cambia la fase. (Previo controllo sul caller del metodo) - 1 Controlla
-     * che non ci siano operazioni in sospeso relative alla corrente fase del
-     * gioco: > REINFORCE : activePlayer non deve avere bonus armies
+     * Changes the phase. If it's the last one, passes the turn.
      *
-     * - 2 SE è l'ultima fase chiama passTurn()
-     *
-     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
-     * @throws PendingOperationsException se non è possibile passare alla fase
-     * successiva perché ci sono operazioni in sospeso.
-     * @author Carolina
+     * @param aiCaller
+     * @throws PendingOperationsException
      */
     @Override
     public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
-        resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
+        resetFightingCountries();
 
         if (phase == Phase.REINFORCE && activePlayer.getBonusArmies() != 0) {
             throw new PendingOperationsException("Hai ancora armate da posizionare!");
@@ -602,11 +526,8 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Passa il turno al giocatore successivo. Ovvero 1 - Setta come active
-     * player il successivo nel giro 2 - Setta come fase la prima del turno 3 -
-     * Assegna all'active player le armate bonus
+     * Passes the turn.
      *
-     * @author Carolina
      */
     private void passTurn() {
         ListIterator<Player> iter = players.listIterator(players.indexOf(activePlayer) + 1);
@@ -617,40 +538,19 @@ public class Game extends Observable implements GameProxy {
             activePlayer = players.get(0);
         }
 
-        //Devo resettare a false ConqueredACountry così che si possa pescare quando clicco nextphase dopo aver conquistato 
         activePlayer.setConqueredACountry(false);
         if (!activePlayer.getBonusCards().isEmpty() && !(activePlayer instanceof ArtificialPlayer)) {
             notifyNextTurn();
         }
         this.phase = Phase.values()[0];
         map.computeBonusArmies(activePlayer);
-        /*ListIterator<Player> iter = players.listIterator(players.indexOf(activePlayer) + 1);
-        Player newActivePlayer;
-        if (iter.hasNext()) {
-            newActivePlayer = iter.next();
-        } else {
-            newActivePlayer = players.get(0);
-        }
-
-        //Devo resettare a false JustDrowCardBonus così che si possa pescare con map.updateOnConquer 
-        newActivePlayer.setAlreadyDrawnCard(false);
-        if (!newActivePlayer.getBonusCards().isEmpty() && !(newActivePlayer instanceof ArtificialPlayer)) {
-            notifyNextTurn();
-        }
-        activePlayer=newActivePlayer;
-        phase = Phase.values()[0];
-        map.computeBonusArmies(activePlayer);*/
     }
 
+    //------------------------------ Cards  ---------------------------------//
     /**
-     * Setta come activePlayer il successivo nel giro.
+     * Returns the name of the last card drawn by <code>activePlayer</code>.
      *
-     * @author Federico
-     */
-    //-------------------- Carte / spostamento finale ----------------//
-    /**
-     * Ritorna il nome dell'ultima carta pescata dal giocatore di turno.
-     *
+     * @param aiCaller
      * @return
      */
     @Override
@@ -659,20 +559,19 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Pesca una carta dal mazzo per l'active player.
+     * Draws a card from the deck and gives it to <code>activePlayer</code>
      *
      * @param aiCaller
      */
     private void drawBonusCard(ArtificialPlayer... aiCaller) {
-        Card card = deck.drawCard();
-        activePlayer.addCard(card);
+        activePlayer.addCard(deck.drawCard());
 
-        boolean isArtificialPlayer = activePlayer instanceof ArtificialPlayer;
-        notifyDrawnCard(card.name(), isArtificialPlayer);
+        notifyDrawnCard(getLastCardDrawn(), activePlayer instanceof ArtificialPlayer);
     }
 
     /**
-     * Ritorna un arrayList contentente i nomi delle carte dell'active player.
+     * Returns an ArrayList containing the names of <code>activePlayer</code>'s
+     * cards.
      *
      * @param aiCaller
      * @return
@@ -732,9 +631,11 @@ public class Game extends Observable implements GameProxy {
         activePlayer.playTris(deck.getCardsByNames(cardsNames), bonusArmiesTris);
     }
 
+    //----------------------------- Move -------------------------------------//
     /**
      * Ritorna il massimo numero di armate per lo spostamento finale.
      *
+     * @param fromCountryName
      * @return
      */
     @Override
@@ -759,7 +660,7 @@ public class Game extends Observable implements GameProxy {
      * Sposta il numero di armate <code>i</code> da <code>attackerCountry</code>
      * alla country con name <code>toCountryName</code>
      *
-     * @param fromCountry
+     * @param fromCountryName
      * @param toCountryName
      * @param i
      */
@@ -1042,7 +943,74 @@ public class Game extends Observable implements GameProxy {
 
     }
 
+    @Override
     public void endGame() {
         notifyEndGame();
+    }
+
+    //-------------------------------- Build info -----------------------------//
+    /**
+     * Builds an array of 2 elements of <code>CountryInfo</code>. The element at
+     * index 0 represent the attacker, the one at index 1 the defender.
+     *
+     * @return
+     */
+    private CountryInfo[] buildFightingCountriesInfo() {
+        CountryInfo attackerCountryInfo = buildCountryInfo(true);
+        attackerCountryInfo.canAttackFromHere(map.canAttackFromCountry(attackerCountry));
+        CountryInfo defenderCountryInfo = buildCountryInfo(false);
+        return new CountryInfo[]{attackerCountryInfo, defenderCountryInfo};
+    }
+
+    /**
+     * Builds an object <code>CountryInfo</code> which contains the info about
+     * the attacker/defender.
+     *
+     * @param isAttacker
+     * @return
+     */
+    private CountryInfo buildCountryInfo(boolean isAttacker) {
+        Country country = (isAttacker) ? attackerCountry : defenderCountry;
+        Player player = map.getPlayerByCountry(country);
+        return new CountryInfo(country.toString(), map.getMaxArmies(country, isAttacker), buildPlayerInfo(player));
+    }
+
+    /**
+     * Builds an object <code>CountryInfo</code> from an object of type
+     * <code>Country</code>.
+     *
+     * @param country
+     * @return
+     */
+    private CountryInfo buildCountryInfo(Country country) {
+        return new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.toString(), country.getArmies());
+    }
+
+    /**
+     * Builds an object <code>PlayerInfo</code> which containts the info about a
+     * certain player.
+     *
+     * @param player
+     * @return
+     */
+    private PlayerInfo buildPlayerInfo(Player player) {
+        return new PlayerInfo(player.toString(), player.getColor(), player.getBonusArmies(), player instanceof ArtificialPlayer);
+    }
+
+    /**
+     * Builds an array of CountryInfo, containing the info about every country
+     * on the map.
+     *
+     * @return
+     */
+    private CountryInfo[] buildAllCountryInfo() {
+        Country country;
+        List<Country> countries = map.getCountriesList();
+        CountryInfo[] countriesInfo = new CountryInfo[countries.size()];
+        for (int i = 0; i < countriesInfo.length; i++) {
+            country = countries.get(i);
+            countriesInfo[i] = new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.getName(), country.getArmies());
+        }
+        return countriesInfo;
     }
 }

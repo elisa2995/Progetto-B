@@ -124,6 +124,15 @@ public class RisikoMap {
             }
         }
     }
+    
+    /**
+     * Initializes the game.
+     * @param players 
+     */
+    public void initGame(List<Player> players){
+        assignCountriesToPlayers(players);
+        assignMissionToPlayers(players);
+    }
 
     /**
      * Effettua l'assegnazione degli obiettivi ai giocatori.
@@ -144,7 +153,7 @@ public class RisikoMap {
      * @param players
      * @author Elisa
      */
-    public void assignCountriesToPlayers(List<Player> players) throws Exception {
+    public void assignCountriesToPlayers(List<Player> players) {
         List<Country> countries = getCountriesList();
         Collections.shuffle(countries);
         int nCountries = this.countryPlayer.size();
