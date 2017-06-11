@@ -972,4 +972,24 @@ public class Game extends Observable implements GameProxy {
     public void endGame() {
         notifyEndGame();
     }
+    
+    /**
+     * converts the activeplayer to an artificial one and starts its thread
+     */
+    public void toArtificialPlayer(){
+        if(!(activePlayer instanceof ArtificialPlayer)){
+            ArtificialPlayer player = new ArtificialPlayer(activePlayer.getName(), activePlayer.getColor(), proxy);
+            player.setMission(activePlayer.getMission());
+            player.setBonusCards(activePlayer.getBonusCards());
+            player.addBonusArmies(activePlayer.getBonusArmies());
+            player.setConqueredACountry(activePlayer.hasConqueredACountry());
+            player.setAlreadyDrawnCard(activePlayer.isAlreadyDrawnCard());
+            activePlayer = player;
+            int position = players.indexOf(activePlayer);
+            players.remove(activePlayer);
+            players.add(position, player);
+            map.changeOwner(activePlayer, player);
+            new Thread((ArtificialPlayer) player).start();
+        }
+    }
 }

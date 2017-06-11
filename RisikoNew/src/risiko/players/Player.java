@@ -72,6 +72,10 @@ public class Player {
         return bonusCards;
     }
 
+    public void setBonusCards(ArrayList<Card> bonusCards) {
+        this.bonusCards = bonusCards;
+    }
+
     /**
      * Gioca il tris di carte, guadagna le corrispettive bonus aramies.
      *
@@ -144,4 +148,14 @@ public class Player {
     public boolean hasConqueredACountry() {
         return conqueredACountry;
     }
+
+    public boolean isAlreadyDrawnCard() {
+        return alreadyDrawnCard;
+    }
+
+    public void setAlreadyDrawnCard(boolean alreadyDrawnCard) {
+        this.alreadyDrawnCard = alreadyDrawnCard;
+    }
+    
+    
 }

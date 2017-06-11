@@ -439,4 +439,17 @@ public class RisikoMap {
     public String getPlayerColorByCountry(Country country) {
         return getPlayerByCountry(country).getColor();
     }
+    
+    /**
+     * changes the owner of all territories
+     * @param oldOwner previous owner of the territories 
+     * @param newOwner new owner of the territories
+     */
+    public void changeOwner(Player oldOwner, Player newOwner){
+        for(Map.Entry<Country, Player> entry : countryPlayer.entrySet()){
+            if(entry.getValue().equals(oldOwner)){
+                entry.setValue(newOwner);
+            }
+        }
+    }
 }

@@ -169,6 +169,7 @@ public class GUI extends JFrame implements GameObserver {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         settingsItem = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -244,6 +245,14 @@ public class GUI extends JFrame implements GameObserver {
             }
         });
         jMenu1.add(settingsItem);
+
+        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
 
         jMenuBar1.add(jMenu1);
 
@@ -334,6 +343,10 @@ public class GUI extends JFrame implements GameObserver {
         }
 
     }//GEN-LAST:event_exitButtonActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * Creazione di una map<Color,String> a partire da un file di testo
@@ -680,6 +693,7 @@ public class GUI extends JFrame implements GameObserver {
     private javax.swing.JButton exitButton;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelMap;
     private javax.swing.JLayeredPane mapLayeredPane;
