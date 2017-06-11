@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,6 +26,7 @@ import risiko.game.GameProxy;
 import services.FileManager;
 import shared.AttackResultInfo;
 import shared.CountryInfo;
+import shared.PlayerInfo;
 
 /**
  * @author andrea
@@ -80,15 +80,17 @@ public class GUI extends JFrame implements GameObserver {
         playerLabel.setFont(new Font("Calibri", Font.BOLD, 24));
         phaseLabel.setFont(new Font("Calibri", Font.BOLD, 24));
 
+        // Mouse Listeners
+        labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, this);
+        labelMap.addMouseListener(labelMapListener);
+        labelMap.addMouseMotionListener(labelMapListener);
+
         // Game
         game = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
                 new Class<?>[]{GameProxy.class},
                 new GameInvocationHandler(new Game(players, playersColor, this)));
 
-        // Mouse Listeners
-        labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, game, this);
-        labelMap.addMouseListener(labelMapListener);
-        labelMap.addMouseMotionListener(labelMapListener);
+        labelMapListener.setGame(game);
 
         // Dialogs
         defenseArmies = new DefenseDialog(game, this, true);
@@ -383,19 +385,29 @@ public class GUI extends JFrame implements GameObserver {
      * @param phase
      */
     @Override
-    public void updateOnPhaseChange(String player, String phase, String color, int bonusArmies) {
+    public void updateOnPhaseChange(PlayerInfo player, String phase) {
         ((GraphicsJLabel) labelMap).resetCone();
+
+        updateLabels(player, phase);
+        updateTextAreaInfo(player, phase);
+
+        labelMapListener.resetCache();
+
+    }
+
+    private void updateLabels(PlayerInfo player, String phase) {
         this.phaseLabel.setText("FASE DI " + getFormattedPhase(phase));
-        this.playerLabel.setText(player);
-        this.phaseLabel.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
-        this.playerLabel.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
+        this.playerLabel.setText(player.getName());
+        this.phaseLabel.setForeground(DefaultColor.valueOf(player.getColor().toUpperCase()).getColor());
+        this.playerLabel.setForeground(DefaultColor.valueOf(player.getColor().toUpperCase()).getColor());
+    }
+
+    private void updateTextAreaInfo(PlayerInfo player, String phase) {
+
         this.textAreaInfo.setText("");
-        if (labelMapListener != null) {
-            labelMapListener.resetCache(); // cioè non è l'inizio del gioco
-        }
         switch (phase) {
             case "REINFORCE":
-                textAreaInfo.setText("Clicca su un tuo territorio per rinforzarlo con un'armata.\nHai " + bonusArmies + " armate bonus.");
+                textAreaInfo.setText("Clicca su un tuo territorio per rinforzarlo con un'armata.\nHai " + player.getBonusArmies() + " armate bonus.");
                 break;
             case "FIGHT":
                 textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
@@ -404,7 +416,6 @@ public class GUI extends JFrame implements GameObserver {
                 textAreaInfo.setText("Scegli un tuo territorio da cui spostare una o più armate");
                 break;
         }
-
     }
 
     /**

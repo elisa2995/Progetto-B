@@ -6,44 +6,32 @@ package shared;
  */
 public class PlayerInfo {
 
-    private String name;
-    private String color;
-    private int bonusArmies;
-    private boolean artificial;
+    private final String name;
+    private final String color;
+    private final int bonusArmies;
+    private final boolean artificial;
 
-    public PlayerInfo(String name, String color, boolean artificial) {
-        this.name = name;
-        this.color = color;
-        this.artificial = artificial;
-    }
-
-    /*public PlayerInfo(String name, String color, int bonus){
+    public PlayerInfo(String name, String color, int bonus, boolean artificial) {
         this.name = name;
         this.color = color;
         this.bonusArmies = bonus;
-    }*/
+        this.artificial = artificial;
+    }
+    
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getColor() {
         return color;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     public boolean isArtificial() {
         return artificial;
     }
-
-    public void setArtificial(boolean artificial) {
-        this.artificial = artificial;
+    
+    public int getBonusArmies(){
+        return bonusArmies;
     }
 
 }

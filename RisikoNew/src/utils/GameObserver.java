@@ -1,5 +1,7 @@
 package utils;
 
+import shared.PlayerInfo;
+
 /**
  * A class can implement the <code>GameObserver</code> interface when it wants
  * to be informed of changes in <code>utils.Observable</code> objects.
@@ -17,10 +19,8 @@ public interface GameObserver extends BasicGameObserver {
      * Updates the observer when the phase changes.
      * @param player
      * @param phase
-     * @param color
-     * @param bonusArmies
      */
-    public void updateOnPhaseChange(String player, String phase, String color, int bonusArmies);
+    public void updateOnPhaseChange(PlayerInfo player, String phase);
 
     /**
      * Updates the observer whenever the active player chooses the attacker for

@@ -24,6 +24,7 @@ public interface BasicGameObserver {
     /**
      * Method called whenever an attack produces a result.
      *
+     * @param attackResult
      */
     public void updateOnAttackResult(AttackResultInfo attackResult);
     
@@ -31,6 +32,7 @@ public interface BasicGameObserver {
      * Method called as soon as the attacker has chosen how many armies to use
      * in a fight.
      *
+     * @param defenderCountryInfo
      */
     public void updateOnDefend(CountryInfo defenderCountryInfo);
 

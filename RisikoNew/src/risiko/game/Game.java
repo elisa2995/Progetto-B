@@ -130,7 +130,7 @@ public class Game extends Observable implements GameProxy {
         map.computeBonusArmies(activePlayer);
         phase = Phase.REINFORCE;
         reattack = false;
-        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor(), activePlayer.getBonusArmies());
+        notifyPhaseChange(buildPlayerInfo(activePlayer), phase.name());
         startArtificialPlayerThreads();
     }
 
@@ -244,7 +244,7 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     private PlayerInfo buildPlayerInfo(Player player) {
-        return new PlayerInfo(player.toString(), player.getColor(), player instanceof ArtificialPlayer);
+        return new PlayerInfo(player.toString(), player.getColor(), player.getBonusArmies(), player instanceof ArtificialPlayer);
     }
 
     @Override
@@ -570,7 +570,7 @@ public class Game extends Observable implements GameProxy {
         } catch (LastPhaseException ex) {
             passTurn();
         }
-        notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor(), activePlayer.getBonusArmies());
+        notifyPhaseChange(buildPlayerInfo(activePlayer),phase.name());
     }
 
     /**
@@ -743,9 +743,9 @@ public class Game extends Observable implements GameProxy {
         notifyArmiesChange(toCountryName, toCountry.getArmies(), activePlayer.getColor());
         notifyArmiesChange(fromCountryName, fromCountry.getArmies(), activePlayer.getColor());
 
-        if (phase == phase.MOVE) {
+        if (phase == Phase.MOVE) {
             passTurn();
-            notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor(), activePlayer.getBonusArmies());
+            notifyPhaseChange(buildPlayerInfo(activePlayer), phase.name());
         }
     }
 

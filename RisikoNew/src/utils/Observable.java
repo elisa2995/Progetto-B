@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import risiko.players.Player;
+import shared.PlayerInfo;
 
 public class Observable extends BasicObservable {
 
@@ -67,10 +68,10 @@ public class Observable extends BasicObservable {
      * @param phase
      * @param color
      */
-    public void notifyPhaseChange(String player, String phase, String color, int bonusArmies) {
+    public void notifyPhaseChange(PlayerInfo player, String phase) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnPhaseChange(player, phase, color, bonusArmies);
+                ((GameObserver) ob).updateOnPhaseChange(player, phase);
             }
         }
     }
