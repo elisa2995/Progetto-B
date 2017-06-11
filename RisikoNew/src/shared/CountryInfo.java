@@ -13,7 +13,7 @@ public class CountryInfo {
     private boolean canAttackFromHere;
 
     /* In case the active player is attacking from this country, this parameter
-    tells wether the player can choose again this country for a new fight */
+    tells wheter the player can choose again this country for a new fight */
     public CountryInfo(String name, int maxArmies, PlayerInfo player, boolean canAttackFromHere) {
         this.name = name;
         this.maxArmies = maxArmies;

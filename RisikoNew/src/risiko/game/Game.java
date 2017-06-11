@@ -382,7 +382,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Tells wether the caller of the method has the right to confirm the attack
+     * Tells wheter the caller of the method has the right to confirm the attack
      * (it has to be the owner of defenderCountry).
      *
      * @param aiCaller
@@ -484,7 +484,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Checks wether the active player has at least 1 bonus army.
+     * Checks wheter the active player has at least 1 bonus army.
      *
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo
      * @return
