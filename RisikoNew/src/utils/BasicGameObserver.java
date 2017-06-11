@@ -26,18 +26,13 @@ public interface BasicGameObserver {
      *
      */
     public void updateOnAttackResult(AttackResultInfo attackResult);
+    
     /**
      * Method called as soon as the attacker has chosen how many armies to use
      * in a fight.
      *
-     * @param defender
-     * @param defenderCountry
-     * @param attacker
-     * @param attackerCountry
-     * @param nrA
-     * @param artificialPlayer
      */
-    public void updateOnDefend(String defender, String defenderCountry, String attacker, String attackerCountry, int nrA, boolean artificialPlayer);
+    public void updateOnDefend(CountryInfo defenderCountryInfo);
 
     /**
      * Method called to update the observer when a player (<code> defender</code>)

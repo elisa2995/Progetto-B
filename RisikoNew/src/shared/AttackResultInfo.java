@@ -12,14 +12,12 @@ public class AttackResultInfo {
     private final int[][] dice;
     private final boolean conquered;
     private final String conqueredContinent;
-    private final boolean[] artificialAttack;
 
-    public AttackResultInfo(CountryInfo[] countries, int[][] dice, boolean conquered, String conqueredContinent, boolean[] artificialAttack) {
+    public AttackResultInfo(CountryInfo[] countries, int[][] dice, boolean conquered, String conqueredContinent) {
         this.countries = countries;
         this.dice = dice;
         this.conquered = conquered;
         this.conqueredContinent = conqueredContinent;
-        this.artificialAttack = artificialAttack;
     }
     
     public CountryInfo getAttackerInfo(){
@@ -57,17 +55,13 @@ public class AttackResultInfo {
     public String getConqueredContinent() {
         return conqueredContinent;
     }
-
-    public boolean[] getArtificialAttack() {
-        return artificialAttack;
-    }
     
     public boolean areBothArtificial(){
-        return artificialAttack[0] && artificialAttack[1];
+        return countries[0].hasArtificialOwner() && countries[1].hasArtificialOwner();
     }
     
     public boolean isAttackerArtificial(){
-        return artificialAttack[0];
+        return countries[0].hasArtificialOwner();
     }
     
     public boolean canAttackFromCountry(){

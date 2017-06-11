@@ -32,15 +32,10 @@ public class BasicObservable {
      * notificha che chi viene attaccato deve scegliere con quante armate deve
      * difendersi
      *
-     * @param defender giocatore attaccato
-     * @param defenderCountry territorio attaccato
-     * @param attacker attaccante
-     * @param attackerCountry territorio attaccante
-     * @param nrA numero di armate da cui si viene attaccati
      */
-    public void notifyDefender(String defender, String defenderCountry, String attacker, String attackerCountry, int nrA, boolean isArtificialPlayer) {
+    public void notifyDefender(CountryInfo defenderCountryInfo) {
         for (BasicGameObserver ob : this.obs) {
-            ob.updateOnDefend(defender, defenderCountry, attacker, attackerCountry, nrA, isArtificialPlayer);
+            ob.updateOnDefend(defenderCountryInfo);
         }
 
     }

@@ -79,4 +79,8 @@ public class CountryInfo {
     public void canAttackFromHere(boolean canAttackFromHere) {
         this.canAttackFromHere = canAttackFromHere;
     }
+    
+    public boolean hasArtificialOwner(){
+        return this.player.isArtificial();
+    }
 }

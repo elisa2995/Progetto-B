@@ -244,7 +244,7 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     private PlayerInfo buildPlayerInfo(Player player) {
-        return new PlayerInfo(player.toString(), player.getColor());
+        return new PlayerInfo(player.toString(), player.getColor(), player instanceof ArtificialPlayer);
     }
 
     @Override
@@ -394,11 +394,8 @@ public class Game extends Observable implements GameProxy {
         Player defenderPlayer = map.getPlayerByCountry(defenderCountry);
         Player attackerPlayer = map.getPlayerByCountry(attackerCountry);
         if (attackerArmies > 0) {
-            if (defenderPlayer instanceof ArtificialPlayer) {
-                notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, true);
-            } else {
-                notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), attackerPlayer.getName(), attackerCountry.getName(), this.attackerArmies, false);
-            }
+            notifyDefender(buildCountryInfo(false));
+            //notifyDefender(defenderPlayer.getName(), defenderCountry.getName(), defenderPlayer instanceof ArtificialPlayer);
         }
     }
 
@@ -418,7 +415,7 @@ public class Game extends Observable implements GameProxy {
         checkCountryConquest();
         checkLostAndWon();
 
-        notifyAttackResult(new AttackResultInfo(buildFightingCountriesInfo(), getDice(), map.isConquered(defenderCountry), checkContinentConquest(), isArtificialAttack()));
+        notifyAttackResult(new AttackResultInfo(buildFightingCountriesInfo(), getDice(), map.isConquered(defenderCountry), checkContinentConquest()));
 
         attackInProgress = false;
     }
@@ -474,17 +471,6 @@ public class Game extends Observable implements GameProxy {
             continent = map.getContinentByCountry(defenderCountry).toString();
         }
         return continent;
-    }
-
-    /**
-     * Returns an array of booleans, of which the first element is true if the
-     * attacker is an artificial player, the second one is true if the defender
-     * is an artificialPlayer.
-     *
-     * @return
-     */
-    private boolean[] isArtificialAttack() {
-        return new boolean[]{activePlayer instanceof ArtificialPlayer, map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer};
     }
 
     /**

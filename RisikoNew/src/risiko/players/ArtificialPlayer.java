@@ -271,8 +271,8 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     @Override
-    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {
-        if (this.getName().equals(defender)) {
+    public void updateOnDefend(CountryInfo defenderCountryInfo) {
+        if (this.getName().equals(defenderCountryInfo.getPlayerName())) {
             this.currentAction = Action.DEFEND;
         }
 

@@ -106,9 +106,8 @@ public class GUI extends JFrame implements GameObserver {
      * Inizializza i labels
      *
      * @param src
-     * @throws IOException
      */
-    private void initLabels() throws IOException {
+    private void initLabels() {
 
         List<Map<String, Object>> labels = FileManager.getInstance().getLabelsProperties();
         String country;
@@ -629,17 +628,12 @@ public class GUI extends JFrame implements GameObserver {
      * Se il giocatore è reale viene richiamata una dialog che chiede al
      * difensore con quante armate difendersi per completare l'attacco
      *
-     * @param defender
-     * @param countryDefender
-     * @param attacker
-     * @param countryAttacker
-     * @param nrA
-     * @param isArtificialPlayer
+     * @param defenderCountryInfo
      */
     @Override
-    public void updateOnDefend(String defender, String countryDefender, String attacker, String countryAttacker, int nrA, boolean isArtificialPlayer) {
-        if (!isArtificialPlayer) {
-            defenseArmies.setDefenderCountryName(game.getDefenderCountryName());
+    public void updateOnDefend(CountryInfo defenderCountryInfo) {
+        if (!defenderCountryInfo.hasArtificialOwner()) {
+            defenseArmies.setDefenderCountryName(defenderCountryInfo.getName());
             this.defenseArmies.setVisible(true);
         }
     }
