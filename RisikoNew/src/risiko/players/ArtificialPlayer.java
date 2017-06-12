@@ -21,6 +21,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     private Action currentAction;
     private ArtificialPlayerSettings setting;
     private int reinforceSpeed;
+    private int attacksRemaining;
 
     public void setSetting(ArtificialPlayerSettings setting) {
         this.setting = setting;
@@ -130,9 +131,11 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     private synchronized void randomAttack() {
         int i = setting.getBaseAttack();
 
-        while (i > 0 && game.getAllAttackers(this).length != 0 && canAttack) {
-            randomSingleAttack();
-            i--;
+        while (i > 0 && game.getAllAttackers(this).length != 0 ) {
+            if (canAttack) {
+                randomSingleAttack();
+                i--;
+            }
         }
     }
 
@@ -232,7 +235,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                             randomReinforce();
                             break;
                         case FIGHT:
-                            canAttack = true;
+                            canAttack = true;  
                             this.randomAttack();
                             game.nextPhase(this);
                             break;
