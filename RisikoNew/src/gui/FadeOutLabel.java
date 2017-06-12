@@ -38,7 +38,6 @@ public class FadeOutLabel extends JLabel {
     public FadeOutLabel(GUI gui) {
         this.gui=gui;
         String url="images/CAVALRY.png";
-        FadeOutLabel fadeOutLabel=this;
         try {
             outImage = ImageIO.read(new File(url));
         } catch (IOException exp) {

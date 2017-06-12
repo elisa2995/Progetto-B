@@ -29,7 +29,13 @@ import shared.PlayerInfo;
  */
 public class GameTest {
     
-    public GameTest() {
+    private List<PlayerInfo> players;
+    private Game instance;
+    
+    public GameTest() throws Exception {
+        players=new ArrayList<>();
+        players.add(new PlayerInfo("","RED","NORMAL"));
+        instance = new Game(players, new GUI(players));
     }
     
     @BeforeClass
@@ -60,12 +66,7 @@ public class GameTest {
         cardNames[0]="WILD";
         cardNames[1]="WILD";
         cardNames[2]="INFANTRY";
-        ArtificialPlayer[] aiCaller = null;
-        List<PlayerInfo> players=new ArrayList<>();
-        players.add(new PlayerInfo("","RED","NORMAL"));
-        GUI gui = new GUI(players);
-
-        Game instance = new Game(players, gui);
+        ArtificialPlayer[] aiCaller = null;        
         boolean expResult = false;
         boolean result = instance.canPlayThisTris(cardNames, aiCaller);
         assertEquals(expResult, result);
