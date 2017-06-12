@@ -1,4 +1,4 @@
-package risiko;
+package risiko.map;
 
 import risiko.players.Player;
 import java.lang.reflect.Constructor;

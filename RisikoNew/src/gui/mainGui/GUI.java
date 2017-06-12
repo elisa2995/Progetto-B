@@ -1,9 +1,19 @@
-package gui;
+package gui.mainGui;
 
 import gui.startGameGUI.StartGameGUI;
 import controllers.LabelMapListener;
 import utils.GameObserver;
 import exceptions.PendingOperationsException;
+import gui.mainGui.dialogs.AttackerDialog;
+import gui.BackgroundPane;
+import gui.mainGui.cards.CardBonusDialog;
+import gui.mainGui.cards.CardPanel;
+import gui.DefaultColor;
+import gui.mainGui.dialogs.DefenseDialog;
+import gui.mainGui.dialogs.DiceDialog;
+import gui.mainGui.dialogs.MoveDialog;
+import gui.PlayAudio;
+import gui.mainGui.dialogs.SettingsDialog;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -809,7 +819,7 @@ public class GUI extends JFrame implements GameObserver {
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables
 
-    void moveToBack() {
+    public void moveToBack() {
         mapLayeredPane.moveToBack(fadeOutLabel);
     }
 

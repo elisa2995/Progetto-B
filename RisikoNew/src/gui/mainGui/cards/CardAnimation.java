@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui;
+package gui.mainGui.cards;
 
+import gui.PlayAudio;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 

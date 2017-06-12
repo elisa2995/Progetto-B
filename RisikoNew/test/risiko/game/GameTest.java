@@ -5,7 +5,7 @@
  */
 package risiko.game;
 
-import gui.GUI;
+import gui.mainGui.GUI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +16,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import risiko.Card;
-import risiko.Phase;
+import risiko.equipment.Card;
 import risiko.players.ArtificialPlayer;
 import risiko.players.ArtificialPlayerSettings;
 import risiko.players.Player;

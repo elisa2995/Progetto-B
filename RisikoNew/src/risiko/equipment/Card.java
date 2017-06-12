@@ -1,4 +1,4 @@
-package risiko;
+package risiko.equipment;
 
 public enum Card {
 

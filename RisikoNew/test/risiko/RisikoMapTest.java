@@ -5,6 +5,8 @@
  */
 package risiko;
 
+import risiko.map.Country;
+import risiko.map.RisikoMap;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;

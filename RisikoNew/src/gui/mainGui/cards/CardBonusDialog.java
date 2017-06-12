@@ -1,4 +1,4 @@
-package gui;
+package gui.mainGui.cards;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;

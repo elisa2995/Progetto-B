@@ -5,9 +5,9 @@
  */
 package controllers;
 
-import gui.CardAnimation;
-import gui.CardPanel;
-import gui.GUI;
+import gui.mainGui.cards.CardAnimation;
+import gui.mainGui.cards.CardPanel;
+import gui.mainGui.GUI;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
-import static risiko.Phase.PLAY_CARDS;
+import static risiko.game.Phase.PLAY_CARDS;
 import risiko.game.GameProxy;
 
 /**

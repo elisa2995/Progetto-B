@@ -1,4 +1,4 @@
-package gui;
+package gui.mainGui.dialogs;
 
 import static java.awt.Dialog.DEFAULT_MODALITY_TYPE;
 import java.awt.Dimension;

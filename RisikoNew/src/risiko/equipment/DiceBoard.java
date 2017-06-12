@@ -1,4 +1,4 @@
-package risiko;
+package risiko.equipment;
 
 import java.util.Arrays;
 import java.util.Random;

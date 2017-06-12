@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui;
+package gui.mainGui.cards;
 
 import controllers.CardListener;
+import gui.PlayAudio;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,7 +73,6 @@ public class CardPanel extends javax.swing.JPanel {
 
         cardsPane.setMaximumSize(new java.awt.Dimension(1000, 300));
         cardsPane.setMinimumSize(new java.awt.Dimension(1000, 300));
-        cardsPane.setPreferredSize(new java.awt.Dimension(1000, 300));
 
         javax.swing.GroupLayout cardsPaneLayout = new javax.swing.GroupLayout(cardsPane);
         cardsPane.setLayout(cardsPaneLayout);
@@ -110,7 +110,7 @@ public class CardPanel extends javax.swing.JPanel {
     private javax.swing.JLayeredPane cardsPane;
     // End of variables declaration//GEN-END:variables
 
-    void setCards(List<String> myCards) {
+    public void setCards(List<String> myCards) {
         
         if(!myCards.isEmpty()){
             PlayAudio.play("sounds/cardFan1.wav");

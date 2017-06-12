@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui;
+package gui.mainGui.dialogs;
 
+import gui.DefaultColor;
+import gui.PlayAudio;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;

@@ -1,4 +1,4 @@
-package risiko;
+package risiko.map;
 
 import java.util.List;
 

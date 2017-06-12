@@ -2,7 +2,7 @@ package gui.startGameGUI;
 
 import java.awt.Dimension;
 import gui.BackgroundPane;
-import gui.GUI;
+import gui.mainGui.GUI;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

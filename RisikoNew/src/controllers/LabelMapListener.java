@@ -1,8 +1,8 @@
 package controllers;
 
-import gui.GUI;
-import gui.GraphicsJLabel;
-import gui.MoveDialog;
+import gui.mainGui.GUI;
+import gui.mainGui.GraphicsJLabel;
+import gui.mainGui.dialogs.MoveDialog;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;

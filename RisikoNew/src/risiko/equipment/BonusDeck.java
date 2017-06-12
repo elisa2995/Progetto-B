@@ -1,5 +1,6 @@
-package risiko;
+package risiko.equipment;
 
+import risiko.equipment.Card;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;

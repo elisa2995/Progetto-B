@@ -3,8 +3,8 @@ package risiko.missions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import risiko.Continent;
-import risiko.Country;
+import risiko.map.Continent;
+import risiko.map.Country;
 
 /**
  * Missione per cui bisogna conquistare i territori indicati in

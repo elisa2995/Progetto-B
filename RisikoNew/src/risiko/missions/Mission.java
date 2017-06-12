@@ -2,8 +2,8 @@ package risiko.missions;
 
 import java.util.List;
 import java.util.Map;
-import risiko.Continent;
-import risiko.Country;
+import risiko.map.Continent;
+import risiko.map.Country;
 
 public abstract class Mission {
 

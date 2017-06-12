@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui;
+package gui.mainGui.dialogs;
 
 import risiko.players.ArtificialPlayerSettings;
 import risiko.game.GameProxy;

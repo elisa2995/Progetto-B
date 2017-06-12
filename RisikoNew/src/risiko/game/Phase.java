@@ -1,4 +1,4 @@
-package risiko;
+package risiko.game;
 
 import exceptions.LastPhaseException;
 
