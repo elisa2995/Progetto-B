@@ -5,11 +5,12 @@
  */
 package controllers;
 
+import gui.startGameGUI.PlayerInfoRow;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
-import javax.swing.DefaultComboBoxModel;
+import java.util.List;
 import javax.swing.JComboBox;
 
 /**
@@ -18,44 +19,84 @@ import javax.swing.JComboBox;
  */
 public class ColorBoxListener implements ActionListener {
 
-    private String[] updateColors;
-    private JComboBox[] colorBoxes;
+    private List<PlayerInfoRow> players;
+    private String[] defaultColors;
 
-    public ColorBoxListener(JComboBox[] colorBoxes, String[] updateColors) {
-        this.updateColors = updateColors;
-        this.colorBoxes = colorBoxes;
+    public ColorBoxListener(List<PlayerInfoRow> players, String[] colors) {
+        this.defaultColors = colors;
+        this.players=players;
     }
 
     /**
-     * Se un giocatore cambia il suo colore di default, quel colore viene 
+     * Se un giocatore cambia il suo colore di default, quel colore viene
      * assegnato al giocatore che possedeva in precedenza il nuovo colore
-     * @param e 
+     *
+     * @param e
      */
     @Override
     public void actionPerformed(ActionEvent e) {
         JComboBox comboBox = (JComboBox) e.getSource();
-        String selected = (String) comboBox.getSelectedItem();
-        
-        int index = Arrays.asList(colorBoxes).indexOf(comboBox);
-        if(!updateColors[index].equals(selected)){ 
-            String colorTmp = updateColors[index]; 
-            updateColors[index] = selected;       
-            for (int j = 0; j < colorBoxes.length; j++) {
-                    if (colorBoxes[j] != comboBox && colorBoxes[j].getSelectedItem().equals(selected)) {
-                        colorBoxes[j].setSelectedItem(colorTmp);    
-                        updateColors[j] = colorTmp;
-                    }
-                }
-        }
+        updateColors(comboBox);
     }
 
-    /**
-     * Ridà la lista dei colori ordinata rispetto alle scelte dei giocatori
-     * @param length
-     * @return 
-     */
-    public String[] getUpdateColors(int length) {
-        return Arrays.copyOfRange(updateColors, 0, length);
+    public void updateColors(JComboBox colorBox) {
+        
+        List<JComboBox> colorBoxes=getColorBoxes();
+        String newColor = (String) colorBox.getSelectedItem();
+        int index = colorBoxes.indexOf(colorBox);
+        /*String oldColor = savedColors[index]; // colore precedente
+        if (!oldColor.equals(newColor)) {  // se ha cambiato colore
+            savedColors[index] = newColor;     // assegno il colore nuovo  */
+            // controlliamo se qualcuno ha il colore selezionato, in tal caso scambiamo i colori
+            for (JComboBox other : colorBoxes) {
+                if (other != colorBox && ((String) other.getSelectedItem()).equals(newColor)) {
+                    //switchColors(other, oldColor);
+                    other.setSelectedItem(getAvailableColor());
+                }
+            }
+
+        //}
+    }
+    
+    private List<JComboBox> getColorBoxes(){ 
+        List<JComboBox> colorBoxes=new ArrayList<>();
+        for(PlayerInfoRow player:players){
+            colorBoxes.add(player.getColorComboBox());
+        }
+        return colorBoxes;
+    }
+    
+
+    private void switchColors(JComboBox other, String oldColor) {
+        other.setSelectedItem(oldColor);
+        //savedColors[getColorBoxes().indexOf(other)] = oldColor;
+        }
+
+    public String getAvailableColor() {
+        
+        for(String defaultColor : defaultColors){
+            if(!getChosenColors().contains(defaultColor)){
+                return defaultColor;
+            }
+        }
+        
+        return null; //non dovrebbe mai arrivarci;
+       /* System.out.println(usedColors);
+        for (String color : defaultColors) {
+            if (!usedColors.contains(color)) {
+                return color;
+            }
+        }
+        return null; // Non dovrebbe mai arrivarci    */
+    }
+
+
+    public List<String> getChosenColors(){
+        List<String> chosen = new ArrayList<>();
+        for(PlayerInfoRow player: players){
+            chosen.add(player.getColor());
+        }
+        return chosen;
     }
 
 }

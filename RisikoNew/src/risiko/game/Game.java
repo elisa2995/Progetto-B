@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import risiko.BonusDeck;
 import risiko.Card;
 import risiko.Country;
+import risiko.DiceBoard;
 import risiko.Phase;
 import risiko.RisikoMap;
 import risiko.players.ArtificialPlayerSettings;
@@ -43,23 +44,20 @@ public class Game extends Observable implements GameProxy {
     private final RisikoMap map;
     private final BonusDeck deck;
     private List<Player> players;
+    private DiceBoard diceBoard;
     private Player activePlayer;
     private Phase phase;
-    private int[] attackDice, defenseDice;
     private boolean reattack;
-    //private final GameProxy proxy;
 
-    public Game(Map<String, String> playersMap, Map<String, String> playersColor, GameObserver observer) throws Exception {
+    public Game(List<PlayerInfo> playersInfo, GameObserver observer) throws Exception {
 
         this.players = new ArrayList<>();
         this.activePlayer = null;
         this.deck = new BonusDeck();
         this.map = new RisikoMap();
+        this.diceBoard = new DiceBoard();
         this.addObserver(observer);
-        /*this.proxy = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
-                new Class<?>[]{GameProxy.class},
-                new GameInvocationHandler(this));*/
-        init(playersMap, playersColor);
+        init(playersInfo);
         this.reattack = false;
 
     }
@@ -107,17 +105,12 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Initializes the game. Ovvero chiama il metodo della mappa per
-     * l'assegnazione iniziale dei territori ai giocatori -
-     * assignCountriesToPlayers() - , setta un giocatore a caso come
-     * activePlayer
-     *
-     * @author Federico
-     * @throws rilancia l'eccezione che potrebbe lanciare la mappa nel caso in
-     * cui l'url del file dei territori fosse sbagliato.
+     * Initializes the game. Calls the methods to initialize the map and sets a
+     * random player as active player.
      */
-    private void init(Map<String, String> playersMap, Map<String, String> playersColor) throws Exception {
-        buildPlayers(playersMap, playersColor);
+    private void init(List<PlayerInfo> playersInfo) {
+
+        buildPlayers(playersInfo);
         map.initGame(players);
         notifyCountriesAssignment(buildAllCountryInfo());
         activePlayer = players.get(new Random().nextInt(players.size()));
@@ -128,8 +121,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Aggiunge i giocatori artificiali come observers e inizializza i loro
-     * threads
+     * Adds the artificial players as observers and starts their threads.
      */
     private void startArtificialPlayersThreads() {
         for (Player playerThread : this.players) {
@@ -157,30 +149,26 @@ public class Game extends Observable implements GameProxy {
 
     /**
      * Builds the list of players.
-     *
-     * @param playersMap maps the name of the player (String) on its type
-     * (String)
-     * @param colors mapst the name of the player (String) on its color.
+     * @param playersInfo
      */
-    private void buildPlayers(Map<String, String> playersTypeMap, Map<String, String> playersColor) {
+    private void buildPlayers(List<PlayerInfo> playersInfo) {
 
-        for (Map.Entry<String, String> playerType : playersTypeMap.entrySet()) {
-            String color = playersColor.get(playerType.getKey());
-            switch (PlayerType.valueOf(playerType.getValue())) {
+        for (PlayerInfo info : playersInfo) {
+            switch (PlayerType.valueOf(info.getType())) {
                 case ARTIFICIAL:
-                    this.players.add(new ArtificialPlayer(playerType.getKey(), color, (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
+                    this.players.add(new ArtificialPlayer(info.getName(), info.getColor(), (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
                             new Class<?>[]{GameProxy.class},
                             new GameInvocationHandler(this))));
                     break;
                 case NORMAL:
-                    Player player = new Player(playerType.getKey(), color);
-                    for (int i = 0; i < 4; i++) {
+                    Player player = new Player(info.getName(), info.getColor());
+                    for (int j = 0; j < 4; j++) {
                         player.addCard(deck.drawCard());
                     }
                     this.players.add(player);
                     break;
                 case LOGGED:
-                    this.players.add(new LoggedPlayer(playerType.getKey(), color));
+                    this.players.add(new LoggedPlayer(info.getName(), info.getColor()));
                     break;
             }
 
@@ -256,64 +244,23 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Computes the number of lost armies during a battle.
+     * Computes the number of armies lost during a battle.
      *
      * @return 2 elements array of which the first one represents the number of
      * armies lost by the attacker, while the second one represents the number
      * of armies lost by the defende.
      */
     private int[] computeLostArmies(int nrA, int nrD) {
-        attackDice = rollDice(nrA);
-        defenseDice = rollDice(nrD);
+        diceBoard.rollAllDice(nrA, nrD);
         int lostArmies[] = new int[2];
         for (int i = 0; i < Math.min(nrA, nrD); i++) {
-            if (attackDice[i] > defenseDice[i]) {
+            if (diceBoard.getAttackerDice()[i] > diceBoard.getDefenderDice()[i]) {
                 lostArmies[1]++;
             } else {
                 lostArmies[0]++;
             }
         }
         return lostArmies;
-    }
-
-    /**
-     * Returns both the set of attackDice and defenseDice.
-     *
-     * @return
-     */
-    private int[][] getDice() {
-        return new int[][]{attackDice, defenseDice};
-    }
-
-    /**
-     * Rolls <code>nrDice</code> dice and returns their value in descending
-     * order.
-     *
-     * @param nrDice
-     */
-    private int[] rollDice(int nrDice) {
-        int dice[] = new int[nrDice];
-        int tmp;
-        for (int i = 0; i < nrDice; i++) {
-            dice[i] = rollDie();
-        }
-        Arrays.sort(dice);
-        if (nrDice > 1) {
-            tmp = dice[0];
-            dice[0] = dice[nrDice - 1];
-            dice[nrDice - 1] = tmp;
-        }
-        return dice;
-    }
-
-    /**
-     * Rolls a die and returns its result.
-     *
-     * @return a random number between 1 and 6 (inclusive).
-     * @author Andrea
-     */
-    private int rollDie() {
-        return 1 + new Random().nextInt(6);
     }
 
     /**
@@ -381,7 +328,7 @@ public class Game extends Observable implements GameProxy {
         checkCountryConquest();
         checkLostAndWon();
 
-        notifyAttackResult(new AttackResultInfo(buildFightingCountriesInfo(), getDice(), map.isConquered(defenderCountry), checkContinentConquest()));
+        notifyAttackResult(new AttackResultInfo(buildFightingCountriesInfo(), diceBoard.getDice(), map.isConquered(defenderCountry), checkContinentConquest()));
 
         attackInProgress = false;
     }

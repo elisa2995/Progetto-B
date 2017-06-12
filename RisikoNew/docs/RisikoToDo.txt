@@ -2,6 +2,8 @@
 - carte per giocatore artificiale
 - move per giocatore artificiale
 - DOCUMENTAZIONE (javaDoc + wiki) 
+- quando conquisti un continente si dice nel jdialog che dice che lo hai conquistato  
+- controllare suoni per i giocatori artificiali
 x quando conquisti un continente si dice nel jdialog che dice che lo hai conquistato
 - controllare suoni per i giocatori artificiali 
 - risolvere il problema dei coni tra la chiusura del dicedialog e la movedialog
@@ -25,6 +27,10 @@ x mettere i neghbors nel country
 - Tendina per tipo giocatori
 - Rendere tutto non resizible
 - Rendere il tutto proporzionale alla dimmensione dello schermo
+- Ombra continenti
+- spostamento iniziale
+- classe che fa trasforma liste, mappe di oggetti in altrettante di stringhe
+- mettere file scrittura giocatori in filemanager (caro)
 - Non si può chiudere la finestra di move
 - Sistemare: fa vedere non si possono effettuare attacchi tante volte quante sono stati effettuati attacchi.
 - fare una classe stringhiFile

@@ -6,6 +6,7 @@
 package risiko.game;
 
 import gui.GUI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import risiko.Phase;
 import risiko.players.ArtificialPlayer;
 import risiko.players.ArtificialPlayerSettings;
 import risiko.players.Player;
+import shared.PlayerInfo;
 
 /**
  *
@@ -59,15 +61,11 @@ public class GameTest {
         cardNames[1]="WILD";
         cardNames[2]="INFANTRY";
         ArtificialPlayer[] aiCaller = null;
-        Map<String, String> playersMap = new HashMap<>();
-        Map<String, String> colorsMap = new HashMap<>();
-        playersMap.put("p1", "NORMAL");
-        playersMap.put("p2", "NORMAL");
-        colorsMap.put("p1", "RED");
-        colorsMap.put("p2", "GREEN");
-        GUI gui = new GUI(playersMap, colorsMap);
+        List<PlayerInfo> players=new ArrayList<>();
+        players.add(new PlayerInfo("","RED","NORMAL"));
+        GUI gui = new GUI(players);
 
-        Game instance = new Game(playersMap, colorsMap, gui);
+        Game instance = new Game(players, gui);
         boolean expResult = false;
         boolean result = instance.canPlayThisTris(cardNames, aiCaller);
         assertEquals(expResult, result);

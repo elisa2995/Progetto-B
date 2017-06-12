@@ -1,4 +1,4 @@
-package gui;
+package gui.startGameGUI;
 
 import java.awt.Component;
 import java.util.Arrays;

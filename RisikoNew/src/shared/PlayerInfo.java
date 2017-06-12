@@ -8,8 +8,9 @@ public class PlayerInfo {
 
     private final String name;
     private final String color;
-    private final int bonusArmies;
-    private final boolean artificial;
+    private int bonusArmies;
+    private boolean artificial;
+    private String type;
 
     public PlayerInfo(String name, String color, int bonus, boolean artificial) {
         this.name = name;
@@ -17,7 +18,13 @@ public class PlayerInfo {
         this.bonusArmies = bonus;
         this.artificial = artificial;
     }
-    
+
+    public PlayerInfo(String name, String color, String type) {
+        this.name = name;
+        this.color = color;
+        this.type = type;
+    }
+
     public String getName() {
         return name;
     }
@@ -29,9 +36,17 @@ public class PlayerInfo {
     public boolean isArtificial() {
         return artificial;
     }
-    
-    public int getBonusArmies(){
+
+    public int getBonusArmies() {
         return bonusArmies;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

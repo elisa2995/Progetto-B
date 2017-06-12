@@ -1,5 +1,6 @@
 package gui;
 
+import gui.startGameGUI.StartGameGUI;
 import controllers.LabelMapListener;
 import utils.GameObserver;
 import exceptions.PendingOperationsException;
@@ -7,6 +8,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+
+import java.awt.Rectangle;
+import java.awt.event.ActionListener;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,6 +25,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import risiko.game.Game;
 import risiko.game.GameInvocationHandler;
@@ -43,19 +49,24 @@ public class GUI extends JFrame implements GameObserver {
     private AttackerDialog attackerDialog;
     private DiceDialog diceDialog;
     private LabelMapListener labelMapListener;
+
+    private FadeOutLabel fadeOutLabel;
+
     private CardPanel cardPanel;
     private final int PREFERRED_WIDTH = 400;
     private final int PREFERRED_HEIGHT = 192;
 
-    public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
+
+
+    public GUI(List<PlayerInfo> players) throws Exception {
         initBackground();
         initComponents();
         labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko.png"))));
         countryLabelMap = new HashMap<>();
         initColorCountryNameMap();
-        init(players, playersColor);
+        init(players);
     }
-
+    
     public JButton getShowCardButton() {
         return showCardButton;
     }
@@ -76,13 +87,20 @@ public class GUI extends JFrame implements GameObserver {
      * @throws IOException
      * @throws Exception
      */
-    private void init(Map<String, String> players, Map<String, String> playersColor) throws IOException, Exception {
+    private void init(List<PlayerInfo> players) throws IOException, Exception {
+
+        // Image fading out
+        fadeOutLabel = new FadeOutLabel(this);
+        fadeOutLabel.setOpaque(true);
+        fadeOutLabel.setBounds(400, 120, 186, 250);
+        mapLayeredPane.add(fadeOutLabel, 1000);
+        
+
         // Labels
         initLabels();
         ((GraphicsJLabel) labelMap).setCountryLabel(countryLabelMap);
         mapLayeredPane.setComponentZOrder(labelMap, mapLayeredPane.getComponentCount() - 1);
         textAreaInfo.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
-
         playerLabel.setFont(new Font("Calibri", Font.BOLD, 24));
         phaseLabel.setFont(new Font("Calibri", Font.BOLD, 24));
 
@@ -94,7 +112,7 @@ public class GUI extends JFrame implements GameObserver {
         // Game
         game = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
                 new Class<?>[]{GameProxy.class},
-                new GameInvocationHandler(new Game(players, playersColor, this)));
+                new GameInvocationHandler(new Game(players, this)));
 
         labelMapListener.setGame(game);
 
@@ -113,6 +131,7 @@ public class GUI extends JFrame implements GameObserver {
         // Setting
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
+
     }
 
     /**
@@ -431,6 +450,17 @@ public class GUI extends JFrame implements GameObserver {
     public void updateOnPhaseChange(PlayerInfo player, String phase) {
         ((GraphicsJLabel) labelMap).resetCone();
 
+        //fadeOutLabel.setImage("images/CAVALRY.png");
+        //mapLayeredPane.moveToFront(fadeOutLabel);
+        //fadeOutLabel.setIcon(new ImageIcon("images/WILD.png"));
+        //fadeOutLabel.setBounds(100,100,1000,512);
+        //fadeOutLabel.setVisible(true);
+        //mapLayeredPane.add(new JLabel("CAISOD"),200);
+        fadeOutLabel.setVisible(true);
+        this.mapLayeredPane.moveToFront(fadeOutLabel);
+        fadeOutLabel.startFadeOut();
+
+
         updateLabels(player, phase);
         updateTextAreaInfo(player, phase);
 
@@ -439,6 +469,7 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     private void updateLabels(PlayerInfo player, String phase) {
+
         this.phaseLabel.setText("FASE DI " + getFormattedPhase(phase));
         this.playerLabel.setText(player.getName());
         this.phaseLabel.setForeground(DefaultColor.valueOf(player.getColor().toUpperCase()).getColor());
@@ -462,6 +493,7 @@ public class GUI extends JFrame implements GameObserver {
                 textAreaInfo.setText("Scegli un tuo territorio da cui spostare una o più armate");
                 break;
         }
+        
     }
 
     /**
@@ -475,6 +507,7 @@ public class GUI extends JFrame implements GameObserver {
 
         ((GraphicsJLabel) labelMap).resetCone();
         labelMapListener.resetCache();
+
 
         if (attackerInfo == null) {
             textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
@@ -775,5 +808,9 @@ public class GUI extends JFrame implements GameObserver {
     private javax.swing.JButton showCardButton;
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables
+
+    void moveToBack() {
+        mapLayeredPane.moveToBack(fadeOutLabel);
+    }
 
 }

@@ -1,7 +1,7 @@
 package risiko;
 
 import gui.GUI;
-import gui.StartGameGUI;
+import gui.startGameGUI.StartGameGUI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
