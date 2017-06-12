@@ -28,7 +28,7 @@ public class UserDialog extends javax.swing.JDialog {
     private final StartGameGUI gui;
     private int index;
     private List<String> players;
-    private List<PlayerInfo> playerRows;
+    private List<PlayerInfoRow> playerRows;
     private boolean isRegistration;
 
     /**
@@ -38,7 +38,7 @@ public class UserDialog extends javax.swing.JDialog {
      * @param playerRows
      * @param isRegistration
      */
-    public UserDialog(StartGameGUI gui,List<PlayerInfo> playerRows, boolean isRegistration) {
+    public UserDialog(StartGameGUI gui,List<PlayerInfoRow> playerRows, boolean isRegistration) {
         initComponents();
         this.gui = gui;
         this.playerRows=playerRows;        

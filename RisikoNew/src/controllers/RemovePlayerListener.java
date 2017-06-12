@@ -5,7 +5,7 @@
  */
 package controllers;
 
-import gui.startGameGUI.PlayerInfo;
+import gui.startGameGUI.PlayerInfoRow;
 import gui.startGameGUI.PlayersPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,10 +18,10 @@ import javax.swing.JButton;
  */
 public class RemovePlayerListener implements ActionListener {
 
-    private List<PlayerInfo> players;
+    private List<PlayerInfoRow> players;
     private PlayersPanel playersPanel;
 
-    public RemovePlayerListener(PlayersPanel playersPanel, List<PlayerInfo> players) {
+    public RemovePlayerListener(PlayersPanel playersPanel, List<PlayerInfoRow> players) {
         this.players = players;
         this.playersPanel = playersPanel;
     }
@@ -29,14 +29,14 @@ public class RemovePlayerListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton source=(JButton) e.getSource();
-        PlayerInfo player = getPlayerByButton(source);
+        PlayerInfoRow player = getPlayerByButton(source);
         // Elimino questa riga e aggiorno la posizione delle righe successive a questa
         players.remove(player);
         playersPanel.removePlayer(player);
     }
 
-    private PlayerInfo getPlayerByButton(JButton removeButton) {
-        for (PlayerInfo player : players) {
+    private PlayerInfoRow getPlayerByButton(JButton removeButton) {
+        for (PlayerInfoRow player : players) {
             if (removeButton.equals(player.getRemoveButton())) {
                 return player;
             }

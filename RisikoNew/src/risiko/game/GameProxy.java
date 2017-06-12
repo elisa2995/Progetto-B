@@ -12,7 +12,7 @@ import risiko.players.Player;
 public interface GameProxy {
 
     public Phase getPhase(ArtificialPlayer... aiCaller);
-    
+
     public String getPhaseName(ArtificialPlayer... aiCaller);
 
     public Player getActivePlayer(ArtificialPlayer... aiCaller);
@@ -38,7 +38,8 @@ public interface GameProxy {
      */
     public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller);
 
-    public void setReattack(boolean reattack,ArtificialPlayer... aiCaller);
+    public void setReattack(boolean reattack, ArtificialPlayer... aiCaller);
+
     /**
      * Resetta le countries dell'attacco. (Previo controllo sul caller del
      * metodo).
@@ -60,10 +61,7 @@ public interface GameProxy {
      */
     //public void attack(int nrA, int nrD, ArtificialPlayer... aiCaller);
 
-    public int[] getResultsDiceAttack(ArtificialPlayer... aiCaller);
-
-    public int[] getResultsDiceDefense(ArtificialPlayer... aiCaller);
-
+    
     /**
      * setta il numero di armate con il quale si vuole difenders
      *
@@ -142,13 +140,6 @@ public interface GameProxy {
     public String getLastCardDrawn(ArtificialPlayer... aiCaller);
 
     /**
-     * Ritorna true se il giocatore di turno ha già pescato una carta.
-     *
-     * @return
-     */
-    public boolean hasAlreadyDrawnCard(ArtificialPlayer... aiCaller);
-
-    /**
      * Ritorna un'arrayList contentente i nomi delle carte dell'active player.
      *
      * @return
@@ -179,14 +170,15 @@ public interface GameProxy {
      * @param bonusArmiesTris
      * @param aiCaller
      */
-    public void playTris(String[] cardsNames, int bonusArmiesTris, ArtificialPlayer... aiCaller);
+    public void playTris(String[] cardsNames, ArtificialPlayer... aiCaller);
 
     /**
      * Ritorna il massimo numero di armate per lo spostamento finale.
      *
+     * @param aiCaller
      * @return
      */
-    public int getMaxArmiesForMovement(ArtificialPlayer... aiCaller);
+    public int getMaxArmiesForMovement(String fromCountryName, ArtificialPlayer... aiCaller);
 
     /**
      * Setta il territorio da cui effettuare lo spostamento.
@@ -200,10 +192,12 @@ public interface GameProxy {
      * Sposta il numero di armate <code>i</code> da <code>attackerCountry</code>
      * alla country con name <code>toCountryName</code>
      *
+     * @param fromCountry
      * @param toCountryName
      * @param i
+     * @param aiCaller
      */
-    public void move(String toCountryName, Integer i, ArtificialPlayer... aiCaller);
+    public void move(String fromCountry,String toCountryName, Integer i, ArtificialPlayer... aiCaller);
 
     /**
      * Controlla che country sia dell'activePlayer e che si legale attaccare.
@@ -216,14 +210,15 @@ public interface GameProxy {
     public boolean controlAttacker(String countryName, ArtificialPlayer... aiCaller);
 
     /**
-     * Controlla che il territorio sia dell'attaccante, abbia più di un armata e 
+     * Controlla che il territorio sia dell'attaccante, abbia più di un armata e
      * abbia territori vicini in cui spostare le armate
+     *
      * @param countryName
      * @param aiCaller
      * @return true se è possibile compiere uno spostamento da quel territorio
      */
     public boolean controlFromCountryPlayer(String countryName, ArtificialPlayer... aiCaller);
-    
+
     /**
      * Controlla che country sia dell'activePlayer. (Previo controllo sul caller
      * del metodo). // mmh
@@ -255,7 +250,6 @@ public interface GameProxy {
     public boolean controlMovement(String toCountryName, ArtificialPlayer... aiCaller);
 
     //  M E T O D I   P E R   D A R E   I N F O
-
     /**
      * Controlla se la Country ha armate sufficienti per attaccare (>=2).
      *
@@ -321,9 +315,11 @@ public interface GameProxy {
     public String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller);
 
     public int getMaxArmies(String countryName, boolean isAttacker, ArtificialPlayer... aiCaller);
-    
-    public boolean canPlayThisTris(String[] cardNames, ArtificialPlayer[] aiCaller);
-    
+
+    public boolean canPlayThisTris(String[] cardNames, ArtificialPlayer... aiCaller);
+
+    public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller);
+
     public void endGame();
 
 }

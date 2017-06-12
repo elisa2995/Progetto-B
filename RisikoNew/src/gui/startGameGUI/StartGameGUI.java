@@ -12,20 +12,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import shared.PlayerInfo;
 
 /**
- * Initial GUI.
- * It let you set the number of players, their type(normal, artificial, logged)
- * and the color of their troops
- * It let you register a new loggable player
- * 
+ * Initial GUI. It let you set the number of players, their type(normal,
+ * artificial, logged) and the color of their troops It let you register a new
+ * loggable player
+ *
  */
 public class StartGameGUI extends JFrame {
 
     private PlayersPanel playersPanel;
 
     /**
-     * It creates a new form startGame; it calls all the initializazion functions
+     * It creates a new form startGame; it calls all the initializazion
+     * functions
      */
     public StartGameGUI() {
         initBackground();
@@ -34,8 +35,8 @@ public class StartGameGUI extends JFrame {
     }
 
     /**
-     * Setting of dimension of the dialog and add of <code>playerPanel</code>, that allows to 
-     * insert the information about the players
+     * Setting of dimension of the dialog and add of <code>playerPanel</code>,
+     * that allows to insert the information about the players
      */
     private void init() {
 
@@ -74,7 +75,6 @@ public class StartGameGUI extends JFrame {
             System.err.println("loginBackground.png not found");
         }
     }
-
 
     /**
      * Setting of all the JComponents
@@ -172,8 +172,8 @@ public class StartGameGUI extends JFrame {
     }//GEN-LAST:event_addButtonActionPerformed
 
     /**
-     * It create the GUI of the game if all the field are filled and the choosen names 
-     * for the players are different among each other
+     * It create the GUI of the game if all the field are filled and the choosen
+     * names for the players are different among each other
      *
      * @param evt
      */
@@ -185,14 +185,10 @@ public class StartGameGUI extends JFrame {
         }
 
         GUI gui;
-        List<String> colors = playersPanel.getColorList();
-        List<String> types = new ArrayList<>();
-        playersPanel.getTypesList().stream().forEach((type) -> {
-            types.add(getFormattedType(type.toLowerCase()));
-        });
-        
+        List<PlayerInfo> players = playersPanel.getAllplayers();
+
         try {
-            gui = new GUI(playerNames, colors, types);
+            gui = new GUI(players);
             gui.setVisible(true);
             this.dispose();
         } catch (Exception ex) {
@@ -204,6 +200,7 @@ public class StartGameGUI extends JFrame {
 
     /**
      * It checks there are empty fields
+     *
      * @param playerNames
      * @return true if there are empty fields
      */
@@ -220,8 +217,8 @@ public class StartGameGUI extends JFrame {
     }
 
     /**
-     * It opens a <code>userDialog</code> in the registration mode, allowing
-     * to register a new user
+     * It opens a <code>userDialog</code> in the registration mode, allowing to
+     * register a new user
      *
      * @param evt
      */
@@ -251,28 +248,12 @@ public class StartGameGUI extends JFrame {
         return false;
     }
 
-    /**
-     * It formattes the type of the player
-     *
-     * @param type
-     * @return
-     */
-    private String getFormattedType(String type) {
-        switch (type) {
-            case "loggato":
-                return "LOGGED";
-            case "normale":
-                return "NORMAL";
-            case "artificiale":
-                return "ARTIFICIAL";
-            default:
-                return null;
-        }
-    }
+
 
     /**
      * It sets the visibility of <code>addButton</code>
-     * @param visible 
+     *
+     * @param visible
      */
     public void setAddButtonVisible(boolean visible) {
         this.addButton.setVisible(visible);

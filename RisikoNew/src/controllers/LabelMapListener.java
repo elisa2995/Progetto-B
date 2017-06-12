@@ -19,6 +19,7 @@ import gui.PlayAudio;
 import java.util.HashMap;
 import java.awt.Rectangle;
 import risiko.game.GameProxy;
+import risiko.players.ArtificialPlayer;
 
 /**
  *
@@ -33,13 +34,16 @@ public class LabelMapListener extends MouseInputAdapter {
     private GUI gui;
     private Map<String, Boolean> cache;
 
-    public LabelMapListener(JLabel mapLabel, Map<Color, String> ColorNameCountry, GameProxy game, GUI gui) {
-        this.game = game;
+    public LabelMapListener(JLabel mapLabel, Map<Color, String> ColorNameCountry, GUI gui) {
         this.gui = gui;
         this.mapLabel = mapLabel;
         this.bufferedImage = convertToBufferedImage(mapLabel);
         this.ColorNameCountry = ColorNameCountry;
         this.cache = new HashMap<>();
+    }
+    
+    public void setGame(GameProxy game){
+        this.game = game;
     }
 
     /**
@@ -52,6 +56,9 @@ public class LabelMapListener extends MouseInputAdapter {
     public void mouseClicked(MouseEvent e) {
         String countryName = getCountryFromClick(e);
         switch (game.getPhase()) {
+            case PLAY_CARDS:
+                PlayAudio.play("sounds/clickOff.wav");
+                break;
             case REINFORCE:
                 if (countryName == null) {
                     PlayAudio.play("sounds/clickOff.wav");
@@ -78,7 +85,7 @@ public class LabelMapListener extends MouseInputAdapter {
 
                 if (game.getAttackerCountryName() == null && cache.containsKey(countryName) && cache.get(countryName)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
-                    game.setAttackerCountry(countryName);                    
+                    game.setAttackerCountry(countryName);
                     PlayAudio.play("sounds/clickOn.wav");
                     break;
                 }
@@ -112,9 +119,10 @@ public class LabelMapListener extends MouseInputAdapter {
                 }
                 if (cache.containsKey(countryName) && cache.get(countryName)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
-                    MoveDialog moveDialog = new MoveDialog(game, countryName);
+                    MoveDialog moveDialog = new MoveDialog(game, game.getAttackerCountryName(), countryName);
                     moveDialog.setVisible(true);
                     PlayAudio.play("sounds/clickOn.wav");
+                    game.resetFightingCountries();
                     break;
                 }
                 //Sono su un territorio non valido per spostarmi
@@ -135,6 +143,8 @@ public class LabelMapListener extends MouseInputAdapter {
      */
     @Override
     public void mouseMoved(MouseEvent e) {
+        if(game.getActivePlayer() instanceof ArtificialPlayer)  //Affinchè la posizione del mouse non interferisca sui coni di luce dei giocatori artificiali
+            return;
         String countryName = getCountryFromClick(e);
         /*Cache reset: a tutti i cambiamenti di fase, dopo ogni attacco se c'è 
          stata una conquista oppure è rimasta solo un armata, quando setto l'attaccante,
@@ -143,6 +153,7 @@ public class LabelMapListener extends MouseInputAdapter {
          quando resetto le fighting countries in labelMaplistener(cioè qui)
          */
         if (countryName == null) {
+            drowCone(e);
             // Non sono su alcun territorio
             e.getComponent().setCursor(Cursor.getDefaultCursor());
             return;
@@ -151,7 +162,8 @@ public class LabelMapListener extends MouseInputAdapter {
         mapLabel.setToolTipText(countryName);
 
         switch (game.getPhase()) {
-
+            case PLAY_CARDS:
+                return;
             case REINFORCE:
                 if ((cache.containsKey(countryName) && cache.get(countryName)) || game.controlPlayer(countryName) && game.canReinforce()) {
                     //Ho ancora bonus armies e sono su un mio territorio
@@ -165,15 +177,12 @@ public class LabelMapListener extends MouseInputAdapter {
                 }
                 break;
             case FIGHT:
+                drowCone(e);
                 if ((cache.containsKey(countryName) && cache.get(countryName)) || game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
                     setHandCursor(e.getComponent(), label);
                     cache.put(countryName, true);
                     break;
-                }
-                if (game.getAttackerCountryName() != null) {
-                    //imposto il cono di luce dall'attackerCountry alla posizione del Mouse
-                    ((GraphicsJLabel) mapLabel).drawCone(gui.getAttackerCountryBounds(), new Rectangle(e.getX(), e.getY(), 2, 2));
                 }
                 if ((cache.containsKey(countryName) && cache.get(countryName)) || game.getAttackerCountryName() != null && game.controlDefender(countryName)) {
                     //Devo scegliere il difensore, sono su un territorio confinante attaccabile
@@ -186,15 +195,12 @@ public class LabelMapListener extends MouseInputAdapter {
                 cache.put(countryName, false);
                 break;
             case MOVE:
+                drowCone(e);
                 if ((cache.containsKey(countryName) && cache.get(countryName)) || game.getAttackerCountryName() == null && game.controlFromCountryPlayer(countryName)) {
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
                     setHandCursor(e.getComponent(), label);
                     cache.put(countryName, true);
                     break;
-                }
-                if (game.getAttackerCountryName() != null) {
-                    //imposto il cono di luce dall'attackerCountry alla posizione del Mouse
-                    ((GraphicsJLabel) mapLabel).drawCone(gui.getAttackerCountryBounds(), new Rectangle(e.getX(), e.getY(), 2, 2));
                 }
                 if ((cache.containsKey(countryName) && cache.get(countryName)) || game.getAttackerCountryName() != null && game.controlMovement(countryName)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
@@ -268,5 +274,11 @@ public class LabelMapListener extends MouseInputAdapter {
         this.cache = new HashMap<>();
     }
 
-}
+    public void drowCone(MouseEvent e) {
+        if (game.getAttackerCountryName() != null) {
+            //imposto il cono di luce dall'attackerCountry alla posizione del Mouse
+            ((GraphicsJLabel) mapLabel).drawCone(gui.getAttackerCountry(), new Rectangle(e.getX(), e.getY(), 2, 2));
+        }
+    }
 
+}

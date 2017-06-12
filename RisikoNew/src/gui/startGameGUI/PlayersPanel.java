@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import shared.PlayerInfo;
 
 /**
  * Panel for the insertion of the players. 
@@ -26,7 +27,7 @@ public class PlayersPanel extends JPanel {
 
     public static final int N_PLAYERS_MIN = 2;
     public static final int N_PLAYERS_MAX = 6;
-    private List<PlayerInfo> players;
+    private List<PlayerInfoRow> players;
     private JComponent header;
     private final static String[] TYPES = {"Normale", "Artificiale", "Loggato"};
     private ColorBoxListener colorListener;
@@ -81,7 +82,7 @@ public class PlayersPanel extends JPanel {
         for (int i = 0; i < colors.length; i++) {
             colorNames[i] = colors[i].toStringLC();
         }
-        colorListener = new ColorBoxListener(colorNames.clone());
+        colorListener = new ColorBoxListener(players,colorNames);
         typeListener = new SelectTypeListener(gui, players);
         removeListener = new RemovePlayerListener(this, players);
     }
@@ -114,8 +115,7 @@ public class PlayersPanel extends JPanel {
      * @param index 
      */
     private void createPlayerRow(int index) {
-        PlayerInfo player = new PlayerInfo(index, TYPES, colorListener, typeListener, removeListener);
-        colorListener.addColorBox(player.getColorComboBox());
+        PlayerInfoRow player = new PlayerInfoRow(index, TYPES, colorListener, typeListener, removeListener);
         players.add(player);
         addToPanel((JComponent) player);
 
@@ -126,7 +126,7 @@ public class PlayersPanel extends JPanel {
      * @param removable 
      */
     public void setRemovable(boolean removable) {
-        for (PlayerInfo p : players) {
+        for (PlayerInfoRow p : players) {
             p.setRemovable(removable);
         }
     }
@@ -135,8 +135,7 @@ public class PlayersPanel extends JPanel {
      * It removes a row from the tables
      * @param player 
      */
-    public void removePlayer(PlayerInfo player) {
-        //colorListener.updateSavedColors();
+    public void removePlayer(PlayerInfoRow player) {
         this.remove(player);
         repaint();
         updateGUI();
@@ -162,29 +161,41 @@ public class PlayersPanel extends JPanel {
      */
     public List<String> getPlayerNames() {
         List<String> names = new ArrayList<>();
-        for (PlayerInfo player : players) {
+        for (PlayerInfoRow player : players) {
             names.add(player.getPlayerName());
         }
         return names;
     }
 
+      
     /**
-     * It retrieves all the chosen colors
+     * It gets all the information about the players
      * @return 
      */
-    public List<String> getColorList() {
-        return Arrays.asList(colorListener.getSavedColors(players.size()));
-    }
-
-    /**
-     * It retrieves all the selected types
-     * @return 
-     */
-    public List<String> getTypesList() {
-        List<String> types = new ArrayList<>();
-        for (PlayerInfo player : players) {
-            types.add(player.getType());
+    public List<PlayerInfo> getAllplayers() {
+        List<PlayerInfo> list = new ArrayList<>();
+        for (PlayerInfoRow player : players) {
+            list.add(new PlayerInfo(player.getPlayerName(), player.getColor(), getFormattedType(player.getType().toLowerCase())));
         }
-        return types;
+        return list;
+    }
+    
+        /**
+     * It formattes the type of the player
+     *
+     * @param type
+     * @return
+     */
+    private String getFormattedType(String type) {
+        switch (type) {
+            case "loggato":
+                return "LOGGED";
+            case "normale":
+                return "NORMAL";
+            case "artificiale":
+                return "ARTIFICIAL";
+            default:
+                return null;
+        }
     }
 }

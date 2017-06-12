@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -13,23 +12,39 @@ import java.awt.geom.Path2D;
 import static java.lang.Math.atan;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
+import java.util.Map;
 import javax.swing.JLabel;
 
 public class GraphicsJLabel extends JLabel {
 
     private double[] xx;
     private double[] yy;
-    private static final Color COLOR_1 = new Color(0,0, 0, 225); // nero opaco
-    private static final Color COLOR_2 = new Color(0, 0, 0, 120); // nero semitrasparente
+    private static final Color COLOR_1 = new Color(0, 0, 0, 225); // opaque black
+    private static final Color COLOR_2 = new Color(0, 0, 0, 120); // semi-transparent black
     private static final Paint GRADIENT_PAINT = new GradientPaint(0, 0, COLOR_1, 20, 20, COLOR_2);
-    private Path2D myPath = new Path2D.Double();
+    private static final int DEFAULT_WIDTH = 15;
+    private Path2D myPath;
+    private Map<String, JLabel> countryLabel;
 
     public GraphicsJLabel() {
         super();
-        xx = new double[]{0, 0, 0, 5};
-        yy = new double[]{0, 0, 0, 0};
+        myPath = new Path2D.Double();
+        xx = new double[]{0, 0, 0};
+        yy = new double[]{0, 0, 0};
     }
 
+    /**
+     * Sets countryLabel.
+     * @param countryLabel 
+     */
+    public void setCountryLabel(Map<String, JLabel> countryLabel) {
+        this.countryLabel = countryLabel;
+    }
+
+    /**
+     * Paints the JLabel.
+     * @param g 
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -41,50 +56,73 @@ public class GraphicsJLabel extends JLabel {
         myPath.closePath();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setPaint(GRADIENT_PAINT);  
-        g2.fill(myPath);  
+        g2.setPaint(GRADIENT_PAINT);
+        g2.fill(myPath);
         myPath.reset();
     }
-    
+
     /**
-     * Disegna un triangolo di luce (???) che parte dall'attaccante al difensore.
-     * @param boundsAttacker i limiti della JLabel dell'attaccante
-     * @param boundsDefender i limiti della JLabel del difensore
+     * Draws a black triangle-shaped shadow with the vertix on the attacker's
+     * label and the base on the defender's label.
+     *
+     * @param attacker
+     * @param defender
      */
-    public void drawCone(Rectangle boundsAttacker, Rectangle boundsDefender) {
+    public void drawCone(String attacker, String defender) {
+        draw(countryLabel.get(attacker).getBounds(), countryLabel.get(defender).getBounds());
+    }
+
+    /**
+     * Draws a black triangle-shaped shadow with the vertix on the attacker's
+     * label and the base at mousePosition.
+     *
+     * @param attacker
+     * @param mousePosition
+     */
+    public void drawCone(String attacker, Rectangle mousePosition) {
+        draw(countryLabel.get(attacker).getBounds(), mousePosition);
+    }
+
+    /**
+     * Draws a black triangle-shaped shadow with the vertix in the middle of the
+     * Rectangle <code> from</code> and the base centred in the middle of the
+     * Rectangle <code>to</code>. The base width is determined by the parameter
+     * <code>defaultWidth</code>. the base at <code>base</code>.
+     *
+     * @param vertix
+     * @param base
+     */
+    private void draw(Rectangle from, Rectangle to) {
         GraphicsJLabel label = this;
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                int defaultWidth = 15;
-                xx[0] = boundsAttacker.getX() + boundsAttacker.getWidth() / 2;
-                yy[0] = boundsAttacker.getY() + boundsAttacker.getHeight() / 2;
-                xx[1] = boundsDefender.getX() + boundsDefender.getWidth() / 2;
-                yy[1] = boundsDefender.getY() + boundsDefender.getHeight() / 2;
+                xx[0] = from.getX() + from.getWidth() / 2;
+                yy[0] = from.getY() + from.getHeight() / 2;
+                xx[1] = to.getX() + to.getWidth() / 2;
+                yy[1] = to.getY() + to.getHeight() / 2;
                 double alpha = atan(Math.abs((xx[1] - xx[0]) / (yy[1] - yy[0])));
-                xx[2] = xx[1] + defaultWidth * cos(alpha);
-                yy[2] = yy[1] + defaultWidth * sin(alpha);
-                //xx[2] = xx[1] + (xx[3] - xx[0]);
-                //yy[2] = yy[1] + (yy[3] - yy[0]);
+                xx[2] = xx[1] + DEFAULT_WIDTH * cos(alpha);
+                yy[2] = yy[1] + DEFAULT_WIDTH * sin(alpha);
                 label.updateUI();
             }
         });
+
     }
-    
+
     /**
-     * Cancella il cono.
+     * Removes the shadow.
      */
     public void resetCone() {
         GraphicsJLabel label = this;
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-               xx=new double[]{0,0,0};
-               yy= new double[]{0,0,0};
-               label.updateUI();
-               
+                xx = new double[]{0, 0, 0};
+                yy = new double[]{0, 0, 0};
+                label.updateUI();
             }
         });
-        
+
     }
 }

@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import risiko.players.Player;
+import shared.CountryInfo;
+import shared.PlayerInfo;
 
 public class Observable extends BasicObservable {
 
@@ -22,10 +24,10 @@ public class Observable extends BasicObservable {
      * @param countryName
      * @param bonusArmies
      */
-    public void notifyReinforce(String countryName, int bonusArmies) {
+    public void notifyReinforce(int bonusArmies) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnReinforce(countryName, bonusArmies);
+                ((GameObserver) ob).updateOnReinforce(bonusArmies);
             }
         }
 
@@ -34,13 +36,12 @@ public class Observable extends BasicObservable {
     /**
      * Notifica un cambiamento dopo che l'attaccante è stato settato
      *
-     * @param countryName
-     * @param maxArmiesAttacker
+     * @param attackerInfo
      */
-    public void notifySetAttacker(String countryName, int maxArmiesAttacker, String attacker, String color) {
+    public void notifySetAttacker(CountryInfo attackerInfo) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnSetAttacker(countryName, maxArmiesAttacker, attacker, color);
+                ((GameObserver) ob).updateOnSetAttacker(attackerInfo);
             }
         }
 
@@ -52,7 +53,7 @@ public class Observable extends BasicObservable {
      * @param countryName
      */
     public void notifySetFromCountry(String countryName) {
-       for (BasicGameObserver ob : this.obs) {
+        for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
                 ((GameObserver) ob).updateOnSetFromCountry(countryName);
             }
@@ -67,10 +68,10 @@ public class Observable extends BasicObservable {
      * @param phase
      * @param color
      */
-    public void notifyPhaseChange(String player, String phase, String color, int bonusArmies) {
+    public void notifyPhaseChange(PlayerInfo player, String phase) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnPhaseChange(player, phase, color, bonusArmies);
+                ((GameObserver) ob).updateOnPhaseChange(player, phase);
             }
         }
     }
@@ -78,30 +79,26 @@ public class Observable extends BasicObservable {
     /**
      * Notifica un cambiamento dopo l'asseganzione dei territori
      *
-     * @param countries
-     * @param armies
-     * @param colors
+     * @param countriesInfo
      */
-    public void notifyCountryAssignment(String[] countries, int[] armies, String[] colors) {
+    public void notifyCountriesAssignment(CountryInfo[] countriesInfo) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnCountryAssignment(countries, armies, colors);
+                ((GameObserver) ob).updateOnCountriesAssignment(countriesInfo);
             }
         }
 
     }
 
     /**
-     * Notifica un cambiamento dopo uno spostamento
+     * Notifies that the number of armies of a country has changed.
      *
-     * @param country
-     * @param armies
-     * @param color
+     * @param countryInfo
      */
-    public void notifyArmiesChange(String country, int armies, String color) {
+    public void notifyArmiesChange(CountryInfo countryInfo) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnArmiesChange(country, armies, color);
+                ((GameObserver) ob).updateOnArmiesChange(countryInfo);
             }
         }
 
@@ -111,10 +108,10 @@ public class Observable extends BasicObservable {
      * Notifica all'observable che il giocatore del nuovo turno ha delle carte
      * da giocare.
      */
-    public void notifyNextTurn() {
+    public void notifyNextTurn(List<String> cards) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnNextTurn();
+                ((GameObserver) ob).updateOnNextTurn(cards);
             }
         }
     }
@@ -122,10 +119,18 @@ public class Observable extends BasicObservable {
     /**
      * Notifica il............... di una carta.
      */
-    public void notifyDrawnCard(String cardName) {
+    public void notifyDrawnCard(String cardName, boolean isArtificialPlayer) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnDrawnCard(cardName);
+                ((GameObserver) ob).updateOnDrawnCard(cardName, isArtificialPlayer);
+            }
+        }
+    }
+
+    public void notifyPlayedTris() {
+        for (BasicGameObserver ob : this.obs) {
+            if (ob instanceof GameObserver) {
+                ((GameObserver) ob).updateOnPlayedTris();
             }
         }
     }

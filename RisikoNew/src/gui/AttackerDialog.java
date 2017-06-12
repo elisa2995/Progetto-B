@@ -6,10 +6,10 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.SpinnerNumberModel;
-import risiko.game.Game;
 import risiko.game.GameProxy;
 
 /**
@@ -26,7 +26,7 @@ public class AttackerDialog extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public AttackerDialog(GameProxy game, java.awt.Frame parent, boolean modal) {
+    public AttackerDialog(GameProxy game, Frame parent, boolean modal) {
         super(parent, modal);
         this.game = game;        
         initComponents();
@@ -131,14 +131,14 @@ public class AttackerDialog extends javax.swing.JDialog {
                     .addComponent(attackerCountryName, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(51, 51, 51)
                 .addComponent(declare, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(110, 110, 110)
                     .addComponent(jLabel1)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(attackerArmies, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(42, Short.MAX_VALUE)))
+                    .addContainerGap(50, Short.MAX_VALUE)))
         );
 
         pack();

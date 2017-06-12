@@ -28,7 +28,7 @@ import javax.swing.JTextField;
  * <code>removeButton</code>(JButton) to remove the player from the
  * <code>playersPanel</code>
  */
-public class PlayerInfo extends JComponent {
+public class PlayerInfoRow extends JComponent {
 
     private final static int[] X = {10, 120, 250, 360};
     private final static int ROW_WIDTH = 35;
@@ -51,7 +51,7 @@ public class PlayerInfo extends JComponent {
      * @param typeListener
      * @param removeListener
      */
-    protected PlayerInfo(int index, String[] types, ColorBoxListener colorListener, SelectTypeListener typeListener, RemovePlayerListener removeListener) {
+    protected PlayerInfoRow(int index, String[] types, ColorBoxListener colorListener, SelectTypeListener typeListener, RemovePlayerListener removeListener) {
         this.nameField = new JTextField();
         this.typeComboBox = new JComboBox(new DefaultComboBoxModel(types));
         this.typeComboBox.addActionListener(typeListener);
@@ -114,8 +114,8 @@ public class PlayerInfo extends JComponent {
 
         // Setto i colorBoxes
         colorComboBox.setModel(new DefaultComboBoxModel(colorNames));
-        //colorComboBox.setSelectedItem(colorListener.getAvailableColor(index));
-        colorComboBox.setSelectedItem(colorNames[index]);
+        colorComboBox.setSelectedItem(colorListener.getAvailableColor());
+        //colorComboBox.setSelectedItem(colorNames[index]);
         ComboBoxRenderer renderer = new ComboBoxRenderer(icons, colorNames);
         renderer.setPreferredSize(new Dimension(icons[0].getIconWidth(), icons[0].getIconHeight()));
         colorComboBox.setRenderer(renderer);
