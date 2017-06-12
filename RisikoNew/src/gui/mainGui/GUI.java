@@ -301,7 +301,7 @@ public class GUI extends JFrame implements GameObserver {
         });
         jMenu1.add(settingsItem);
 
-        jMenuItem1.setText("jMenuItem1");
+        jMenuItem1.setText("abbandona");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -428,7 +428,7 @@ public class GUI extends JFrame implements GameObserver {
     }//GEN-LAST:event_showCardButtonActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-
+        game.toArtificialPlayer();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
 //----------------------------- Update ---------------------------------------//

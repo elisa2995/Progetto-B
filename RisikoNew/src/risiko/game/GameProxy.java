@@ -320,5 +320,6 @@ public interface GameProxy {
     public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller);
 
     public void endGame();
-
+    
+    public void toArtificialPlayer();
 }

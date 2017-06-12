@@ -950,11 +950,20 @@ public class Game extends Observable implements GameProxy {
             player.addBonusArmies(activePlayer.getBonusArmies());
             player.setConqueredACountry(activePlayer.hasConqueredACountry());
 
-            activePlayer = player;
-            int position = players.indexOf(activePlayer);
-            players.remove(activePlayer);
+            //activePlayer = player;
+            
+            
+            int position = -1;
+            for(Player entry : players){
+                if(entry.getName().equals(activePlayer.getName())){
+                    position = players.indexOf(entry);
+                }
+            }
+            map.changeOwner(players.get(position), player);
+            players.remove(position);
             players.add(position, player);
-            map.changeOwner(activePlayer, player);
+            activePlayer = players.get(position);
+            this.addObserver((ArtificialPlayer) players.get(position));
             new Thread((ArtificialPlayer) player).start();
         }
     }
