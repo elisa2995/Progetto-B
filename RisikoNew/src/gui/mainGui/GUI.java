@@ -2,11 +2,12 @@ package gui.mainGui;
 
 import gui.startGameGUI.StartGameGUI;
 import controllers.LabelMapListener;
+import exceptions.FileManagerException;
 import utils.GameObserver;
 import exceptions.PendingOperationsException;
+import exceptions.TranslationException;
 import gui.mainGui.dialogs.AttackerDialog;
 import gui.BackgroundPane;
-import gui.mainGui.cards.CardBonusDialog;
 import gui.mainGui.cards.CardPanel;
 import gui.DefaultColor;
 import gui.mainGui.dialogs.DefenseDialog;
@@ -18,10 +19,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-
-import java.awt.Rectangle;
-import java.awt.event.ActionListener;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,55 +27,48 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import risiko.game.Game;
 import risiko.game.GameInvocationHandler;
 import risiko.game.GameProxy;
 import services.FileManager;
+import services.Translator;
 import shared.AttackResultInfo;
 import shared.CountryInfo;
 import shared.PlayerInfo;
 
 /**
- * @author andrea
+ * Main GUI.
  */
 public class GUI extends JFrame implements GameObserver {
 
-    //private Game game;
     private GameProxy game;
     private Map<Color, String> colorCountryNameMap;
     private final Map<String, JLabel> countryLabelMap;
     private DefenseDialog defenseArmies;
-    private CardBonusDialog cardBonusDialog;
     private AttackerDialog attackerDialog;
     private DiceDialog diceDialog;
     private LabelMapListener labelMapListener;
-
     private FadeOutLabel fadeOutLabel;
-
     private CardPanel cardPanel;
     private final int PREFERRED_WIDTH = 400;
     private final int PREFERRED_HEIGHT = 192;
+    private final String LANG = "ITA";
 
-
-
-    public GUI(List<PlayerInfo> players) throws Exception {
+    public GUI(List<PlayerInfo> players) {
         initBackground();
         initComponents();
-        labelMap.setIcon(new javax.swing.ImageIcon(ImageIO.read(new File("images/risiko.png"))));
+        labelMap.setIcon(new ImageIcon("images/risiko.png"));
         countryLabelMap = new HashMap<>();
         initColorCountryNameMap();
         init(players);
-    }
-    
-    public JButton getShowCardButton() {
-        return showCardButton;
     }
 
     private void initBackground() {
@@ -93,18 +83,14 @@ public class GUI extends JFrame implements GameObserver {
 
     /**
      * Inizializza la gui e il game.
-     *
-     * @throws IOException
-     * @throws Exception
      */
-    private void init(List<PlayerInfo> players) throws IOException, Exception {
+    private void init(List<PlayerInfo> players) {
 
         // Image fading out
         fadeOutLabel = new FadeOutLabel(this);
         fadeOutLabel.setOpaque(true);
         fadeOutLabel.setBounds(400, 120, 186, 250);
         mapLayeredPane.add(fadeOutLabel, 1000);
-        
 
         // Labels
         initLabels();
@@ -131,7 +117,6 @@ public class GUI extends JFrame implements GameObserver {
         attackerDialog = new AttackerDialog(game, this, true);
         attackerDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
         diceDialog = new DiceDialog(game, this, true);
-        cardBonusDialog = new CardBonusDialog(game);
 
         // CardPanel
         cardPanel = new CardPanel(game);
@@ -145,7 +130,26 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Inizializza i labels
+     * Creates an HashMap which maps a <code>java.awt.Color</code> to a country.
+     */
+    private void initColorCountryNameMap() {
+        List<Map<String, Object>> countriesColors = FileManager.getInstance().getCountriesColors();
+        colorCountryNameMap = new HashMap<>();
+        Color color;
+        int R, G, B;
+        String country;
+        for (Map<String, Object> row : countriesColors) {
+            country = (String) row.get("country");
+            R = (Integer) row.get("R");
+            G = (Integer) row.get("G");
+            B = (Integer) row.get("B");
+            color = new Color(R, G, B);
+            colorCountryNameMap.put(color, country);
+        }
+    }
+
+    /**
+     * Initializes the JLabels.
      *
      * @param src
      */
@@ -163,7 +167,8 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Crea un label e lo aggiunge a <code>countryLabelMap</code>.
+     * Creates a label for the country <code>countryName</code> and adds it to
+     * countryLabelMap.
      *
      * @param countryName
      * @param x
@@ -180,7 +185,7 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Ritorna la jlabel corrispondente al territorio di nome
+     * Returns the JLabel that corresponds to the Country whose name is
      * <code>country</code>.
      *
      * @param country
@@ -358,24 +363,22 @@ public class GUI extends JFrame implements GameObserver {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    //----------------------- Event controllers ------------------------------//
     /**
-     * Passa alla fase successiva del gioco
+     *
      *
      * @param evt
      */
     private void buttonNextPhaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextPhaseActionPerformed
-
-
         try {
             game.nextPhase();
         } catch (PendingOperationsException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
-        //repaint();
     }//GEN-LAST:event_buttonNextPhaseActionPerformed
 
     /**
-     * Mostra la missione del giocatore di turno
+     * Shows active player's mission.
      *
      * @param evt
      */
@@ -384,20 +387,37 @@ public class GUI extends JFrame implements GameObserver {
     }//GEN-LAST:event_buttonShowMissionActionPerformed
 
     /**
-     * Mostra la Dialog per la gestione dei settings del player artificiale
+     * Shows the JDialog that can be used to change artificial players'
+     * settings.
+     *
+     * @param evt
      */
     private void settingsItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsItemActionPerformed
         SettingsDialog settings = new SettingsDialog(this, true, game);
         settings.setVisible(true);
     }//GEN-LAST:event_settingsItemActionPerformed
 
+    /**
+     * Ends the game.
+     *
+     * @param evt
+     */
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        if (JOptionPane.showConfirmDialog(this, "Sei sicuro di voler abbandonare la partita?") == 0) {
-            game.endGame();
+        try {
+            if (JOptionPane.showConfirmDialog(this, FileManager.getInstance().getInfoFor("ASK_END", LANG)) == 0) {
+                game.endGame();
+            }
+        } catch (FileManagerException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_exitButtonActionPerformed
 
+    /**
+     * Shows <code>cardPanel</code>
+     *
+     * @param evt
+     */
     private void showCardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showCardButtonActionPerformed
 
         if (cardPanel.getY() == cardPanel.getLOW_Y()) {
@@ -411,47 +431,27 @@ public class GUI extends JFrame implements GameObserver {
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+//----------------------------- Update ---------------------------------------//
     /**
-     * Creazione di una map<Color,String> a partire da un file di testo
-     * contenente un numero a piacere di linee, dove ogni linea contiene un
-     * [token] avente la forma: [token] -> [Country] = [RGB] [Country] ->
-     * qualsiasi sequenza di caratteri ASCII diversi dal carattere = e
-     * interruzioni di linea [RGB] -> [R],[G],[B] [R] -> un numerCountryo intero
-     * da 0 a 255 [G] -> un numero intero da 0 a 255 [B] -> un numero intero da
-     * 0 a 255.
-     */
-    private void initColorCountryNameMap() throws FileNotFoundException {
-
-        List<Map<String, Object>> countriesColors = FileManager.getInstance().getCountriesColors();
-        colorCountryNameMap = new HashMap<>();
-        Color color;
-        int R, G, B;
-        String country;
-        for (Map<String, Object> row : countriesColors) {
-            country = (String) row.get("country");
-            R = (Integer) row.get("R");
-            G = (Integer) row.get("G");
-            B = (Integer) row.get("B");
-            color = new Color(R, G, B);
-            colorCountryNameMap.put(color, country);
-        }
-
-    }
-
-    /**
-     * Aggiorna <code> textAreaInfo</code> e <code>labelAdvice</code> dopo che
-     * la country <code>countryName</code> è stata rinforzata.
+     * Updates <code> textAreaInfo</code> right after a country has been
+     * reinforced.
      *
      * @param bonusArmies
      */
     @Override
     public void updateOnReinforce(int bonusArmies) {
-        textAreaInfo.setText("Clicca su un tuo territorio per rinforzarlo con un'armata.\nHai " + bonusArmies + " armate bonus.");
+        try {
+            String info = FileManager.getInstance().getInfoFor("REINFORCE", LANG);
+            info = info.replace("?", String.valueOf(bonusArmies));
+            textAreaInfo.setText(info);
+        } catch (FileManagerException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
-     * Aggiorna <code>textAreaInfo</code> e <code>labelAdvice</code> quando
-     * cambia la fase del gioco.
+     * Shows a fading image with the name of the current phase. Updates
+     * <code>textAreaInfo</code> accordingly.
      *
      * @param player
      * @param phase
@@ -459,56 +459,54 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnPhaseChange(PlayerInfo player, String phase) {
         ((GraphicsJLabel) labelMap).resetCone();
-
-        //fadeOutLabel.setImage("images/CAVALRY.png");
-        //mapLayeredPane.moveToFront(fadeOutLabel);
-        //fadeOutLabel.setIcon(new ImageIcon("images/WILD.png"));
-        //fadeOutLabel.setBounds(100,100,1000,512);
-        //fadeOutLabel.setVisible(true);
-        //mapLayeredPane.add(new JLabel("CAISOD"),200);
         fadeOutLabel.setVisible(true);
         this.mapLayeredPane.moveToFront(fadeOutLabel);
         fadeOutLabel.startFadeOut();
-
-
         updateLabels(player, phase);
         updateTextAreaInfo(player, phase);
-
         labelMapListener.resetCache();
-
     }
 
+    /**
+     * Updates <code>phaseLabel</code> showing the current phase and
+     * <code>playerLabel</code> showing the name of the active player.
+     *
+     * @param player
+     * @param phase
+     */
     private void updateLabels(PlayerInfo player, String phase) {
-
-        this.phaseLabel.setText("FASE DI " + getFormattedPhase(phase));
+        try {
+            this.phaseLabel.setText(Translator.getInstance().translate("phase", LANG) + " " + getFormattedPhase(phase));
+        } catch (TranslationException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.playerLabel.setText(player.getName());
         this.phaseLabel.setForeground(DefaultColor.valueOf(player.getColor().toUpperCase()).getColor());
         this.playerLabel.setForeground(DefaultColor.valueOf(player.getColor().toUpperCase()).getColor());
     }
 
+    /**
+     * Updates <code>textAreaInfo</code> and shows a proper message for the
+     * current phase.
+     *
+     * @param player
+     * @param phase
+     */
     private void updateTextAreaInfo(PlayerInfo player, String phase) {
-
-        this.textAreaInfo.setText("");
-        switch (phase) {
-            case "PLAY_CARDS":
-                textAreaInfo.setText("Gioca un tris di carte per ottenere più armate o passa al rinforzo");
-                break;
-            case "REINFORCE":
-                textAreaInfo.setText("Clicca su un tuo territorio per rinforzarlo con un'armata.\nHai " + player.getBonusArmies() + " armate bonus.");
-                break;
-            case "FIGHT":
-                textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
-                break;
-            case "MOVE":
-                textAreaInfo.setText("Scegli un tuo territorio da cui spostare una o più armate");
-                break;
+        try {
+            String info = FileManager.getInstance().getInfoFor(phase, LANG);
+            if (phase.equals("REINFORCE")) {
+                info = info.replace("?", String.valueOf(player.getBonusArmies()));
+            }
+            textAreaInfo.setText(info);
+        } catch (FileManagerException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
 
     /**
-     * Aggiorna <code>textAreaInfo</code> e <code>labelAdvice</code> quando è
-     * stato scelto il territorio da cui attaccare.
+     * Updates <code>textAreaInfo</code> as soon as the attacker has chosen from
+     * which country to launch an attack.
      *
      * @param attackerInfo
      */
@@ -517,7 +515,6 @@ public class GUI extends JFrame implements GameObserver {
 
         ((GraphicsJLabel) labelMap).resetCone();
         labelMapListener.resetCache();
-
 
         if (attackerInfo == null) {
             textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
@@ -531,10 +528,8 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Aggiorna  <code>textAreaInfo</code> e <code>labelAdvice</code> quando è
-     * stato scelto il territorio da attaccare. Aggiorna anche i valori di
-     * massimo numero di armate dell'attaccante/difensore per preparare il
-     * jspinner dell'AttackDialog.
+     * Updates <code>textAreaInfo</code> as soon as the attacker has chosen
+     * which country to attack.
      *
      * @param fightingCountries
      * @param reattack
@@ -550,7 +545,6 @@ public class GUI extends JFrame implements GameObserver {
             textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
 
-        //ERRORE reattack è true ma maxArmiesDefender è 0.
         defenseArmies.setMaxArmies(fightingCountries[1].getMaxArmies());
 
         if (reattack) {
@@ -560,8 +554,8 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Aggiorna <code>textAreaInfo</code> e <code>labelAdvice</code> quando è
-     * stato scelto il territorio da cui attaccare.
+     * Updates <code>textAreaInfo</code> as soon as the active player has chosen
+     * from which country to move its armies.
      *
      * @param countryName
      */
@@ -576,7 +570,7 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Shows the information of an attackResult.
+     * Shows the information of an attack result.
      *
      * @param ar
      */
@@ -586,18 +580,6 @@ public class GUI extends JFrame implements GameObserver {
             showDiceDialog(ar);
         }
 
-        /*<<<<<<< HEAD
-        //mi accerto che l'attaccante non sia artificiale
-        if (isConquered && !artificialAttack[1]) {
-            String info = "Complimenti, hai conquistato " + defenderCountryName + ".\n";
-            if (conqueredContinent != null) {
-                info += "Ora possiedi " + conqueredContinent;
-            }
-            MoveDialog moveDialog = new MoveDialog(game, attackerCountryName, defenderCountryName, info, maxArmiesAttacker);
-            moveDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
-            PlayAudio.play("sounds/conquest.wav");
-            moveDialog.setVisible(true);
-=======*/
         if (ar.hasConquered() && !ar.isAttackerArtificial()) {
             showCongratsForConquest(ar);
         }
@@ -629,7 +611,7 @@ public class GUI extends JFrame implements GameObserver {
 
     /**
      * Shows a dialog with a congrats message for the conquest. This dialog can
-     * be used to move armies from tbe attacker's country to the country that's
+     * be used to move armies from the attacker's country to the country that's
      * just been conquered.
      *
      * @param ar
@@ -647,21 +629,21 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Cancella i coni e resetta le stringhe visualizzate
+     * Removes the dark cones and resets <code>textAreaInfo</code>.
      */
     public void resetAfterAttack() {
-        repaint(textAreaInfo, textAreaInfo);
+        repaint(textAreaInfo);
         ((GraphicsJLabel) labelMap).resetCone();
     }
 
     /**
-     * Mostra un messaggio di vittoria e chiude il gioco
+     * Shows a congrats message for the victory and closes the game.
      *
-     * @param winner
+     * @param winMessage
      */
     @Override
-    public void updateOnVictory(String winner) {
-        JOptionPane.showMessageDialog(null, "Complimenti " + winner + " hai vinto!");
+    public void updateOnVictory(String winMessage) {
+        JOptionPane.showMessageDialog(null, winMessage);
         this.dispose();
         System.exit(0);
         // etc
@@ -669,7 +651,7 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Updates the coutries' labels after the initial assignment.
+     * Updates the coutries' JLabels after the initial assignment.
      *
      * @param countriesInfo
      */
@@ -681,12 +663,8 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Aggiorna l'etichetta del territorio <code>country</code> quando cambia il
-     * numero di armate.
-     *
-     * @param country
-     * @param armies
-     * @param color
+     * Updates the JLabel that belongs to <code>countryInfo</code> with the new
+     * number of armies on that country.
      */
     @Override
     public void updateOnArmiesChange(CountryInfo countryInfo) {
@@ -701,13 +679,10 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Mostra la finestra di gestione delle carte
+     * Shows the card panel.
      */
     @Override
     public void updateOnNextTurn(List<String> cards) {
-        /*cardBonusDialog.initImagesPanel();
-        cardBonusDialog.initButtonPanel();
-        cardBonusDialog.setVisible(true);*/
         if (!cards.isEmpty()) {
             showCardButton.setVisible(true);
         }
@@ -715,7 +690,8 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Setta la carta vinta in <code>diceDialog</code>
+     * Shows a congrats message and the card that has just been drawn.
+     *
      *
      * @param cardName
      */
@@ -728,8 +704,7 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     *
-     *
+     * Hides the cards panel.
      */
     @Override
     public void updateOnPlayedTris() {
@@ -738,20 +713,8 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Chiama Component.repaint() sui components passati come parametro del
-     * metodo.
-     *
-     * @param components
-     */
-    private void repaint(Component... components) {
-        for (Component c : components) {
-            c.repaint();
-        }
-    }
-
-    /**
-     * Se il giocatore è reale viene richiamata una dialog che chiede al
-     * difensore con quante armate difendersi per completare l'attacco
+     * Shows the dialog that asks the defender the number of armies to set in
+     * defense. (If it isn't an artificial player)
      *
      * @param defenderCountryInfo
      */
@@ -763,14 +726,13 @@ public class GUI extends JFrame implements GameObserver {
         }
     }
 
-    public void setVisibleAttackerDialog(boolean visible) {
-        attackerDialog.setVisible(visible);
-    }
-
-    public String getAttackerCountry() {
-        return game.getAttackerCountryName();
-    }
-
+    /**
+     * Shows a message for the player that has just been removed from the game.
+     * (if it(?) isn't an artificial player)
+     *
+     * @param defenderName
+     * @param artificialAttack
+     */
     @Override
     public void updateOnElimination(String defenderName, boolean artificialAttack) {
         if (!artificialAttack) {
@@ -779,6 +741,9 @@ public class GUI extends JFrame implements GameObserver {
 
     }
 
+    /**
+     * Hides the gui and shows StartGameGUI().
+     */
     @Override
     public void updateOnEndGame() {
         this.setVisible(false);
@@ -786,18 +751,49 @@ public class GUI extends JFrame implements GameObserver {
         startGui.setVisible(true);
     }
 
+    /**
+     * Returns the name of the attacker country.
+     *
+     * @return
+     */
+    public String getAttackerCountry() {
+        return game.getAttackerCountryName();
+    }
+
+    /**
+     * Sets <code>attackerDialog</code>'s visible property to
+     * <code>visible</code>.
+     *
+     * @param visible
+     */
+    public void setAttackerDialogVisible(boolean visible) {
+        attackerDialog.setVisible(visible);
+    }
+
+    /**
+     * Returns the translation (in the language specified in <code>LANG</code>)
+     * of the phase.
+     *
+     * @param phase
+     * @return
+     */
     private String getFormattedPhase(String phase) {
-        switch (phase) {
-            case "PLAY_CARDS":
-                return "GIOCA UN TRIS";
-            case "REINFORCE":
-                return "RINFORZO";
-            case "FIGHT":
-                return "COMBATTIMENTO";
-            case "MOVE":
-                return "SPOSTAMENTO";
-            default:
-                return "";
+        try {
+            return Translator.getInstance().translate(phase, LANG);
+        } catch (TranslationException ex) {
+            return "";
+        }
+    }
+
+    /**
+     * Calls component.repaint() on the Components passed as parameters of the
+     * method.
+     *
+     * @param components
+     */
+    private void repaint(Component... components) {
+        for (Component c : components) {
+            c.repaint();
         }
     }
 

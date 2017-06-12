@@ -93,7 +93,7 @@ public class LabelMapListener extends MouseInputAdapter {
                     //Devo scegliere il difensore, sono su un territorio confinante attaccabile
                     game.setDefenderCountry(countryName);
                     PlayAudio.play("sounds/clickOn.wav");
-                    gui.setVisibleAttackerDialog(true);
+                    gui.setAttackerDialogVisible(true);
                     break;
                 }
                 //Sono su un territorio non valido per attaccare nè per difendere

@@ -48,7 +48,7 @@ public class Game extends Observable implements GameProxy {
     private Phase phase;
     private boolean reattack;
 
-    public Game(List<PlayerInfo> playersInfo, GameObserver observer) throws Exception {
+    public Game(List<PlayerInfo> playersInfo, GameObserver observer) {
 
         this.players = new ArrayList<>();
         this.activePlayer = null;

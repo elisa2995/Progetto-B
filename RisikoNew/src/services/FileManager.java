@@ -29,6 +29,8 @@ public class FileManager {
     private final String LABELS = "files/countriesLabels.txt";
     private final String COLORS = "files/countriesColors.txt";
     private final String TRIS = "files/bonusTris.txt";
+    private final String VOCABULARY = "files/vocabulary";
+    private final String INFO = "files/info";
 
     private FileManager() {
     }
@@ -160,8 +162,8 @@ public class FileManager {
                 missions.add(mission);
             }
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return missions;
 
@@ -312,12 +314,8 @@ public class FileManager {
                 if (tmp[0].equals(username)) {
                     return false;
                 }
-
             }
-
-        } catch (FileNotFoundException ex) {
-            System.out.println("File not found");
-        } catch (IOException ex) {
+        } catch (IOException ex) { 
             Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
@@ -366,9 +364,8 @@ public class FileManager {
      * Integer numero da 0 a 255 che rappresenta il valore di Verde nell'RGB
      * della country § 4 - key : "B" -> Integer numero da 0 a 255 che
      * rappresenta il valore di Blu nell'RGB della country
-     * @throws FileNotFoundException
      */
-    public List<Map<String, Object>> getCountriesColors() throws FileNotFoundException {
+    public List<Map<String, Object>> getCountriesColors() {
 
         List<Map<String, Object>> countriesColors = new ArrayList();
         try (BufferedReader br = new BufferedReader(new FileReader(COLORS))) {
@@ -419,5 +416,40 @@ public class FileManager {
         return tris;
 
     }
-
+    
+    //---------------------------- vocabulary.txt --------------------------------//
+    
+    public String getWord(String word, String lang) throws FileManagerException{
+        
+        String line;
+        try(BufferedReader br = new BufferedReader(new FileReader(VOCABULARY+lang+".txt"))){
+            while((line = br.readLine())!=null){
+                if(line.split("=")[0].trim().equals(word)){
+                    return line;
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        throw new FileManagerException("Word "+word+" not found in vocabulary"+lang+".");
+    
+    }
+    
+    //---------------------------------- info.txt -------------------------------//
+    
+    public String getInfoFor(String phase, String lang) throws FileManagerException{
+    
+        String line;
+        try(BufferedReader br = new BufferedReader(new FileReader(INFO+lang+".txt"))){
+            while((line = br.readLine())!=null){
+                if(line.split("=")[0].trim().equals(phase)){
+                    return line.split("=")[1];
+                }
+            }
+        
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        throw new FileManagerException("No info found for "+phase);
+    }
 }
