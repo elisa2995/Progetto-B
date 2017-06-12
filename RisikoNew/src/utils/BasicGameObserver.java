@@ -1,16 +1,51 @@
 package utils;
 
+import shared.AttackResultInfo;
+import shared.CountryInfo;
+
 public interface BasicGameObserver {
+
+    /**
+     * Method that updates the observer as soon as the attacker has chosen which
+     * country to attack.
+     *
+     * @param fightingCountries
+     * @param reattack
+     */
+    public void updateOnSetDefender(CountryInfo[] fightingCountries, boolean reattack);
     
-    public void updateOnSetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender, boolean reattack);
+    /**
+     * Method called on the victory of a player.
+     *
+     * @param winMessage message that notifies the victory.
+     */
+    public void updateOnVictory(String winMessage);
+
+    /**
+     * Method called whenever an attack produces a result.
+     *
+     * @param attackResult
+     */
+    public void updateOnAttackResult(AttackResultInfo attackResult);
     
-    public void updateOnVictory(String winner);
+    /**
+     * Method called as soon as the attacker has chosen how many armies to use
+     * in a fight.
+     *
+     * @param defenderCountryInfo
+     */
+    public void updateOnDefend(CountryInfo defenderCountryInfo);
 
-    public void updateOnAttackResult(boolean conquered, boolean canAttackFromCountry, int maxArmiesAttacker, int maxArmiesDefender, int[] attackerDice, int[] defenderDice, boolean[] artificialAttack, String attackerCountryName, String defenderCountryName, String conqueredContinent);
-
-    public void updateOnDefend(String defender, String defenderCountry, String attacker, String attackerCountry, int nrA, boolean artificialPlayer);
-
+    /**
+     * Method called to update the observer when a player (<code> defender</code>)
+     * is eliminated from the game.
+     * @param defenderName
+     * @param artificialAttack 
+     */
     public void updateOnElimination(String defenderName, boolean artificialAttack);
 
-    public void updateOnEndGame();        
+    /**
+     * Method called to update the observer when the game ends.
+     */
+    public void updateOnEndGame();
 }

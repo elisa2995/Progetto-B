@@ -60,10 +60,8 @@ public interface GameProxy {
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
     //public void attack(int nrA, int nrD, ArtificialPlayer... aiCaller);
-    public int[] getResultsDiceAttack(ArtificialPlayer... aiCaller);
 
-    public int[] getResultsDiceDefense(ArtificialPlayer... aiCaller);
-
+    
     /**
      * setta il numero di armate con il quale si vuole difenders
      *
@@ -140,13 +138,6 @@ public interface GameProxy {
      * @return
      */
     public String getLastCardDrawn(ArtificialPlayer... aiCaller);
-
-    /**
-     * Ritorna true se il giocatore di turno ha già pescato una carta.
-     *
-     * @return
-     */
-    public boolean hasAlreadyDrawnCard(ArtificialPlayer... aiCaller);
 
     /**
      * Ritorna un'arrayList contentente i nomi delle carte dell'active player.

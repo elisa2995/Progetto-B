@@ -1,15 +1,11 @@
 package risiko.players;
 
-import java.awt.Color;
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import risiko.Card;
 import risiko.Country;
 import risiko.missions.Mission;
@@ -18,19 +14,14 @@ public class Player {
 
     private Mission mission;
     private ArrayList<Card> bonusCards;
-    private String name;
-    //private Color color;
-    private String color;
-    //private int contaCarte[];
+    private final String name;
+    private final String color;
     protected int bonusArmies;
-    private boolean alreadyDrawnCard;
     private boolean conqueredACountry;
 
     public Player(String name, String color) {
-        this.alreadyDrawnCard = false;
         this.bonusArmies = 0;
         this.mission = null;
-        //this.contaCarte = new int[4];
         this.bonusCards = new ArrayList<>();
         this.color = color;
         this.name = name;
@@ -42,10 +33,6 @@ public class Player {
 
     public int getBonusArmies() {
         return bonusArmies;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void addBonusArmies(int bonusArmies) {
@@ -72,8 +59,13 @@ public class Player {
         return bonusCards;
     }
 
+    public void setBonusCards(ArrayList<Card> bonusCards) {
+        this.bonusCards = bonusCards;
+    }
+
     /**
-     * Gioca il tris di carte, guadagna le corrispettive bonus aramies.
+     * Plays <code>cards</code> and therefore gains <code>bonusArmiesTris</code>
+     * armies.
      *
      * @param cards
      * @param bonusArmiesTris
@@ -86,8 +78,8 @@ public class Player {
     }
 
     /**
-     * Ritorna true se il giocatore può giocare il tris di carte
-     * <code> cards</code>. <code>cards</code> è un array di 3 carte.
+     * It tells wheter the player has enough cards to play the tris
+     * <code>cards</code>.
      *
      * @param cards
      * @return
@@ -102,7 +94,8 @@ public class Player {
     }
 
     /**
-     * Ritorna i tris giocabili dal player.
+     * Returns the valid combinations of cards that can be played having this
+     * player's cards.
      *
      * @param tris
      * @return
@@ -114,23 +107,11 @@ public class Player {
                 playable.remove(cards);
             }
         }
-
-        /*Predicate <Card[]> cantPlay = cards -> !canPlayThisTris(cards);
-            tris.keySet().removeIf(cantPlay);*/
         return playable;
     }
 
     public void addCard(Card card) {
         bonusCards.add(card);
-        this.alreadyDrawnCard = true;
-    }
-
-    public boolean hasAlreadyDrawnCard() {
-        return alreadyDrawnCard;
-    }
-
-    public void setAlreadyDrawnCard(boolean alreadyDrawn) {
-        this.alreadyDrawnCard = alreadyDrawn;
     }
 
     public Card getLastDrawnCard() {
@@ -151,5 +132,11 @@ public class Player {
 
     public boolean hasConqueredACountry() {
         return conqueredACountry;
+    }
+
+    
+    @Override
+    public String toString() {
+        return name;
     }
 }
