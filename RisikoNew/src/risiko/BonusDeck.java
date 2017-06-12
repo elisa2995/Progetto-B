@@ -119,7 +119,6 @@ public class BonusDeck {
                 return tris.get(set);
             }
         }
-        //System.out.println(this.tris.get(tris));
         return 0; // non dovrebbe mai arrivarci
     }
 

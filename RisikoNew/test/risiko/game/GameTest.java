@@ -71,7 +71,6 @@ public class GameTest {
         boolean expResult = false;
         boolean result = instance.canPlayThisTris(cardNames, aiCaller);
         assertEquals(expResult, result);
-        System.out.println(result);
     }
     
 }
