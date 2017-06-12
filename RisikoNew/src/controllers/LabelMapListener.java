@@ -14,7 +14,6 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
-import risiko.game.Game;
 import gui.PlayAudio;
 import java.util.HashMap;
 import java.awt.Rectangle;
@@ -41,8 +40,8 @@ public class LabelMapListener extends MouseInputAdapter {
         this.ColorNameCountry = ColorNameCountry;
         this.cache = new HashMap<>();
     }
-    
-    public void setGame(GameProxy game){
+
+    public void setGame(GameProxy game) {
         this.game = game;
     }
 
@@ -54,20 +53,20 @@ public class LabelMapListener extends MouseInputAdapter {
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-        String countryName = getCountryFromClick(e);
+        String country = getCountryFromClick(e);
         switch (game.getPhase()) {
             case PLAY_CARDS:
                 PlayAudio.play("sounds/clickOff.wav");
                 break;
             case REINFORCE:
-                if (countryName == null) {
+                if (country == null) {
                     PlayAudio.play("sounds/clickOff.wav");
                     return;
                 }
 
-                if (cache.containsKey(countryName) && cache.get(countryName)) {
+                if (canBeChosen(country)) {
                     //Ho ancora bonus armies e sono su un mio territorio
-                    game.reinforce(countryName);
+                    game.reinforce(country);
                     //reinforce chiama notify(), la gui si aggiorna
                     PlayAudio.play("sounds/clickOn.wav");
                     break;
@@ -76,22 +75,22 @@ public class LabelMapListener extends MouseInputAdapter {
                 PlayAudio.play("sounds/clickOff.wav");
                 break;
             case FIGHT:
-                if (countryName == null) {
+                if (country == null) {
                     PlayAudio.play("sounds/clickOff.wav");
                     game.resetFightingCountries();
                     resetCache();
                     return;
                 }
 
-                if (game.getAttackerCountryName() == null && cache.containsKey(countryName) && cache.get(countryName)) {
+                if (game.getAttackerCountryName() == null && canBeChosen(country)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
-                    game.setAttackerCountry(countryName);
+                    game.setAttackerCountry(country);
                     PlayAudio.play("sounds/clickOn.wav");
                     break;
                 }
-                if (cache.containsKey(countryName) && cache.get(countryName)) {
+                if (canBeChosen(country)) {
                     //Devo scegliere il difensore, sono su un territorio confinante attaccabile
-                    game.setDefenderCountry(countryName);
+                    game.setDefenderCountry(country);
                     PlayAudio.play("sounds/clickOn.wav");
                     gui.setAttackerDialogVisible(true);
                     break;
@@ -103,23 +102,23 @@ public class LabelMapListener extends MouseInputAdapter {
                 break;
 
             case MOVE:
-                if (countryName == null) {
+                if (country == null) {
                     PlayAudio.play("sounds/clickOff.wav");
                     game.resetFightingCountries();
                     resetCache();
                     return;
                 }
 
-                if (game.getAttackerCountryName() == null && (cache.containsKey(countryName) && cache.get(countryName))) {
+                if (game.getAttackerCountryName() == null && (canBeChosen(country))) {
 
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
-                    game.setFromCountry(countryName);
+                    game.setFromCountry(country);
                     PlayAudio.play("sounds/clickOn.wav");
                     break;
                 }
-                if (cache.containsKey(countryName) && cache.get(countryName)) {
+                if (canBeChosen(country)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
-                    MoveDialog moveDialog = new MoveDialog(game, game.getAttackerCountryName(), countryName);
+                    MoveDialog moveDialog = new MoveDialog(game, game.getAttackerCountryName(), country);
                     moveDialog.setVisible(true);
                     PlayAudio.play("sounds/clickOn.wav");
                     game.resetFightingCountries();
@@ -135,6 +134,14 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
+     * Check in the cache wheter the <code>country</code> can be chosen in the
+     * current phase.
+     */
+    private boolean canBeChosen(String country) {
+        return cache.containsKey(country) && cache.get(country);
+    }
+
+    /**
      * Setta il cursore a "manina" nel caso in cui il territorio su cui esso si
      * trova è valido nel contesto dell'attuale fase di gioco, a "freccina" se
      * non lo è.
@@ -143,74 +150,76 @@ public class LabelMapListener extends MouseInputAdapter {
      */
     @Override
     public void mouseMoved(MouseEvent e) {
-        if(game.getActivePlayer() instanceof ArtificialPlayer)  //Affinchè la posizione del mouse non interferisca sui coni di luce dei giocatori artificiali
+        if (game.getActivePlayer() instanceof ArtificialPlayer) //Affinchè la posizione del mouse non interferisca sui coni di luce dei giocatori artificiali
+        {
             return;
-        String countryName = getCountryFromClick(e);
+        }
+        String country = getCountryFromClick(e);
         /*Cache reset: a tutti i cambiamenti di fase, dopo ogni attacco se c'è 
          stata una conquista oppure è rimasta solo un armata, quando setto l'attaccante,
          (quando setto il difensore: no perchè posso sceglierne un altro quindi rimango
          con le stesse possibilità)
          quando resetto le fighting countries in labelMaplistener(cioè qui)
          */
-        if (countryName == null) {
+        if (country == null) {
             drowCone(e);
             // Non sono su alcun territorio
             e.getComponent().setCursor(Cursor.getDefaultCursor());
             return;
         }
-        JLabel label = gui.getLabelByCountry(countryName);
-        mapLabel.setToolTipText(countryName);
+        JLabel label = gui.getLabelByCountry(country);
+        mapLabel.setToolTipText(country);
 
         switch (game.getPhase()) {
             case PLAY_CARDS:
                 return;
             case REINFORCE:
-                if ((cache.containsKey(countryName) && cache.get(countryName)) || game.controlPlayer(countryName) && game.canReinforce()) {
+                if (canBeChosen(country) || game.controlPlayer(country) && game.canReinforce()) {
                     //Ho ancora bonus armies e sono su un mio territorio
                     setHandCursor(e.getComponent(), label);
-                    cache.put(countryName, true);
+                    cache.put(country, true);
 
                 } else {
                     //Non ho più bonusArmies oppure non sono sul mio territorio
                     setDefaultCursor(e.getComponent(), label);
-                    cache.put(countryName, false);
+                    cache.put(country, false);
                 }
                 break;
             case FIGHT:
                 drowCone(e);
-                if ((cache.containsKey(countryName) && cache.get(countryName)) || game.getAttackerCountryName() == null && game.controlAttacker(countryName)) {
+                if (canBeChosen(country) || game.getAttackerCountryName() == null && game.controlAttacker(country)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
                     setHandCursor(e.getComponent(), label);
-                    cache.put(countryName, true);
+                    cache.put(country, true);
                     break;
                 }
-                if ((cache.containsKey(countryName) && cache.get(countryName)) || game.getAttackerCountryName() != null && game.controlDefender(countryName)) {
+                if (canBeChosen(country) || game.getAttackerCountryName() != null && game.controlDefender(country)) {
                     //Devo scegliere il difensore, sono su un territorio confinante attaccabile
                     setHandCursor(e.getComponent(), label);
-                    cache.put(countryName, true);
+                    cache.put(country, true);
                     break;
                 }
                 //Sono su un territorio non valido per attaccare nè per difendere
                 setDefaultCursor(e.getComponent(), label);
-                cache.put(countryName, false);
+                cache.put(country, false);
                 break;
             case MOVE:
                 drowCone(e);
-                if ((cache.containsKey(countryName) && cache.get(countryName)) || game.getAttackerCountryName() == null && game.controlFromCountryPlayer(countryName)) {
+                if (canBeChosen(country) || game.getAttackerCountryName() == null && game.controlFromCountryPlayer(country)) {
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
                     setHandCursor(e.getComponent(), label);
-                    cache.put(countryName, true);
+                    cache.put(country, true);
                     break;
                 }
-                if ((cache.containsKey(countryName) && cache.get(countryName)) || game.getAttackerCountryName() != null && game.controlMovement(countryName)) {
+                if (canBeChosen(country)|| game.getAttackerCountryName() != null && game.controlMovement(country)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
                     setHandCursor(e.getComponent(), label);
-                    cache.put(countryName, true);
+                    cache.put(country, true);
                     break;
                 }
                 //Sono su un territorio non valido per spostarmi
                 setDefaultCursor(e.getComponent(), label);
-                cache.put(countryName, false);
+                cache.put(country, false);
                 break;
         }
     }

@@ -1,24 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui.mainGui.dialogs;
 
 import gui.mainGui.GUI;
 import java.awt.Dimension;
-import java.awt.Frame;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import risiko.game.Game;
 import risiko.game.GameProxy;
 
-/**
- *
- * @author Elisa
- */
 public class DiceDialog extends javax.swing.JDialog {
 
     private GameProxy game;

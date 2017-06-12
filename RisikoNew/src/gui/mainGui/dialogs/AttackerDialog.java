@@ -5,6 +5,7 @@
  */
 package gui.mainGui.dialogs;
 
+import exceptions.TranslationException;
 import gui.DefaultColor;
 import gui.PlayAudio;
 import java.awt.Dimension;
@@ -13,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.SpinnerNumberModel;
 import risiko.game.GameProxy;
+import services.Translator;
 
 /**
  *
@@ -20,6 +22,7 @@ import risiko.game.GameProxy;
  */
 public class AttackerDialog extends javax.swing.JDialog {
 
+    private final static String LANG = "ITA";
     private GameProxy game;    
 
     /**
@@ -41,7 +44,11 @@ public class AttackerDialog extends javax.swing.JDialog {
     private void init() {
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
-        this.setTitle("Attacco");
+        try {
+            this.setTitle(Translator.getInstance().translate("Attack", LANG, false));
+        } catch (TranslationException ex) {
+            this.setTitle("");
+        }
         
         AttackerDialog attackerDialog=this;
         attackerArmies.setModel(new SpinnerNumberModel(1, 1, 1, 1)); 

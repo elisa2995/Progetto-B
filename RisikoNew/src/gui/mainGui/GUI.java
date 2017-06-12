@@ -476,7 +476,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     private void updateLabels(PlayerInfo player, String phase) {
         try {
-            this.phaseLabel.setText(Translator.getInstance().translate("phase", LANG) + " " + getFormattedPhase(phase));
+            this.phaseLabel.setText(Translator.getInstance().translate("phase", LANG, false) + " " + getFormattedPhase(phase));
         } catch (TranslationException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -779,7 +779,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     private String getFormattedPhase(String phase) {
         try {
-            return Translator.getInstance().translate(phase, LANG);
+            return Translator.getInstance().translate(phase, LANG, false);
         } catch (TranslationException ex) {
             return "";
         }

@@ -5,11 +5,15 @@
  */
 package gui.mainGui.dialogs;
 
+import exceptions.TranslationException;
 import gui.PlayAudio;
 import java.awt.Dimension;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.SpinnerNumberModel;
 import risiko.game.GameProxy;
+import services.Translator;
 
 /**
  *
@@ -17,18 +21,28 @@ import risiko.game.GameProxy;
  */
 public class DefenseDialog extends JDialog {
 
-    //int maxArmiesDefender;
-    private GameProxy game;     
+    private final static String LANG = "ITA";
+    private GameProxy game;
 
-    public DefenseDialog(GameProxy game, java.awt.Frame parent,boolean modal) {
+    public DefenseDialog(GameProxy game, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        this.game = game;        
+        this.game = game;
+        init();
+    }
+
+    private void init() {
+        try {
+            this.setTitle(Translator.getInstance().translate("Defense", LANG, false));
+        } catch (TranslationException ex) {
+            Logger.getLogger(DefenseDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
+
     }
-    
+
     public void setMaxArmies(int maxArmiesDefender) {
         defenderArmies.setModel(new SpinnerNumberModel(maxArmiesDefender, 1, maxArmiesDefender, 1));
     }
@@ -103,10 +117,10 @@ public class DefenseDialog extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmAttackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmAttackButtonActionPerformed
-        PlayAudio.play("sounds/tank.wav");                
-        game.setDefenderArmies((int)this.defenderArmies.getValue());
+        PlayAudio.play("sounds/tank.wav");
+        game.setDefenderArmies((int) this.defenderArmies.getValue());
         this.setVisible(false);
-        game.confirmAttack();        
+        game.confirmAttack();
     }//GEN-LAST:event_confirmAttackButtonActionPerformed
 
     public void setDefenderCountryName(String defenderCountryName) {
@@ -121,5 +135,4 @@ public class DefenseDialog extends JDialog {
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 
-    
 }
