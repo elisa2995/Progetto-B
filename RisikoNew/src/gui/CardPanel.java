@@ -124,7 +124,6 @@ public class CardPanel extends javax.swing.JPanel {
             label.putClientProperty("name", card);
             label.putClientProperty("chosen", false);
             label.setIcon(new ImageIcon("images/" + card + ".png"));
-            System.out.println("images/" + card.toUpperCase() + ".png");
             label.setOpaque(false);
             label.addMouseListener(new CardListener(this,game));
             label.addMouseMotionListener(new CardListener(this, game));
@@ -166,16 +165,8 @@ public class CardPanel extends javax.swing.JPanel {
             chosenCards.add(label);
             cards.remove(label);
             cardsPane.setLayer(label, -(getNrChosenCards() - 1));
-            /*if (checkOnTris(chosenCards)) {
-                System.out.println("ciao");
-                int bonus = game.getBonusForTris(getTrisAsString(chosenCards));
-                playTris.setText("Gioca il tris. (" + bonus + ")");
-                playTris.setVisible(true);
-            }*/
-
         }
         if (checkOnTris(chosenCards)) {
-            System.out.println("ciao");
             int bonus = game.getBonusForTris(getTrisAsString(chosenCards));
             playTris.setText("Gioca il tris. (" + bonus + ")");
             playTris.setVisible(true);

@@ -354,8 +354,7 @@ public class GUI extends JFrame implements GameObserver {
      * @param evt
      */
     private void buttonNextPhaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextPhaseActionPerformed
-        //System.out.println(javax.swing.SwingUtilities.isEventDispatchThread());
-        //((GraphicsJLabel) labelMap).resetCone();
+
 
         try {
             game.nextPhase();
@@ -399,7 +398,7 @@ public class GUI extends JFrame implements GameObserver {
     }//GEN-LAST:event_showCardButtonActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        
+
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
@@ -577,7 +576,7 @@ public class GUI extends JFrame implements GameObserver {
             showDiceDialog(ar);
         }
 
-/*<<<<<<< HEAD
+        /*<<<<<<< HEAD
         //mi accerto che l'attaccante non sia artificiale
         if (isConquered && !artificialAttack[1]) {
             String info = "Complimenti, hai conquistato " + defenderCountryName + ".\n";
@@ -681,7 +680,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnArmiesChange(CountryInfo countryInfo) {
-        
+
         JLabel label = countryLabelMap.get(countryInfo.getName());
         label.setForeground(Color.WHITE);
         label.setText(Integer.toString(countryInfo.getArmies()));
@@ -719,15 +718,15 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      */
-    
     @Override
-    public void updateOnPlayedTris(){
+    public void updateOnPlayedTris() {
         cardPanel.setLocation(cardPanel.getX(), cardPanel.getLOW_Y());
         showCardButton.setVisible(false);
     }
+
     /**
      * Chiama Component.repaint() sui components passati come parametro del
      * metodo.

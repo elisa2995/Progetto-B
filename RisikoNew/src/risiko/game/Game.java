@@ -180,7 +180,6 @@ public class Game extends Observable implements GameProxy {
                 case LOGGED:
                     this.players.add(new LoggedPlayer(info.getName(), info.getColor()));
                     break;
-
             }
 
         }
@@ -547,17 +546,16 @@ public class Game extends Observable implements GameProxy {
         }
 
         activePlayer.setConqueredACountry(false);
-        if (!activePlayer.getBonusCards().isEmpty() && !(activePlayer instanceof ArtificialPlayer)) {
-            List<String> cards = getCardsNames();
-
-            notifyNextTurn(cards);
-            if (cards.isEmpty()) {
-                this.phase = Phase.values()[1];
-            } else {
-                this.phase = Phase.values()[0];
-            }
-
+        if (!getCardsNames().isEmpty() && !(activePlayer instanceof ArtificialPlayer)) {
+            notifyNextTurn(getCardsNames());
         }
+
+        if (getCardsNames().isEmpty()) {
+            this.phase = Phase.values()[1];
+        } else {
+            this.phase = Phase.values()[0];
+        }
+
         map.computeBonusArmies(activePlayer);
 
     }
@@ -611,9 +609,7 @@ public class Game extends Observable implements GameProxy {
 
         Card[] cards = new Card[3];
         for (int i = 0; i < cardNames.length; i++) {
-            //System.out.println(cardNames[i].toUpperCase());
             cards[i] = Card.valueOf(cardNames[i].toUpperCase());
-            //System.out.println(cards[i]);
         }
 
         return deck.getBonusForTris(cards);
@@ -714,8 +710,10 @@ public class Game extends Observable implements GameProxy {
         notifyArmiesChange(buildCountryInfo(fromCountry));
 
         if (phase == Phase.MOVE) {
-            passTurn();
-            notifyPhaseChange(buildPlayerInfo(activePlayer), phase.name());
+            try {
+                nextPhase();
+            } catch (PendingOperationsException ex) {
+            }
         }
     }
 

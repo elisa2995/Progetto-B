@@ -60,9 +60,6 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         String[] trisToPlay = null;
 
         Map<String[], Integer> playableTris = game.getPlayableTris();
-        if(playableTris.size()>0){
-            int k=0;
-        }
         for (Map.Entry<String[], Integer> entry : playableTris.entrySet()) {
             if (max < entry.getValue()) {
                 max = entry.getValue();
@@ -71,6 +68,12 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         }
         if (trisToPlay != null) {
             game.playTris(trisToPlay, this);
+        }else{
+            try {
+                game.nextPhase(this);
+            } catch (PendingOperationsException ex) {
+                Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }
@@ -221,33 +224,26 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
             try {
                 if (game.getActivePlayer().equals(this)) {
-                    //System.out.println(currentAction);
-                    //System.out.println(game.getPhase() + " " + this.getName());
                     switch (game.getPhase()) {
-                        case REINFORCE:
-                            //System.out.println(game.getPhase() + " " + this.getName());
+                        case PLAY_CARDS:
                             playHighestTris();
+                            break;
+                        case REINFORCE:
                             randomReinforce();
                             break;
                         case FIGHT:
-                            //System.out.println(game.getPhase() + " " + this.getName());
                             canAttack = true;
                             this.randomAttack();
                             game.nextPhase(this);
                             break;
                         case MOVE:
-                            //System.out.println(game.getPhase() + " " + this.getName());
-                            //System.out.println("--------------------------------------------");
                             moveArmies();
                             synchronized(this) {
                                 this.wait(100);
                             }
-                            game.nextPhase(this);
                             break;
                     }
                 } else if (this.currentAction == Action.DEFEND) {
-
-                    //System.out.println(Action.DEFEND + " " + this.getName());
                     this.defend();
                 }
             } catch (PendingOperationsException ex) {
