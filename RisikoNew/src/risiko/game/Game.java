@@ -179,8 +179,6 @@ public class Game extends Observable implements GameProxy {
                     }
                     this.players.add(player);
                     //this.players.add(new Player(playerType.getKey(), color));
-
-                    //this.players.add(new Player(playerType.getKey(), color));
                     break;
 
             }
@@ -513,7 +511,9 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
         resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
-
+        if (phase == Phase.PLAY_CARDS) {
+            notifyPlayedTris(); //to hide showCardButton and cardPanel
+        }
         if (phase == Phase.REINFORCE && activePlayer.getBonusArmies() != 0) {
             throw new PendingOperationsException("Hai ancora armate da posizionare!");
         }
@@ -560,7 +560,11 @@ public class Game extends Observable implements GameProxy {
             notifyNextTurn(cards);
             //Devo resettare a false ConqueredACountry così che si possa pescare quando clicco nextphase dopo aver conquistato 
             activePlayer.setConqueredACountry(false);
-            this.phase = Phase.values()[0];
+            if (cards.isEmpty()) {
+                this.phase = Phase.values()[1];
+            } else {
+                this.phase = Phase.values()[0];
+            }
             map.computeBonusArmies(activePlayer);
             /*ListIterator<Player> iter = players.listIterator(players.indexOf(activePlayer) + 1);
         Player newActivePlayer;
@@ -679,6 +683,12 @@ public class Game extends Observable implements GameProxy {
             return;
         }
         activePlayer.playTris(deck.getCardsByNames(cardsNames), getBonusForTris(cardsNames));
+        notifyPlayedTris();
+        try {
+            nextPhase();
+        } catch (PendingOperationsException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
         notifyPhaseChange(activePlayer.getName(), phase.name(), activePlayer.getColor(), activePlayer.getBonusArmies());
     }
 

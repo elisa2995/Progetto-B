@@ -28,7 +28,17 @@ public class CardPanel extends javax.swing.JPanel {
     private List<JLabel> chosenCards;
     private GameProxy game;
     private JButton playTris;
+    private final int LOW_Y = 530;
+    private final int HIGH_Y = 330;
+    
+    public int getLOW_Y() {
+        return LOW_Y;
+    }
 
+    public int getHIGH_Y() {
+        return HIGH_Y;
+    }
+    
     public CardPanel(GameProxy game) {
         this.cards = new ArrayList<>();
         this.chosenCards = new ArrayList<>();
@@ -46,7 +56,7 @@ public class CardPanel extends javax.swing.JPanel {
             }
         });
         this.add(playTris);
-        playTris.setBounds(1000, 10, 125, 50);
+        playTris.setBounds(1015, 100, 125, 50);
     }
 
     /**
@@ -60,19 +70,19 @@ public class CardPanel extends javax.swing.JPanel {
 
         cardsPane = new javax.swing.JLayeredPane();
 
-        cardsPane.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Le tue carte", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 1, 14), new java.awt.Color(255, 255, 255))); // NOI18N
         cardsPane.setMaximumSize(new java.awt.Dimension(1000, 300));
         cardsPane.setMinimumSize(new java.awt.Dimension(1000, 300));
+        cardsPane.setPreferredSize(new java.awt.Dimension(1000, 300));
 
         javax.swing.GroupLayout cardsPaneLayout = new javax.swing.GroupLayout(cardsPane);
         cardsPane.setLayout(cardsPaneLayout);
         cardsPaneLayout.setHorizontalGroup(
             cardsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 1000, Short.MAX_VALUE)
         );
         cardsPaneLayout.setVerticalGroup(
             cardsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 272, Short.MAX_VALUE)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -80,8 +90,8 @@ public class CardPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(cardsPane, javax.swing.GroupLayout.PREFERRED_SIZE, 986, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 326, Short.MAX_VALUE))
+                .addComponent(cardsPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 312, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -102,8 +112,9 @@ public class CardPanel extends javax.swing.JPanel {
 
     void setCards(List<String> myCards) {
         
-        PlayAudio.play("sounds/cardFan1.wav");
-        
+        if(!myCards.isEmpty()){
+            PlayAudio.play("sounds/cardFan1.wav");
+        }
         cardsPane.removeAll();
         JLabel label;
         cards.clear();
@@ -115,13 +126,14 @@ public class CardPanel extends javax.swing.JPanel {
             label.setIcon(new ImageIcon("images/" + card + ".png"));
             System.out.println("images/" + card.toUpperCase() + ".png");
             label.setOpaque(false);
-            label.addMouseListener(new CardListener(this));
-            label.addMouseMotionListener(new CardListener(this));
+            label.addMouseListener(new CardListener(this,game));
+            label.addMouseMotionListener(new CardListener(this, game));
             cards.add(label);
         }
 
         addCardsToPane();
         addChosenCardsToPane();
+        playTris.setVisible(false);
     }
 
     public void addCardsToPane() {

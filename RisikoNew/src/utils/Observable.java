@@ -52,7 +52,7 @@ public class Observable extends BasicObservable {
      * @param countryName
      */
     public void notifySetFromCountry(String countryName) {
-       for (BasicGameObserver ob : this.obs) {
+        for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
                 ((GameObserver) ob).updateOnSetFromCountry(countryName);
             }
@@ -126,6 +126,14 @@ public class Observable extends BasicObservable {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
                 ((GameObserver) ob).updateOnDrawnCard(cardName, isArtificialPlayer);
+            }
+        }
+    }
+
+    public void notifyPlayedTris() {
+        for (BasicGameObserver ob : this.obs) {
+            if (ob instanceof GameObserver) {
+                ((GameObserver) ob).updateOnPlayedTris();
             }
         }
     }

@@ -16,6 +16,8 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
+import static risiko.Phase.PLAY_CARDS;
+import risiko.game.GameProxy;
 
 /**
  *
@@ -24,61 +26,65 @@ import javax.swing.event.MouseInputAdapter;
 public class CardListener extends MouseInputAdapter {
 
     private CardPanel cardPanel;
-    private GUI gui;
+    private GameProxy game;
     private static final int CHOSEN_OFFSET = 670;
     private static final int LOW_Y = 20;
     private static final int HIGH_Y = 15;
 
-    public CardListener(CardPanel cardPanel) {
+    public CardListener(CardPanel cardPanel, GameProxy game) {
         this.cardPanel = cardPanel;
+        this.game = game;
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        JLabel label = (JLabel) e.getComponent();
-        cardPanel.getCardsPane().setLayer(label, 1);
-        String card = (String) label.getClientProperty("name");
-        label.setIcon(new ImageIcon("images/" + card + "Black.png"));
-        Point p = label.getLocation();
-        Point p1 = new Point(p.x, HIGH_Y);
-        label.setLocation(p1);
-        cardPanel.updateUI();
-
+        if (game.getPhase() == PLAY_CARDS) {
+            JLabel label = (JLabel) e.getComponent();
+            cardPanel.getCardsPane().setLayer(label, 1);
+            String card = (String) label.getClientProperty("name");
+            label.setIcon(new ImageIcon("images/" + card + "Black.png"));
+            Point p = label.getLocation();
+            Point p1 = new Point(p.x, HIGH_Y);
+            label.setLocation(p1);
+            cardPanel.updateUI();
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
-        JLabel label = (JLabel) e.getComponent();
-        cardPanel.getCardsPane().setLayer(label, cardPanel.getLabelLayer(label));
-        String card = (String) label.getClientProperty("name");
-        label.setIcon(new ImageIcon("images/" + card + ".png"));
-        Point p = label.getLocation();
-        Point p1 = new Point(p.x, LOW_Y);
-        label.setLocation(p1);
-        cardPanel.updateUI();
+        if (game.getPhase() == PLAY_CARDS) {
+            JLabel label = (JLabel) e.getComponent();
+            cardPanel.getCardsPane().setLayer(label, cardPanel.getLabelLayer(label));
+            String card = (String) label.getClientProperty("name");
+            label.setIcon(new ImageIcon("images/" + card + ".png"));
+            Point p = label.getLocation();
+            Point p1 = new Point(p.x, LOW_Y);
+            label.setLocation(p1);
+            cardPanel.updateUI();
+        }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
-        JLabel label = (JLabel) e.getComponent();
-        if (!(boolean) label.getClientProperty("chosen")) {
-            if (cardPanel.getNrChosenCards() < 3) {
+        if (game.getPhase() == PLAY_CARDS) {
+            JLabel label = (JLabel) e.getComponent();
+            if (!(boolean) label.getClientProperty("chosen")) {
+                if (cardPanel.getNrChosenCards() < 3) {
+                    String card = (String) label.getClientProperty("name");
+                    label.setIcon(new ImageIcon("images/" + card + "Green.png"));
+                    CardAnimation animation = new CardAnimation(cardPanel, label.getX(), HIGH_Y, getToX(label), label);
+                    animation.start();
+                    cardPanel.updateUI();
+                } else {
+                    return;
+                }
+            } else {
                 String card = (String) label.getClientProperty("name");
                 label.setIcon(new ImageIcon("images/" + card + "Green.png"));
                 CardAnimation animation = new CardAnimation(cardPanel, label.getX(), HIGH_Y, getToX(label), label);
                 animation.start();
                 cardPanel.updateUI();
-            } else {
-                return;
             }
-        } else {
-            String card = (String) label.getClientProperty("name");
-            label.setIcon(new ImageIcon("images/" + card + "Green.png"));
-            CardAnimation animation = new CardAnimation(cardPanel, label.getX(), HIGH_Y, getToX(label), label);
-            animation.start();
-            cardPanel.updateUI();
         }
     }
 

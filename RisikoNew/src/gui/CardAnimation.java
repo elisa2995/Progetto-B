@@ -46,7 +46,7 @@ public class CardAnimation extends Thread {
             redraw();
 
             try {
-                sleep(0, 100);
+                sleep(0, 1);
             } catch (InterruptedException ie) {
                 /* ignore */ }
         }

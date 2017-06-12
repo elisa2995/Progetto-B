@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -40,9 +42,13 @@ public class GUI extends JFrame implements GameObserver {
     private AttackerDialog attackerDialog;
     private DiceDialog diceDialog;
     private LabelMapListener labelMapListener;
-    private CardPanel cardPanel;    
-    private final int PREFERRED_WIDTH=400;
-    private final int PREFERRED_HEIGHT=192;
+    private CardPanel cardPanel;
+    private final int PREFERRED_WIDTH = 400;
+    private final int PREFERRED_HEIGHT = 192;
+
+    public JButton getShowCardButton() {
+        return showCardButton;
+    }
 
     public GUI(Map<String, String> players, Map<String, String> playersColor) throws Exception {
         initBackground();
@@ -95,9 +101,10 @@ public class GUI extends JFrame implements GameObserver {
         diceDialog = new DiceDialog(game, this, true);
         cardBonusDialog = new CardBonusDialog(game);
 
+        // CardPanel
         cardPanel = new CardPanel(game);
-        this.add(cardPanel);
-        cardPanel.setBounds(0, 530, 1200, 300);
+        this.add(cardPanel, 0);
+        cardPanel.setBounds(10, 530, 1200, 300);
         cardPanel.setOpaque(false);
         // Setting
         Dimension dim = getToolkit().getScreenSize();
@@ -171,6 +178,7 @@ public class GUI extends JFrame implements GameObserver {
         textAreaInfo = new javax.swing.JTextArea();
         playerLabel = new javax.swing.JLabel();
         exitButton = new javax.swing.JButton();
+        showCardButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         settingsItem = new javax.swing.JMenuItem();
@@ -239,6 +247,14 @@ public class GUI extends JFrame implements GameObserver {
             }
         });
 
+        showCardButton.setText("Mostra/Nascondi carte");
+        showCardButton.setVisible(false);
+        showCardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showCardButtonActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("Settings");
 
         settingsItem.setText("AISettings");
@@ -263,14 +279,17 @@ public class GUI extends JFrame implements GameObserver {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(phaseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(showCardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(buttonShowMission, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(buttonNextPhase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -289,9 +308,11 @@ public class GUI extends JFrame implements GameObserver {
                             .addComponent(buttonShowMission, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(buttonNextPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(exitButton, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                            .addComponent(showCardButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(mapLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(233, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         pack();
@@ -338,6 +359,15 @@ public class GUI extends JFrame implements GameObserver {
         }
 
     }//GEN-LAST:event_exitButtonActionPerformed
+
+    private void showCardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showCardButtonActionPerformed
+
+        if (cardPanel.getY() == cardPanel.getLOW_Y()) {
+            cardPanel.setLocation(cardPanel.getX(), cardPanel.getHIGH_Y());
+        } else {
+            cardPanel.setLocation(cardPanel.getX(), cardPanel.getLOW_Y());
+        }
+    }//GEN-LAST:event_showCardButtonActionPerformed
 
     /**
      * Creazione di una map<Color,String> a partire da un file di testo
@@ -397,6 +427,9 @@ public class GUI extends JFrame implements GameObserver {
             labelMapListener.resetCache(); // cioè non è l'inizio del gioco
         }
         switch (phase) {
+            case "PLAY_CARDS":
+                textAreaInfo.setText("Gioca un tris di carte per ottenere più armate o passa al rinforzo");
+                break;
             case "REINFORCE":
                 textAreaInfo.setText("Clicca su un tuo territorio per rinforzarlo con un'armata.\nHai " + bonusArmies + " armate bonus.");
                 break;
@@ -506,9 +539,9 @@ public class GUI extends JFrame implements GameObserver {
 
         //mi accerto che l'attaccante non sia artificiale
         if (isConquered && !artificialAttack[1]) {
-            String info = "Complimenti, hai conquistato " + defenderCountryName+".\n";
-            if(conqueredContinent != null){
-                info+="Ora possiedi "+conqueredContinent;
+            String info = "Complimenti, hai conquistato " + defenderCountryName + ".\n";
+            if (conqueredContinent != null) {
+                info += "Ora possiedi " + conqueredContinent;
             }
             MoveDialog moveDialog = new MoveDialog(game, attackerCountryName, defenderCountryName, info, maxArmiesAttacker);
             moveDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
@@ -590,10 +623,12 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnNextTurn(List<String> cards) {
-        System.out.println(cards);
-        cardBonusDialog.initImagesPanel();
+        /*cardBonusDialog.initImagesPanel();
         cardBonusDialog.initButtonPanel();
-        cardBonusDialog.setVisible(true);
+        cardBonusDialog.setVisible(true);*/
+        if (!cards.isEmpty()) {
+            showCardButton.setVisible(true);
+        }
         cardPanel.setCards(cards);
     }
 
@@ -610,6 +645,16 @@ public class GUI extends JFrame implements GameObserver {
         }
     }
 
+    /**
+     * 
+     * 
+     */
+    
+    @Override
+    public void updateOnPlayedTris(){
+        cardPanel.setLocation(cardPanel.getX(), cardPanel.getLOW_Y());
+        showCardButton.setVisible(false);
+    }
     /**
      * Chiama Component.repaint() sui components passati come parametro del
      * metodo.
@@ -667,6 +712,8 @@ public class GUI extends JFrame implements GameObserver {
 
     private String getFormattedPhase(String phase) {
         switch (phase) {
+            case "PLAY_CARDS":
+                return "GIOCA UN TRIS";
             case "REINFORCE":
                 return "RINFORZO";
             case "FIGHT":
@@ -691,6 +738,7 @@ public class GUI extends JFrame implements GameObserver {
     private javax.swing.JLabel phaseLabel;
     private javax.swing.JLabel playerLabel;
     private javax.swing.JMenuItem settingsItem;
+    private javax.swing.JButton showCardButton;
     private javax.swing.JTextArea textAreaInfo;
     // End of variables declaration//GEN-END:variables
 

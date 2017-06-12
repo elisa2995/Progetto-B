@@ -61,4 +61,6 @@ public interface GameObserver extends BasicGameObserver {
     public void updateOnSetFromCountry(String countryName);
 
     public void updateOnDrawnCard(String cardName, boolean isArtificialPlayer);
+    
+    public void updateOnPlayedTris();
 }
