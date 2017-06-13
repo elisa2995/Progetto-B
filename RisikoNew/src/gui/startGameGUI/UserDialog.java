@@ -206,7 +206,7 @@ public class UserDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        String url = "files/players.txt";
+        String url = "src/resources/files/players.txt";
         String username = usernameText.getText();
         String password = String.valueOf(passwordText.getPassword());
         if (checkUsername(username)) {
@@ -254,7 +254,7 @@ public class UserDialog extends javax.swing.JDialog {
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encryptedBytes = encoder.encode(password.getBytes());
         String encryptedString = new String(encryptedBytes, "UTF-8");
-        try (PrintWriter out = new PrintWriter(new FileOutputStream("files/players.txt", true))) {
+        try (PrintWriter out = new PrintWriter(new FileOutputStream("src/resources/files/players.txt", true))) {
             out.println(username + ";" + encryptedString);
         }
     }
