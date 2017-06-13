@@ -92,7 +92,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             if (max > 0) {
                 int nArmies = new Random().nextInt(max);
                 if(nArmies != 0){
-                    game.move(myCountries[from], myCountries[to], nArmies, this);
+                    game.setFromCountry(myCountries[from], this);
+                    game.setToCountry(myCountries[to], this);
+                    game.move(nArmies, this);
                 }
             }
         }
@@ -226,20 +228,20 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         while (currentAction != Action.ENDGAME) {
 
             try {
-                if (game.getActivePlayer().equals(this)) {
+                if (game.checkMyIdentity(this)) {
                     switch (game.getPhase()) {
-                        case PLAY_CARDS:
+                        case "PLAY_CARDS":
                             playHighestTris();
                             break;
-                        case REINFORCE:
+                        case "REINFORCE":
                             randomReinforce();
                             break;
-                        case FIGHT:
+                        case "FIGHT":
                             canAttack = true;  
                             this.randomAttack();
                             game.nextPhase(this);
                             break;
-                        case MOVE:
+                        case "MOVE":
                             moveArmies();
                             synchronized(this) {
                                 this.wait(100);
@@ -272,7 +274,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             this.currentAction = Action.NOACTION;
         }
         if(ar.hasConquered()){
-            game.move(ar.getAttackerCountryName(), ar.getDefenderCountryName(), ar.getMaxArmiesAttacker(), this);
+            game.move(/*ar.getAttackerCountryName(), ar.getDefenderCountryName(), */ar.getMaxArmiesAttacker(), this);
         }
         canAttack = true;
     }

@@ -37,7 +37,7 @@ public class Game extends Observable implements GameProxy {
     private final RisikoMap map;
     private List<Player> players;
     private Player activePlayer;
-    private PhaseEnum phase;
+    //private PhaseEnum phase;
     private int phaseIndex;
     private Phase[] phases;
 
@@ -53,6 +53,7 @@ public class Game extends Observable implements GameProxy {
 
     }
 
+    // <editor-fold defaultstate="collapsed" desc=" Getters ">
     /**
      * Returns the current phase.
      *
@@ -60,29 +61,8 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public synchronized PhaseEnum getPhase(ArtificialPlayer... aiCaller) {
-        return this.phase;
-    }
-
-    /**
-     * Returns the name of the cuurent game phase.
-     *
-     * @param aiCaller
-     * @return
-     */
-    @Override
-    public synchronized String getPhaseName(ArtificialPlayer... aiCaller) {
-        return this.phase.toString();
-    }
-
-    /**
-     * Returns the active player.
-     *
-     * @return
-     */
-    @Override
-    public synchronized Player getActivePlayer(ArtificialPlayer... aiCaller) {
-        return activePlayer;
+    public synchronized String getPhase(ArtificialPlayer... aiCaller) {
+        return Phase.getName(phaseIndex);
     }
 
     /**
@@ -95,6 +75,8 @@ public class Game extends Observable implements GameProxy {
         return activePlayer.getMissionDescription();
     }
 
+// </editor-fold>
+    //<editor-fold defaultstate="collapsed" desc=" Initialization  ">
     /**
      * Creates a sorted array of phases, with one element for each class that
      * extends the class <code>Phase</code>,
@@ -126,7 +108,7 @@ public class Game extends Observable implements GameProxy {
         notifyCountriesAssignment(buildAllCountryInfo());
         activePlayer = players.get(new Random().nextInt(players.size()));
         map.computeBonusArmies(activePlayer);
-        notifyPhaseChange(buildPlayerInfo(activePlayer), phase.toString());
+        notifyPhaseChange(buildPlayerInfo(activePlayer), phases[phaseIndex].toString());
         startArtificialPlayersThreads();
     }
 
@@ -187,7 +169,8 @@ public class Game extends Observable implements GameProxy {
         }
     }
 
-    //------------------------------ Cards  ---------------------------------//
+    // <editor-fold defaultstate="collapsed" desc=" CardsPhase ">
+//------------------------------ Cards  ---------------------------------//
     /**
      * Returns the name of the last card drawn by <code>activePlayer</code>.
      *
@@ -243,17 +226,16 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Returns a Map which keySet is the set of Cards[] that can be
-     * played by the <code>activePlayer</code>. Maps the
-     * tris with the number of bonus armies awarded for that specific set of
-     * cards.
+     * Returns a Map which keySet is the set of Cards[] that can be played by
+     * the <code>activePlayer</code>. Maps the tris with the number of bonus
+     * armies awarded for that specific set of cards.
      *
      * @return
      */
     @Override
     public synchronized Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller) {
         // STRINGIFY
-        
+
         Map<Card[], Integer> tris = getCardsPhase().getPlayableTris(activePlayer);
         Map<String[], Integer> playableTrisNames = new HashMap<>();
         for (Map.Entry<Card[], Integer> entry : tris.entrySet()) {
@@ -263,14 +245,16 @@ public class Game extends Observable implements GameProxy {
         }
         return playableTrisNames;
     }
-    
+
     /**
      * Checks if <code>chosenCards</code> is a valid tris.
+     *
      * @param cardNames
+     * @param aiCaller
      */
     @Override
     public boolean isAValidTris(String[] cardNames, ArtificialPlayer... aiCaller) {
-        
+
         // DE-STRINGIFY
         Card[] cards = new Card[3];
 
@@ -279,19 +263,6 @@ public class Game extends Observable implements GameProxy {
         }
         return getCardsPhase().isAValidTris(cards);
 
-    }
-
-    /**
-     * Returns true if the player can play the tris represented by
-     * <code>cards</code>.
-     *
-     * @param cards
-     * @param aiCaller
-     * @return
-     */
-    @Override
-    public boolean canPlayThisTris(Card[] cards, ArtificialPlayer... aiCaller) {
-        return activePlayer.canPlayThisTris(cards);
     }
 
     /**
@@ -304,7 +275,7 @@ public class Game extends Observable implements GameProxy {
     public void playTris(String[] cardsNames, ArtificialPlayer... aiCaller) {
         // DE-STRINGIFY....
         getCardsPhase().playTris(cardsNames, activePlayer);
-        
+
         notifyPlayedTris();
         try {
             nextPhase();
@@ -314,7 +285,9 @@ public class Game extends Observable implements GameProxy {
         notifyPhaseChange(buildPlayerInfo(activePlayer), phases[phaseIndex].toString());
     }
 
-    // ----------------------- Reinforce ------------------------------------
+// </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc=" ReinforcePhase ">
+// ----------------------- Reinforce ------------------------------------
     /**
      * Reinforces the country which name is <code>countryName</code> with one
      * army. When the active player runs out of bonus armies, the phase is
@@ -351,7 +324,9 @@ public class Game extends Observable implements GameProxy {
         return activePlayer.getBonusArmies() > 0;
     }
 
-    //------------------------  Attack  ------------------------------------//
+// </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc=" FightPhase ">
+//------------------------  Attack  ------------------------------------//
     /**
      * Sets the attacker.
      *
@@ -442,19 +417,14 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void confirmAttack(ArtificialPlayer... aiCaller) {
-        FightPhase fightPhase = getFightPhase();
-        fightPhase.confirmAttack(aiCaller);
+
+        getFightPhase().confirmAttack(aiCaller);
         checkLostAndWon();
         // Dopo il combattimento
-        notifyArmiesChangeAfterAttack(fightPhase.getAttackerCountry(), getDefenderCountry());
-        notifyAttackResult(getAttackResultInfo());
+        notifyArmiesChangeAfterAttack(getAttackerCountry(), getDefenderCountry());
+        notifyAttackResult(buildAttackResultInfo());
         // Dopo lo spostamento.. perché è qui??
         //notifyArmiesChangeAfterAttack(fightPhase.getAttackerCountry(), getDefenderCountry());
-    }
-
-    private AttackResultInfo getAttackResultInfo() {
-        FightPhase fight = getFightPhase();
-        return new AttackResultInfo(buildFightingCountriesInfo(), fight.getDice(), fight.hasConquered(), fight.checkContinentConquest());
     }
 
     /**
@@ -533,6 +503,8 @@ public class Game extends Observable implements GameProxy {
 
     }
 
+// </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc=" MovePhase ">
     //----------------------------- Move -------------------------------------//
     /**
      * Ritorna il massimo numero di armate per lo spostamento finale.
@@ -542,8 +514,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public synchronized int getMaxArmiesForMovement(String fromCountryName, ArtificialPlayer... aiCaller) {
-        Country fromCountry = map.getCountryByName(fromCountryName);
-        return fromCountry.getArmies() - 1;
+        return getMovePhase().getMaxArmiesForMovement(map.getCountryByName(fromCountryName));
     }
 
     /**
@@ -552,50 +523,61 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void resetMoveCountries(ArtificialPlayer... aiCaller) {
-        getMovePhase().resetMoveCountries();
+        getMovePhase().clear();
         notifySetFromCountry(null);
     }
-
+    
     @Override
     public synchronized String getFromCountryName(ArtificialPlayer... aiCaller) {
-        return getMovePhase().getFromCountryName();
+        return getMovePhase().getFromCountry().toString();
     }
 
     /**
      * Setta il territorio da cui effettuare lo spostamento.
      *
-     * @param attackerCountryName
+     * @param fromCountryName
      * @param aiCaller
      */
     @Override
     public void setFromCountry(String fromCountryName, ArtificialPlayer... aiCaller) {
-        getMovePhase().setFromCountry(fromCountryName);
+        getMovePhase().setFromCountry(map.getCountryByName(fromCountryName));
         notifySetFromCountry(fromCountryName);
+    }
+    
+    @Override
+    public void setToCountry(String toCountryName, ArtificialPlayer... aiCaller) {
+        getMovePhase().setToCountry(map.getCountryByName(toCountryName));
     }
 
     /**
      * Sposta il numero di armate <code>i</code> da <code>attackerCountry</code>
      * alla country con name <code>toCountryName</code>
      *
-     * @param fromCountryName
-     * @param toCountryName
-     * @param i
+     * @param nrArmies
      */
     @Override
-    public void move(String fromCountryName, String toCountryName, Integer i, ArtificialPlayer... aiCaller) {
-        Country toCountry = map.getCountryByName(toCountryName);
-        Country fromCountry = map.getCountryByName(fromCountryName);
-        map.move(fromCountry, toCountry, i);
-        notifyArmiesChange(buildCountryInfo(toCountry));
-        notifyArmiesChange(buildCountryInfo(fromCountry));
-
-        if (phase == PhaseEnum.MOVE) {
+    public void move(/*String fromCountryName, String toCountryName,*/Integer nrArmies, ArtificialPlayer... aiCaller) {
+        if (phaseIndex == getFightPhase().getIndex()) {
+            moveAfterConquest();
+        }
+        getMovePhase().move(nrArmies);
+        notifyArmiesChange(buildCountryInfo(getMovePhase().getToCountry()));
+        notifyArmiesChange(buildCountryInfo(getMovePhase().getFromCountry()));
+        
+        if (phaseIndex == getMovePhase().getIndex()) {
             try {
                 nextPhase();
             } catch (PendingOperationsException ex) {
             }
         }
     }
+    
+    private void moveAfterConquest() {
+        getMovePhase().setFromCountry(getFightPhase().getAttackerCountry());
+        getMovePhase().setToCountry(getFightPhase().getDefenderCountry());
+    }
+
+// </editor-fold>
 
     //--------------------- Gestione fasi / turni --------------------------//
     private CardsPhase getCardsPhase() {
@@ -644,7 +626,8 @@ public class Game extends Observable implements GameProxy {
         if (phaseIndex == 4) {
             passTurn();
         }
-        notifyPhaseChange(buildPlayerInfo(activePlayer), phase.name());
+        phases[phaseIndex].clear();
+        notifyPhaseChange(buildPlayerInfo(activePlayer), Phase.getName(phaseIndex));
     }
 
     /**
@@ -787,10 +770,16 @@ public class Game extends Observable implements GameProxy {
      * @param aiCaller l'eventuale <code>ArtificialPlayer</code> caller del
      * metodo.
      * @return
-     * @author Carolina
      */
     public synchronized boolean checkCallerIdentity(ArtificialPlayer[] aiCaller) {
         return (aiCaller.length == 0) ? !(activePlayer instanceof ArtificialPlayer) : aiCaller[0].equals(activePlayer);
+    }
+    
+    
+    @Override
+    public boolean checkMyIdentity(ArtificialPlayer[] aiCaller){
+        // Perchè se checkCallerIdenty fallisce non arriva qui.... boh 
+        return true;
     }
 
     @Override
@@ -914,6 +903,16 @@ public class Game extends Observable implements GameProxy {
     }
 
     //-------------------------------- Build info -----------------------------//
+    /**
+     * ... non ho voglia
+     *
+     * @return
+     */
+    private AttackResultInfo buildAttackResultInfo() {
+        FightPhase fight = getFightPhase();
+        return new AttackResultInfo(buildFightingCountriesInfo(), fight.getDice(), fight.hasConquered(), fight.checkContinentConquest());
+    }
+
     /**
      * Builds an array of 2 elements of <code>CountryInfo</code>. The element at
      * index 0 represent the attacker, the one at index 1 the defender.

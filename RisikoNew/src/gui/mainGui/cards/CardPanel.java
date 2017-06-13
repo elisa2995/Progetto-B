@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui.mainGui.cards;
 
 import controllers.CardListener;
@@ -15,13 +10,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 import risiko.game.GameProxy;
 
-/**
- *
- * @author feded
- */
-public class CardPanel extends javax.swing.JPanel {
+public class CardPanel extends JPanel {
 
     private List<JLabel> cards;
     private List<JLabel> chosenCards;

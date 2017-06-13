@@ -358,11 +358,6 @@ public class RisikoMap {
         return this.countryPlayer.get(toCountry).equals(player) && this.getNeighbors(fromCountry).contains(toCountry) && !toCountry.getName().equals(fromCountry.getName());
     }
 
-    public void move(Country fromCountry, Country toCountry, int nrArmies) {
-        fromCountry.removeArmies(nrArmies);
-        toCountry.addArmies(nrArmies);
-    }
-
     /*
         Ridà il massimo numero di armate per lo spinner rispetto al tipo di country
      */

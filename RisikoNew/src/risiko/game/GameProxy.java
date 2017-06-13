@@ -6,15 +6,10 @@ import java.util.Map;
 import risiko.equipment.Card;
 import risiko.players.ArtificialPlayer;
 import risiko.players.ArtificialPlayerSettings;
-import risiko.players.Player;
 
 public interface GameProxy {
 
-    public PhaseEnum getPhase(ArtificialPlayer... aiCaller);
-
-    public String getPhaseName(ArtificialPlayer... aiCaller);
-
-    public Player getActivePlayer(ArtificialPlayer... aiCaller);
+    public String getPhase(ArtificialPlayer... aiCaller);
 
     public String getActivePlayerMission(ArtificialPlayer... aiCaller);
 
@@ -162,7 +157,7 @@ public interface GameProxy {
      * @param cards
      * @return
      */
-    public boolean canPlayThisTris(Card[] cards, ArtificialPlayer... aiCaller);
+    //public boolean canPlayThisTris(Card[] cards, ArtificialPlayer... aiCaller);
 
     /**
      * Gioca il tris.
@@ -198,8 +193,8 @@ public interface GameProxy {
      * @param i
      * @param aiCaller
      */
-    public void move(String fromCountry,String toCountryName, Integer i, ArtificialPlayer... aiCaller);
-
+    public void move(/*String fromCountry,String toCountryName, */Integer i, ArtificialPlayer... aiCaller);
+    
     /**
      * Controlla che country sia dell'activePlayer e che si legale attaccare.
      * (Previo controllo sul caller del metodo).
@@ -326,4 +321,9 @@ public interface GameProxy {
     public void toArtificialPlayer();
 
     public String getFromCountryName(ArtificialPlayer... aiCaller);
+
+    public void setToCountry(String country, ArtificialPlayer... aiCaller);
+
+    public boolean checkMyIdentity(ArtificialPlayer... aiCalle);
+
 }

@@ -5,12 +5,9 @@
  */
 package risiko.phase;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import risiko.equipment.BonusDeck;
 import risiko.equipment.Card;
 import risiko.map.RisikoMap;

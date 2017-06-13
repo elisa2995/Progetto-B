@@ -5,10 +5,6 @@ import java.awt.Dimension;
 import javax.swing.SpinnerNumberModel;
 import risiko.game.GameProxy;
 
-/**
- *
- * @author andrea
- */
 public class MoveDialog extends javax.swing.JDialog {
 
     private GameProxy game;
@@ -16,8 +12,7 @@ public class MoveDialog extends javax.swing.JDialog {
     private String fromCountryName;
 
     /**
-     * Inizializzazione
-     *
+     * Initialization.
      * @param game
      * @param countryName
      */
@@ -108,7 +103,7 @@ public class MoveDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void executeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeActionPerformed
-        game.move(fromCountryName, toCountryName, (Integer) movementArmies.getValue());
+        game.move(/*fromCountryName, toCountryName, */(Integer) movementArmies.getValue());
         MoveDialog.this.dispose();
     }//GEN-LAST:event_executeActionPerformed
 

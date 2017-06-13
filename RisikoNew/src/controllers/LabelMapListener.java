@@ -18,7 +18,6 @@ import gui.PlayAudio;
 import java.util.HashMap;
 import java.awt.Rectangle;
 import risiko.game.GameProxy;
-import risiko.players.ArtificialPlayer;
 
 /**
  *
@@ -55,10 +54,10 @@ public class LabelMapListener extends MouseInputAdapter {
     public void mouseClicked(MouseEvent e) {
         String country = getCountryFromClick(e);
         switch (game.getPhase()) {
-            case PLAY_CARDS:
+            case "PLAY_CARDS":
                 PlayAudio.play("src/resources/sounds/clickOff.wav");
                 break;
-            case REINFORCE:
+            case "REINFORCE":
                 if (country == null) {
                     PlayAudio.play("src/resources/sounds/clickOff.wav");
                     return;
@@ -74,7 +73,7 @@ public class LabelMapListener extends MouseInputAdapter {
 
                 PlayAudio.play("src/resources/sounds/clickOff.wav");
                 break;
-            case FIGHT:
+            case "FIGHT":
                 if (country == null) {
                     PlayAudio.play("src/resources/sounds/clickOff.wav");
                     game.resetFightingCountries();
@@ -101,7 +100,7 @@ public class LabelMapListener extends MouseInputAdapter {
                 resetCache();
                 break;
 
-            case MOVE:
+            case "MOVE":
                 if (country == null) {
                     PlayAudio.play("src/resources/sounds/clickOff.wav");
                     game.resetMoveCountries();
@@ -118,6 +117,7 @@ public class LabelMapListener extends MouseInputAdapter {
                 }
                 if (canBeChosen(country)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
+                    game.setToCountry(country);
                     MoveDialog moveDialog = new MoveDialog(game, game.getFromCountryName(), country);
                     moveDialog.setVisible(true);
                     PlayAudio.play("src/resources/sounds/clickOn.wav");
@@ -150,8 +150,8 @@ public class LabelMapListener extends MouseInputAdapter {
      */
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (game.getActivePlayer() instanceof ArtificialPlayer) //Affinchè la posizione del mouse non interferisca sui coni di luce dei giocatori artificiali
-        {
+        if (!game.checkMyIdentity()) { //Affinchè la posizione del mouse non interferisca sui coni di luce dei giocatori artificiali
+
             return;
         }
         String country = getCountryFromClick(e);
@@ -171,9 +171,9 @@ public class LabelMapListener extends MouseInputAdapter {
         mapLabel.setToolTipText(country);
 
         switch (game.getPhase()) {
-            case PLAY_CARDS:
+            case "PLAY_CARDS":
                 return;
-            case REINFORCE:
+            case "REINFORCE":
                 if (canBeChosen(country) || game.controlPlayer(country) && game.canReinforce()) {
                     //Ho ancora bonus armies e sono su un mio territorio
                     setHandCursor(e.getComponent(), label);
@@ -185,7 +185,7 @@ public class LabelMapListener extends MouseInputAdapter {
                     cache.put(country, false);
                 }
                 break;
-            case FIGHT:
+            case "FIGHT":
                 drowCone(e);
                 if (canBeChosen(country) || game.getAttackerCountryName() == null && game.controlAttacker(country)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
@@ -203,7 +203,7 @@ public class LabelMapListener extends MouseInputAdapter {
                 setDefaultCursor(e.getComponent(), label);
                 cache.put(country, false);
                 break;
-            case MOVE:
+            case "MOVE":
                 drowCone(e);
                 if (canBeChosen(country) || game.getAttackerCountryName() == null && game.controlFromCountryPlayer(country)) {
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
@@ -211,7 +211,7 @@ public class LabelMapListener extends MouseInputAdapter {
                     cache.put(country, true);
                     break;
                 }
-                if (canBeChosen(country)|| game.getAttackerCountryName() != null && game.controlMovement(country)) {
+                if (canBeChosen(country) || game.getAttackerCountryName() != null && game.controlMovement(country)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
                     setHandCursor(e.getComponent(), label);
                     cache.put(country, true);
