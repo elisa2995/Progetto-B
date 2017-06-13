@@ -95,7 +95,6 @@ public class FadeOutLabel extends JLabel {
     }
 
     public void setImage(String url) {
-        System.out.println("setImage");
         try {
             outImage = ImageIO.read(new File(url));
         } catch (IOException exp) {

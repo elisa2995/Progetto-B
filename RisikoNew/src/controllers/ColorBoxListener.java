@@ -72,13 +72,7 @@ public class ColorBoxListener implements ActionListener {
         }
         
         return null; //non dovrebbe mai arrivarci;
-       /* System.out.println(usedColors);
-        for (String color : defaultColors) {
-            if (!usedColors.contains(color)) {
-                return color;
-            }
-        }
-        return null; // Non dovrebbe mai arrivarci    */
+       
     }
 
 

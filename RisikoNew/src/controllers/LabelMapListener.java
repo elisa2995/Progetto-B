@@ -162,17 +162,19 @@ public class LabelMapListener extends MouseInputAdapter {
          quando resetto le fighting countries in labelMaplistener(cioè qui)
          */
         if (country == null) {
-            drowCone(e);
+            //drawCone(e);
             // Non sono su alcun territorio
             e.getComponent().setCursor(Cursor.getDefaultCursor());
             return;
         }
+        
         JLabel label = gui.getLabelByCountry(country);
         mapLabel.setToolTipText(country);
 
         switch (game.getPhase()) {
             case PLAY_CARDS:
-                return;
+                setDefaultCursor(e.getComponent(), label);
+                break;
             case REINFORCE:
                 if (canBeChosen(country) || game.controlPlayer(country) && game.canReinforce()) {
                     //Ho ancora bonus armies e sono su un mio territorio
@@ -186,7 +188,8 @@ public class LabelMapListener extends MouseInputAdapter {
                 }
                 break;
             case FIGHT:
-                drowCone(e);
+                
+                drawCone(e);
                 if (canBeChosen(country) || game.getAttackerCountryName() == null && game.controlAttacker(country)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
                     setHandCursor(e.getComponent(), label);
@@ -204,7 +207,6 @@ public class LabelMapListener extends MouseInputAdapter {
                 cache.put(country, false);
                 break;
             case MOVE:
-                drowCone(e);
                 if (canBeChosen(country) || game.getAttackerCountryName() == null && game.controlFromCountryPlayer(country)) {
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
                     setHandCursor(e.getComponent(), label);
@@ -283,7 +285,7 @@ public class LabelMapListener extends MouseInputAdapter {
         this.cache = new HashMap<>();
     }
 
-    public void drowCone(MouseEvent e) {
+    public void drawCone(MouseEvent e) {
         if (game.getAttackerCountryName() != null) {
             //imposto il cono di luce dall'attackerCountry alla posizione del Mouse
             ((GraphicsJLabel) mapLabel).drawCone(gui.getAttackerCountry(), new Rectangle(e.getX(), e.getY(), 2, 2));

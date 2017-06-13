@@ -24,29 +24,31 @@ public class MoveDialog extends javax.swing.JDialog {
     public MoveDialog(GameProxy game, String fromCountryName, String toCountryName) {
         initComponents();
         init(game, fromCountryName, toCountryName);
+        labelInfo.setText("Da "+fromCountryName+" a "+toCountryName);
         int maxArmies = game.getMaxArmiesForMovement(fromCountryName);
         movementArmies.setModel(new SpinnerNumberModel(maxArmies, 1, maxArmies, 1));
     }
 
-    public MoveDialog(GameProxy game, String fromCountryName, String  toCountryName , String info, int minArmies) {
+    public MoveDialog(GameProxy game, String fromCountryName, String toCountryName, String info, int minArmies) {
         initComponents();
         init(game, fromCountryName, toCountryName);
+        
+        this.fromCountryName = fromCountryName;
+        this.toCountryName = toCountryName;
         int maxArmies = game.getMaxArmiesForMovement(fromCountryName);
         movementArmies.setModel(new SpinnerNumberModel(maxArmies, minArmies, maxArmies, 1));
-        labelInfo.setText(info);     
+        labelInfo.setText(info);
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     }
 
     private void init(GameProxy game, String fromCountryName, String toCountryName) {
-        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        this.game=game;
+        this.game = game;
         this.fromCountryName = fromCountryName;
         this.toCountryName = toCountryName;
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
         this.setModalityType(DEFAULT_MODALITY_TYPE);
     }
-
-    
 
     /**
      * This method is called from within the constructor to initialize the form.

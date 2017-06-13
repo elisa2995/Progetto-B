@@ -34,6 +34,7 @@ public class GameInvocationHandler implements InvocationHandler {
         if (method.getDeclaringClass() == GameProxy.class && !isDefenseMethod && !istoArtificialPlayer && !isEndGame && (method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Void.TYPE))) {
             ArtificialPlayer[] player = (ArtificialPlayer[]) args[args.length - 1];
             if (!this.game.checkCallerIdentity(player)) {
+                
                 return false;
             }
         }

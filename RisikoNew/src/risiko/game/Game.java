@@ -326,10 +326,11 @@ public class Game extends Observable implements GameProxy {
         fight();
         checkCountryConquest();
         checkLostAndWon();
-
+        
+        
+        attackInProgress = false;
         notifyAttackResult(new AttackResultInfo(buildFightingCountriesInfo(), diceBoard.getDice(), map.isConquered(defenderCountry), checkContinentConquest()));
 
-        attackInProgress = false;
     }
 
     /**
@@ -454,7 +455,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
-
+       
         resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
         if (phase == Phase.PLAY_CARDS) {
             notifyPlayedTris(); //to hide showCardButton and cardPanel
@@ -551,8 +552,10 @@ public class Game extends Observable implements GameProxy {
      * Returns the value of the tris.
      *
      * @param cardNames
+     * @param aiCaller
      * @return
      */
+    @Override
     public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller) {
 
         Card[] cards = new Card[3];
@@ -568,6 +571,7 @@ public class Game extends Observable implements GameProxy {
      * tris giocabili dall'activePlayer, e come value le armate bonus
      * corrisponenti.
      *
+     * @param aiCaller
      * @return
      */
     @Override
