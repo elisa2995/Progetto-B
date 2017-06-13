@@ -48,7 +48,7 @@ public class Game extends Observable implements GameProxy {
     private Phase phase;
     private boolean reattack;
 
-    public Game(List<PlayerInfo> playersInfo, GameObserver observer) throws Exception {
+    public Game(List<PlayerInfo> playersInfo, GameObserver observer) {
 
         this.players = new ArrayList<>();
         this.activePlayer = null;
@@ -557,7 +557,7 @@ public class Game extends Observable implements GameProxy {
 
         Card[] cards = new Card[3];
         for (int i = 0; i < cardNames.length; i++) {
-            cards[i] = Card.valueOf(cardNames[i].toUpperCase());
+            cards[i] = Card.valueOf(cardNames[i]);
         }
 
         return deck.getBonusForTris(cards);

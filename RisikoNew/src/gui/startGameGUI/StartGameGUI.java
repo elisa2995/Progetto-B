@@ -45,12 +45,6 @@ public class StartGameGUI extends JFrame {
         this.setResizable(false);
 
         addPlayersPanel();
-
-        // IMMAGINI BOTTONI
-        // Setto le immagini sugli altri bottoni
-        //addButton.setIcon(new ImageIcon("images/addButton.png"));
-        //registrationButton.setIcon(new ImageIcon("images/registrationButton.png"));
-        //startButton.setIcon(new ImageIcon("images/playButton.png"));
     }
 
     /**
@@ -69,7 +63,7 @@ public class StartGameGUI extends JFrame {
     private void initBackground() {
         BufferedImage backgroundImage;
         try {
-            backgroundImage = ImageIO.read(new File("images/loginBackground.png"));
+            backgroundImage = ImageIO.read(new File("src/resources/images/loginBackground.png"));
             this.setContentPane(new BackgroundPane(backgroundImage));
         } catch (IOException ex) {
             System.err.println("loginBackground.png not found");

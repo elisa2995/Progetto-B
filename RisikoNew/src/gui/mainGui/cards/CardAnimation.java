@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui.mainGui.cards;
 
 import gui.PlayAudio;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-/**
- *
- * @author feded
- */
 public class CardAnimation extends Thread {
 
     private CardPanel cardPanel;
@@ -31,18 +22,15 @@ public class CardAnimation extends Thread {
     @Override
     public void run() {
 
-        PlayAudio.play("sounds/moveCard.wav");
+        PlayAudio.play("src/resources/sounds/moveCard.wav");
 
         cardPanel.switchCard(card);
-        destination = false;
-        while (!destination) {
+        while (x != toX) {
 
             if (x < toX) {
                 ++x;
             } else if (x > toX) {
                 --x;
-            } else {
-                stopAnimation();
             }
             redraw();
 
@@ -54,10 +42,6 @@ public class CardAnimation extends Thread {
         cardPanel.addCardsToPane();
         cardPanel.addChosenCardsToPane();
 
-    }
-
-    private void stopAnimation() {
-        destination = true;
     }
 
     private void redraw() {

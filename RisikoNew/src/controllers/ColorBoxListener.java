@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import gui.startGameGUI.PlayerInfoRow;
@@ -13,10 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.JComboBox;
 
-/**
- *
- * @author Elisa
- */
 public class ColorBoxListener implements ActionListener {
 
     private List<PlayerInfoRow> players;

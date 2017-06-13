@@ -109,7 +109,7 @@ public class PlayerInfoRow extends JComponent {
         // Creo un array di icons (una per colore)
         for (int i = 0; i < icons.length; i++) {
             colorNames[i] = colors[i].toStringLC();
-            icons[i] = new ImageIcon("images/" + colors[i].toStringLC() + ".png");
+            icons[i] = new ImageIcon("src/resources/images/" + colors[i].toStringLC() + ".png");
         }
 
         // Setto i colorBoxes

@@ -1,28 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import gui.mainGui.cards.CardAnimation;
 import gui.mainGui.cards.CardPanel;
-import gui.mainGui.GUI;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
 import static risiko.game.Phase.PLAY_CARDS;
 import risiko.game.GameProxy;
 
-/**
- *
- * @author feded
- */
 public class CardListener extends MouseInputAdapter {
 
     private CardPanel cardPanel;
@@ -42,7 +29,7 @@ public class CardListener extends MouseInputAdapter {
             JLabel label = (JLabel) e.getComponent();
             cardPanel.getCardsPane().setLayer(label, 1);
             String card = (String) label.getClientProperty("name");
-            label.setIcon(new ImageIcon("images/" + card + "Black.png"));
+            label.setIcon(new ImageIcon("src/resources/images/" + card + "_BLACK.png"));
             Point p = label.getLocation();
             Point p1 = new Point(p.x, HIGH_Y);
             label.setLocation(p1);
@@ -56,7 +43,7 @@ public class CardListener extends MouseInputAdapter {
             JLabel label = (JLabel) e.getComponent();
             cardPanel.getCardsPane().setLayer(label, cardPanel.getLabelLayer(label));
             String card = (String) label.getClientProperty("name");
-            label.setIcon(new ImageIcon("images/" + card + ".png"));
+            label.setIcon(new ImageIcon("src/resources/images/" + card + ".png"));
             Point p = label.getLocation();
             Point p1 = new Point(p.x, LOW_Y);
             label.setLocation(p1);
@@ -71,7 +58,7 @@ public class CardListener extends MouseInputAdapter {
             if (!(boolean) label.getClientProperty("chosen")) {
                 if (cardPanel.getNrChosenCards() < 3) {
                     String card = (String) label.getClientProperty("name");
-                    label.setIcon(new ImageIcon("images/" + card + "Green.png"));
+                    label.setIcon(new ImageIcon("src/resources/images/" + card + "_GREEN.png"));
                     CardAnimation animation = new CardAnimation(cardPanel, label.getX(), HIGH_Y, getToX(label), label);
                     animation.start();
                     cardPanel.updateUI();
@@ -80,7 +67,7 @@ public class CardListener extends MouseInputAdapter {
                 }
             } else {
                 String card = (String) label.getClientProperty("name");
-                label.setIcon(new ImageIcon("images/" + card + "Green.png"));
+                label.setIcon(new ImageIcon("src/resources/images/" + card + "_GREEN.png"));
                 CardAnimation animation = new CardAnimation(cardPanel, label.getX(), HIGH_Y, getToX(label), label);
                 animation.start();
                 cardPanel.updateUI();

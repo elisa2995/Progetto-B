@@ -5,6 +5,7 @@
  */
 package gui.mainGui.dialogs;
 
+import exceptions.TranslationException;
 import gui.DefaultColor;
 import gui.PlayAudio;
 import java.awt.Dimension;
@@ -13,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.SpinnerNumberModel;
 import risiko.game.GameProxy;
+import services.Translator;
 
 /**
  *
@@ -20,6 +22,7 @@ import risiko.game.GameProxy;
  */
 public class AttackerDialog extends javax.swing.JDialog {
 
+    private final static String LANG = "ITA";
     private GameProxy game;    
 
     /**
@@ -41,7 +44,11 @@ public class AttackerDialog extends javax.swing.JDialog {
     private void init() {
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
-        this.setTitle("Attacco");
+        try {
+            this.setTitle(Translator.getInstance().translate("Attack", LANG, false));
+        } catch (TranslationException ex) {
+            this.setTitle("");
+        }
         
         AttackerDialog attackerDialog=this;
         attackerArmies.setModel(new SpinnerNumberModel(1, 1, 1, 1)); 
@@ -49,7 +56,7 @@ public class AttackerDialog extends javax.swing.JDialog {
         declare.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PlayAudio.play("sounds/tank.wav");
+                PlayAudio.play("src/resources/sounds/tank.wav");
                 game.setAttackerArmies((int) attackerArmies.getValue());
                 attackerDialog.setVisible(false);
                 game.declareAttack();                
@@ -58,13 +65,12 @@ public class AttackerDialog extends javax.swing.JDialog {
 
     }
     
-    public void setAttackerCountry(String attackerCountryName, String color){
-        this.attackerCountryName.setText(attackerCountryName);        
-        this.attackerCountryName.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
-    }
     
-    public void setAttackerColor(String color){
-        this.attackerCountryName.setForeground(DefaultColor.valueOf(color.toUpperCase()).getColor());
+    public void setFightingLabels(String attackerCountryName, String attackerColor, String defenderCountryName, String defenderColor) {
+        this.attackerCountryName.setText(attackerCountryName);
+        this.attackerCountryName.setForeground(DefaultColor.valueOf(attackerColor.toUpperCase()).getColor());
+        this.defenderCountryName.setText(defenderCountryName);
+        this.defenderCountryName.setForeground(DefaultColor.valueOf(defenderColor.toUpperCase()).getColor());
     }
 
     /**
@@ -87,60 +93,61 @@ public class AttackerDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        defenderCountryName = new javax.swing.JLabel();
+        attackerCountryName = new javax.swing.JLabel();
         attackerArmies = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         declare = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        attackerCountryName = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        defenderCountryName.setText("Stati UNiti Occidentali");
+
+        attackerCountryName.setText("Stati UNiti Occidentali");
 
         jLabel1.setText("Armate attacco");
 
         declare.setText("Dichiara l'attacco");
 
-        jLabel2.setText("Attaccante:");
+        jLabel4.setText("VS");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(attackerCountryName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(212, Short.MAX_VALUE)
-                        .addComponent(declare, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(50, 50, 50))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(48, 48, 48)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(attackerArmies, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
-                    .addContainerGap(278, Short.MAX_VALUE)))
+                        .addComponent(attackerCountryName)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)
+                        .addGap(18, 18, 18)
+                        .addComponent(defenderCountryName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(attackerArmies, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(declare, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(46, 46, 46)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(attackerCountryName, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(51, 51, 51)
-                .addComponent(declare, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(46, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(110, 110, 110)
-                    .addComponent(jLabel1)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(attackerCountryName)
+                    .addComponent(defenderCountryName)
+                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(attackerArmies, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(50, Short.MAX_VALUE)))
+                    .addComponent(declare, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -150,7 +157,8 @@ public class AttackerDialog extends javax.swing.JDialog {
     private javax.swing.JSpinner attackerArmies;
     private javax.swing.JLabel attackerCountryName;
     private javax.swing.JButton declare;
+    private javax.swing.JLabel defenderCountryName;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
     // End of variables declaration//GEN-END:variables
 }

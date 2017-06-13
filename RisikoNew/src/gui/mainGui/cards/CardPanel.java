@@ -57,7 +57,7 @@ public class CardPanel extends javax.swing.JPanel {
             }
         });
         this.add(playTris);
-        playTris.setBounds(1015, 100, 125, 50);
+        playTris.setBounds(1015, 100, 250, 50);
     }
 
     /**
@@ -113,7 +113,7 @@ public class CardPanel extends javax.swing.JPanel {
     public void setCards(List<String> myCards) {
         
         if(!myCards.isEmpty()){
-            PlayAudio.play("sounds/cardFan1.wav");
+            PlayAudio.play("src/resources/sounds/cardFan1.wav");
         }
         cardsPane.removeAll();
         JLabel label;
@@ -123,7 +123,7 @@ public class CardPanel extends javax.swing.JPanel {
             label = new JLabel();
             label.putClientProperty("name", card);
             label.putClientProperty("chosen", false);
-            label.setIcon(new ImageIcon("images/" + card + ".png"));
+            label.setIcon(new ImageIcon("src/resources/images/" + card + ".png"));
             label.setOpaque(false);
             label.addMouseListener(new CardListener(this,game));
             label.addMouseMotionListener(new CardListener(this, game));
