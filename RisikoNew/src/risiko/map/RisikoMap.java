@@ -124,12 +124,13 @@ public class RisikoMap {
             }
         }
     }
-    
+
     /**
      * Initializes the game.
-     * @param players 
+     *
+     * @param players
      */
-    public void initGame(List<Player> players){
+    public void initGame(List<Player> players) {
         assignCountriesToPlayers(players);
         assignMissionToPlayers(players);
     }
@@ -208,9 +209,9 @@ public class RisikoMap {
      * @author Elisa
      */
     public void computeBonusArmies(Player player) {
-        
+
         int bonus = 0;
-        for (Continent continent : continents) {            
+        for (Continent continent : continents) {
             if (ownsContinent(player, continent)) {
                 bonus += continent.getBonus();
             }
@@ -219,43 +220,49 @@ public class RisikoMap {
         bonus += (int) Math.floor(getMyCountries(player).size() / 3);
         player.addBonusArmies(bonus);
     }
-    
+
     /**
      * Ritorna true se il player possiede il continente.
+     *
      * @param player
      * @param continent
-     * @return 
+     * @return
      */
-    private boolean ownsContinent(Player player, Continent continent){
+    private boolean ownsContinent(Player player, Continent continent) {
         return getMyCountries(player).containsAll(continent.getCountries());
     }
-    
+
     /**
-     * Ritorna true se il player dopo la conquiesta della Country 
+     * Ritorna true se il player dopo la conquiesta della Country
      * <code>justConqueredCountry</code> possiede l'intero continente.
+     *
      * @param player
      * @param justConqueredCountry
-     * @return 
+     * @return
      */
-    public boolean hasConqueredContinent(Player player, Country justConqueredCountry){
-        return ownsContinent(player, getContinentByCountry(justConqueredCountry));
+    public boolean hasConqueredContinent(Country conqueredCountry) {
+        Player player = getPlayerByCountry(conqueredCountry);
+        Continent continent = getContinentByCountry(conqueredCountry);
+        return getMyCountries(player).containsAll(continent.getCountries());
     }
-    
+
     /**
      * Ritorna il continente a cui appartiene una country.
+     *
      * @param country
-     * @return 
+     * @return
      */
-    public Continent getContinentByCountry(Country country){
-        
-        for(Continent continent: continents){
-            if(continent.containsCountry(country)){
+    public Continent getContinentByCountry(Country country) {
+
+        for (Continent continent : continents) {
+            if (continent.containsCountry(country)) {
                 return continent;
             }
         }
         return null; //non dovrebbe mai arrivarci
-   
+
     }
+
     /**
      * Ritorna una lista dei territori del giocatore
      *
@@ -333,11 +340,14 @@ public class RisikoMap {
     }
 
     /**
-     * Controlla che il territorio non sia dell'active player e che sia un
-     * confinante dell'attacker
+     * Checks if attacker and defender don't belong to the same player and
+     * they're neighbors.
+     * @param attacker
+     * @param defender
+     * @return true if the defender is valid, false otherwise.
      */
-    public boolean controlDefender(Country attacker, Country defender, Player player) {
-        return !this.countryPlayer.get(defender).equals(player) && this.getNeighbors(attacker).contains(defender);
+    public boolean controlDefender(Country attacker, Country defender) {
+        return !this.countryPlayer.get(defender).equals(getPlayerByCountry(attacker)) && this.getNeighbors(attacker).contains(defender);
     }
 
     /**
@@ -376,6 +386,7 @@ public class RisikoMap {
      */
     public void updateOnConquer(Country attackerCountry, Country defenderCountry, int armies) {
         Player attacker = this.countryPlayer.get(attackerCountry);
+        attacker.setConqueredACountry(true);
         this.countryPlayer.put(defenderCountry, attacker);
         //attackerCountry.removeArmies(armies);
         //defenderCountry.setArmies(armies);
@@ -447,15 +458,16 @@ public class RisikoMap {
     public String getPlayerColorByCountry(Country country) {
         return getPlayerByCountry(country).getColor();
     }
-    
+
     /**
      * changes the owner of all territories
-     * @param oldOwner previous owner of the territories 
+     *
+     * @param oldOwner previous owner of the territories
      * @param newOwner new owner of the territories
      */
-    public void changeOwner(Player oldOwner, Player newOwner){
-        for(Map.Entry<Country, Player> entry : countryPlayer.entrySet()){
-            if(entry.getValue().equals(oldOwner)){
+    public void changeOwner(Player oldOwner, Player newOwner) {
+        for (Map.Entry<Country, Player> entry : countryPlayer.entrySet()) {
+            if (entry.getValue().equals(oldOwner)) {
                 entry.setValue(newOwner);
             }
         }

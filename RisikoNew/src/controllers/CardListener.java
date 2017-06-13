@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
-import static risiko.game.Phase.PLAY_CARDS;
+import static risiko.game.PhaseEnum.PLAY_CARDS;
 import risiko.game.GameProxy;
 
 public class CardListener extends MouseInputAdapter {

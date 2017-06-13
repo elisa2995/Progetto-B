@@ -10,7 +10,7 @@ import risiko.players.Player;
 
 public interface GameProxy {
 
-    public Phase getPhase(ArtificialPlayer... aiCaller);
+    public PhaseEnum getPhase(ArtificialPlayer... aiCaller);
 
     public String getPhaseName(ArtificialPlayer... aiCaller);
 
@@ -46,6 +46,8 @@ public interface GameProxy {
      * @param aiCaller
      */
     public void resetFightingCountries(ArtificialPlayer... aiCaller);
+    
+    public void resetMoveCountries(ArtificialPlayer... aiCaller);
 
     /**
      * Simula l'attacco tra {@code this.attackerCountry} e
@@ -322,4 +324,6 @@ public interface GameProxy {
     public void endGame();
     
     public void toArtificialPlayer();
+
+    public String getFromCountryName(ArtificialPlayer... aiCaller);
 }

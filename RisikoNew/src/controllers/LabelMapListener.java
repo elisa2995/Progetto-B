@@ -104,12 +104,12 @@ public class LabelMapListener extends MouseInputAdapter {
             case MOVE:
                 if (country == null) {
                     PlayAudio.play("src/resources/sounds/clickOff.wav");
-                    game.resetFightingCountries();
+                    game.resetMoveCountries();
                     resetCache();
                     return;
                 }
 
-                if (game.getAttackerCountryName() == null && (canBeChosen(country))) {
+                if (game.getFromCountryName() == null && (canBeChosen(country))) {
 
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
                     game.setFromCountry(country);
@@ -118,15 +118,15 @@ public class LabelMapListener extends MouseInputAdapter {
                 }
                 if (canBeChosen(country)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
-                    MoveDialog moveDialog = new MoveDialog(game, game.getAttackerCountryName(), country);
+                    MoveDialog moveDialog = new MoveDialog(game, game.getFromCountryName(), country);
                     moveDialog.setVisible(true);
                     PlayAudio.play("src/resources/sounds/clickOn.wav");
-                    game.resetFightingCountries();
+                    game.resetMoveCountries();
                     break;
                 }
                 //Sono su un territorio non valido per spostarmi
                 PlayAudio.play("src/resources/sounds/clickOff.wav");
-                game.resetFightingCountries();
+                game.resetMoveCountries();
                 resetCache();
                 break;
 

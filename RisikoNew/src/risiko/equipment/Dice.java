@@ -3,7 +3,7 @@ package risiko.equipment;
 import java.util.Arrays;
 import java.util.Random;
 
-public class DiceBoard {
+public class Dice {
 
     private int[] attackerDice, defenderDice;
 
