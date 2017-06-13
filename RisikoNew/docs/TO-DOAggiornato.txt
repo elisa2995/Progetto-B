@@ -51,3 +51,5 @@ devono essere messi in invokelater perch� a questo punto appartengono a thread
 x non si pu� chiudere la finestra di move (ANDREA)
 x spostare le immagini/files ecc in resources e cambiare i metodi di lettura/scrittura accordingly 
 x Metti sia nella finestra dell'attaccante che nella finestra del difensore entrambi i nomi con i colori (ANDREA)
+x Introdotta legenda giocatori
+x Il bottone nextPhase cambia nome e visibilità in funzione della fase
