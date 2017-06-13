@@ -1,16 +1,9 @@
 package risk.phase;
 
-import exceptions.FileManagerException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import risiko.equipment.Dice;
-import risiko.game.Game;
 import risiko.map.Country;
 import risiko.map.RisikoMap;
 import risiko.players.ArtificialPlayer;
-import risiko.players.LoggedPlayer;
-import services.FileManager;
-import shared.AttackResultInfo;
 
 public class FightPhase extends Phase {
 

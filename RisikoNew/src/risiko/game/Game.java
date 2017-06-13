@@ -1,11 +1,12 @@
 package risiko.game;
 
+import org.reflections.Reflections;
 import exceptions.FileManagerException;
 import risiko.players.PlayerType;
 import risiko.players.Player;
 import risiko.players.ArtificialPlayer;
-import exceptions.LastPhaseException;
 import exceptions.PendingOperationsException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,6 @@ import java.util.logging.Logger;
 import risiko.equipment.BonusDeck;
 import risiko.equipment.Card;
 import risiko.map.Country;
-import risiko.equipment.Dice;
 import risiko.map.RisikoMap;
 import risiko.players.ArtificialPlayerSettings;
 import risiko.players.LoggedPlayer;
@@ -51,19 +51,13 @@ public class Game extends Observable implements GameProxy {
         this.deck = new BonusDeck();
         this.map = new RisikoMap();
         this.addObserver(observer);
-        phases = new Phase[4];
-        phases[0] = new CardPhase(map);
-        phases[1] = new ReinforcePhase(map);
-        phases[2] = new FightPhase(map);
-        phases[3] = new MovePhase(map);
-        //this.phases = {new CardPhase(map), new ReinforcePhase(map), (PhaseEnum)new FightPhase(map), (PhaseEnum)new MovePhase(map)};
+        initPhases();
         init(playersInfo);
-        //this.reattack = false;
 
     }
 
     /**
-     * Returns the current game phase.
+     * Returns the current phase.
      *
      * @param aiCaller
      * @return
@@ -102,6 +96,26 @@ public class Game extends Observable implements GameProxy {
     @Override
     public synchronized String getActivePlayerMission(ArtificialPlayer... aiCaller) {
         return activePlayer.getMissionDescription();
+    }
+
+    /**
+     * Creates a sorted array of phases, with one element for each class
+     * that extends the class <code>Phase</code>,
+     */
+    private void initPhases() {
+        Set<Class<? extends Phase>> subTypes = new Reflections().getSubTypesOf(Phase.class);
+
+        phases = new Phase[subTypes.size()];
+        int i = 0;
+        for (Class<? extends Phase> cls : subTypes) {
+            try {
+                phases[i] = cls.getDeclaredConstructor(RisikoMap.class).newInstance(map);
+            } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            i++;
+        }
+        Arrays.sort(phases);
     }
 
     /**
@@ -601,13 +615,11 @@ public class Game extends Observable implements GameProxy {
         getMovePhase().resetMoveCountries();
         notifySetFromCountry(null);
     }
-    
-    
+
     @Override
     public synchronized String getFromCountryName(ArtificialPlayer... aiCaller) {
         return getMovePhase().getFromCountryName();
     }
-
 
     /**
      * Setta il territorio da cui effettuare lo spostamento.
