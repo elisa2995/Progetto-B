@@ -185,7 +185,7 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Returns the JLabel that corresponds to the Country whose name is
+     * Returns the JLabel that corresponds to the Country which name is
      * <code>country</code>.
      *
      * @param country

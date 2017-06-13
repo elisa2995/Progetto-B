@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import risiko.equipment.BonusDeck;
 import risiko.equipment.Card;
 import risiko.map.Country;
 import risiko.missions.Mission;
@@ -138,5 +139,9 @@ public class Player {
     @Override
     public String toString() {
         return name;
+    }
+
+    public void drawCard(BonusDeck deck) {
+        this.addCard(deck.drawCard());
     }
 }

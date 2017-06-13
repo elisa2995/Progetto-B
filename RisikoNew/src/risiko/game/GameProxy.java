@@ -317,7 +317,7 @@ public interface GameProxy {
 
     public int getMaxArmies(String countryName, boolean isAttacker, ArtificialPlayer... aiCaller);
 
-    public boolean canPlayThisTris(String[] cardNames, ArtificialPlayer... aiCaller);
+    public boolean isAValidTris(String[] cardNames, ArtificialPlayer... aiCaller);
 
     public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller);
 

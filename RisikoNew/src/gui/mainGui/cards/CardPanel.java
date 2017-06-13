@@ -7,7 +7,6 @@ package gui.mainGui.cards;
 
 import controllers.CardListener;
 import gui.PlayAudio;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
 import risiko.game.GameProxy;
 
 /**
@@ -211,7 +209,7 @@ public class CardPanel extends javax.swing.JPanel {
         boolean success = false;
         String[] cards = getTrisAsString(chosenCards);
         if (chosenCards.size() == 3) {
-            success = game.canPlayThisTris(cards);
+            success = game.isAValidTris(cards);
         }
         return success;
     }

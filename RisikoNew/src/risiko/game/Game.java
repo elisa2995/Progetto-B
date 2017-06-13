@@ -37,7 +37,6 @@ import utils.BasicObservable;
 public class Game extends Observable implements GameProxy {
 
     private final RisikoMap map;
-    private final BonusDeck deck;
     private List<Player> players;
     private Player activePlayer;
     private PhaseEnum phase;
@@ -48,7 +47,6 @@ public class Game extends Observable implements GameProxy {
 
         this.players = new ArrayList<>();
         this.activePlayer = null;
-        this.deck = new BonusDeck();
         this.map = new RisikoMap();
         this.phaseIndex = 1;
         this.addObserver(observer);
@@ -100,8 +98,8 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Creates a sorted array of phases, with one element for each class
-     * that extends the class <code>Phase</code>,
+     * Creates a sorted array of phases, with one element for each class that
+     * extends the class <code>Phase</code>,
      */
     private void initPhases() {
         Set<Class<? extends Phase>> subTypes = new Reflections().getSubTypesOf(Phase.class);
@@ -177,9 +175,10 @@ public class Game extends Observable implements GameProxy {
                     break;
                 case NORMAL:
                     Player player = new Player(info.getName(), info.getColor());
-                    for (int j = 0; j < 4; j++) {
+                    /*for (int j = 0; j < 4; j++) {
+                        RICORDATI
                         player.addCard(deck.drawCard());
-                    }
+                    }*/
                     this.players.add(player);
                     break;
                 case LOGGED:
@@ -189,9 +188,137 @@ public class Game extends Observable implements GameProxy {
 
         }
     }
+
+    //------------------------------ Cards  ---------------------------------//
+    /**
+     * Returns the name of the last card drawn by <code>activePlayer</code>.
+     *
+     * @param aiCaller
+     * @return
+     */
+    @Override
+    public synchronized String getLastCardDrawn(ArtificialPlayer... aiCaller) {
+        return activePlayer.getLastDrawnCard().name();
+    }
+
+    /**
+     * Draws a card from the deck and gives it to <code>activePlayer</code>
+     *
+     * @param aiCaller
+     */
+    private void drawBonusCard(ArtificialPlayer... aiCaller) {
+        getCardsPhase().drawCard(activePlayer);
+        notifyDrawnCard(getLastCardDrawn(), activePlayer instanceof ArtificialPlayer);
+    }
+
+    /**
+     * Returns an ArrayList containing the names of <code>activePlayer</code>'s
+     * cards.
+     *
+     * @param aiCaller
+     * @return
+     */
+    @Override
+    public synchronized List<String> getCardsNames(ArtificialPlayer... aiCaller) {
+        // STRINGIFY
+        List<String> bonusCardsNames = new ArrayList<>();
+        for (Card card : activePlayer.getBonusCards()) {
+            bonusCardsNames.add(card.name());
+        }
+        return bonusCardsNames;
+    }
+
+    /**
+     * Returns the value of the tris.
+     *
+     * @param cardNames
+     * @return
+     */
+    @Override
+    public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller) {
+        // De - stringify
+        Card[] cards = new Card[3];
+        for (int i = 0; i < cardNames.length; i++) {
+            cards[i] = Card.valueOf(cardNames[i]);
+        }
+        return getCardsPhase().getBonusForTris(cards);
+    }
+
+    /**
+     * Returns a Map which keySet is the set of Cards[] that can be
+     * played by the <code>activePlayer</code>. Maps the
+     * tris with the number of bonus armies awarded for that specific set of
+     * cards.
+     *
+     * @return
+     */
+    @Override
+    public synchronized Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller) {
+        // STRINGIFY
+        
+        Map<Card[], Integer> tris = getCardsPhase().getPlayableTris(activePlayer);
+        Map<String[], Integer> playableTrisNames = new HashMap<>();
+        for (Map.Entry<Card[], Integer> entry : tris.entrySet()) {
+            Card[] cards = entry.getKey();
+            String[] names = {cards[0].name(), cards[1].name(), cards[2].name()};
+            playableTrisNames.put(names, entry.getValue());
+        }
+        return playableTrisNames;
+    }
+    
+    /**
+     * Checks if <code>chosenCards</code> is a valid tris.
+     * @param cardNames
+     */
+    @Override
+    public boolean isAValidTris(String[] cardNames, ArtificialPlayer... aiCaller) {
+        
+        // DE-STRINGIFY
+        Card[] cards = new Card[3];
+
+        for (int i = 0; i < cardNames.length; i++) {
+            cards[i] = Card.valueOf(cardNames[i].toUpperCase());
+        }
+        return getCardsPhase().isAValidTris(cards);
+
+    }
+
+    /**
+     * Returns true is the player can play the tris represented by
+     * <code>cards</code>.
+     *
+     * @param cards
+     * @param aiCaller
+     * @return
+     */
+    @Override
+    public boolean canPlayThisTris(Card[] cards, ArtificialPlayer... aiCaller) {
+        return activePlayer.canPlayThisTris(cards);
+    }
+
+    /**
+     * Plays the tris.
+     *
+     * @param cardsNames
+     * @param aiCaller
+     */
+    @Override
+    public void playTris(String[] cardsNames, ArtificialPlayer... aiCaller) {
+        // DE-STRINGIFY....
+        getCardsPhase().playTris(cardsNames, activePlayer);
+        
+        notifyPlayedTris();
+        try {
+            nextPhase();
+        } catch (PendingOperationsException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        notifyPhaseChange(buildPlayerInfo(activePlayer), phases[phaseIndex].toString());
+    }
+
     // ----------------------- Reinforce ------------------------------------
     /**
-     * Reinforces the country whose name is <code>countryName</code> with one
+     * Reinforces the country which name is <code>countryName</code> with one
      * army. When the active player runs out of bonus armies, the phase is
      * changed.
      *
@@ -225,7 +352,6 @@ public class Game extends Observable implements GameProxy {
     public boolean canReinforce(ArtificialPlayer... aiCaller) {
         return activePlayer.getBonusArmies() > 0;
     }
-    
 
     //------------------------  Attack  ------------------------------------//
     /**
@@ -275,17 +401,6 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Sets the number of armies for the defense.
-     *
-     * @param nrD
-     * @param aiCaller
-     */
-    @Override
-    public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller) {
-        getFightPhase().setDefenderArmies(nrD);
-    }
-
-    /**
      * Sets the number of armies for the attack.
      *
      * @param nrA
@@ -294,6 +409,17 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller) {
         getFightPhase().setAttackerArmies(nrA);
+    }
+
+    /**
+     * Sets the number of armies for the defense.
+     *
+     * @param nrD
+     * @param aiCaller
+     */
+    @Override
+    public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller) {
+        getFightPhase().setDefenderArmies(nrD);
     }
 
     /**
@@ -324,8 +450,8 @@ public class Game extends Observable implements GameProxy {
         // Dopo il combattimento
         notifyArmiesChangeAfterAttack(fightPhase.getAttackerCountry(), getDefenderCountry());
         notifyAttackResult(getAttackResultInfo());
-        // Dopo lo spostamento
-        notifyArmiesChangeAfterAttack(fightPhase.getAttackerCountry(), getDefenderCountry());
+        // Dopo lo spostamento.. perché è qui??
+        //notifyArmiesChangeAfterAttack(fightPhase.getAttackerCountry(), getDefenderCountry());
     }
 
     private AttackResultInfo getAttackResultInfo() {
@@ -409,190 +535,6 @@ public class Game extends Observable implements GameProxy {
 
     }
 
-    //--------------------- Gestione fasi / turni --------------------------//
-    
-    
-    private CardPhase getCardPhase() {
-        return (CardPhase) phases[Phase.CARD_INDEX];
-    }
-
-    private ReinforcePhase getReinforcePhase() {
-        return (ReinforcePhase) phases[Phase.REINFORCE_INDEX];
-    }
-
-    private FightPhase getFightPhase() {
-        return (FightPhase) phases[Phase.FIGHT_INDEX];
-    }
-
-    private MovePhase getMovePhase() {
-        return (MovePhase) phases[Phase.MOVE_INDEX];
-    }
-    
-    /**
-     * Changes the phase. If it's the last one, passes the turn.
-     *
-     * @param aiCaller
-     * @throws PendingOperationsException
-     */
-    @Override
-    public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
-
-        resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
-        if (phases[phaseIndex].toString().equals("PLAY_CARDS")) {
-            notifyPlayedTris(); //to hide showCardButton and cardPanel
-        }
-
-        if (phases[phaseIndex].toString().equals("REINFORCE") && activePlayer.getBonusArmies() != 0) {
-            throw new PendingOperationsException("Hai ancora armate da posizionare!");
-        }
-
-        if (phases[phaseIndex].toString().equals("FIGHT") && getFightPhase().isAttackInProgress()) {
-            throw new PendingOperationsException("Attacco ancora in corso!");
-        }
-
-        if (phases[phaseIndex].toString().equals("FIGHT") && activePlayer.hasConqueredACountry()) {
-            this.drawBonusCard(aiCaller);
-        }
-
-        phaseIndex++;
-        if (phaseIndex == 4) {
-            passTurn();
-        }
-        notifyPhaseChange(buildPlayerInfo(activePlayer), phase.name());
-    }
-
-    /**
-     * Passes the turn.
-     *
-     */
-    private void passTurn() {
-        ListIterator<Player> iter = players.listIterator(players.indexOf(activePlayer) + 1);
-
-        if (iter.hasNext()) {
-            activePlayer = iter.next();
-        } else {
-            activePlayer = players.get(0);
-        }
-
-        activePlayer.setConqueredACountry(false);
-        if (!getCardsNames().isEmpty() && !(activePlayer instanceof ArtificialPlayer)) {
-            notifyNextTurn(getCardsNames());
-        }
-
-        phaseIndex = (getCardsNames().isEmpty()) ? 1 : 0;
-
-        map.computeBonusArmies(activePlayer);
-
-    }
-
-    //------------------------------ Cards  ---------------------------------//
-    /**
-     * Returns the name of the last card drawn by <code>activePlayer</code>.
-     *
-     * @param aiCaller
-     * @return
-     */
-    @Override
-    public synchronized String getLastCardDrawn(ArtificialPlayer... aiCaller) {
-        return activePlayer.getLastDrawnCard().name();
-    }
-
-    /**
-     * Draws a card from the deck and gives it to <code>activePlayer</code>
-     *
-     * @param aiCaller
-     */
-    private void drawBonusCard(ArtificialPlayer... aiCaller) {
-        activePlayer.addCard(deck.drawCard());
-
-        notifyDrawnCard(getLastCardDrawn(), activePlayer instanceof ArtificialPlayer);
-    }
-
-    /**
-     * Returns an ArrayList containing the names of <code>activePlayer</code>'s
-     * cards.
-     *
-     * @param aiCaller
-     * @return
-     */
-    @Override
-    public synchronized List<String> getCardsNames(ArtificialPlayer... aiCaller) {
-        List<String> bonusCardsNames = new ArrayList<>();
-        for (Card card : activePlayer.getBonusCards()) {
-            bonusCardsNames.add(card.name());
-        }
-        return bonusCardsNames;
-    }
-
-    /**
-     * Returns the value of the tris.
-     *
-     * @param cardNames
-     * @return
-     */
-    public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller) {
-
-        Card[] cards = new Card[3];
-        for (int i = 0; i < cardNames.length; i++) {
-            cards[i] = Card.valueOf(cardNames[i]);
-        }
-
-        return deck.getBonusForTris(cards);
-    }
-
-    /**
-     * Ritorna una mappa che ha come key i nomi delle carte che compongono i
-     * tris giocabili dall'activePlayer, e come value le armate bonus
-     * corrisponenti.
-     *
-     * @return
-     */
-    @Override
-    public synchronized Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller) {
-        Map<Card[], Integer> tris = activePlayer.getPlayableTris(deck.getTris());
-        Map<String[], Integer> playableTrisNames = new HashMap<>();
-        for (Map.Entry<Card[], Integer> entry : tris.entrySet()) {
-            Card[] cards = entry.getKey();
-            String[] names = {cards[0].name(), cards[1].name(), cards[2].name()};
-            playableTrisNames.put(names, entry.getValue());
-        }
-        return playableTrisNames;
-    }
-
-    /**
-     * Ritorna true se il giocatore può giocare il tris selezionato.
-     *
-     * @param cards
-     * @param aiCaller
-     * @return
-     */
-    @Override
-    public boolean canPlayThisTris(Card[] cards, ArtificialPlayer... aiCaller) {
-        return activePlayer.canPlayThisTris(cards);
-    }
-
-    /**
-     * Gioca il tris.
-     *
-     * @param cardsNames
-     * @param bonusArmiesTris
-     * @param aiCaller
-     */
-    @Override
-    public void playTris(String[] cardsNames, ArtificialPlayer... aiCaller) {
-        if (cardsNames == null) {
-            return;
-        }
-        activePlayer.playTris(deck.getCardsByNames(cardsNames), getBonusForTris(cardsNames));
-        notifyPlayedTris();
-        try {
-            nextPhase();
-        } catch (PendingOperationsException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        notifyPhaseChange(buildPlayerInfo(activePlayer), phase.name());
-    }
-
     //----------------------------- Move -------------------------------------//
     /**
      * Ritorna il massimo numero di armate per lo spostamento finale.
@@ -655,6 +597,80 @@ public class Game extends Observable implements GameProxy {
             } catch (PendingOperationsException ex) {
             }
         }
+    }
+
+    //--------------------- Gestione fasi / turni --------------------------//
+    private CardsPhase getCardsPhase() {
+        return (CardsPhase) phases[Phase.CARD_INDEX];
+    }
+
+    private ReinforcePhase getReinforcePhase() {
+        return (ReinforcePhase) phases[Phase.REINFORCE_INDEX];
+    }
+
+    private FightPhase getFightPhase() {
+        return (FightPhase) phases[Phase.FIGHT_INDEX];
+    }
+
+    private MovePhase getMovePhase() {
+        return (MovePhase) phases[Phase.MOVE_INDEX];
+    }
+
+    /**
+     * Changes the phase. If it's the last one, passes the turn.
+     *
+     * @param aiCaller
+     * @throws PendingOperationsException
+     */
+    @Override
+    public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
+
+        resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
+        if (phases[phaseIndex].toString().equals("PLAY_CARDS")) {
+            notifyPlayedTris(); //to hide showCardButton and cardPanel
+        }
+
+        if (phases[phaseIndex].toString().equals("REINFORCE") && activePlayer.getBonusArmies() != 0) {
+            throw new PendingOperationsException("Hai ancora armate da posizionare!");
+        }
+
+        if (phases[phaseIndex].toString().equals("FIGHT") && getFightPhase().isAttackInProgress()) {
+            throw new PendingOperationsException("Attacco ancora in corso!");
+        }
+
+        if (phases[phaseIndex].toString().equals("FIGHT") && activePlayer.hasConqueredACountry()) {
+            this.drawBonusCard(aiCaller);
+        }
+
+        phaseIndex++;
+        if (phaseIndex == 4) {
+            passTurn();
+        }
+        notifyPhaseChange(buildPlayerInfo(activePlayer), phase.name());
+    }
+
+    /**
+     * Passes the turn.
+     *
+     */
+    private void passTurn() {
+        ListIterator<Player> iter = players.listIterator(players.indexOf(activePlayer) + 1);
+
+        if (iter.hasNext()) {
+            activePlayer = iter.next();
+        } else {
+            activePlayer = players.get(0);
+        }
+
+        activePlayer.setConqueredACountry(false);
+        if (!getCardsNames().isEmpty() && !(activePlayer instanceof ArtificialPlayer)) {
+            notifyNextTurn(getCardsNames());
+        }
+
+        phaseIndex = (getCardsNames().isEmpty()) ? 1 : 0;
+
+        map.computeBonusArmies(activePlayer);
+
     }
 
     //  M E T O D I   R I P R E S I   D A   M A P
@@ -863,40 +879,6 @@ public class Game extends Observable implements GameProxy {
     private void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
         notifyArmiesChange(buildCountryInfo(defenderCountry));
         notifyArmiesChange(buildCountryInfo(attackerCountry));
-    }
-
-    /**
-     * Controlla se il tris in cardNames è un tris giocabile.
-     *
-     * @param cardNames
-     * @param aiCaller
-     * @return
-     */
-    @Override
-    public boolean canPlayThisTris(String[] cardNames, ArtificialPlayer... aiCaller) {
-
-        List<Card[]> playableTris = new ArrayList<>();
-        Card[] cards = new Card[3];
-
-        for (int i = 0; i < cardNames.length; i++) {
-            cards[i] = Card.valueOf(cardNames[i].toUpperCase());
-        }
-
-        playableTris.addAll((Set) deck.getTris().keySet());
-
-        for (Card[] cardArray : playableTris) {
-            List<Card> cardList = Arrays.asList(cardArray);
-            boolean success = true;
-            for (Card card : cardList) {
-                success = success && (Collections.frequency(cardList, card)) == (Collections.frequency(Arrays.asList(cards), card));
-            }
-            if (success) {
-                return success;
-            }
-
-        }
-        return false;
-
     }
 
     @Override
