@@ -56,7 +56,7 @@ public class AttackerDialog extends javax.swing.JDialog {
         declare.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PlayAudio.play("sounds/tank.wav");
+                PlayAudio.play("src/resources/sounds/tank.wav");
                 game.setAttackerArmies((int) attackerArmies.getValue());
                 attackerDialog.setVisible(false);
                 game.declareAttack();                

@@ -22,15 +22,15 @@ import java.util.logging.Logger;
 public class FileManager {
 
     private static volatile FileManager instance;
-    private final String PLAYERS = "files/players.txt";
+    private final String PLAYERS = "src/resources/files/players.txt";
     // url file che fa da db per le info dei giocatori
-    private final String COUNTRIES = "files/countries.txt";
-    private final String MISSIONS = "files/missions.txt";
-    private final String LABELS = "files/countriesLabels.txt";
-    private final String COLORS = "files/countriesColors.txt";
-    private final String TRIS = "files/bonusTris.txt";
-    private final String VOCABULARY = "files/vocabulary";
-    private final String INFO = "files/info";
+    private final String COUNTRIES = "src/resources/files/countries.txt";
+    private final String MISSIONS = "src/resources/files/missions.txt";
+    private final String LABELS = "src/resources/files/countriesLabels.txt";
+    private final String COLORS = "src/resources/files/countriesColors.txt";
+    private final String TRIS = "src/resources/files/bonusTris.txt";
+    private final String VOCABULARY = "src/resources/files/vocabulary";
+    private final String INFO = "src/resources/files/info";
 
     private FileManager() {
     }

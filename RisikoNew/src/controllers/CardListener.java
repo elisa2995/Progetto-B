@@ -29,7 +29,7 @@ public class CardListener extends MouseInputAdapter {
             JLabel label = (JLabel) e.getComponent();
             cardPanel.getCardsPane().setLayer(label, 1);
             String card = (String) label.getClientProperty("name");
-            label.setIcon(new ImageIcon("images/" + card + "_BLACK.png"));
+            label.setIcon(new ImageIcon("src/resources/images/" + card + "_BLACK.png"));
             Point p = label.getLocation();
             Point p1 = new Point(p.x, HIGH_Y);
             label.setLocation(p1);
@@ -43,7 +43,7 @@ public class CardListener extends MouseInputAdapter {
             JLabel label = (JLabel) e.getComponent();
             cardPanel.getCardsPane().setLayer(label, cardPanel.getLabelLayer(label));
             String card = (String) label.getClientProperty("name");
-            label.setIcon(new ImageIcon("images/" + card + ".png"));
+            label.setIcon(new ImageIcon("src/resources/images/" + card + ".png"));
             Point p = label.getLocation();
             Point p1 = new Point(p.x, LOW_Y);
             label.setLocation(p1);
@@ -58,7 +58,7 @@ public class CardListener extends MouseInputAdapter {
             if (!(boolean) label.getClientProperty("chosen")) {
                 if (cardPanel.getNrChosenCards() < 3) {
                     String card = (String) label.getClientProperty("name");
-                    label.setIcon(new ImageIcon("images/" + card + "_GREEN.png"));
+                    label.setIcon(new ImageIcon("src/resources/images/" + card + "_GREEN.png"));
                     CardAnimation animation = new CardAnimation(cardPanel, label.getX(), HIGH_Y, getToX(label), label);
                     animation.start();
                     cardPanel.updateUI();
@@ -67,7 +67,7 @@ public class CardListener extends MouseInputAdapter {
                 }
             } else {
                 String card = (String) label.getClientProperty("name");
-                label.setIcon(new ImageIcon("images/" + card + "_GREEN.png"));
+                label.setIcon(new ImageIcon("src/resources/images/" + card + "_GREEN.png"));
                 CardAnimation animation = new CardAnimation(cardPanel, label.getX(), HIGH_Y, getToX(label), label);
                 animation.start();
                 cardPanel.updateUI();

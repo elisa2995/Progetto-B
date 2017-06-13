@@ -54,7 +54,7 @@ public class DiceDialog extends javax.swing.JDialog {
      * dadi
      */
     public void showDice() {
-        String imagePath = "files/images/dice/";
+        String imagePath = "src/resources/images/dice/";
         ImageIcon icon;
 
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

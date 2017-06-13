@@ -22,7 +22,7 @@ public class CardAnimation extends Thread {
     @Override
     public void run() {
 
-        PlayAudio.play("sounds/moveCard.wav");
+        PlayAudio.play("src/resources/sounds/moveCard.wav");
 
         cardPanel.switchCard(card);
         while (x != toX) {

@@ -65,7 +65,7 @@ public class GUI extends JFrame implements GameObserver {
     public GUI(List<PlayerInfo> players) {
         initBackground();
         initComponents();
-        labelMap.setIcon(new ImageIcon("images/risiko.png"));
+        labelMap.setIcon(new ImageIcon("src/resources/images/risiko.png"));
         countryLabelMap = new HashMap<>();
         initColorCountryNameMap();
         init(players);
@@ -74,7 +74,7 @@ public class GUI extends JFrame implements GameObserver {
     private void initBackground() {
         BufferedImage backgroundImage;
         try {
-            backgroundImage = ImageIO.read(new File("images/background.jpg"));
+            backgroundImage = ImageIO.read(new File("src/resources/images/background.jpg"));
             this.setContentPane(new BackgroundPane(backgroundImage));
         } catch (IOException ex) {
             System.out.println("loginBackground.png not found");
@@ -624,7 +624,7 @@ public class GUI extends JFrame implements GameObserver {
 
         MoveDialog moveDialog = new MoveDialog(game, ar.getAttackerCountryName(), ar.getDefenderCountryName(), info, ar.getMaxArmiesAttacker());
         moveDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
-        PlayAudio.play("sounds/conquest.wav");
+        PlayAudio.play("src/resources/sounds/conquest.wav");
         moveDialog.setVisible(true);
     }
 
@@ -673,7 +673,7 @@ public class GUI extends JFrame implements GameObserver {
         label.setForeground(Color.WHITE);
         label.setText(Integer.toString(countryInfo.getArmies()));
         label.setHorizontalTextPosition(JLabel.CENTER);
-        label.setIcon(new ImageIcon("files/images/labelCountry/" + countryInfo.getPlayerColor() + "label1.png"));
+        label.setIcon(new ImageIcon("src/resources/images/labelCountry/" + countryInfo.getPlayerColor() + "label1.png"));
 
         repaint(label);
     }
@@ -699,7 +699,7 @@ public class GUI extends JFrame implements GameObserver {
     public void updateOnDrawnCard(String cardName, boolean isArtificialPlayer) {
         if (!isArtificialPlayer) {
             JOptionPane.showMessageDialog(null, "Complimenti,\nhai pescato questa carta.", null,
-                    JOptionPane.INFORMATION_MESSAGE, new ImageIcon("images/" + cardName + ".png"));
+                    JOptionPane.INFORMATION_MESSAGE, new ImageIcon("src/resources/images/" + cardName + ".png"));
         }
     }
 
