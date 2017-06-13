@@ -5,6 +5,7 @@
  */
 package risk.phase;
 
+import risiko.map.Country;
 import risiko.map.RisikoMap;
 
 /**
@@ -21,6 +22,10 @@ public class ReinforcePhase extends Phase{
     @Override
     public String toString(){
         return "REINFORCE";
+    }
+
+    public void reinforce(Country country) {
+        map.reinforce(country);
     }
     
 }

@@ -4,7 +4,7 @@ import risiko.map.RisikoMap;
 
 public abstract class Phase implements Comparable<Phase>{
 
-    protected static final int CARD_INDEX = 0, REINFORCE_INDEX = 1, FIGHT_INDEX = 2, MOVE_INDEX = 3;
+    public static final int CARD_INDEX = 0, REINFORCE_INDEX = 1, FIGHT_INDEX = 2, MOVE_INDEX = 3;
     protected int index;
     protected RisikoMap map;
 

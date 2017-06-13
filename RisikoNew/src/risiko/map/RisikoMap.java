@@ -427,6 +427,12 @@ public class RisikoMap {
     public void removeArmies(Country country, int nArmies) {
         country.removeArmies(nArmies);
     }
+    
+    public void reinforce(Country country){
+        country.incrementArmies();
+        getPlayerByCountry(country).decrementBonusArmies();
+        
+    }
 
     public boolean canAttackFromCountry(Country country) {
         boolean canAttack = false;

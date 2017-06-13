@@ -50,6 +50,7 @@ public class Game extends Observable implements GameProxy {
         this.activePlayer = null;
         this.deck = new BonusDeck();
         this.map = new RisikoMap();
+        this.phaseIndex = 1;
         this.addObserver(observer);
         initPhases();
         init(playersInfo);
@@ -129,7 +130,6 @@ public class Game extends Observable implements GameProxy {
         notifyCountriesAssignment(buildAllCountryInfo());
         activePlayer = players.get(new Random().nextInt(players.size()));
         map.computeBonusArmies(activePlayer);
-        phaseIndex = 1;
         notifyPhaseChange(buildPlayerInfo(activePlayer), phase.toString());
         startArtificialPlayersThreads();
     }
@@ -189,22 +189,43 @@ public class Game extends Observable implements GameProxy {
 
         }
     }
+    // ----------------------- Reinforce ------------------------------------
+    /**
+     * Reinforces the country whose name is <code>countryName</code> with one
+     * army. When the active player runs out of bonus armies, the phase is
+     * changed.
+     *
+     * @param countryName
+     * @param aiCaller
+     */
+    @Override
+    public void reinforce(String countryName, ArtificialPlayer... aiCaller) {
 
-    private CardPhase getCardPhase() {
-        return (CardPhase) phases[0];
+        getReinforcePhase().reinforce(map.getCountryByName(countryName));
+
+        notifyReinforce(activePlayer.getBonusArmies());
+
+        if (activePlayer.getBonusArmies() == 0) {
+            try {
+                nextPhase();
+            } catch (PendingOperationsException ex) {
+            }
+        }
+
+        notifyArmiesChange(buildCountryInfo(map.getCountryByName(countryName)));
     }
 
-    private ReinforcePhase getReinforcePhase() {
-        return (ReinforcePhase) phases[1];
+    /**
+     * Checks wheter the active player has at least 1 bonus army.
+     *
+     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo
+     * @return
+     */
+    @Override
+    public boolean canReinforce(ArtificialPlayer... aiCaller) {
+        return activePlayer.getBonusArmies() > 0;
     }
-
-    private FightPhase getFightPhase() {
-        return (FightPhase) phases[2];
-    }
-
-    private MovePhase getMovePhase() {
-        return (MovePhase) phases[3];
-    }
+    
 
     //------------------------  Attack  ------------------------------------//
     /**
@@ -388,46 +409,25 @@ public class Game extends Observable implements GameProxy {
 
     }
 
-    // ----------------------- Reinforce ------------------------------------
-    /**
-     * Reinforces the country whose name is <code>countryName</code> with one
-     * army. When the active player runs out of bonus armies, the phase is
-     * changed.
-     *
-     * @param countryName
-     * @param aiCaller
-     */
-    @Override
-    public void reinforce(String countryName, ArtificialPlayer... aiCaller) {
-
-        Country country = map.getCountryByName(countryName);
-        activePlayer.decrementBonusArmies();
-        map.addArmies(country, 1);
-
-        notifyReinforce(activePlayer.getBonusArmies());
-
-        if (activePlayer.getBonusArmies() == 0) {
-            try {
-                nextPhase();
-            } catch (PendingOperationsException ex) {
-            }
-        }
-
-        notifyArmiesChange(buildCountryInfo(country));
-    }
-
-    /**
-     * Checks wheter the active player has at least 1 bonus army.
-     *
-     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo
-     * @return
-     */
-    @Override
-    public boolean canReinforce(ArtificialPlayer... aiCaller) {
-        return activePlayer.getBonusArmies() > 0;
-    }
-
     //--------------------- Gestione fasi / turni --------------------------//
+    
+    
+    private CardPhase getCardPhase() {
+        return (CardPhase) phases[Phase.CARD_INDEX];
+    }
+
+    private ReinforcePhase getReinforcePhase() {
+        return (ReinforcePhase) phases[Phase.REINFORCE_INDEX];
+    }
+
+    private FightPhase getFightPhase() {
+        return (FightPhase) phases[Phase.FIGHT_INDEX];
+    }
+
+    private MovePhase getMovePhase() {
+        return (MovePhase) phases[Phase.MOVE_INDEX];
+    }
+    
     /**
      * Changes the phase. If it's the last one, passes the turn.
      *

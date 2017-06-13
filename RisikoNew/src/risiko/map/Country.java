@@ -43,6 +43,10 @@ public class Country implements Comparable<Country>{
         this.armies+=armies;
     }
     
+    public void incrementArmies(){
+        this.armies++;
+    }
+    
     public boolean isConquered(){
         return (armies==0);
     }
