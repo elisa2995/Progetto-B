@@ -23,68 +23,61 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel1" min="-2" pref="129" max="-2" attributes="0"/>
-                          <Component id="attackerLabel" min="-2" pref="180" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="dice1R" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="dice3R" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="dice2R" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="cone2" alignment="0" pref="232" max="32767" attributes="0"/>
-                                  <Component id="cone1" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="cone3" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="dice1R" alignment="1" max="32767" attributes="0"/>
+                          <Component id="dice3R" alignment="0" max="32767" attributes="0"/>
+                          <Component id="dice2R" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="defenderLabel" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="dice3B" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
-                              <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="dice2B" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="dice1B" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
-                              </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="cone2" alignment="0" pref="232" max="32767" attributes="0"/>
+                          <Component id="cone1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="cone3" alignment="1" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="dice3B" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
+                          <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="dice2B" alignment="0" max="32767" attributes="0"/>
+                              <Component id="dice1B" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jLabel2" alignment="0" pref="180" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
+                      <Component id="attackerCountryLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
+                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="89" max="32767" attributes="0"/>
+                      <Component id="defenderCountryLabel" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
                       <Component id="exit" min="-2" pref="149" max="-2" attributes="0"/>
-                      <EmptySpace pref="293" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="reattack" min="-2" pref="149" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabel1" min="-2" pref="27" max="-2" attributes="0"/>
-                  <Component id="jLabel2" min="-2" pref="27" max="-2" attributes="0"/>
-              </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="attackerLabel" min="-2" pref="25" max="-2" attributes="0"/>
-                  <Component id="defenderLabel" min="-2" pref="25" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="attackerCountryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="defenderCountryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="dice1R" min="-2" pref="110" max="-2" attributes="0"/>
+                          <Component id="dice1R" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="37" pref="37" max="-2" attributes="0"/>
                               <Component id="cone1" min="-2" pref="62" max="-2" attributes="0"/>
@@ -92,7 +85,7 @@
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="dice2R" min="-2" pref="110" max="-2" attributes="0"/>
+                          <Component id="dice2R" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                               <Component id="cone2" min="-2" pref="62" max="-2" attributes="0"/>
@@ -100,7 +93,7 @@
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="dice3R" min="-2" pref="110" max="-2" attributes="0"/>
+                          <Component id="dice3R" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                               <Component id="cone3" min="-2" pref="62" max="-2" attributes="0"/>
@@ -113,29 +106,38 @@
                       <Component id="dice2B" min="-2" pref="110" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="dice3B" min="-2" pref="110" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="27" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="exit" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                   <Component id="reattack" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="attackerLabel">
-    </Component>
-    <Component class="javax.swing.JLabel" name="defenderLabel">
-    </Component>
-    <Component class="javax.swing.JLabel" name="cone3">
+    <Component class="javax.swing.JLabel" name="defenderCountryLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Stati UNiti Occidentali"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="cone2">
     </Component>
+    <Component class="javax.swing.JLabel" name="attackerCountryLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Stati UNiti Occidentali"/>
+      </Properties>
+    </Component>
     <Component class="javax.swing.JLabel" name="dice1B">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel4">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="VS"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="dice3B">
     </Component>
@@ -148,16 +150,6 @@
     <Component class="javax.swing.JLabel" name="dice2R">
     </Component>
     <Component class="javax.swing.JLabel" name="cone1">
-    </Component>
-    <Component class="javax.swing.JLabel" name="jLabel1">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Attaccante:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="jLabel2">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Difensore:"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="exit">
       <Properties>
@@ -174,6 +166,8 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reattackActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="cone3">
     </Component>
   </SubComponents>
 </Form>

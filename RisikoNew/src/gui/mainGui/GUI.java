@@ -52,7 +52,7 @@ public class GUI extends JFrame implements GameObserver {
     private GameProxy game;
     private Map<Color, String> colorCountryNameMap;
     private final Map<String, JLabel> countryLabelMap;
-    private DefenseDialog defenseArmies;
+    private DefenseDialog defenseDialog;
     private AttackerDialog attackerDialog;
     private DiceDialog diceDialog;
     private LabelMapListener labelMapListener;
@@ -113,7 +113,7 @@ public class GUI extends JFrame implements GameObserver {
         labelMapListener.setGame(game);
 
         // Dialogs
-        defenseArmies = new DefenseDialog(game, this, true);
+        defenseDialog = new DefenseDialog(game, this, true);
         attackerDialog = new AttackerDialog(game, this, true);
         attackerDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
         diceDialog = new DiceDialog(game, this, true);
@@ -523,8 +523,6 @@ public class GUI extends JFrame implements GameObserver {
 
         textAreaInfo.setText("Clicca su un territorio nemico confinante per attaccarlo");
         attackerDialog.setMaxArmies(attackerInfo.getMaxArmies());
-        attackerDialog.setAttackerCountry(attackerInfo.getName(), attackerInfo.getPlayerColor());
-
     }
 
     /**
@@ -545,7 +543,11 @@ public class GUI extends JFrame implements GameObserver {
             textAreaInfo.setText("Clicca su un tuo territorio per sceglierlo come attaccante");
         }
 
-        defenseArmies.setMaxArmies(fightingCountries[1].getMaxArmies());
+        defenseDialog.setMaxArmies(fightingCountries[1].getMaxArmies());
+        defenseDialog.setMaxArmies(fightingCountries[1].getMaxArmies());
+        defenseDialog.setFightingLabels(attacker.getName(), attacker.getPlayerColor(), defender.getName(), defender.getPlayerColor());
+        attackerDialog.setFightingLabels(attacker.getName(), attacker.getPlayerColor(), defender.getName(), defender.getPlayerColor());
+        diceDialog.setFightingLabels(attacker.getName(), attacker.getPlayerColor(), defender.getName(), defender.getPlayerColor());
 
         if (reattack) {
             this.attackerDialog.setVisible(true);
@@ -585,7 +587,7 @@ public class GUI extends JFrame implements GameObserver {
         }
 
         if (!ar.hasConquered()) {
-            defenseArmies.setMaxArmies(ar.getMaxArmiesDefender());
+            defenseDialog.setMaxArmies(ar.getMaxArmiesDefender());
         }
 
         if (ar.hasConquered() || !ar.canAttackFromCountry()) {
@@ -599,11 +601,9 @@ public class GUI extends JFrame implements GameObserver {
      * @param ar
      */
     private void showDiceDialog(AttackResultInfo ar) {
-        diceDialog.setAttackerCountryName(ar.getAttackerCountryName());
         diceDialog.setArtificialAttacker(ar.isAttackerArtificial());
         diceDialog.setIsConquered(ar.hasConquered());
         diceDialog.setCanAttackFromCountry(ar.canAttackFromCountry());
-        diceDialog.setDefenderCountryName(ar.getDefenderCountryName());
         diceDialog.updateDice(ar.getDice()[0], ar.getDice()[1]);
         diceDialog.showDice();
         diceDialog.setVisible(true);
@@ -721,8 +721,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnDefend(CountryInfo defenderCountryInfo) {
         if (!defenderCountryInfo.hasArtificialOwner()) {
-            defenseArmies.setDefenderCountryName(defenderCountryInfo.getName());
-            this.defenseArmies.setVisible(true);
+            this.defenseDialog.setVisible(true);
         }
     }
 
