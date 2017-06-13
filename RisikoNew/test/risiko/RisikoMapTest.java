@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package risiko;
 
 import risiko.map.Country;
@@ -15,15 +10,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import risiko.map.Continent;
 import risiko.players.Player;
 
-/**
- *
- * @author Elisa
- */
 public class RisikoMapTest {
 
-    private final int N_COUNTRIES=42;
+    private final int N_COUNTRIES = 42;
     private List<Player> players;
     private RisikoMap instance;
 
@@ -60,20 +52,20 @@ public class RisikoMapTest {
         instance.assignMissionToPlayers(players);
         players.stream().forEach((player) -> {
             assertNotNull(player.getMission());
-        });        
+        });
     }
-    
+
     /**
      * Test of assignCountriesToPlayers method, of class RisikoMap.
      */
     @Test
     public void testAssignCountriesToPlayers() {
         System.out.println("assignCountriesToPlayers");
-        instance.assignCountriesToPlayers(players);        
+        instance.assignCountriesToPlayers(players);
         players.stream().forEach((player) -> {
             assertNotNull(instance.getMyCountries(player));
         });
-        
+
     }
 
     /**
@@ -83,41 +75,42 @@ public class RisikoMapTest {
     public void testGetCountriesList() {
         System.out.println("getCountriesList");
         List<Country> result = instance.getCountriesList();
-        assertNotNull(result);   
+        assertNotNull(result);
         assertEquals(result.size(), N_COUNTRIES);
     }
 
-//    /**
-//     * Test of getPlayerByCountry method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testGetPlayerByCountry() {
-//        System.out.println("getPlayerByCountry");
-//        Country country = null;
-//        RisikoMap instance = new RisikoMap();
-//        Player expResult = null;
-//        Player result = instance.getPlayerByCountry(country);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of computeBonusArmies method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testComputeBonusArmies() {
-//        System.out.println("computeBonusArmies");
-//        Player player = null;
-//        RisikoMap instance = new RisikoMap();
-//        instance.computeBonusArmies(player);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of hasConqueredContinent method, of class RisikoMap.
-//     */
+    /**
+     * Test of getPlayerByCountry method, of class RisikoMap.
+     */
+    @Test
+    public void testGetPlayerByCountry() {
+        instance.initGame(players);
+        System.out.println("getPlayerByCountry");
+        for (Country country : instance.getCountriesList()) {
+            Player owner = instance.getPlayerByCountry(country);
+            assertTrue(instance.getMyCountries(owner).contains(country));
+        }
+    }
+
+    /**
+     * Test of computeBonusArmies method, of class RisikoMap.
+     */
+    @Test
+    public void testComputeBonusArmies() {
+        instance.initGame(players);
+        System.out.println("computeBonusArmies");
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+            instance.computeBonusArmies(player);
+            int bonusArmies = player.getBonusArmies();
+            int nrCountries = instance.getMyCountries(player).size();
+            assertTrue((bonusArmies) * 3 - nrCountries < 3);
+        }
+    }
+
+    /**
+     * Test of hasConqueredContinent method, of class RisikoMap.
+     */
 //    @Test
 //    public void testHasConqueredContinent() {
 //        System.out.println("hasConqueredContinent");
@@ -131,35 +124,47 @@ public class RisikoMapTest {
 //        fail("The test case is a prototype.");
 //    }
 //
-//    /**
-//     * Test of getContinentByCountry method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testGetContinentByCountry() {
-//        System.out.println("getContinentByCountry");
-//        Country country = null;
-//        RisikoMap instance = new RisikoMap();
-//        Continent expResult = null;
-//        Continent result = instance.getContinentByCountry(country);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of getMyCountries method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testGetMyCountries() {
-//        System.out.println("getMyCountries");
-//        Player player = null;
-//        RisikoMap instance = new RisikoMap();
-//        List<Country> expResult = null;
-//        List<Country> result = instance.getMyCountries(player);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+    /**
+     * Test of getContinentByCountry method, of class RisikoMap.
+     */
+    @Test
+    public void testGetContinentByCountry() {
+        System.out.println("getContinentByCountry");
+        instance.initGame(players);
+        String[] countries = {"Alaska","Venezuela", "Ucraina","Madagascar","India","Indonesia"};
+        String[] continents = {"Nord America", "Sud America", "Europa", "Africa", "Asia", "Oceania"};
+        int i = 0;
+        for(String countryName: countries){
+            Country country = instance.getCountryByName(countryName);
+            Continent continent = instance.getContinentByCountry(country);
+            assertEquals(continents[i], continent.getName());
+            i++;
+        }
+    }
+
+    /**
+     * Test of getMyCountries method, of class RisikoMap.
+     */
+    @Test
+    public void testGetMyCountries() {
+        System.out.println("getMyCountries");
+        List<Player> newPlayers = (List<Player>)((ArrayList)players).clone();
+        for(int i =0; i<4; i++){
+            newPlayers.add(new Player("", ""));
+            instance.initGame(newPlayers);
+            int total =0;
+            for(Player player : newPlayers){
+                List<Country> myCountries = instance.getMyCountries(player);
+                total+=myCountries.size();
+                assertNotNull(myCountries);
+                for(Country country : myCountries){
+                    assertNotNull(country);
+                }
+                assertTrue(Math.abs(myCountries.size()-N_COUNTRIES/(newPlayers.size()))<=1);
+            }
+            assertEquals(N_COUNTRIES, total);
+        }
+    }
 //
 //    /**
 //     * Test of getNeighbors method, of class RisikoMap.
