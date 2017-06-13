@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package risk.phase;
+package risiko.phase;
 
 import risiko.map.Country;
 import risiko.map.RisikoMap;

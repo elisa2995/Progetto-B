@@ -1,4 +1,4 @@
-package risk.phase;
+package risiko.phase;
 
 import risiko.map.Country;
 import risiko.map.RisikoMap;

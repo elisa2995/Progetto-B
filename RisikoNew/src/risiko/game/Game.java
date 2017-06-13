@@ -1,5 +1,6 @@
 package risiko.game;
 
+import risiko.phase.*;
 import org.reflections.Reflections;
 import exceptions.FileManagerException;
 import risiko.players.PlayerType;
@@ -10,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import services.FileManager;
 import java.util.ListIterator;
@@ -22,13 +22,11 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import risiko.equipment.BonusDeck;
 import risiko.equipment.Card;
 import risiko.map.Country;
 import risiko.map.RisikoMap;
 import risiko.players.ArtificialPlayerSettings;
 import risiko.players.LoggedPlayer;
-import risk.phase.*;
 import shared.AttackResultInfo;
 import shared.CountryInfo;
 import shared.PlayerInfo;
@@ -206,7 +204,7 @@ public class Game extends Observable implements GameProxy {
      *
      * @param aiCaller
      */
-    private void drawBonusCard(ArtificialPlayer... aiCaller) {
+    private void drawBonusCard() {
         getCardsPhase().drawCard(activePlayer);
         notifyDrawnCard(getLastCardDrawn(), activePlayer instanceof ArtificialPlayer);
     }
@@ -229,7 +227,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Returns the value of the tris.
+     * Returns the bonus awarded for the tris.
      *
      * @param cardNames
      * @return
@@ -284,7 +282,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Returns true is the player can play the tris represented by
+     * Returns true if the player can play the tris represented by
      * <code>cards</code>.
      *
      * @param cards
@@ -639,7 +637,7 @@ public class Game extends Observable implements GameProxy {
         }
 
         if (phases[phaseIndex].toString().equals("FIGHT") && activePlayer.hasConqueredACountry()) {
-            this.drawBonusCard(aiCaller);
+            this.drawBonusCard();
         }
 
         phaseIndex++;

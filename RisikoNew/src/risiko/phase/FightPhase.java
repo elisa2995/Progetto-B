@@ -1,4 +1,4 @@
-package risk.phase;
+package risiko.phase;
 
 import risiko.equipment.Dice;
 import risiko.map.Country;
