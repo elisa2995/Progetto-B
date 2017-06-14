@@ -296,6 +296,7 @@ public interface GameProxy {
      * territori puo attaccare
      *
      * @param player il giocatore che fa la richiesta
+     * @param aiCaller
      * @return i territori posseduti da player
      */
     public String[] getAllAttackers(ArtificialPlayer player, ArtificialPlayer... aiCaller);

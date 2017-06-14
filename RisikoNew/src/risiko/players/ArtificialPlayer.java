@@ -86,7 +86,6 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         String[] myCountries = game.getMyCountries(this);
         int from = new Random().nextInt(myCountries.length);
         int to = new Random().nextInt(myCountries.length);
-
         if (from != to) {
             int max = game.getMaxArmiesForMovement(myCountries[from], this);
             if (max > 0) {
@@ -133,10 +132,10 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     private synchronized void randomAttack() {
         int i = setting.getBaseAttack();
 
-        while (i > 0 && game.getAllAttackers(this).length != 0 ) {
+        while (i > 0 && game.getAllAttackers(this).length != 0) {
             if (canAttack) {
-                randomSingleAttack();
-                i--;
+            randomSingleAttack();
+            i--;
             }
         }
     }
@@ -173,9 +172,6 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                 ex.printStackTrace();
             }
 
-            //set armate attacco
-            //int nrA = new Random().nextInt(game.getMaxArmies(myCountries[index], true, this));
-            //game.setAttackerArmies(nrA, this);
             if (maxArmiesSet) { // Perché?
                 int nrA = new Random().nextInt(maxArmiesAttack) + 1;
                 game.setAttackerArmies(nrA, this);

@@ -47,7 +47,7 @@ public class CardPanel extends JPanel {
             }
         });
         this.add(playTris);
-        playTris.setBounds(1015, 100, 250, 50);
+        playTris.setBounds(1015, 100, 125, 50);
     }
 
     /**

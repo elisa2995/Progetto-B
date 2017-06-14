@@ -75,7 +75,7 @@ public class CardsPhase extends Phase {
      */
     public boolean isAValidTris(Card[] chosenCards) {
         for (Card[] validCardArray : deck.getTris().keySet()) {
-            boolean success = false;
+            boolean success = true;
             for (Card card : validCardArray) {
                 /**
                  * The tris is valid if and only each cards appears the same

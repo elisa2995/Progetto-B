@@ -1,21 +1,25 @@
 Urgenti: 
-- uscita dal gioco -> da giocatore normale ad artificiale (ALESSANDRO?)
+- uscita dal gioco -> da giocatore normale ad artificiale (ALESSANDRO?) mettere a posto e mettere in bottone sulla gui
 - DOCUMENTAZIONE (javaDoc) (possiamo spartirci le classi da documentare..?)
 - testare qualche classe (tipo player e map ... o qualsiasi altra cosa - se nessuno ha voglia di farlo possiamo spartirci i metodi).
-- spostare le immagini/files ecc in resources e cambiare i metodi di lettura/scrittura accordingly 
-- Metti sia nella finestra dell'attaccante che nella finestra del difensore entrambi i nomi con i colori (ANDREA)
 - immagine per cambio fase che appare e scompare (servono solo le immagini, il codice lo abbiamo)
 - rendere tutto non resizable
-- non si pu� chiudere la finestra di move (ANDREA)
-- Spostare game su un thread diverso rispetto alla gui: 
-( idea : nel main si crea game (costruttore senza parametri) e startGameGUI (con invokelater), quando 
-startGameGUI ha i parametri per game, glieli setta. Il contenuto di tutti gli update va messo nell'EventQueue
-con invokeLater ( EventQueue.invokeLater(new Runnable() {....}) riga 56 GraphicsJLabel) 
-devono essere messi in invokelater perch� a questo punto appartengono a thread diversi. )
 - Visualizzazione della classifica
-x Cambiare nomi images (keySensitive)
-- Settings artificial player
 - usa funzioni fileManager per UserDialog(ELISA)
+- classe cache
+- cono bianco per spostamento
+- settings giocatore artificiale da mettere a posto
+- mettere la funzionalità di termina partina nella x della gui
+- mettere invokeLater negli update
+- nel move del giocatore artificiale mettere che può spostare solo da country confinanti
+
+DIVISIONE TEST(4 a testa): 
+-andrea
+-alessandro
+-federico
+-elisa
+-carolina
+
 
 In un'altra vita : 
 - fare una classe che si occupi di trasformare in stringhe gli oggetti e viceversa (per la comunicazione game-gui)
@@ -36,3 +40,16 @@ x Metti le finestre grandi uguali per attacco
 x finire la visualizzazione delle carte (FEDERICO)
 x sistemare startgamegui - ELISA
 x Refactoring comunicazione observable - observer con classi dedicate - CAROLINA
+x Cambiare nomi images (keySensitive)
+x discutere se togliere cono da spostamento
+x problema moveDialog la dialog non si può chiudere SOLO quando è dopo l'attacco
+x Spostare game su un thread diverso rispetto alla gui: 
+( idea : nel main si crea game (costruttore senza parametri) e startGameGUI (con invokelater), quando 
+startGameGUI ha i parametri per game, glieli setta. Il contenuto di tutti gli update va messo nell'EventQueue
+con invokeLater ( EventQueue.invokeLater(new Runnable() {....}) riga 56 GraphicsJLabel) 
+devono essere messi in invokelater perch� a questo punto appartengono a thread diversi. )
+x non si pu� chiudere la finestra di move (ANDREA)
+x spostare le immagini/files ecc in resources e cambiare i metodi di lettura/scrittura accordingly 
+x Metti sia nella finestra dell'attaccante che nella finestra del difensore entrambi i nomi con i colori (ANDREA)
+x Introdotta legenda giocatori
+x Il bottone nextPhase cambia nome e visibilità in funzione della fase

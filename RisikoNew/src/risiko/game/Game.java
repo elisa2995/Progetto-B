@@ -83,7 +83,7 @@ public class Game extends Observable implements GameProxy {
      */
     private void initPhases() {
         Set<Class<? extends Phase>> subTypes = new Reflections().getSubTypesOf(Phase.class);
-        
+
         phases = new Phase[subTypes.size()];
         int i = 0;
         for (Class<? extends Phase> cls : subTypes) {
@@ -102,7 +102,7 @@ public class Game extends Observable implements GameProxy {
      * random player as active player.
      */
     private void init(List<PlayerInfo> playersInfo) {
-        
+
         buildPlayers(playersInfo);
         map.initGame(players);
         notifyCountriesAssignment(buildAllCountryInfo());
@@ -145,27 +145,30 @@ public class Game extends Observable implements GameProxy {
      * @param playersInfo
      */
     private void buildPlayers(List<PlayerInfo> playersInfo) {
-        
+
+        Player player;
         for (PlayerInfo info : playersInfo) {
             switch (PlayerType.valueOf(info.getType())) {
                 case ARTIFICIAL:
-                    this.players.add(new ArtificialPlayer(info.getName(), info.getColor(), (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
+                    player = new ArtificialPlayer(info.getName(), info.getColor(), (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
                             new Class<?>[]{GameProxy.class},
-                            new GameInvocationHandler(this))));
+                            new GameInvocationHandler(this)));
+                    this.players.add(player);
                     break;
                 case NORMAL:
-                    Player player = new Player(info.getName(), info.getColor());
-                    /*for (int j = 0; j < 4; j++) {
-                        RICORDATI
-                        player.addCard(deck.drawCard());
-                    }*/
+                    player = new Player(info.getName(), info.getColor());
                     this.players.add(player);
                     break;
                 case LOGGED:
-                    this.players.add(new LoggedPlayer(info.getName(), info.getColor()));
+                    player = new LoggedPlayer(info.getName(), info.getColor());
+                    this.players.add(player);
                     break;
+                default:
+                    player = new Player("","");
             }
-            
+            for (int j = 0; j < 4; j++) {
+                getCardsPhase().drawCard(player);
+            }
         }
     }
 
@@ -527,10 +530,10 @@ public class Game extends Observable implements GameProxy {
         getMovePhase().clear();
         notifySetFromCountry(null);
     }
-    
+
     @Override
     public synchronized String getFromCountryName(ArtificialPlayer... aiCaller) {
-        return (getMovePhase().getFromCountry()==null)? null:getMovePhase().getFromCountry().toString();
+        return (getMovePhase().getFromCountry() == null) ? null : getMovePhase().getFromCountry().toString();
     }
 
     /**
@@ -544,7 +547,7 @@ public class Game extends Observable implements GameProxy {
         getMovePhase().setFromCountry(map.getCountryByName(fromCountryName));
         notifySetFromCountry(fromCountryName);
     }
-    
+
     @Override
     public void setToCountry(String toCountryName, ArtificialPlayer... aiCaller) {
         getMovePhase().setToCountry(map.getCountryByName(toCountryName));
@@ -558,13 +561,10 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void move(/*String fromCountryName, String toCountryName,*/Integer nrArmies, ArtificialPlayer... aiCaller) {
-        /*if (getPhase().equals("FIGHT")) {
-            moveAfterConquest();
-        }*/
         getMovePhase().move(nrArmies);
         notifyArmiesChange(buildCountryInfo(getMovePhase().getToCountry()));
         notifyArmiesChange(buildCountryInfo(getMovePhase().getFromCountry()));
-        
+
         if (getPhase().equals("MOVE")) {
             try {
                 nextPhase();
@@ -572,14 +572,9 @@ public class Game extends Observable implements GameProxy {
             }
         }
     }
-    
-    private void moveAfterConquest() {
-        getMovePhase().setFromCountry(getFightPhase().getAttackerCountry());
-        getMovePhase().setToCountry(getFightPhase().getDefenderCountry());
-    }
+
 
 // </editor-fold>
-
     //--------------------- Gestione fasi / turni --------------------------//
     private CardsPhase getCardsPhase() {
         return (CardsPhase) phases[Phase.CARD_INDEX];
@@ -616,7 +611,7 @@ public class Game extends Observable implements GameProxy {
         if (Phase.getName(phaseIndex).equals("FIGHT") && getFightPhase().isAttackInProgress()) {
             throw new PendingOperationsException("Attacco ancora in corso!");
         }
-        
+
         if (Phase.getName(phaseIndex).equals("FIGHT") && activePlayer.hasConqueredACountry()) {
             this.drawBonusCard();
         }
@@ -727,9 +722,10 @@ public class Game extends Observable implements GameProxy {
     }
 
     @Override
-    public boolean controlMovement(String toCountry, ArtificialPlayer... aiCaller){
+    public boolean controlMovement(String toCountry, ArtificialPlayer... aiCaller) {
         return getMovePhase().controlMovement(map.getCountryByName(toCountry));
     }
+
     //  M E T O D I   P E R   D A R E   I N F O
     /**
      * Controlla se la Country ha armate sufficienti per attaccare (>=2).
@@ -777,10 +773,9 @@ public class Game extends Observable implements GameProxy {
     public synchronized boolean checkCallerIdentity(ArtificialPlayer[] aiCaller) {
         return (aiCaller.length == 0) ? !(activePlayer instanceof ArtificialPlayer) : aiCaller[0].equals(activePlayer);
     }
-    
-    
+
     @Override
-    public boolean checkMyIdentity(ArtificialPlayer[] aiCaller){
+    public boolean checkMyIdentity(ArtificialPlayer[] aiCaller) {
         // Perchè se checkCallerIdenty fallisce non arriva qui.... boh 
         return true;
     }
