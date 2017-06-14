@@ -28,14 +28,14 @@ public class Translator {
      *
      * @param source
      * @param lang
-     * @param backwards
+     * @param reverse
      * @return
      * @throws TranslationException
      */
-    public String translate(String source, String lang, boolean backwards) throws TranslationException {
+    public String translate(String source, String lang, boolean reverse) throws TranslationException {
         try {
-            int index = backwards? 0:1;
-            String row = FileManager.getInstance().getWord(source, lang, backwards);
+            int index = reverse? 0:1;
+            String row = FileManager.getInstance().getWord(source, lang, reverse);
             return row.split("=")[index];
         } catch (FileManagerException ex) {
             throw new TranslationException(ex.getMessage());
