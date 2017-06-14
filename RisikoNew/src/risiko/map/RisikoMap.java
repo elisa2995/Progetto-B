@@ -124,12 +124,13 @@ public class RisikoMap {
             }
         }
     }
-    
+
     /**
      * Initializes the game.
-     * @param players 
+     *
+     * @param players
      */
-    public void initGame(List<Player> players){
+    public void initGame(List<Player> players) {
         assignCountriesToPlayers(players);
         assignMissionToPlayers(players);
     }
@@ -208,9 +209,9 @@ public class RisikoMap {
      * @author Elisa
      */
     public void computeBonusArmies(Player player) {
-        
+
         int bonus = 0;
-        for (Continent continent : continents) {            
+        for (Continent continent : continents) {
             if (ownsContinent(player, continent)) {
                 bonus += continent.getBonus();
             }
@@ -219,43 +220,47 @@ public class RisikoMap {
         bonus += (int) Math.floor(getMyCountries(player).size() / 3);
         player.addBonusArmies(bonus);
     }
-    
+
     /**
      * Ritorna true se il player possiede il continente.
+     *
      * @param player
      * @param continent
-     * @return 
+     * @return
      */
-    private boolean ownsContinent(Player player, Continent continent){
+    private boolean ownsContinent(Player player, Continent continent) {
         return getMyCountries(player).containsAll(continent.getCountries());
     }
-    
+
     /**
-     * Ritorna true se il player dopo la conquiesta della Country 
+     * Ritorna true se il player dopo la conquiesta della Country
      * <code>justConqueredCountry</code> possiede l'intero continente.
+     *
      * @param player
      * @param justConqueredCountry
-     * @return 
+     * @return
      */
-    public boolean hasConqueredContinent(Player player, Country justConqueredCountry){
+    public boolean hasConqueredContinent(Player player, Country justConqueredCountry) {
         return ownsContinent(player, getContinentByCountry(justConqueredCountry));
     }
-    
+
     /**
      * Ritorna il continente a cui appartiene una country.
+     *
      * @param country
-     * @return 
+     * @return
      */
-    public Continent getContinentByCountry(Country country){
-        
-        for(Continent continent: continents){
-            if(continent.containsCountry(country)){
+    public Continent getContinentByCountry(Country country) {
+
+        for (Continent continent : continents) {
+            if (continent.containsCountry(country)) {
                 return continent;
             }
         }
         return null; //non dovrebbe mai arrivarci
-   
+
     }
+
     /**
      * Ritorna una lista dei territori del giocatore
      *
@@ -420,6 +425,11 @@ public class RisikoMap {
     public boolean canAttackFromCountry(Country country) {
         boolean canAttack = false;
         for (Country c : country.getNeighbors()) {
+//            if (countryPlayer.get(c) != countryPlayer.get(country)) {
+//                System.out.println(countryPlayer.get(c) != countryPlayer.get(country));
+//                System.out.println(country.getArmies());
+//            }
+
             canAttack = canAttack || countryPlayer.get(c) != countryPlayer.get(country);
         }
         return canAttack & country.getArmies() > 1;
@@ -447,15 +457,16 @@ public class RisikoMap {
     public String getPlayerColorByCountry(Country country) {
         return getPlayerByCountry(country).getColor();
     }
-    
+
     /**
      * changes the owner of all territories
-     * @param oldOwner previous owner of the territories 
+     *
+     * @param oldOwner previous owner of the territories
      * @param newOwner new owner of the territories
      */
-    public void changeOwner(Player oldOwner, Player newOwner){
-        for(Map.Entry<Country, Player> entry : countryPlayer.entrySet()){
-            if(entry.getValue().equals(oldOwner)){
+    public void changeOwner(Player oldOwner, Player newOwner) {
+        for (Map.Entry<Country, Player> entry : countryPlayer.entrySet()) {
+            if (entry.getValue().equals(oldOwner)) {
                 entry.setValue(newOwner);
             }
         }

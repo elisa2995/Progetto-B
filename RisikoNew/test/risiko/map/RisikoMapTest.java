@@ -1,4 +1,4 @@
-package risiko;
+package risiko.map;
 
 import risiko.map.Country;
 import risiko.map.RisikoMap;
@@ -104,7 +104,7 @@ public class RisikoMapTest {
             instance.computeBonusArmies(player);
             int bonusArmies = player.getBonusArmies();
             int nrCountries = instance.getMyCountries(player).size();
-            assertTrue((bonusArmies) * 3 - nrCountries < 3);
+            assertTrue((bonusArmies) >= nrCountries / 3);
         }
     }
 
@@ -131,10 +131,10 @@ public class RisikoMapTest {
     public void testGetContinentByCountry() {
         System.out.println("getContinentByCountry");
         instance.initGame(players);
-        String[] countries = {"Alaska","Venezuela", "Ucraina","Madagascar","India","Indonesia"};
+        String[] countries = {"Alaska", "Venezuela", "Ucraina", "Madagascar", "India", "Indonesia"};
         String[] continents = {"Nord America", "Sud America", "Europa", "Africa", "Asia", "Oceania"};
         int i = 0;
-        for(String countryName: countries){
+        for (String countryName : countries) {
             Country country = instance.getCountryByName(countryName);
             Continent continent = instance.getContinentByCountry(country);
             assertEquals(continents[i], continent.getName());
@@ -148,19 +148,19 @@ public class RisikoMapTest {
     @Test
     public void testGetMyCountries() {
         System.out.println("getMyCountries");
-        List<Player> newPlayers = (List<Player>)((ArrayList)players).clone();
-        for(int i =0; i<4; i++){
+        List<Player> newPlayers = (List<Player>) ((ArrayList) players).clone();
+        for (int i = 0; i < 4; i++) {
             newPlayers.add(new Player("", ""));
             instance.initGame(newPlayers);
-            int total =0;
-            for(Player player : newPlayers){
+            int total = 0;
+            for (Player player : newPlayers) {
                 List<Country> myCountries = instance.getMyCountries(player);
-                total+=myCountries.size();
+                total += myCountries.size();
                 assertNotNull(myCountries);
-                for(Country country : myCountries){
+                for (Country country : myCountries) {
                     assertNotNull(country);
                 }
-                assertTrue(Math.abs(myCountries.size()-N_COUNTRIES/(newPlayers.size()))<=1);
+                assertTrue(Math.abs(myCountries.size() - N_COUNTRIES / (newPlayers.size())) <= 1);
             }
             assertEquals(N_COUNTRIES, total);
         }
@@ -394,20 +394,49 @@ public class RisikoMapTest {
 //        fail("The test case is a prototype.");
 //    }
 //
-//    /**
-//     * Test of canAttackFromCountry method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testCanAttackFromCountry() {
-//        System.out.println("canAttackFromCountry");
-//        Country country = null;
-//        RisikoMap instance = new RisikoMap();
-//        boolean expResult = false;
-//        boolean result = instance.canAttackFromCountry(country);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+    /**
+     * Test of canAttackFromCountry method, of class RisikoMap.
+     */
+    @Test
+    public void testCanAttackFromCountry() {
+        System.out.println("canAttackFromCountry");
+        boolean result;
+        instance.initGame(players);
+        //Country country = instance.getCountryByName("Ontario");
+        for (Country country : instance.getCountriesList()) {
+            Player player = instance.getPlayerByCountry(country);
+            if (instance.getMyCountries(player).containsAll(country.getNeighbors())) {
+                result = instance.canAttackFromCountry(country);                    
+                assertFalse(result);
+                break;
+            }
+            for (Country c : country.getNeighbors()) {
+                // The neighbor is not a country of the player's
+                if (instance.getPlayerByCountry(c) != player) {
+                    result = instance.canAttackFromCountry(country);
+                    assertTrue(result);
+                    // The country has only 1 army
+                    country.removeArmies(country.getArmies() - 1);
+                    result = instance.canAttackFromCountry(country);
+                    assertFalse(result);
+                    break;
+                }
+
+            }
+            
+
+//            for (Country c : country.getNeighbors()) {
+//                // The neighbor is a country of the player's
+//                if (instance.getPlayerByCountry(c) == instance.getPlayerByCountry(country)) {
+//                    result = instance.canAttackFromCountry(country);
+//                    assertFalse(result);
+//                    break;
+//                }
+//
+//            }
+        }
+
+    }
 //
 //    /**
 //     * Test of getCountryByName method, of class RisikoMap.

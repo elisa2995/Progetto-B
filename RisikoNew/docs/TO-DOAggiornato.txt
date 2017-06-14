@@ -12,6 +12,7 @@ Urgenti:
 - mettere la funzionalità di termina partina nella x della gui
 - mettere invokeLater negli update
 - nel move del giocatore artificiale mettere che può spostare solo da country confinanti
+- mettere la la x del diceDialog
 
 DIVISIONE TEST(4 a testa): 
 -andrea
