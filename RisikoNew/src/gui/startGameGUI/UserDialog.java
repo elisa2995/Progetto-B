@@ -18,10 +18,9 @@ import javax.swing.JOptionPane;
 import services.FileManager;
 
 /**
- * Dialog for registration and login.
- * In the registration mode it allows to register a new loggable player while in
- * the login mode it allow to login
- * 
+ * Dialog for registration and login. In the registration mode it allows to
+ * register a new loggable player while in the login mode it allow to login
+ *
  */
 public class UserDialog extends javax.swing.JDialog {
 
@@ -38,25 +37,24 @@ public class UserDialog extends javax.swing.JDialog {
      * @param playerRows
      * @param isRegistration
      */
-    public UserDialog(StartGameGUI gui,List<PlayerInfoRow> playerRows, boolean isRegistration) {
+    public UserDialog(StartGameGUI gui, List<PlayerInfoRow> playerRows, boolean isRegistration) {
         initComponents();
         this.gui = gui;
-        this.playerRows=playerRows;        
+        this.playerRows = playerRows;
         this.isRegistration = isRegistration;
         setWindowSettings();
         setMode(isRegistration);
     }
-    
-    
+
     /**
-     * It sets the dimensions of the window, the background of <code>commentsText</code>
-     * and the behavior when the window is closed
+     * It sets the dimensions of the window, the background of
+     * <code>commentsText</code> and the behavior when the window is closed
      */
     private void setWindowSettings() {
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
         this.setResizable(false);
-        
+
         commentsText.setBackground(new Color(240, 240, 240));
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -155,8 +153,8 @@ public class UserDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * It registers a new loggable player if all the fields are filled, the inserted passwords matched and 
-     * the username choosen is not already used.
+     * It registers a new loggable player if all the fields are filled, the
+     * inserted passwords matched and the username choosen is not already used.
      *
      * @param evt
      */
@@ -186,11 +184,12 @@ public class UserDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_saveUserButtonActionPerformed
 
     /**
-     * It closes the dialog and makes the gui visible again; if the closing operation is done
-     * after an attempt of login, it resets the type of the player
+     * It closes the dialog and makes the gui visible again; if the closing
+     * operation is done after an attempt of login, it resets the type of the
+     * player
      */
     private void closeDialog() {
-        if(!isRegistration){
+        if (!isRegistration) {
             playerRows.get(index).setType("Normale");
         }
         this.dispose();
@@ -199,52 +198,33 @@ public class UserDialog extends javax.swing.JDialog {
     }
 
     /**
-     * It insertes in <code>playerRow</code> a logged player if 
-     * the player is not already logged and the inserted username and password
-     * are correct
+     * It insertes in <code>playerRow</code> a logged player if the player is
+     * not already logged and the inserted username and password are correct
      *
      * @param evt
      */
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        String url = "files/players.txt";
         String username = usernameText.getText();
         String password = String.valueOf(passwordText.getPassword());
         if (checkUsername(username)) {
-            try (BufferedReader br = new BufferedReader(new FileReader(url))) {
-                String line;
-
-                while ((line = br.readLine()) != null) {
-                    String[] tmp = line.split(";");
-                    byte[] encryptedBytes = tmp[1].getBytes();
-                    byte[] decryptedBytes = Base64.getDecoder().decode(encryptedBytes);
-                    String decryptedString = new String(decryptedBytes, "UTF-8");
-                    if (tmp[0].equals(username) && decryptedString.equals(password)) {
-                        JOptionPane.showMessageDialog(null, "Utente " + usernameText.getText() + " inserito correttamente");
-                        this.setVisible(false);
-                        playerRows.get(index).setPlayerName(username);
-                        playerRows.get(index).setLogged(true);
-                        gui.setVisible(true);
-                        gui.setEnabled(true);
-                        return;
-                    }
-
-                }
-
-            } catch (FileNotFoundException ex) {
-                System.out.println("File not found");
-            } catch (IOException ex) {
-                Logger.getLogger(UserDialog.class.getName()).log(Level.SEVERE, null, ex);
+            if (FileManager.getInstance().checkCredentials(username, password)) {
+                this.setVisible(false);
+                playerRows.get(index).setPlayerName(username);
+                playerRows.get(index).setLogged(true);
+                gui.setVisible(true);
+                gui.setEnabled(true);
+                return;
             }
-
             commentsText.setText("Nome giocatore o password errati");
         } else {
-            commentsText.setText("Giocatore già presente nel gioco");
+            commentsText.setText("Giocatore giÃ  presente nel gioco");
         }
+
     }//GEN-LAST:event_loginButtonActionPerformed
 
     /**
-     * It saves in the players.txt the username and the encripted password 
-     * of the player 
+     * It saves in the players.txt the username and the encripted password of
+     * the player
      *
      * @param username
      * @param password
@@ -254,13 +234,11 @@ public class UserDialog extends javax.swing.JDialog {
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encryptedBytes = encoder.encode(password.getBytes());
         String encryptedString = new String(encryptedBytes, "UTF-8");
-        try (PrintWriter out = new PrintWriter(new FileOutputStream("files/players.txt", true))) {
-            out.println(username + ";" + encryptedString);
-        }
+        FileManager.getInstance().registerUser(username, encryptedString);
     }
 
     /**
-     * it sets the dialog components depending on the purpose of the 
+     * it sets the dialog components depending on the purpose of the
      * dialog(registration of a new user or login)
      *
      * @param isRegistration
@@ -283,7 +261,6 @@ public class UserDialog extends javax.swing.JDialog {
         this.index = index;
     }
 
-    
     /**
      * It saves the list of the already logged players
      *

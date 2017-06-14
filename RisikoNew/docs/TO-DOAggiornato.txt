@@ -6,7 +6,7 @@ Urgenti:
 - rendere tutto non resizable
 - Visualizzazione della classifica
 - usa funzioni fileManager per UserDialog(ELISA)
-- classe cache
+X classe cache
 - cono bianco per spostamento
 - settings giocatore artificiale da mettere a posto
 - mettere la funzionalità di termina partina nella x della gui
