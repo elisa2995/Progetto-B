@@ -19,6 +19,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -126,7 +128,25 @@ public class GUI extends JFrame implements GameObserver {
         // Setting
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
+        
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closeDialog();
+            }
 
+        });
+
+    }
+    
+    private void closeDialog(){
+        try {
+            if (JOptionPane.showConfirmDialog(this, FileManager.getInstance().getInfoFor("ASK_END", LANG)) == 0) {
+                game.endGame();
+            }
+        } catch (FileManagerException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -398,22 +418,6 @@ public class GUI extends JFrame implements GameObserver {
     }//GEN-LAST:event_settingsItemActionPerformed
 
     /**
-     * Ends the game.
-     *
-     * @param evt
-     */
-    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        try {
-            if (JOptionPane.showConfirmDialog(this, FileManager.getInstance().getInfoFor("ASK_END", LANG)) == 0) {
-                game.endGame();
-            }
-        } catch (FileManagerException ex) {
-            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }//GEN-LAST:event_exitButtonActionPerformed
-
-    /**
      * Shows <code>cardPanel</code>
      *
      * @param evt
@@ -430,6 +434,15 @@ public class GUI extends JFrame implements GameObserver {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         game.toArtificialPlayer();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    /**
+     * Ends the game.
+     *
+     * @param evt
+     */
+    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+
+    }//GEN-LAST:event_exitButtonActionPerformed
 
 //----------------------------- Update ---------------------------------------//
     /**

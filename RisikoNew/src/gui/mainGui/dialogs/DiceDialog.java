@@ -3,6 +3,8 @@ package gui.mainGui.dialogs;
 import gui.DefaultColor;
 import gui.mainGui.GUI;
 import java.awt.Dimension;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import risiko.game.GameProxy;
@@ -46,6 +48,14 @@ public class DiceDialog extends javax.swing.JDialog {
         defenderDice = new int[]{};
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
+        
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closeDialog();
+            }
+
+        });
     }
 
     /**
@@ -265,9 +275,7 @@ public class DiceDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
-        game.resetFightingCountries();
-        gui.resetAfterAttack();
-        this.setVisible(false);
+        closeDialog();
     }//GEN-LAST:event_exitActionPerformed
 
     private void reattackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reattackActionPerformed
@@ -278,6 +286,11 @@ public class DiceDialog extends javax.swing.JDialog {
         game.setReattack(false);
     }//GEN-LAST:event_reattackActionPerformed
 
+    private void closeDialog(){
+        game.resetFightingCountries();
+        gui.resetAfterAttack();
+        this.setVisible(false);
+    }
     /**
      * @param args the command line arguments
      */

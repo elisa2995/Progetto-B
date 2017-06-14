@@ -5,14 +5,14 @@ Urgenti:
 - immagine per cambio fase che appare e scompare (servono solo le immagini, il codice lo abbiamo)
 - rendere tutto non resizable
 - Visualizzazione della classifica
-- usa funzioni fileManager per UserDialog(ELISA)
+X usa funzioni fileManager per UserDialog(ELISA)
 X classe cache
 - cono bianco per spostamento
 - settings giocatore artificiale da mettere a posto
 - mettere la funzionalità di termina partina nella x della gui
 - mettere invokeLater negli update
 - nel move del giocatore artificiale mettere che può spostare solo da country confinanti
-- mettere la la x del diceDialog
+X mettere la la x del diceDialog
 
 DIVISIONE TEST(4 a testa): 
 -andrea
