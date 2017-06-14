@@ -76,14 +76,14 @@ public class Game extends Observable implements GameProxy {
     }
 
 // </editor-fold>
-    //<editor-fold defaultstate="collapsed" desc=" Initialization  ">
+    // <editor-fold defaultstate="collapsed" desc=" Initialization ">
     /**
      * Creates a sorted array of phases, with one element for each class that
      * extends the class <code>Phase</code>,
      */
     private void initPhases() {
         Set<Class<? extends Phase>> subTypes = new Reflections().getSubTypesOf(Phase.class);
-
+        
         phases = new Phase[subTypes.size()];
         int i = 0;
         for (Class<? extends Phase> cls : subTypes) {
@@ -102,7 +102,7 @@ public class Game extends Observable implements GameProxy {
      * random player as active player.
      */
     private void init(List<PlayerInfo> playersInfo) {
-
+        
         buildPlayers(playersInfo);
         map.initGame(players);
         notifyCountriesAssignment(buildAllCountryInfo());
@@ -145,7 +145,7 @@ public class Game extends Observable implements GameProxy {
      * @param playersInfo
      */
     private void buildPlayers(List<PlayerInfo> playersInfo) {
-
+        
         for (PlayerInfo info : playersInfo) {
             switch (PlayerType.valueOf(info.getType())) {
                 case ARTIFICIAL:
@@ -165,10 +165,11 @@ public class Game extends Observable implements GameProxy {
                     this.players.add(new LoggedPlayer(info.getName(), info.getColor()));
                     break;
             }
-
+            
         }
     }
 
+// </editor-fold>
     // <editor-fold defaultstate="collapsed" desc=" CardsPhase ">
 //------------------------------ Cards  ---------------------------------//
     /**
@@ -405,7 +406,7 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void declareAttack(ArtificialPlayer... aiCaller) {
         getFightPhase().declareAttack();
-        if (getFightPhase().getDefenderArmies() > 0) {
+        if (getFightPhase().getAttackerArmies() > 0) { // perché?
             notifyDefender(buildCountryInfo(false));
         }
     }
@@ -529,7 +530,7 @@ public class Game extends Observable implements GameProxy {
     
     @Override
     public synchronized String getFromCountryName(ArtificialPlayer... aiCaller) {
-        return getMovePhase().getFromCountry().toString();
+        return (getMovePhase().getFromCountry()==null)? null:getMovePhase().getFromCountry().toString();
     }
 
     /**
@@ -557,14 +558,14 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void move(/*String fromCountryName, String toCountryName,*/Integer nrArmies, ArtificialPlayer... aiCaller) {
-        if (phaseIndex == getFightPhase().getIndex()) {
+        /*if (getPhase().equals("FIGHT")) {
             moveAfterConquest();
-        }
+        }*/
         getMovePhase().move(nrArmies);
         notifyArmiesChange(buildCountryInfo(getMovePhase().getToCountry()));
         notifyArmiesChange(buildCountryInfo(getMovePhase().getFromCountry()));
         
-        if (phaseIndex == getMovePhase().getIndex()) {
+        if (getPhase().equals("MOVE")) {
             try {
                 nextPhase();
             } catch (PendingOperationsException ex) {
@@ -604,21 +605,19 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
-
-        resetFightingCountries(); //Affinchè sia ripristinato il cursore del Mouse.
-        if (phases[phaseIndex].toString().equals("PLAY_CARDS")) {
+        if (Phase.getName(phaseIndex).equals("PLAY_CARDS")) {
             notifyPlayedTris(); //to hide showCardButton and cardPanel
         }
 
-        if (phases[phaseIndex].toString().equals("REINFORCE") && activePlayer.getBonusArmies() != 0) {
+        if (Phase.getName(phaseIndex).equals("REINFORCE") && activePlayer.getBonusArmies() != 0) {
             throw new PendingOperationsException("Hai ancora armate da posizionare!");
         }
 
-        if (phases[phaseIndex].toString().equals("FIGHT") && getFightPhase().isAttackInProgress()) {
+        if (Phase.getName(phaseIndex).equals("FIGHT") && getFightPhase().isAttackInProgress()) {
             throw new PendingOperationsException("Attacco ancora in corso!");
         }
-
-        if (phases[phaseIndex].toString().equals("FIGHT") && activePlayer.hasConqueredACountry()) {
+        
+        if (Phase.getName(phaseIndex).equals("FIGHT") && activePlayer.hasConqueredACountry()) {
             this.drawBonusCard();
         }
 
@@ -723,10 +722,14 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public boolean controlMovement(String toCountryName, ArtificialPlayer... aiCaller) {
-        return getMovePhase().controlMovement(map.getCountryByName(toCountryName));
+    public boolean controlMovement(ArtificialPlayer... aiCaller) {
+        return getMovePhase().controlMovement();
     }
 
+    @Override
+    public boolean controlMovement(String toCountry, ArtificialPlayer... aiCaller){
+        return getMovePhase().controlMovement(map.getCountryByName(toCountry));
+    }
     //  M E T O D I   P E R   D A R E   I N F O
     /**
      * Controlla se la Country ha armate sufficienti per attaccare (>=2).

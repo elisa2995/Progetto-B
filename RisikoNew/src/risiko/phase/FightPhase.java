@@ -68,8 +68,7 @@ public class FightPhase extends Phase {
      * @param aiCaller
      */
     public void resetFightingCountries() {
-        this.defenderCountry = null;
-        this.attackerCountry = null;
+        clear();
     }
 
     /**
@@ -152,13 +151,12 @@ public class FightPhase extends Phase {
      * @param aiCaller
      */
     public void confirmAttack(ArtificialPlayer... aiCaller) {
-
         if (!canCallDefenseMethods(aiCaller)) {
             return;
         }
 
         fight();
-
+        checkCountryConquest();
         attackInProgress = false;
     }
 
@@ -196,8 +194,7 @@ public class FightPhase extends Phase {
     /**
      * Checks if the country in defense has been conquered and acts accordingly.
      */
-    public void checkCountryConquest() {
-
+    private void checkCountryConquest() {
         if (map.isConquered(defenderCountry)) {
             map.updateOnConquer(attackerCountry, defenderCountry, nrA);
         }
@@ -230,7 +227,8 @@ public class FightPhase extends Phase {
 
     /**
      * Returns <code>attackInProgress</code>
-     * @return 
+     *
+     * @return
      */
     public boolean isAttackInProgress() {
         return attackInProgress;
@@ -238,8 +236,9 @@ public class FightPhase extends Phase {
 
     /**
      * Checks if the defender is valid.
+     *
      * @param defenderCountryName
-     * @return 
+     * @return
      */
     public boolean controlDefender(String defenderCountryName) {
         return map.controlDefender(attackerCountry, map.getCountryByName(defenderCountryName));
@@ -247,5 +246,11 @@ public class FightPhase extends Phase {
 
     public boolean reattack() {
         return reattack;
+    }
+
+    @Override
+    public void clear() {
+        this.attackerCountry = null;
+        this.defenderCountry = null;
     }
 }

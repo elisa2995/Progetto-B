@@ -31,8 +31,7 @@ public abstract class Phase implements Comparable<Phase> {
         }
     }
 
-    public void clear() {
-    }
+    public void clear() {}
 
     @Override
     public int compareTo(Phase other) {

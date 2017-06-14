@@ -48,8 +48,12 @@ public class MovePhase extends Phase {
         return "MOVE";
     }
 
-    public boolean controlMovement(Country countryByName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean controlMovement() {
+        return map.controlMovement(fromCountry, toCountry);
+    }
+    
+    public boolean controlMovement(Country toCountry){
+        return map.controlMovement(fromCountry, toCountry);
     }
 
 }

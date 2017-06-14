@@ -41,7 +41,7 @@ public interface GameProxy {
      * @param aiCaller
      */
     public void resetFightingCountries(ArtificialPlayer... aiCaller);
-    
+
     public void resetMoveCountries(ArtificialPlayer... aiCaller);
 
     /**
@@ -56,8 +56,6 @@ public interface GameProxy {
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
     //public void attack(int nrA, int nrD, ArtificialPlayer... aiCaller);
-
-    
     /**
      * setta il numero di armate con il quale si vuole difenders
      *
@@ -158,7 +156,6 @@ public interface GameProxy {
      * @return
      */
     //public boolean canPlayThisTris(Card[] cards, ArtificialPlayer... aiCaller);
-
     /**
      * Gioca il tris.
      *
@@ -194,7 +191,7 @@ public interface GameProxy {
      * @param aiCaller
      */
     public void move(/*String fromCountry,String toCountryName, */Integer i, ArtificialPlayer... aiCaller);
-    
+
     /**
      * Controlla che country sia dell'activePlayer e che si legale attaccare.
      * (Previo controllo sul caller del metodo).
@@ -243,7 +240,9 @@ public interface GameProxy {
      * @param toCountryName
      * @return
      */
-    public boolean controlMovement(String toCountryName, ArtificialPlayer... aiCaller);
+    public boolean controlMovement(ArtificialPlayer... aiCaller);
+
+    public boolean controlMovement(String toCountry, ArtificialPlayer... aiCaller);
 
     //  M E T O D I   P E R   D A R E   I N F O
     /**
@@ -317,7 +316,7 @@ public interface GameProxy {
     public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller);
 
     public void endGame();
-    
+
     public void toArtificialPlayer();
 
     public String getFromCountryName(ArtificialPlayer... aiCaller);

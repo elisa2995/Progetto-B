@@ -162,7 +162,7 @@ public class LabelMapListener extends MouseInputAdapter {
          quando resetto le fighting countries in labelMaplistener(cioè qui)
          */
         if (country == null) {
-            drowCone(e);
+            //drowCone(e);
             // Non sono su alcun territorio
             e.getComponent().setCursor(Cursor.getDefaultCursor());
             return;
@@ -205,13 +205,13 @@ public class LabelMapListener extends MouseInputAdapter {
                 break;
             case "MOVE":
                 drowCone(e);
-                if (canBeChosen(country) || game.getAttackerCountryName() == null && game.controlFromCountryPlayer(country)) {
+                if (canBeChosen(country) || game.getFromCountryName() == null && game.controlFromCountryPlayer(country)) {
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
                     setHandCursor(e.getComponent(), label);
                     cache.put(country, true);
                     break;
                 }
-                if (canBeChosen(country) || game.getAttackerCountryName() != null && game.controlMovement(country)) {
+                if (canBeChosen(country) || game.getFromCountryName() != null && game.controlMovement(country)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
                     setHandCursor(e.getComponent(), label);
                     cache.put(country, true);

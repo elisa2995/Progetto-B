@@ -353,9 +353,12 @@ public class RisikoMap {
     /**
      * Controlla che toCountry sia dell'active player e che sia un confinante
      * dell'fromCountry
+     * @param fromCountry
+     * @param toCountry
      */
-    public boolean controlMovement(Country fromCountry, Country toCountry, Player player) {
-        return this.countryPlayer.get(toCountry).equals(player) && this.getNeighbors(fromCountry).contains(toCountry) && !toCountry.getName().equals(fromCountry.getName());
+    public boolean controlMovement(Country fromCountry, Country toCountry) {
+        boolean sameOwner = getPlayerByCountry(fromCountry).equals(getPlayerByCountry(toCountry));
+        return sameOwner && fromCountry.getNeighbors().contains(toCountry);
     }
 
     /*
@@ -382,9 +385,8 @@ public class RisikoMap {
     public void updateOnConquer(Country attackerCountry, Country defenderCountry, int armies) {
         Player attacker = this.countryPlayer.get(attackerCountry);
         attacker.setConqueredACountry(true);
+        
         this.countryPlayer.put(defenderCountry, attacker);
-        //attackerCountry.removeArmies(armies);
-        //defenderCountry.setArmies(armies);
     }
 
     /**
