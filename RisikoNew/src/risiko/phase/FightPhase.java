@@ -155,7 +155,7 @@ public class FightPhase extends Phase {
         if (!canCallDefenseMethods(aiCaller)) {
             throw new WrongCallerException();
         }
-        this.nrD=nrD;
+        this.nrD = nrD;
         fight();
         checkCountryConquest();
         attackInProgress = false;
@@ -247,6 +247,10 @@ public class FightPhase extends Phase {
 
     public boolean reattack() {
         return reattack;
+    }
+
+    public int getMaxArmies(Country country, boolean isAttacker) {
+        return map.getMaxArmies(country, isAttacker);
     }
 
     @Override
