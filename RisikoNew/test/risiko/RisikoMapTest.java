@@ -103,10 +103,10 @@ public class RisikoMapTest {
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
             instance.computeBonusArmies(player);
-            int bonusArmies = player.getBonusArmies();
-            int nrCountries = instance.getMyCountries(player).size();
-            assertTrue((bonusArmies)  <= Math.floor(nrCountries / 3)); 
-            //Minore uguale perchè non calcolo il bonus derivante dai continenti
+            double bonusArmies = player.getBonusArmies();
+            double nrCountries = instance.getMyCountries(player).size();
+            assertTrue((bonusArmies) >= Math.floor(nrCountries / 3));
+            //Maggiore uguale perchè non calcolo il bonus derivante dai continenti
         }
     }
 
@@ -184,53 +184,63 @@ public class RisikoMapTest {
         assertNotNull(result);
     }
 
-//    /**
-//     * Test of playerCanAttack method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testPlayerCanAttack() {
-//        System.out.println("playerCanAttack");
-//        Player player = null;
-//        RisikoMap instance = new RisikoMap();
-//        boolean expResult = false;
-//        boolean result = instance.playerCanAttack(player);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of controlAttacker method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testControlAttacker() {
-//        System.out.println("controlAttacker");
-//        Country country = null;
-//        Player player = null;
-//        RisikoMap instance = new RisikoMap();
-//        boolean expResult = false;
-//        boolean result = instance.controlAttacker(country, player);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of controlFromCountryPlayer method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testControlFromCountryPlayer() {
-//        System.out.println("controlFromCountryPlayer");
-//        Country country = null;
-//        Player player = null;
-//        RisikoMap instance = new RisikoMap();
-//        boolean expResult = false;
-//        boolean result = instance.controlFromCountryPlayer(country, player);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
+    /**
+     * Test of playerCanAttack method, of class RisikoMap.
+     */
+    @Test
+    public void testPlayerCanAttack() {
+        System.out.println("playerCanAttack");
+        instance.initGame(players);
+        Player player0 = players.get(0);
+        List<Country> player0Countries = instance.getMyCountries(player0);
+        boolean expResult = false;
+        for (Country country : player0Countries) {
+            if (country.getArmies() > 1) {
+                expResult = true;
+            }
+        }
+        boolean result = instance.playerCanAttack(player0);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of controlAttacker method, of class RisikoMap.
+     */
+    @Test
+    public void testControlAttacker() {
+        System.out.println("controlAttacker");
+        instance.initGame(players);
+        Country country = instance.getCountryByName("Alaska");
+        Player player0 = players.get(0);
+        List<Country> player0Country = instance.getMyCountries(player0);
+        boolean expResult = player0Country.contains(country) && (country.getArmies() > 1);
+        boolean result = instance.controlAttacker(country, player0);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of controlFromCountryPlayer method, of class RisikoMap.
+     */
+    @Test
+    public void testControlFromCountryPlayer() {
+        System.out.println("controlFromCountryPlayer");
+        instance.initGame(players);
+        Country country = instance.getCountryByName("Alaska");
+        Player player0 = players.get(0);
+        
+        boolean expResult = false;
+        Player subjectPlayer=instance.getPlayerByCountry(country);
+        for (Country neighbor : country.getNeighbors()) {
+            Player neighborPlayer=instance.getPlayerByCountry(neighbor);
+            if (neighborPlayer.equals(subjectPlayer)) {
+                expResult = true;
+            } 
+        }
+        expResult= country.getArmies()>1 && subjectPlayer.equals(player0);
+        boolean result = instance.controlFromCountryPlayer(country, player0);
+        assertEquals(expResult, result);
+    }
+
 //    /**
 //     * Test of controlPlayer method, of class RisikoMap.
 //     */
