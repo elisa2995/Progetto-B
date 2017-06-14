@@ -9,7 +9,7 @@ X usa funzioni fileManager per UserDialog(ELISA)
 X classe cache
 - cono bianco per spostamento
 - settings giocatore artificiale da mettere a posto
-- mettere la funzionalità di termina partina nella x della gui
+X mettere la funzionalità di termina partina nella x della gui
 - mettere invokeLater negli update
 - nel move del giocatore artificiale mettere che può spostare solo da country confinanti
 X mettere la la x del diceDialog
@@ -52,3 +52,5 @@ devono essere messi in invokelater perch� a questo punto appartengono a thread
 x non si pu� chiudere la finestra di move (ANDREA)
 x spostare le immagini/files ecc in resources e cambiare i metodi di lettura/scrittura accordingly 
 x Metti sia nella finestra dell'attaccante che nella finestra del difensore entrambi i nomi con i colori (ANDREA)
+x Introdotta legenda giocatori
+x Il bottone nextPhase cambia nome e visibilità in funzione della fase

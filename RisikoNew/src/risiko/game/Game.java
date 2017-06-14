@@ -353,7 +353,7 @@ public class Game extends Observable implements GameProxy {
     private void checkCountryConquest() {
 
         if (map.isConquered(defenderCountry)) {
-            map.updateOnConquer(attackerCountry, defenderCountry, attackerArmies);
+            map.updateOnConquer(attackerCountry, defenderCountry);
             notifyArmiesChangeAfterAttack(attackerCountry, defenderCountry);
             activePlayer.setConqueredACountry(true);
         }

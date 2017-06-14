@@ -374,16 +374,13 @@ public class RisikoMap {
      * (countryPlayer) e muove tante armate quante sono quelle con cui è stato
      * eseguito l'attacco dal territorio attaccante a quello conquistato.
      *
-     * @param armies è il numero di armate con cui è stato sferrato l'attacco, e
-     * in questa prima versione del gioco anche il numero di armate che vengono
-     * spostate dal territorio attaccante a quello appena conquistato.
      * @author Alessandro
+     * @param attackerCountry
+     * @param defenderCountry
      */
-    public void updateOnConquer(Country attackerCountry, Country defenderCountry, int armies) {
+    public void updateOnConquer(Country attackerCountry, Country defenderCountry) {
         Player attacker = this.countryPlayer.get(attackerCountry);
         this.countryPlayer.put(defenderCountry, attacker);
-        //attackerCountry.removeArmies(armies);
-        //defenderCountry.setArmies(armies);
     }
 
     /**
