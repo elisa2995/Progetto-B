@@ -91,9 +91,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             if (max > 0) {
                 int nArmies = new Random().nextInt(max);
                 if(nArmies != 0){
-                    game.setFromCountry(myCountries[from], this);
-                    game.setToCountry(myCountries[to], this);
-                    game.move(nArmies, this);
+                    game.move(myCountries[from].toString(),myCountries[to].toString(), nArmies, this);
                 }
             }
         }
@@ -205,8 +203,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             game.setDefenderArmies(-1, this);
         }*/
         int nrD = new Random().nextInt(this.maxArmiesDefense) + 1;
-        game.setDefenderArmies(nrD, this);
-        game.confirmAttack(this);
+        game.confirmAttack(nrD, this);
         this.currentAction = Action.NOACTION;
         try {
             this.wait(setting.getAttackDelay());
@@ -270,7 +267,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             this.currentAction = Action.NOACTION;
         }
         if(ar.hasConquered()){
-            game.move(/*ar.getAttackerCountryName(), ar.getDefenderCountryName(), */ar.getMaxArmiesAttacker(), this);
+            game.move(ar.getAttackerCountryName(), ar.getDefenderCountryName(), ar.getMaxArmiesAttacker(), this);
         }
         canAttack = true;
     }
@@ -285,7 +282,6 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         if (this.getName().equals(defenderCountryInfo.getPlayerName())) {
             this.currentAction = Action.DEFEND;
         }
-
     }
 
     @Override

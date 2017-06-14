@@ -1,5 +1,6 @@
 package risiko.phase;
 
+import exceptions.WrongCallerException;
 import risiko.equipment.Dice;
 import risiko.map.Country;
 import risiko.map.RisikoMap;
@@ -150,11 +151,11 @@ public class FightPhase extends Phase {
      *
      * @param aiCaller
      */
-    public void confirmAttack(ArtificialPlayer... aiCaller) {
+    public void confirmAttack(int nrD, ArtificialPlayer... aiCaller) throws WrongCallerException {
         if (!canCallDefenseMethods(aiCaller)) {
-            return;
+            throw new WrongCallerException();
         }
-
+        this.nrD=nrD;
         fight();
         checkCountryConquest();
         attackInProgress = false;
@@ -196,7 +197,7 @@ public class FightPhase extends Phase {
      */
     private void checkCountryConquest() {
         if (map.isConquered(defenderCountry)) {
-            map.updateOnConquer(attackerCountry, defenderCountry, nrA);
+            map.updateOnConquer(attackerCountry, defenderCountry);
         }
     }
 

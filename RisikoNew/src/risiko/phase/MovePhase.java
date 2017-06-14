@@ -37,6 +37,12 @@ public class MovePhase extends Phase {
         toCountry.addArmies(nrArmies);
     }
     
+    public void move(Country fromCountry, Country toCountry, int nrArmies) {
+        this.fromCountry=fromCountry;
+        this.toCountry=toCountry;
+        move(nrArmies);
+    }
+    
     @Override
     public void clear(){
         fromCountry = null;

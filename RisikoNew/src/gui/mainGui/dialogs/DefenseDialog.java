@@ -126,9 +126,9 @@ public class DefenseDialog extends JDialog {
 
     private void confirmAttackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmAttackButtonActionPerformed
         PlayAudio.play("src/resources/sounds/tank.wav");
-        game.setDefenderArmies((int) this.defenderArmies.getValue());
+        //game.setDefenderArmies();
         this.setVisible(false);
-        game.confirmAttack();
+        game.confirmAttack((int) this.defenderArmies.getValue());
     }//GEN-LAST:event_confirmAttackButtonActionPerformed
 
     public void setFightingLabels(String attackerCountryName, String attackerColor, String defenderCountryName, String defenderColor) {

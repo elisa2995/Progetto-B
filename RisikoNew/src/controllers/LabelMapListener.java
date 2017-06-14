@@ -117,7 +117,6 @@ public class LabelMapListener extends MouseInputAdapter {
                 }
                 if (canBeChosen(country)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
-                    game.setToCountry(country);
                     MoveDialog moveDialog = new MoveDialog(game, game.getFromCountryName(), country);
                     moveDialog.setVisible(true);
                     PlayAudio.play("src/resources/sounds/clickOn.wav");

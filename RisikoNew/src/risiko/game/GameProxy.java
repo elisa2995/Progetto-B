@@ -63,7 +63,7 @@ public interface GameProxy {
      * numero di armate massimo
      * @param aiCaller
      */
-    public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller);
+    //public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller);
 
     public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller);
 
@@ -86,7 +86,7 @@ public interface GameProxy {
      * @param nrD
      * @param aiCaller
      */
-    public void confirmAttack(ArtificialPlayer... aiCaller);
+    public void confirmAttack(int nrD, ArtificialPlayer... aiCaller);
 
     // ----------------------- Rinforzo ------------------------------------
     /**
@@ -150,13 +150,6 @@ public interface GameProxy {
     public Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller);
 
     /**
-     * Ritorna true se il giocatore può giocare il tris selezionato.
-     *
-     * @param cards
-     * @return
-     */
-    //public boolean canPlayThisTris(Card[] cards, ArtificialPlayer... aiCaller);
-    /**
      * Gioca il tris.
      *
      * @param cardsNames
@@ -190,7 +183,7 @@ public interface GameProxy {
      * @param i
      * @param aiCaller
      */
-    public void move(/*String fromCountry,String toCountryName, */Integer i, ArtificialPlayer... aiCaller);
+    public void move(String fromCountry,String toCountryName, Integer i, ArtificialPlayer... aiCaller);
 
     /**
      * Controlla che country sia dell'activePlayer e che si legale attaccare.
@@ -275,12 +268,6 @@ public interface GameProxy {
      * @author Carolina
      */
     public boolean isReadyToFight(ArtificialPlayer... aiCaller);
-
-    public String[] getCountriesNames(ArtificialPlayer... aiCaller);
-
-    public int[] getCountriesArmies(ArtificialPlayer... aiCaller);
-
-    public String[] getCountriesColors(ArtificialPlayer... aiCaller);
 
     /**
      * questo metodo serve per i giocatori artificiali per determinare quali

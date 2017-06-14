@@ -382,7 +382,7 @@ public class RisikoMap {
      * spostate dal territorio attaccante a quello appena conquistato.
      * @author Alessandro
      */
-    public void updateOnConquer(Country attackerCountry, Country defenderCountry, int armies) {
+    public void updateOnConquer(Country attackerCountry, Country defenderCountry) {
         Player attacker = this.countryPlayer.get(attackerCountry);
         attacker.setConqueredACountry(true);
         
@@ -446,16 +446,6 @@ public class RisikoMap {
             }
         }
         return null;
-    }
-
-    public String[] getCountriesColors() {
-        String[] colors = new String[getCountriesList().size()];
-        int i = 0;
-        for (Country country : getCountriesList()) {
-            colors[i] = getPlayerColorByCountry(country);
-            i++;
-        }
-        return colors;
     }
 
     public String getPlayerColorByCountry(Country country) {
