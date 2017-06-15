@@ -5,14 +5,10 @@ Urgenti:
 - immagine per cambio fase che appare e scompare (servono solo le immagini, il codice lo abbiamo)
 - rendere tutto non resizable
 - Visualizzazione della classifica
-X usa funzioni fileManager per UserDialog(ELISA)
-X classe cache
 - cono bianco per spostamento
 - settings giocatore artificiale da mettere a posto
-X mettere la funzionalità di termina partina nella x della gui
 - mettere invokeLater negli update
 - nel move del giocatore artificiale mettere che può spostare solo da country confinanti
-X mettere la la x del diceDialog
 - sistemare textInfo nella fase delle carte
 
 DIVISIONE TEST(4 a testa): 
@@ -55,3 +51,7 @@ x spostare le immagini/files ecc in resources e cambiare i metodi di lettura/scr
 x Metti sia nella finestra dell'attaccante che nella finestra del difensore entrambi i nomi con i colori (ANDREA)
 x Introdotta legenda giocatori
 x Il bottone nextPhase cambia nome e visibilità in funzione della fase
+x usa funzioni fileManager per UserDialog(ELISA)
+x classe cache
+x mettere la la x del diceDialog
+x mettere la funzionalità di termina partina nella x della gui
