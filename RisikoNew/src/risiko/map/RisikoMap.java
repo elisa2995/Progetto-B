@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import services.FileManager;
 import risiko.missions.Mission;
 
@@ -457,7 +456,7 @@ public class RisikoMap {
     }
 
     /**
-     * changes the owner of all territories
+     * Assigns the countries of a player to another
      *
      * @param oldOwner previous owner of the territories
      * @param newOwner new owner of the territories

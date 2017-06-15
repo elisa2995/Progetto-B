@@ -20,8 +20,8 @@ import java.awt.Rectangle;
 import risiko.game.GameProxy;
 
 /**
- *
- * @author andrea
+ * Listens to the movement and the click of the mouse and it processes it
+ * dependending on the current phase.
  */
 public class LabelMapListener extends MouseInputAdapter {
 
@@ -32,127 +32,164 @@ public class LabelMapListener extends MouseInputAdapter {
     private GUI gui;
     private Cache cache;
 
+    /**
+     * Creates a new LabelMapListener
+     *
+     * @param mapLabel
+     * @param ColorNameCountry
+     * @param gui
+     */
     public LabelMapListener(JLabel mapLabel, Map<Color, String> ColorNameCountry, GUI gui) {
         this.gui = gui;
         this.mapLabel = mapLabel;
         this.bufferedImage = convertToBufferedImage(mapLabel);
         this.ColorNameCountry = ColorNameCountry;
-        this.cache=new Cache();
+        this.cache = new Cache();
     }
 
+    /**
+     * Sets the <code>GameProxy</code>
+     *
+     * @param game
+     */
     public void setGame(GameProxy game) {
         this.game = game;
         cache.setGame(game);
     }
 
     /**
-     * Decide se scatenare o meno l'evento relativo alla corrente fase del
-     * gioco, a seconda che il punto cliccato sia valido o meno.
+     *
+     * If the click is on a country it calls the actions related to the current
+     * phase; if the click is not on a country it resets all.
      *
      * @param e
      */
     @Override
     public void mouseClicked(MouseEvent e) {
         String country = getCountryFromClick(e);
+        if (country == null) {
+            reset();
+            return;
+        }
         switch (game.getPhase()) {
             case "PLAY_CARDS":
                 PlayAudio.play("src/resources/sounds/clickOff.wav");
                 break;
             case "REINFORCE":
-                if (country == null) {
-                    PlayAudio.play("src/resources/sounds/clickOff.wav");
-                    return;
-                }
-
-                if (cache.canBeChosen(country)) {
-                    //Ho ancora bonus armies e sono su un mio territorio
-                    game.reinforce(country);
-                    //reinforce chiama notify(), la gui si aggiorna
-                    PlayAudio.play("src/resources/sounds/clickOn.wav");
-                    break;
-                }
-
-                PlayAudio.play("src/resources/sounds/clickOff.wav");
+                tryReinforce(country);
                 break;
             case "FIGHT":
-                if (country == null) {
-                    PlayAudio.play("src/resources/sounds/clickOff.wav");
-                    game.resetFightingCountries();
-                    resetCache();
-                    return;
-                }
-
-                if (cache.canBeChosenAsAttacker(country)) {
-                    //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
-                    game.setAttackerCountry(country);
-                    PlayAudio.play("src/resources/sounds/clickOn.wav");
-                    break;
-                }
-                if (cache.canBeChosen(country)) {
-                    //Devo scegliere il difensore, sono su un territorio confinante attaccabile
-                    game.setDefenderCountry(country);
-                    PlayAudio.play("src/resources/sounds/clickOn.wav");
-                    gui.setAttackerDialogVisible(true);
-                    break;
-                }
-                //Sono su un territorio non valido per attaccare nè per difendere
-                PlayAudio.play("src/resources/sounds/clickOff.wav");
-                game.resetFightingCountries();
-                resetCache();
+                tryFight(country);
                 break;
-
             case "MOVE":
-                if (country == null) {
-                    PlayAudio.play("src/resources/sounds/clickOff.wav");
-                    game.resetMoveCountries();
-                    resetCache();
-                    return;
-                }
-
-                if (cache.canBeChosenAsFromCountry(country)) {
-
-                    //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
-                    game.setFromCountry(country);
-                    PlayAudio.play("src/resources/sounds/clickOn.wav");
-                    break;
-                }
-                if (cache.canBeChosen(country)) {
-                    //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
-                    MoveDialog moveDialog = new MoveDialog(game, game.getFromCountryName(), country);
-                    moveDialog.setVisible(true);
-                    PlayAudio.play("src/resources/sounds/clickOn.wav");
-                    game.resetMoveCountries();
-                    break;
-                }
-                //Sono su un territorio non valido per spostarmi
-                PlayAudio.play("src/resources/sounds/clickOff.wav");
-                game.resetMoveCountries();
-                resetCache();
+                tryMove(country);
                 break;
-
         }
     }
 
     /**
-     * Setta il cursore a "manina" nel caso in cui il territorio su cui esso si
-     * trova è valido nel contesto dell'attuale fase di gioco, a "freccina" se
-     * non lo è.
+     * If the country is valid to be chosen(so it has bonus armies left and the
+     * country is one of the active player's), it reinforces it.
+     *
+     * @param country
+     */
+    private void tryReinforce(String country) {
+        if (cache.canBeChosen(country)) {
+            //Ho ancora bonus armies e sono su un mio territorio
+            game.reinforce(country);
+            //reinforce chiama notify(), la gui si aggiorna
+            PlayAudio.play("src/resources/sounds/clickOn.wav");
+            return;
+        }
+
+        reset();
+    }
+
+    /**
+     * If the attacker/defender country has to be set, it controls if the
+     * country is valid to be chosen; if it is it sets the country as the
+     * attacker/defender.
+     *
+     * @param country
+     */
+    private void tryFight(String country) {
+        if (cache.canBeChosenAsAttacker(country)) {
+            //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
+            game.setAttackerCountry(country);
+            PlayAudio.play("src/resources/sounds/clickOn.wav");
+            return;
+        }
+        if (cache.canBeChosen(country)) {
+            //Devo scegliere il difensore, sono su un territorio confinante attaccabile
+            game.setDefenderCountry(country);
+            PlayAudio.play("src/resources/sounds/clickOn.wav");
+            gui.setAttackerDialogVisible(true);
+            return;
+        }
+        //Sono su un territorio non valido per attaccare nè per difendere
+        reset();
+    }
+
+    /**
+     * If the country from/to which the movement has to take place has to be
+     * set, it controls if the country is valid to be chosen; if it is it sets
+     * the country as the fromCountry/toCountry.
+     *
+     * @param country
+     */
+    private void tryMove(String country) {
+
+        if (cache.canBeChosenAsFromCountry(country)) {
+
+            //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
+            game.setFromCountry(country);
+            PlayAudio.play("src/resources/sounds/clickOn.wav");
+            return;
+        }
+        if (cache.canBeChosen(country)) {
+            //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
+            MoveDialog moveDialog = new MoveDialog(game, game.getFromCountryName(), country);
+            moveDialog.setVisible(true);
+            PlayAudio.play("src/resources/sounds/clickOn.wav");
+            game.resetMoveCountries();
+            return;
+        }
+        //Sono su un territorio non valido per spostarmi
+        reset();
+    }
+
+    /**
+     * Resets all the original settings
+     */
+    private void reset() {
+        PlayAudio.play("src/resources/sounds/clickOff.wav");
+        if (!game.getPhase().equals("REINFORCE")) {
+            resetCache();
+        }
+
+        if (game.getPhase().equals("FIGHT")) {
+            game.resetFightingCountries();
+            return;
+        }
+        if (game.getPhase().equals("FIGHT")) {
+            game.resetMoveCountries();
+        }
+    }
+
+    /**
+     * If the country on which the mouse is situated is valid on the current
+     * phase of the game, it sets the hand cursor; if not it sets the default
+     * cursor.
      *
      * @param e
      */
     @Override
     public void mouseMoved(MouseEvent e) {
         if (!game.checkMyIdentity()) { //Affinchè la posizione del mouse non interferisca sui coni di luce dei giocatori artificiali
-
             return;
         }
         String country = getCountryFromClick(e);
-        /*Cache reset: a tutti i cambiamenti di fase, dopo ogni attacco se c'è 
-         stata una conquista oppure è rimasta solo un armata, quando setto l'attaccante,
-         (quando setto il difensore: no perchè posso sceglierne un altro quindi rimango
-         con le stesse possibilità)
-         quando resetto le fighting countries in labelMaplistener(cioè qui)
-         */
+
         if (country == null) {
             // Non sono su alcun territorio
             e.getComponent().setCursor(Cursor.getDefaultCursor());
