@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import risiko.map.Continent;
+import risiko.missions.ContinentsMission;
 import risiko.players.Player;
 
 public class RisikoMapTest {
@@ -129,7 +130,6 @@ public class RisikoMapTest {
 //        assertTrue(instance.hasConqueredContinent(player, countri0fPlayer0));
 //        
 //    }
-
     /**
      * Test of getContinentByCountry method, of class RisikoMap.
      */
@@ -241,7 +241,7 @@ public class RisikoMapTest {
      * Test of controlFromCountryPlayer method, of class RisikoMap.
      */
     @Test
-    public void testControlFromCountryPlayer() {
+    public void testControlFromCountryPlayer() {//qualcosa non torna
         System.out.println("controlFromCountryPlayer");
         instance.initGame(players);
         Country country = instance.getCountryByName("Alaska");
@@ -322,68 +322,77 @@ public class RisikoMapTest {
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
 //    }
-//
-//    /**
-//     * Test of getMaxArmies method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testGetMaxArmies() {
-//        System.out.println("getMaxArmies");
-//        Country country = null;
-//        boolean isAttacker = false;
-//        RisikoMap instance = new RisikoMap();
-//        int expResult = 0;
-//        int result = instance.getMaxArmies(country, isAttacker);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of updateOnConquer method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testUpdateOnConquer() {
-//        System.out.println("updateOnConquer");
-//        Country attackerCountry = null;
-//        Country defenderCountry = null;
-//        int armies = 0;
-//        RisikoMap instance = new RisikoMap();
-//        instance.updateOnConquer(attackerCountry, defenderCountry, armies);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of checkIfWinner method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testCheckIfWinner() {
-//        System.out.println("checkIfWinner");
-//        Player player = null;
-//        RisikoMap instance = new RisikoMap();
-//        boolean expResult = false;
-//        boolean result = instance.checkIfWinner(player);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of isConquered method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testIsConquered() {
-//        System.out.println("isConquered");
-//        Country country = null;
-//        RisikoMap instance = new RisikoMap();
-//        boolean expResult = false;
-//        boolean result = instance.isConquered(country);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
+//xxxxxxxxxxxxxxxxx
+
+    /**
+     * Test of getMaxArmies method, of class RisikoMap.
+     */
+    @Test
+    public void testGetMaxArmies() {
+        System.out.println("getMaxArmies");
+        instance.initGame(players);
+        Country country0 = instance.getCountriesList().get((int) (Math.random() * N_COUNTRIES));
+        country0.setArmies(3);
+        boolean isAttacker = true;
+        int expResult0 = 2;
+        int result0 = instance.getMaxArmies(country0, isAttacker);
+        assertEquals(expResult0, result0);
+
+        Country country1 = instance.getCountriesList().get((int) (Math.random() * N_COUNTRIES));
+        country1.setArmies(3);
+        int expResult1 = 3;
+        isAttacker = false;
+        int result1 = instance.getMaxArmies(country1, isAttacker);
+        assertEquals(expResult1, result1);
+    }
+
+    /**
+     * Test of updateOnConquer method, of class RisikoMap.
+     */
+    @Test
+    public void testUpdateOnConquer() {
+        System.out.println("updateOnConquer");
+        instance.initGame(players);
+        Country attackerCountry = instance.getCountryByName("Alaska");
+        Country defenderCountry = instance.getCountryByName("Alberta");
+        instance.updateOnConquer(attackerCountry, defenderCountry);
+        Player player0 = instance.getPlayerByCountry(attackerCountry);
+        Player player1 = instance.getPlayerByCountry(defenderCountry);
+        assertEquals(player0, player1);
+    }
+
+    /**
+     * Test of checkIfWinner method, of class RisikoMap.
+     */
+    @Test
+    public void testCheckIfWinner() {
+        System.out.println("checkIfWinner");
+        instance.initGame(players);
+        Player player = players.get(0);
+        List <Country> targetList = instance.getMyCountries(player);
+        ContinentsMission mission = new ContinentsMission("test", 0);
+        mission.setTargetList(targetList);
+        player.setMission(mission);
+        boolean expResult = true;
+        boolean result = instance.checkIfWinner(player);
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of isConquered method, of class RisikoMap.
+     */
+    @Test
+    public void testIsConquered() {
+        System.out.println("isConquered");
+        instance.initGame(players);
+        Country country = instance.getCountryByName("Egitto");
+        country.setArmies(0); 
+        
+        boolean expResult = true;
+        boolean result = instance.isConquered(country);
+        assertEquals(expResult, result);
+    } 
 //    /**
 //     * Test of hasLost method, of class RisikoMap.
 //     */

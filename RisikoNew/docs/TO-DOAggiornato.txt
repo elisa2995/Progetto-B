@@ -2,8 +2,6 @@ Urgenti:
 - uscita dal gioco -> da giocatore normale ad artificiale (ALESSANDRO?) mettere a posto e mettere in bottone sulla gui
 - DOCUMENTAZIONE (javaDoc) (possiamo spartirci le classi da documentare..?)
 - testare qualche classe (tipo player e map ... o qualsiasi altra cosa - se nessuno ha voglia di farlo possiamo spartirci i metodi).
-- immagine per cambio fase che appare e scompare (servono solo le immagini, il codice lo abbiamo)
-- rendere tutto non resizable
 - Visualizzazione della classifica
 - usa funzioni fileManager per UserDialog(ELISA)
 - classe cache
@@ -53,3 +51,5 @@ x spostare le immagini/files ecc in resources e cambiare i metodi di lettura/scr
 x Metti sia nella finestra dell'attaccante che nella finestra del difensore entrambi i nomi con i colori (ANDREA)
 x Introdotta legenda giocatori
 x Il bottone nextPhase cambia nome e visibilità in funzione della fase
+x immagine per cambio fase che appare e scompare (servono solo le immagini, il codice lo abbiamo)
+x rendere tutto non resizable

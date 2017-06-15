@@ -28,7 +28,7 @@ public class FadeOutLabel extends JLabel {
 
     public FadeOutLabel(GUI gui) {
         this.gui=gui;
-        String url="src/resources/images/CAVALRY.png";
+        String url="src/resources/images/REINFORCE.png";
         try {
             outImage = ImageIO.read(new File(url));
         } catch (IOException exp) {

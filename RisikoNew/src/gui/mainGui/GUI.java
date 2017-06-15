@@ -89,7 +89,7 @@ public class GUI extends JFrame implements GameObserver {
         // Image fading out
         fadeOutLabel = new FadeOutLabel(this);
         fadeOutLabel.setOpaque(true);
-        fadeOutLabel.setBounds(400, 120, 186, 250);
+        fadeOutLabel.setBounds(334, 233, 332, 46);
         mapLayeredPane.add(fadeOutLabel, 1000);
 
         // Labels
@@ -240,6 +240,7 @@ public class GUI extends JFrame implements GameObserver {
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         phaseLabel.setBackground(new java.awt.Color(225, 207, 218));
         phaseLabel.setForeground(new java.awt.Color(1, 1, 1));
@@ -411,7 +412,7 @@ public class GUI extends JFrame implements GameObserver {
                             .addComponent(buttonNextPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(12, 12, 12)
                         .addComponent(showCardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         pack();
@@ -476,9 +477,9 @@ public class GUI extends JFrame implements GameObserver {
     private void showCardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showCardButtonActionPerformed
 
         if (cardPanel.getY() == cardPanel.getLOW_Y()) {
-            cardPanel.setLocation(cardPanel.getX(), cardPanel.getHIGH_Y());
+            cardPanel.moveTo(cardPanel.getHIGH_Y());
         } else {
-            cardPanel.setLocation(cardPanel.getX(), cardPanel.getLOW_Y());
+            cardPanel.moveTo(cardPanel.getLOW_Y());
         }
     }//GEN-LAST:event_showCardButtonActionPerformed
 
@@ -514,6 +515,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnPhaseChange(PlayerInfo player, String phase) {
         ((GraphicsJLabel) labelMap).resetCone();
+        fadeOutLabel.setImage("src/resources/images/" + phase + ".png");
         fadeOutLabel.setVisible(true);
         this.mapLayeredPane.moveToFront(fadeOutLabel);
         fadeOutLabel.startFadeOut();
@@ -536,6 +538,7 @@ public class GUI extends JFrame implements GameObserver {
             case "MOVE":
                 buttonNextPhase.setText("Passa il turno");
         }
+        
     }
 
     /**
@@ -758,6 +761,7 @@ public class GUI extends JFrame implements GameObserver {
             showCardButton.setVisible(true);
         }
         cardPanel.setCards(cards);
+        cardPanel.moveTo(cardPanel.getHIGH_Y());
     }
 
     /**
@@ -779,7 +783,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnPlayedTris() {
-        cardPanel.setLocation(cardPanel.getX(), cardPanel.getLOW_Y());
+        cardPanel.moveTo(cardPanel.getLOW_Y());
         showCardButton.setVisible(false);
     }
 
