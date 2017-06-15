@@ -2,4 +2,4 @@ PLAY_CARDS = Gioca un tris di carte per ottenere piu' armate o passa al rinforzo
 REINFORCE = Clicca su un tuo territorio per rinforzarlo con un'armata. Hai ? armate bonus.
 FIGHT = Clicca su un tuo territorio per sceglierlo come attaccante
 MOVE = Scegli un tuo territorio da cui spostare una o piu' armate
-ASK_END = Sei sicuro di voler abbandonare la partita?
+ASK_END = Sei sicuro di voler terminare la partita?
