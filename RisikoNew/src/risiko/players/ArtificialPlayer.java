@@ -86,13 +86,12 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         String[] myCountries = game.getMyCountries(this);
         int from = new Random().nextInt(myCountries.length);
         int to = new Random().nextInt(myCountries.length);
-
         if (from != to) {
             int max = game.getMaxArmiesForMovement(myCountries[from], this);
             if (max > 0) {
                 int nArmies = new Random().nextInt(max);
                 if(nArmies != 0){
-                    game.move(myCountries[from], myCountries[to], nArmies, this);
+                    game.move(myCountries[from].toString(),myCountries[to].toString(), nArmies, this);
                 }
             }
         }
@@ -171,9 +170,6 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                 ex.printStackTrace();
             }
 
-            //set armate attacco
-            //int nrA = new Random().nextInt(game.getMaxArmies(myCountries[index], true, this));
-            //game.setAttackerArmies(nrA, this);
             if (maxArmiesSet) { // Perché?
                 int nrA = new Random().nextInt(maxArmiesAttack) + 1;
                 game.setAttackerArmies(nrA, this);
@@ -207,8 +203,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             game.setDefenderArmies(-1, this);
         }*/
         int nrD = new Random().nextInt(this.maxArmiesDefense) + 1;
-        game.setDefenderArmies(nrD, this);
-        game.confirmAttack(this);
+        game.confirmAttack(nrD, this);
         this.currentAction = Action.NOACTION;
         try {
             this.wait(setting.getAttackDelay());
@@ -226,20 +221,20 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         while (currentAction != Action.ENDGAME) {
 
             try {
-                if (game.getActivePlayer().equals(this)) {
+                if (game.checkMyIdentity(this)) {
                     switch (game.getPhase()) {
-                        case PLAY_CARDS:
+                        case "PLAY_CARDS":
                             playHighestTris();
                             break;
-                        case REINFORCE:
+                        case "REINFORCE":
                             randomReinforce();
                             break;
-                        case FIGHT:
+                        case "FIGHT":
                             canAttack = true;  
                             this.randomAttack();
                             game.nextPhase(this);
                             break;
-                        case MOVE:
+                        case "MOVE":
                             moveArmies();
                             synchronized(this) {
                                 this.wait(100);
@@ -287,7 +282,6 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         if (this.getName().equals(defenderCountryInfo.getPlayerName())) {
             this.currentAction = Action.DEFEND;
         }
-
     }
 
     @Override

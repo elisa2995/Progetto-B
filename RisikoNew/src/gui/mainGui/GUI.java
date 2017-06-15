@@ -228,7 +228,7 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Returns the JLabel that corresponds to the Country whose name is
+     * Returns the JLabel that corresponds to the Country which name is
      * <code>country</code>.
      *
      * @param country
@@ -694,7 +694,7 @@ public class GUI extends JFrame implements GameObserver {
         if (ar.getConqueredContinent() != null) {
             info += "Ora possiedi " + ar.getConqueredContinent();
         }
-
+        
         MoveDialog moveDialog = new MoveDialog(game, ar.getAttackerCountryName(), ar.getDefenderCountryName(), info, ar.getMaxArmiesAttacker());
         moveDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
         PlayAudio.play("src/resources/sounds/conquest.wav");

@@ -419,12 +419,12 @@ public class FileManager {
     
     //---------------------------- vocabulary.txt --------------------------------//
     
-    public String getWord(String word, String lang, boolean backwards) throws FileManagerException{
+    public String getWord(String word, String lang, boolean reverse) throws FileManagerException{
         
         String line;
         try(BufferedReader br = new BufferedReader(new FileReader(VOCABULARY+lang+".txt"))){
             while((line = br.readLine())!=null){
-                int index = backwards ? 1:0;
+                int index = reverse ? 1:0;
                 if(line.split("=")[index].trim().equals(word)){
                     return line;
                 }

@@ -13,6 +13,7 @@ X mettere la funzionalità di termina partina nella x della gui
 - mettere invokeLater negli update
 - nel move del giocatore artificiale mettere che può spostare solo da country confinanti
 X mettere la la x del diceDialog
+- sistemare textInfo nella fase delle carte
 
 DIVISIONE TEST(4 a testa): 
 -andrea

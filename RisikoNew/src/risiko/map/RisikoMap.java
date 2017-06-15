@@ -240,8 +240,10 @@ public class RisikoMap {
      * @param justConqueredCountry
      * @return
      */
-    public boolean hasConqueredContinent(Player player, Country justConqueredCountry) {
-        return ownsContinent(player, getContinentByCountry(justConqueredCountry));
+    public boolean hasConqueredContinent(Country conqueredCountry) {
+        Player player = getPlayerByCountry(conqueredCountry);
+        Continent continent = getContinentByCountry(conqueredCountry);
+        return getMyCountries(player).containsAll(continent.getCountries());
     }
 
     /**
@@ -338,24 +340,25 @@ public class RisikoMap {
     }
 
     /**
-     * Controlla che il territorio non sia dell'active player e che sia un
-     * confinante dell'attacker
+     * Checks if attacker and defender don't belong to the same player and
+     * they're neighbors.
+     * @param attacker
+     * @param defender
+     * @return true if the defender is valid, false otherwise.
      */
-    public boolean controlDefender(Country attacker, Country defender, Player player) {
-        return !this.countryPlayer.get(defender).equals(player) && this.getNeighbors(attacker).contains(defender);
+    public boolean controlDefender(Country attacker, Country defender) {
+        return !this.countryPlayer.get(defender).equals(getPlayerByCountry(attacker)) && this.getNeighbors(attacker).contains(defender);
     }
 
     /**
      * Controlla che toCountry sia dell'active player e che sia un confinante
      * dell'fromCountry
+     * @param fromCountry
+     * @param toCountry
      */
-    public boolean controlMovement(Country fromCountry, Country toCountry, Player player) {
-        return this.countryPlayer.get(toCountry).equals(player) && this.getNeighbors(fromCountry).contains(toCountry) && !toCountry.getName().equals(fromCountry.getName());
-    }
-
-    public void move(Country fromCountry, Country toCountry, int nrArmies) {
-        fromCountry.removeArmies(nrArmies);
-        toCountry.addArmies(nrArmies);
+    public boolean controlMovement(Country fromCountry, Country toCountry) {
+        boolean sameOwner = getPlayerByCountry(fromCountry).equals(getPlayerByCountry(toCountry));
+        return sameOwner && fromCountry.getNeighbors().contains(toCountry);
     }
 
     /*
@@ -380,6 +383,8 @@ public class RisikoMap {
      */
     public void updateOnConquer(Country attackerCountry, Country defenderCountry) {
         Player attacker = this.countryPlayer.get(attackerCountry);
+        attacker.setConqueredACountry(true);
+        
         this.countryPlayer.put(defenderCountry, attacker);
     }
 
@@ -418,6 +423,12 @@ public class RisikoMap {
     public void removeArmies(Country country, int nArmies) {
         country.removeArmies(nArmies);
     }
+    
+    public void reinforce(Country country){
+        country.incrementArmies();
+        getPlayerByCountry(country).decrementBonusArmies();
+        
+    }
 
     public boolean canAttackFromCountry(Country country) {
         boolean canAttack = false;
@@ -439,16 +450,6 @@ public class RisikoMap {
             }
         }
         return null;
-    }
-
-    public String[] getCountriesColors() {
-        String[] colors = new String[getCountriesList().size()];
-        int i = 0;
-        for (Country country : getCountriesList()) {
-            colors[i] = getPlayerColorByCountry(country);
-            i++;
-        }
-        return colors;
     }
 
     public String getPlayerColorByCountry(Country country) {

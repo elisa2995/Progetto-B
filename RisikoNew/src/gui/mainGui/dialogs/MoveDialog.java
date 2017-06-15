@@ -5,10 +5,6 @@ import java.awt.Dimension;
 import javax.swing.SpinnerNumberModel;
 import risiko.game.GameProxy;
 
-/**
- *
- * @author andrea
- */
 public class MoveDialog extends javax.swing.JDialog {
 
     private GameProxy game;
@@ -16,7 +12,7 @@ public class MoveDialog extends javax.swing.JDialog {
     private String fromCountryName;
 
     /**
-     * Inizializzazione
+     * Initialization.
      *
      * @param game
      * @param countryName

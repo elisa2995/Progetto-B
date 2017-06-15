@@ -18,7 +18,6 @@ import gui.PlayAudio;
 import java.util.HashMap;
 import java.awt.Rectangle;
 import risiko.game.GameProxy;
-import risiko.players.ArtificialPlayer;
 
 /**
  *
@@ -56,10 +55,10 @@ public class LabelMapListener extends MouseInputAdapter {
     public void mouseClicked(MouseEvent e) {
         String country = getCountryFromClick(e);
         switch (game.getPhase()) {
-            case PLAY_CARDS:
+            case "PLAY_CARDS":
                 PlayAudio.play("src/resources/sounds/clickOff.wav");
                 break;
-            case REINFORCE:
+            case "REINFORCE":
                 if (country == null) {
                     PlayAudio.play("src/resources/sounds/clickOff.wav");
                     return;
@@ -75,7 +74,7 @@ public class LabelMapListener extends MouseInputAdapter {
 
                 PlayAudio.play("src/resources/sounds/clickOff.wav");
                 break;
-            case FIGHT:
+            case "FIGHT":
                 if (country == null) {
                     PlayAudio.play("src/resources/sounds/clickOff.wav");
                     game.resetFightingCountries();
@@ -83,7 +82,7 @@ public class LabelMapListener extends MouseInputAdapter {
                     return;
                 }
 
-                if (cache.canBeChosenOnFirstClick(country)) {
+                if (cache.canBeChosenAsAttacker(country)) {
                     //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
                     game.setAttackerCountry(country);
                     PlayAudio.play("src/resources/sounds/clickOn.wav");
@@ -102,15 +101,16 @@ public class LabelMapListener extends MouseInputAdapter {
                 resetCache();
                 break;
 
-            case MOVE:
+            case "MOVE":
                 if (country == null) {
                     PlayAudio.play("src/resources/sounds/clickOff.wav");
-                    game.resetFightingCountries();
+                    game.resetMoveCountries();
                     resetCache();
                     return;
                 }
 
-                if (cache.canBeChosenOnFirstClick(country)) {
+                if (cache.canBeChosenAsFromCountry(country)) {
+
                     //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
                     game.setFromCountry(country);
                     PlayAudio.play("src/resources/sounds/clickOn.wav");
@@ -118,15 +118,15 @@ public class LabelMapListener extends MouseInputAdapter {
                 }
                 if (cache.canBeChosen(country)) {
                     //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
-                    MoveDialog moveDialog = new MoveDialog(game, game.getAttackerCountryName(), country);
+                    MoveDialog moveDialog = new MoveDialog(game, game.getFromCountryName(), country);
                     moveDialog.setVisible(true);
                     PlayAudio.play("src/resources/sounds/clickOn.wav");
-                    game.resetFightingCountries();
+                    game.resetMoveCountries();
                     break;
                 }
                 //Sono su un territorio non valido per spostarmi
                 PlayAudio.play("src/resources/sounds/clickOff.wav");
-                game.resetFightingCountries();
+                game.resetMoveCountries();
                 resetCache();
                 break;
 
@@ -142,8 +142,8 @@ public class LabelMapListener extends MouseInputAdapter {
      */
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (game.getActivePlayer() instanceof ArtificialPlayer) //Affinchè la posizione del mouse non interferisca sui coni di luce dei giocatori artificiali
-        {
+        if (!game.checkMyIdentity()) { //Affinchè la posizione del mouse non interferisca sui coni di luce dei giocatori artificiali
+
             return;
         }
         String country = getCountryFromClick(e);
@@ -162,7 +162,7 @@ public class LabelMapListener extends MouseInputAdapter {
         JLabel label = gui.getLabelByCountry(country);
         mapLabel.setToolTipText(country);
 
-        switch (game.getPhase().toString()) {
+        switch (game.getPhase()) {
             case "PLAY_CARDS":
                 setDefaultCursor(e.getComponent(), label);
                 break;

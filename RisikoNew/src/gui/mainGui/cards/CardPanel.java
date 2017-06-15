@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui.mainGui.cards;
 
 import controllers.CardListener;
 import gui.PlayAudio;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -19,11 +13,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import risiko.game.GameProxy;
 
-/**
- *
- * @author feded
- */
-public class CardPanel extends javax.swing.JPanel {
+public class CardPanel extends JPanel {
 
     private List<JLabel> cards;
     private List<JLabel> chosenCards;
@@ -211,7 +201,7 @@ public class CardPanel extends javax.swing.JPanel {
         boolean success = false;
         String[] cards = getTrisAsString(chosenCards);
         if (chosenCards.size() == 3) {
-            success = game.canPlayThisTris(cards);
+            success = game.isAValidTris(cards);
         }
         return success;
     }

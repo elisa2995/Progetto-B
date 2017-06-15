@@ -110,26 +110,35 @@ public class RisikoMapTest {
         }
     }
 
-    /**
-     * Test of hasConqueredContinent method, of class RisikoMap.
-     */
+///**
+//     * Test of hasConqueredContinent method, of class RisikoMap.
+//     */
 //    @Test
 //    public void testHasConqueredContinent() {
 //        System.out.println("hasConqueredContinent");
-//        instance.initGame(players);
 //        Player player = players.get(0);
 //        Country country = instance.getMyCountries(player).get(0);
-//        Continent continet = instance.getContinentByCountry(country);
-//        String[] countries={"Indonesia","Nuova Guinea","Australia Orientale","Australia Occidentale"};
-//        for (String countryName : countries) {
-//            Country country = instance.getCountryByName(countryName);
-//            instance.updateOnConquer(countri0fPlayer0, country, 3);
-//            
+//        Continent continent = instance.getContinentByCountry(country);
+//        for (Country c : continent.getCountries()) {
+//            if (instance.getPlayerByCountry(c) != player) {
+//                instance.updateOnConquer(country, c);
+//            }
 //        }
-//        assertTrue(instance.hasConqueredContinent(player, countri0fPlayer0));
-//        
+//
+//        boolean result = instance.hasConqueredContinent(player, country);
+//        assertTrue(result);
+//        Player otherPlayer = players.get(1);
+//        Country otherCountry = instance.getMyCountries(otherPlayer).get(0);
+//
+//        for (Country c : continent.getCountries()) {
+//            if (c != country) {
+//                instance.updateOnConquer(otherCountry, c);        
+//                break;
+//            }
+//        }
+//        result = instance.hasConqueredContinent(player, country);
+//        assertFalse(result);
 //    }
-
     /**
      * Test of getContinentByCountry method, of class RisikoMap.
      */
@@ -287,7 +296,7 @@ public class RisikoMapTest {
         Country defenderCountry = instance.getCountriesList().get((int) (Math.random() * N_COUNTRIES));
         boolean expResult = !instance.getPlayerByCountry(defenderCountry).equals(player0) && instance.getNeighbors(attackerCountry).contains(defenderCountry);
 
-        boolean result = instance.controlDefender(attackerCountry, defenderCountry, player0);
+        boolean result = instance.controlDefender(attackerCountry, defenderCountry);
         assertEquals(expResult, result);
     }
 //
@@ -427,21 +436,48 @@ public class RisikoMapTest {
 //        fail("The test case is a prototype.");
 //    }
 //
-//    /**
-//     * Test of canAttackFromCountry method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testCanAttackFromCountry() {
-//        System.out.println("canAttackFromCountry");
-//        Country country = null;
-//        RisikoMap instance = new RisikoMap();
-//        boolean expResult = false;
-//        boolean result = instance.canAttackFromCountry(country);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
+
+    /**
+     * Test of canAttackFromCountry method, of class RisikoMap.
+     */
+    @Test
+    public void testCanAttackFromCountry() {
+        System.out.println("canAttackFromCountry");
+        boolean result;
+        instance.initGame(players);
+        for (Country country : instance.getCountriesList()) {
+            Player player = instance.getPlayerByCountry(country);
+            if (instance.getMyCountries(player).containsAll(country.getNeighbors())) {
+                result = instance.canAttackFromCountry(country);
+                assertFalse(result);
+                break;
+            }
+            for (Country c : country.getNeighbors()) {
+                // The neighbor is not a country of the player's
+                if (instance.getPlayerByCountry(c) != player) {
+                    result = instance.canAttackFromCountry(country);
+                    assertTrue(result);
+                    // The country has only 1 army
+                    country.removeArmies(country.getArmies() - 1);
+                    result = instance.canAttackFromCountry(country);
+                    assertFalse(result);
+                    break;
+                }
+
+            }
+
+            for (Country c : country.getNeighbors()) {
+                // The neighbor is a country of the player's
+                if (instance.getPlayerByCountry(c) == instance.getPlayerByCountry(country)) {
+                    result = instance.canAttackFromCountry(country);
+                    assertFalse(result);
+                    break;
+                }
+
+            }
+        }
+
+    }
 //    /**
 //     * Test of getCountryByName method, of class RisikoMap.
 //     */

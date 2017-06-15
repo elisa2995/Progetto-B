@@ -7,11 +7,11 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
-import static risiko.game.Phase.PLAY_CARDS;
 import risiko.game.GameProxy;
 
 public class CardListener extends MouseInputAdapter {
 
+    private final String PLAY_CARDS="PLAY_CARDS";
     private CardPanel cardPanel;
     private GameProxy game;
     private static final int CHOSEN_OFFSET = 670;
@@ -25,7 +25,7 @@ public class CardListener extends MouseInputAdapter {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if (game.getPhase() == PLAY_CARDS) {
+        if (game.getPhase().equals(PLAY_CARDS)) {
             JLabel label = (JLabel) e.getComponent();
             cardPanel.getCardsPane().setLayer(label, 1);
             String card = (String) label.getClientProperty("name");
@@ -39,7 +39,7 @@ public class CardListener extends MouseInputAdapter {
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if (game.getPhase() == PLAY_CARDS) {
+        if (game.getPhase().equals(PLAY_CARDS)) {
             JLabel label = (JLabel) e.getComponent();
             cardPanel.getCardsPane().setLayer(label, cardPanel.getLabelLayer(label));
             String card = (String) label.getClientProperty("name");
@@ -53,7 +53,7 @@ public class CardListener extends MouseInputAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (game.getPhase() == PLAY_CARDS) {
+        if (game.getPhase().equals(PLAY_CARDS)) {
             JLabel label = (JLabel) e.getComponent();
             if (!(boolean) label.getClientProperty("chosen")) {
                 if (cardPanel.getNrChosenCards() < 3) {

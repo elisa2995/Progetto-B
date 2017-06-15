@@ -6,15 +6,10 @@ import java.util.Map;
 import risiko.equipment.Card;
 import risiko.players.ArtificialPlayer;
 import risiko.players.ArtificialPlayerSettings;
-import risiko.players.Player;
 
 public interface GameProxy {
 
-    public Phase getPhase(ArtificialPlayer... aiCaller);
-
-    public String getPhaseName(ArtificialPlayer... aiCaller);
-
-    public Player getActivePlayer(ArtificialPlayer... aiCaller);
+    public String getPhase(ArtificialPlayer... aiCaller);
 
     public String getActivePlayerMission(ArtificialPlayer... aiCaller);
 
@@ -47,6 +42,8 @@ public interface GameProxy {
      */
     public void resetFightingCountries(ArtificialPlayer... aiCaller);
 
+    public void resetMoveCountries(ArtificialPlayer... aiCaller);
+
     /**
      * Simula l'attacco tra {@code this.attackerCountry} e
      * {@code this.defenderCountry}, con rispettivamente nrA e nrD armate.
@@ -59,8 +56,6 @@ public interface GameProxy {
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
     //public void attack(int nrA, int nrD, ArtificialPlayer... aiCaller);
-
-    
     /**
      * setta il numero di armate con il quale si vuole difenders
      *
@@ -68,7 +63,7 @@ public interface GameProxy {
      * numero di armate massimo
      * @param aiCaller
      */
-    public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller);
+    //public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller);
 
     public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller);
 
@@ -91,7 +86,7 @@ public interface GameProxy {
      * @param nrD
      * @param aiCaller
      */
-    public void confirmAttack(ArtificialPlayer... aiCaller);
+    public void confirmAttack(int nrD, ArtificialPlayer... aiCaller);
 
     // ----------------------- Rinforzo ------------------------------------
     /**
@@ -153,14 +148,6 @@ public interface GameProxy {
      * @return
      */
     public Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller);
-
-    /**
-     * Ritorna true se il giocatore può giocare il tris selezionato.
-     *
-     * @param cards
-     * @return
-     */
-    public boolean canPlayThisTris(Card[] cards, ArtificialPlayer... aiCaller);
 
     /**
      * Gioca il tris.
@@ -246,7 +233,9 @@ public interface GameProxy {
      * @param toCountryName
      * @return
      */
-    public boolean controlMovement(String toCountryName, ArtificialPlayer... aiCaller);
+    public boolean controlMovement(ArtificialPlayer... aiCaller);
+
+    public boolean controlMovement(String toCountry, ArtificialPlayer... aiCaller);
 
     //  M E T O D I   P E R   D A R E   I N F O
     /**
@@ -281,12 +270,6 @@ public interface GameProxy {
      */
     public boolean isReadyToFight(ArtificialPlayer... aiCaller);
 
-    public String[] getCountriesNames(ArtificialPlayer... aiCaller);
-
-    public int[] getCountriesArmies(ArtificialPlayer... aiCaller);
-
-    public String[] getCountriesColors(ArtificialPlayer... aiCaller);
-
     /**
      * questo metodo serve per i giocatori artificiali per determinare quali
      * sono i suoi territori
@@ -317,11 +300,18 @@ public interface GameProxy {
 
     public int getMaxArmies(String countryName, boolean isAttacker, ArtificialPlayer... aiCaller);
 
-    public boolean canPlayThisTris(String[] cardNames, ArtificialPlayer... aiCaller);
+    public boolean isAValidTris(String[] cardNames, ArtificialPlayer... aiCaller);
 
     public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller);
 
     public void endGame();
-    
+
     public void toArtificialPlayer();
+
+    public String getFromCountryName(ArtificialPlayer... aiCaller);
+
+    public void setToCountry(String country, ArtificialPlayer... aiCaller);
+
+    public boolean checkMyIdentity(ArtificialPlayer... aiCalle);
+
 }

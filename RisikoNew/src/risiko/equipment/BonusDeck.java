@@ -82,6 +82,9 @@ public class BonusDeck {
      * @return
      */
     public Card[] getCardsByNames(String[] names) {
+        if(names == null){
+            return null;
+        }
         Card[] set = new Card[names.length];
         for (int i = 0; i < names.length; i++) {
             set[i] = getCardByName(names[i]);

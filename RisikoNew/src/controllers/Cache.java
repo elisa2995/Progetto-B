@@ -58,14 +58,18 @@ public class Cache {
     }
 
     public boolean controlMoveFromCountry(String country) {
-        return canBeChosen(country) || game.getAttackerCountryName() == null && game.controlFromCountryPlayer(country);
+        return canBeChosen(country) || game.getFromCountryName() == null && game.controlFromCountryPlayer(country);
     }
 
     public boolean controlMoveToCountry(String country) {
-        return canBeChosen(country) || game.getAttackerCountryName() != null && game.controlMovement(country);
+        return canBeChosen(country) || game.getFromCountryName() != null && game.controlMovement(country);
     }
 
-    public boolean canBeChosenOnFirstClick(String country) {
+    public boolean canBeChosenAsAttacker(String country) {
         return game.getAttackerCountryName() == null && canBeChosen(country);
+    }
+    
+    public boolean canBeChosenAsFromCountry(String country){
+        return game.getFromCountryName() == null && canBeChosen(country);
     }
 }
