@@ -19,6 +19,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -89,7 +91,7 @@ public class GUI extends JFrame implements GameObserver {
         // Image fading out
         fadeOutLabel = new FadeOutLabel(this);
         fadeOutLabel.setOpaque(true);
-        fadeOutLabel.setBounds(400, 120, 186, 250);
+        fadeOutLabel.setBounds(334, 233, 332, 46);
         mapLayeredPane.add(fadeOutLabel, 1000);
 
         // Labels
@@ -128,8 +130,35 @@ public class GUI extends JFrame implements GameObserver {
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
 
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closeDialog();
+            }
+        });
+
     }
 
+    /**
+     * Asks if you want to end the game. If the answer is yes, it ends the game and 
+     * you come back to the initial GUI
+     */
+    private void closeDialog() {
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        try {
+            if (JOptionPane.showConfirmDialog(this, FileManager.getInstance().getInfoFor("ASK_END", LANG)) == 0) {
+                game.endGame();
+            }
+        } catch (FileManagerException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+    }
+
+    /**
+     * Creates a legend for the players
+     * @param players 
+     */
     private void buildLabelPlayers(List<PlayerInfo> players) {
         JLabel[] labelPlayers = {labelPlayer1, labelPlayer2, labelPlayer3, labelPlayer4, labelPlayer5, labelPlayer6};
         for (int i = 0; i < 6; i++) {
@@ -226,7 +255,6 @@ public class GUI extends JFrame implements GameObserver {
         jScrollPane1 = new javax.swing.JScrollPane();
         textAreaInfo = new javax.swing.JTextArea();
         playerLabel = new javax.swing.JLabel();
-        exitButton = new javax.swing.JButton();
         showCardButton = new javax.swing.JButton();
         labelPlayer6 = new javax.swing.JLabel();
         labelPlayer5 = new javax.swing.JLabel();
@@ -240,6 +268,7 @@ public class GUI extends JFrame implements GameObserver {
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         phaseLabel.setBackground(new java.awt.Color(225, 207, 218));
         phaseLabel.setForeground(new java.awt.Color(1, 1, 1));
@@ -295,13 +324,6 @@ public class GUI extends JFrame implements GameObserver {
         playerLabel.setBackground(new java.awt.Color(225, 207, 218));
         playerLabel.setForeground(new java.awt.Color(1, 1, 1));
         phaseLabel.setFont(new Font("Serif", Font.BOLD, 24));
-
-        exitButton.setText("Termina partita");
-        exitButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitButtonActionPerformed(evt);
-            }
-        });
 
         showCardButton.setText("Mostra/Nascondi carte");
         showCardButton.setVisible(false);
@@ -360,7 +382,6 @@ public class GUI extends JFrame implements GameObserver {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(buttonShowMission, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(buttonNextPhase, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(showCardButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -383,34 +404,32 @@ public class GUI extends JFrame implements GameObserver {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(mapLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(phaseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(phaseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(playerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(labelPlayer1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(12, 12, 12)
                                 .addComponent(labelPlayer2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(labelPlayer3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(labelPlayer4, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(buttonShowMission, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(labelPlayer5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(labelPlayer6))
+                                .addComponent(labelPlayer3)
+                                .addGap(12, 12, 12)
+                                .addComponent(labelPlayer4, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(buttonNextPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(12, 12, 12)
-                        .addComponent(showCardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(labelPlayer5)
+                                .addGap(16, 16, 16)
+                                .addComponent(labelPlayer6))
+                            .addComponent(showCardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -453,22 +472,6 @@ public class GUI extends JFrame implements GameObserver {
     }//GEN-LAST:event_settingsItemActionPerformed
 
     /**
-     * Ends the game.
-     *
-     * @param evt
-     */
-    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        try {
-            if (JOptionPane.showConfirmDialog(this, FileManager.getInstance().getInfoFor("ASK_END", LANG)) == 0) {
-                game.endGame();
-            }
-        } catch (FileManagerException ex) {
-            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }//GEN-LAST:event_exitButtonActionPerformed
-
-    /**
      * Shows <code>cardPanel</code>
      *
      * @param evt
@@ -476,9 +479,9 @@ public class GUI extends JFrame implements GameObserver {
     private void showCardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showCardButtonActionPerformed
 
         if (cardPanel.getY() == cardPanel.getLOW_Y()) {
-            cardPanel.setLocation(cardPanel.getX(), cardPanel.getHIGH_Y());
+            cardPanel.moveTo(cardPanel.getHIGH_Y());
         } else {
-            cardPanel.setLocation(cardPanel.getX(), cardPanel.getLOW_Y());
+            cardPanel.moveTo(cardPanel.getLOW_Y());
         }
     }//GEN-LAST:event_showCardButtonActionPerformed
 
@@ -514,6 +517,7 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnPhaseChange(PlayerInfo player, String phase) {
         ((GraphicsJLabel) labelMap).resetCone();
+        fadeOutLabel.setImage("src/resources/images/" + phase + ".png");
         fadeOutLabel.setVisible(true);
         this.mapLayeredPane.moveToFront(fadeOutLabel);
         fadeOutLabel.startFadeOut();
@@ -536,6 +540,7 @@ public class GUI extends JFrame implements GameObserver {
             case "MOVE":
                 buttonNextPhase.setText("Passa il turno");
         }
+        
     }
 
     /**
@@ -758,6 +763,7 @@ public class GUI extends JFrame implements GameObserver {
             showCardButton.setVisible(true);
         }
         cardPanel.setCards(cards);
+        cardPanel.moveTo(cardPanel.getHIGH_Y());
     }
 
     /**
@@ -779,7 +785,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnPlayedTris() {
-        cardPanel.setLocation(cardPanel.getX(), cardPanel.getLOW_Y());
+        cardPanel.moveTo(cardPanel.getLOW_Y());
         showCardButton.setVisible(false);
     }
 
@@ -871,7 +877,6 @@ public class GUI extends JFrame implements GameObserver {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonNextPhase;
     private javax.swing.JButton buttonShowMission;
-    private javax.swing.JButton exitButton;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;

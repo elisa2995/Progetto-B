@@ -2,16 +2,13 @@
 - uscita dal gioco -> da giocatore normale ad artificiale (ALESSANDRO?) mettere a posto e mettere in bottone sulla gui
 - DOCUMENTAZIONE (javaDoc) (possiamo spartirci le classi da documentare..?)
 - testare qualche classe (tipo player e map ... o qualsiasi altra cosa - se nessuno ha voglia di farlo possiamo spartirci i metodi).
-- immagine per cambio fase che appare e scompare (servono solo le immagini, il codice lo abbiamo)
-- rendere tutto non resizable
 - Visualizzazione della classifica
-- usa funzioni fileManager per UserDialog(ELISA)
-- classe cache
 - cono bianco per spostamento
 - settings giocatore artificiale da mettere a posto
-- mettere la funzionalità di termina partina nella x della gui
 - mettere invokeLater negli update
 - nel move del giocatore artificiale mettere che può spostare solo da country confinanti
+- sistemare textInfo nella fase delle carte
+- non far vedere il nome della fase se giocatore artificiale
 - Sistemare i tasti per i giocatori artificiali 
 - Tasto visualizza regolamento che apre una finestra con il regolamento
 - Cambiare lettura resources (vedi Cusano - Hangman - Dictionary)
@@ -57,3 +54,9 @@ x spostare le immagini/files ecc in resources e cambiare i metodi di lettura/scr
 x Metti sia nella finestra dell'attaccante che nella finestra del difensore entrambi i nomi con i colori (ANDREA)
 x Introdotta legenda giocatori
 x Il bottone nextPhase cambia nome e visibilità in funzione della fase
+x usa funzioni fileManager per UserDialog(ELISA)
+x classe cache
+x mettere la la x del diceDialog
+x mettere la funzionalità di termina partina nella x della gui
+x immagine per cambio fase che appare e scompare (servono solo le immagini, il codice lo abbiamo)
+x rendere tutto non resizable

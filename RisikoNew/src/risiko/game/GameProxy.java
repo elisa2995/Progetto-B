@@ -250,6 +250,7 @@ public interface GameProxy {
     /**
      * Ritorna il nome della Country che sta attaccando.
      *
+     * @param aiCaller
      * @return
      */
     public String getAttackerCountryName(ArtificialPlayer... aiCaller);

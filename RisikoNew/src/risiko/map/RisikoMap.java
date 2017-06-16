@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import services.FileManager;
 import risiko.missions.Mission;
 
@@ -377,10 +376,9 @@ public class RisikoMap {
      * (countryPlayer) e muove tante armate quante sono quelle con cui è stato
      * eseguito l'attacco dal territorio attaccante a quello conquistato.
      *
-     * @param armies è il numero di armate con cui è stato sferrato l'attacco, e
-     * in questa prima versione del gioco anche il numero di armate che vengono
-     * spostate dal territorio attaccante a quello appena conquistato.
      * @author Alessandro
+     * @param attackerCountry
+     * @param defenderCountry
      */
     public void updateOnConquer(Country attackerCountry, Country defenderCountry) {
         Player attacker = this.countryPlayer.get(attackerCountry);
@@ -434,6 +432,11 @@ public class RisikoMap {
     public boolean canAttackFromCountry(Country country) {
         boolean canAttack = false;
         for (Country c : country.getNeighbors()) {
+//            if (countryPlayer.get(c) != countryPlayer.get(country)) {
+//                System.out.println(countryPlayer.get(c) != countryPlayer.get(country));
+//                System.out.println(country.getArmies());
+//            }
+
             canAttack = canAttack || countryPlayer.get(c) != countryPlayer.get(country);
         }
         return canAttack & country.getArmies() > 1;
@@ -453,7 +456,7 @@ public class RisikoMap {
     }
 
     /**
-     * changes the owner of all territories
+     * Assigns the countries of a player to another
      *
      * @param oldOwner previous owner of the territories
      * @param newOwner new owner of the territories

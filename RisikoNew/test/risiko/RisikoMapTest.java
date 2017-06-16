@@ -4,7 +4,6 @@ import risiko.map.Country;
 import risiko.map.RisikoMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -12,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import risiko.map.Continent;
+import risiko.missions.ContinentsMission;
 import risiko.players.Player;
 
 public class RisikoMapTest {
@@ -21,11 +21,11 @@ public class RisikoMapTest {
     private RisikoMap instance;
 
     public RisikoMapTest() {
-
         players = new ArrayList<>();
         players.add(new Player("player1", "RED"));
         players.add(new Player("player2", "GREEN"));
         instance = new RisikoMap();
+        instance.initGame(players);
     }
 
     @BeforeClass
@@ -85,7 +85,7 @@ public class RisikoMapTest {
      */
     @Test
     public void testGetPlayerByCountry() {
-        instance.initGame(players);
+        //instance.initGame(players);
         System.out.println("getPlayerByCountry");
         for (Country country : instance.getCountriesList()) {
             Player owner = instance.getPlayerByCountry(country);
@@ -98,7 +98,7 @@ public class RisikoMapTest {
      */
     @Test
     public void testComputeBonusArmies() {
-        instance.initGame(players);
+        //instance.initGame(players);
         System.out.println("computeBonusArmies");
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
@@ -110,33 +110,42 @@ public class RisikoMapTest {
         }
     }
 
-    /**
-     * Test of hasConqueredContinent method, of class RisikoMap.
-     */
+///**
+//     * Test of hasConqueredContinent method, of class RisikoMap.
+//     */
 //    @Test
 //    public void testHasConqueredContinent() {
 //        System.out.println("hasConqueredContinent");
-//        instance.initGame(players);
 //        Player player = players.get(0);
 //        Country country = instance.getMyCountries(player).get(0);
-//        Continent continet = instance.getContinentByCountry(country);
-//        String[] countries={"Indonesia","Nuova Guinea","Australia Orientale","Australia Occidentale"};
-//        for (String countryName : countries) {
-//            Country country = instance.getCountryByName(countryName);
-//            instance.updateOnConquer(countri0fPlayer0, country, 3);
-//            
+//        Continent continent = instance.getContinentByCountry(country);
+//        for (Country c : continent.getCountries()) {
+//            if (instance.getPlayerByCountry(c) != player) {
+//                instance.updateOnConquer(country, c);
+//            }
 //        }
-//        assertTrue(instance.hasConqueredContinent(player, countri0fPlayer0));
-//        
+//
+//        boolean result = instance.hasConqueredContinent(player, country);
+//        assertTrue(result);
+//        Player otherPlayer = players.get(1);
+//        Country otherCountry = instance.getMyCountries(otherPlayer).get(0);
+//
+//        for (Country c : continent.getCountries()) {
+//            if (c != country) {
+//                instance.updateOnConquer(otherCountry, c);        
+//                break;
+//            }
+//        }
+//        result = instance.hasConqueredContinent(player, country);
+//        assertFalse(result);
 //    }
-
     /**
      * Test of getContinentByCountry method, of class RisikoMap.
      */
     @Test
     public void testGetContinentByCountry() {
         System.out.println("getContinentByCountry");
-        instance.initGame(players);
+        //instance.initGame(players);
         String[] countries = {"Alaska", "Venezuela", "Ucraina", "Madagascar", "India", "Indonesia"};
         String[] continents = {"Nord America", "Sud America", "Europa", "Africa", "Asia", "Oceania"};
         int i = 0;
@@ -178,7 +187,7 @@ public class RisikoMapTest {
     @Test
     public void testGetNeighbors() {
         System.out.println("getNeighbors");
-        instance.initGame(players);
+        //instance.initGame(players);
         Country country = instance.getCountryByName("Alaska");
         List<Country> result = instance.getNeighbors(country);
         assertNotNull(result);
@@ -190,7 +199,7 @@ public class RisikoMapTest {
     @Test
     public void testPlayerCanAttack() {
         System.out.println("playerCanAttack");
-        instance.initGame(players);
+        //instance.initGame(players);
 
         for (Country country : instance.getCountriesList()) {
             country.setArmies(1);
@@ -212,7 +221,7 @@ public class RisikoMapTest {
     @Test
     public void testControlAttacker() {
         System.out.println("controlAttacker");
-        instance.initGame(players);
+        //instance.initGame(players);
         Player player0 = players.get(0);
         Player player1 = players.get(1);
         for (int i = 0; i < instance.getMyCountries(player0).size(); i++) {
@@ -241,9 +250,9 @@ public class RisikoMapTest {
      * Test of controlFromCountryPlayer method, of class RisikoMap.
      */
     @Test
-    public void testControlFromCountryPlayer() {
+    public void testControlFromCountryPlayer() {//qualcosa non torna
         System.out.println("controlFromCountryPlayer");
-        instance.initGame(players);
+        //instance.initGame(players);
         Country country = instance.getCountryByName("Alaska");
         Player player0 = players.get(0);
 
@@ -266,7 +275,7 @@ public class RisikoMapTest {
     @Test
     public void testControlPlayer() {
         System.out.println("controlPlayer");
-        instance.initGame(players);
+        //instance.initGame(players);
         Country country = instance.getCountryByName("Alaska");
         Player player0 = players.get(0);
         List<Country> player0Countries = instance.getMyCountries(player0);
@@ -276,12 +285,12 @@ public class RisikoMapTest {
     }
 
     /**
-     * Test of controlDefender method, of class RisikoMap.
+     * Test of controlDefender method, of class RisikoMap. FAILED :(
      */
     @Test
     public void testControlDefender() {
         System.out.println("controlDefender");
-        instance.initGame(players);
+        //instance.initGame(players);
         Country attackerCountry = instance.getCountriesList().get((int) (Math.random() * N_COUNTRIES));
         Player player0 = players.get(0);
         Country defenderCountry = instance.getCountriesList().get((int) (Math.random() * N_COUNTRIES));
@@ -384,6 +393,167 @@ public class RisikoMapTest {
 //        fail("The test case is a prototype.");
 //    }
 //
+
+    /**
+     * Test of hasLost method, of class RisikoMap.
+     */
+    @Test
+    public void testHasLost() {
+        System.out.println("hasLost");
+        Player player = players.get(0);
+        Player otherPlayer = players.get(1);
+        Country attackerCountry=instance.getMyCountries(otherPlayer).get(0);
+        for (Country country : instance.getCountriesList()) {
+            if (instance.getPlayerByCountry(country) == player) {
+                instance.updateOnConquer(attackerCountry, country);
+            }
+        }
+        boolean result = instance.hasLost(player);
+        assertTrue(result);
+        
+        result=instance.hasLost(otherPlayer);
+        assertFalse(result);
+    }
+
+    /**
+     * Test of addArmies method, of class RisikoMap.
+     */
+    @Test
+    public void testAddArmies() {
+        System.out.println("addArmies");
+        int armies;
+        int bonus = 3;
+        for (Country country : instance.getCountriesList()) {
+            armies = country.getArmies();
+            instance.addArmies(country, bonus);
+            assertEquals(country.getArmies(), armies + bonus);
+        }
+    }
+
+    /**
+     * Test of removeArmies method, of class RisikoMap.
+     */
+    @Test
+    public void testRemoveArmies() {
+        System.out.println("removeArmies");
+        for (Country country : instance.getCountriesList()) {
+            int nArmies = country.getArmies();
+            instance.removeArmies(country, nArmies);
+            assertTrue(country.getArmies() == 0);
+        }
+    }
+
+    /**
+     * Test of canAttackFromCountry method, of class RisikoMap.
+     */
+    @Test
+    public void testCanAttackFromCountry() {
+        System.out.println("canAttackFromCountry");
+        boolean result;
+        for (Country country : instance.getCountriesList()) {
+            Player player = instance.getPlayerByCountry(country);
+            if (instance.getMyCountries(player).containsAll(country.getNeighbors())) {
+                result = instance.canAttackFromCountry(country);
+                assertFalse(result);
+                break;
+            }
+            for (Country c : country.getNeighbors()) {
+                // The neighbor is not a country of the player's
+                if (instance.getPlayerByCountry(c) != player) {
+                    result = instance.canAttackFromCountry(country);
+                    assertTrue(result);
+                    // The country has only 1 army
+                    country.removeArmies(country.getArmies() - 1);
+                    result = instance.canAttackFromCountry(country);
+                    assertFalse(result);
+                    break;
+                }
+
+            }
+
+            for (Country c : country.getNeighbors()) {
+                // The neighbor is a country of the player's
+                if (instance.getPlayerByCountry(c) == instance.getPlayerByCountry(country)) {
+                    result = instance.canAttackFromCountry(country);
+                    assertFalse(result);
+                    break;
+                }
+
+            }
+        }
+
+    }
+//xxxxxxxxxxxxxxxxx
+
+    /**
+     * Test of getMaxArmies method, of class RisikoMap.
+     */
+    @Test
+    public void testGetMaxArmies() {
+        System.out.println("getMaxArmies");
+        instance.initGame(players);
+        Country country0 = instance.getCountriesList().get((int) (Math.random() * N_COUNTRIES));
+        country0.setArmies(3);
+        boolean isAttacker = true;
+        int expResult0 = 2;
+        int result0 = instance.getMaxArmies(country0, isAttacker);
+        assertEquals(expResult0, result0);
+
+        Country country1 = instance.getCountriesList().get((int) (Math.random() * N_COUNTRIES));
+        country1.setArmies(3);
+        int expResult1 = 3;
+        isAttacker = false;
+        int result1 = instance.getMaxArmies(country1, isAttacker);
+        assertEquals(expResult1, result1);
+    }
+
+    /**
+     * Test of updateOnConquer method, of class RisikoMap.
+     */
+    @Test
+    public void testUpdateOnConquer() {
+        System.out.println("updateOnConquer");
+        instance.initGame(players);
+        Country attackerCountry = instance.getCountryByName("Alaska");
+        Country defenderCountry = instance.getCountryByName("Alberta");
+        instance.updateOnConquer(attackerCountry, defenderCountry);
+        Player player0 = instance.getPlayerByCountry(attackerCountry);
+        Player player1 = instance.getPlayerByCountry(defenderCountry);
+        assertEquals(player0, player1);
+    }
+
+    /**
+     * Test of checkIfWinner method, of class RisikoMap.
+     */
+    @Test
+    public void testCheckIfWinner() {
+        System.out.println("checkIfWinner");
+        instance.initGame(players);
+        Player player = players.get(0);
+        List <Country> targetList = instance.getMyCountries(player);
+        ContinentsMission mission = new ContinentsMission("test", 0);
+        mission.setTargetList(targetList);
+        player.setMission(mission);
+        boolean expResult = true;
+        boolean result = instance.checkIfWinner(player);
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of isConquered method, of class RisikoMap.
+     */
+    @Test
+    public void testIsConquered() {
+        System.out.println("isConquered");
+        instance.initGame(players);
+        Country country = instance.getCountryByName("Egitto");
+        country.setArmies(0); 
+        
+        boolean expResult = true;
+        boolean result = instance.isConquered(country);
+        assertEquals(expResult, result);
+    } 
 //    /**
 //     * Test of hasLost method, of class RisikoMap.
 //     */

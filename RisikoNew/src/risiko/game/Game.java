@@ -822,11 +822,11 @@ public class Game extends Observable implements GameProxy {
 
     @Override
     public boolean checkMyIdentity(ArtificialPlayer[] aiCaller) {
-        /* Perchè se checkCallerIdenty fallisce non arriva qui.... 
+        boolean checkCallerIdentityPassed = true;
+        /* Perchè se checkCallerIdenty fallisce gli restituisce false.... 
         boh perché non usare checkCallerIdentity? non ho voglia di pensarci.............*/
-        return true;
+        return checkCallerIdentityPassed;
     }
-
 
 
     private void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {

@@ -21,7 +21,7 @@ public class CardPanel extends JPanel {
     private JButton playTris;
     private final int LOW_Y = 530;
     private final int HIGH_Y = 330;
-    
+
     public int getLOW_Y() {
         return LOW_Y;
     }
@@ -29,7 +29,7 @@ public class CardPanel extends JPanel {
     public int getHIGH_Y() {
         return HIGH_Y;
     }
-    
+
     public CardPanel(GameProxy game) {
         this.cards = new ArrayList<>();
         this.chosenCards = new ArrayList<>();
@@ -101,8 +101,8 @@ public class CardPanel extends JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void setCards(List<String> myCards) {
-        
-        if(!myCards.isEmpty()){
+
+        if (!myCards.isEmpty()) {
             PlayAudio.play("src/resources/sounds/cardFan1.wav");
         }
         cardsPane.removeAll();
@@ -115,7 +115,7 @@ public class CardPanel extends JPanel {
             label.putClientProperty("chosen", false);
             label.setIcon(new ImageIcon("src/resources/images/" + card + ".png"));
             label.setOpaque(false);
-            label.addMouseListener(new CardListener(this,game));
+            label.addMouseListener(new CardListener(this, game));
             label.addMouseMotionListener(new CardListener(this, game));
             cards.add(label);
         }
@@ -215,4 +215,9 @@ public class CardPanel extends JPanel {
         return cards;
     }
 
+    public void moveTo(int newY) {
+        PlayAudio.play("src/resources/sounds/movePanel.wav");
+        PanelAnimation animation = new PanelAnimation(this, newY);
+        animation.start();
+    }
 }
