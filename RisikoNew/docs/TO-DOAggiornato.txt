@@ -1,4 +1,4 @@
-Urgenti: 
+﻿Urgenti: 
 - uscita dal gioco -> da giocatore normale ad artificiale (ALESSANDRO?) mettere a posto e mettere in bottone sulla gui
 - DOCUMENTAZIONE (javaDoc) (possiamo spartirci le classi da documentare..?)
 - testare qualche classe (tipo player e map ... o qualsiasi altra cosa - se nessuno ha voglia di farlo possiamo spartirci i metodi).
@@ -12,6 +12,10 @@ Urgenti:
 - mettere la funzionalità di termina partina nella x della gui
 - mettere invokeLater negli update
 - nel move del giocatore artificiale mettere che può spostare solo da country confinanti
+- Sistemare i tasti per i giocatori artificiali 
+- Tasto visualizza regolamento che apre una finestra con il regolamento
+- Cambiare lettura resources (vedi Cusano - Hangman - Dictionary)
+- Classe per buildinfo
 
 DIVISIONE TEST(4 a testa): 
 -andrea
