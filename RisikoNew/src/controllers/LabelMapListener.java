@@ -171,7 +171,7 @@ public class LabelMapListener extends MouseInputAdapter {
             game.resetFightingCountries();
             return;
         }
-        if (game.getPhase().equals("FIGHT")) {
+        if (game.getPhase().equals("MOVE")) {
             game.resetMoveCountries();
         }
     }
