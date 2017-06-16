@@ -1,6 +1,6 @@
 package risiko.equipment;
 
-public enum Card {
+public enum Card{
 
     INFANTRY(13), CAVALRY(13), ARTILLERY(13), WILD(3);
 

@@ -1,5 +1,6 @@
 package risiko.game;
 
+import services.InfoFactory;
 import risiko.phase.*;
 import exceptions.FileManagerException;
 import risiko.players.PlayerType;
@@ -82,10 +83,10 @@ public class Game extends Observable implements GameProxy {
 
         buildPlayers(playersInfo);
         map.initGame(players);
-        notifyCountriesAssignment(buildAllCountryInfo());
+        notifyCountriesAssignment(InfoFactory.buildAllCountryInfo(map));
         activePlayer = players.get(new Random().nextInt(players.size()));
         map.computeBonusArmies(activePlayer);
-        notifyPhaseChange(buildPlayerInfo(activePlayer), phases[phaseIndex].toString());
+        notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), phases[phaseIndex].toString());
         startArtificialPlayersThreads();
     }
 
@@ -272,7 +273,7 @@ public class Game extends Observable implements GameProxy {
         } catch (PendingOperationsException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
-        notifyPhaseChange(buildPlayerInfo(activePlayer), phases[phaseIndex].toString());
+        notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), phases[phaseIndex].toString());
     }
 
 // </editor-fold>
@@ -309,7 +310,7 @@ public class Game extends Observable implements GameProxy {
             }
         }
 
-        notifyArmiesChange(buildCountryInfo(map.getCountryByName(countryName)));
+        notifyArmiesChange(InfoFactory.buildCountryInfo(map.getCountryByName(countryName), map));
     }
 
     /**
@@ -344,7 +345,7 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
         getFightPhase().setAttackerCountry(attackerCountryName);
-        notifySetAttacker(buildCountryInfo(true));
+        notifySetAttacker(InfoFactory.buildCountryInfo(true, getFightPhase(), map));
     }
 
     /**
@@ -356,7 +357,7 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller) {
         getFightPhase().setDefenderCountry(defenderCountryName);
-        ((BasicObservable) this).notifySetDefender(buildFightingCountriesInfo(), getFightPhase().reattack());
+        ((BasicObservable) this).notifySetDefender(InfoFactory.buildFightingCountriesInfo(getFightPhase(), map), getFightPhase().reattack());
     }
 
     /**
@@ -424,7 +425,7 @@ public class Game extends Observable implements GameProxy {
     public void declareAttack(ArtificialPlayer... aiCaller) {
         getFightPhase().declareAttack();
         //if (getFightPhase().getAttackerArmies() > 0) { // perché?
-        notifyDefender(buildCountryInfo(false));
+        notifyDefender(InfoFactory.buildCountryInfo(false, getFightPhase(), map));
         //}
     }
 
@@ -444,7 +445,7 @@ public class Game extends Observable implements GameProxy {
         checkLostAndWon();
         // Dopo il combattimento
         notifyArmiesChangeAfterAttack(getAttackerCountry(), getDefenderCountry());
-        notifyAttackResult(buildAttackResultInfo());
+        notifyAttackResult(InfoFactory.buildAttackResultInfo(getFightPhase(), map));
         // Dopo lo spostamento.. perché è qui??
         //notifyArmiesChangeAfterAttack(fightPhase.getAttackerCountry(), getDefenderCountry());
     }
@@ -603,8 +604,8 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void move(String fromCountryName, String toCountryName, Integer nrArmies, ArtificialPlayer... aiCaller) {
         getMovePhase().move(map.getCountryByName(fromCountryName), map.getCountryByName(toCountryName), nrArmies);
-        notifyArmiesChange(buildCountryInfo(getMovePhase().getToCountry()));
-        notifyArmiesChange(buildCountryInfo(getMovePhase().getFromCountry()));
+        notifyArmiesChange(InfoFactory.buildCountryInfo(getMovePhase().getToCountry(), map));
+        notifyArmiesChange(InfoFactory.buildCountryInfo(getMovePhase().getFromCountry(), map)); 
 
         if (getPhase().equals("MOVE")) {
             try {
@@ -664,7 +665,7 @@ public class Game extends Observable implements GameProxy {
             passTurn();
         }
         phases[phaseIndex].clear();
-        notifyPhaseChange(buildPlayerInfo(activePlayer), Phase.getName(phaseIndex));
+        notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), Phase.getName(phaseIndex));
     }
 
     /**
@@ -822,16 +823,16 @@ public class Game extends Observable implements GameProxy {
 
     @Override
     public boolean checkMyIdentity(ArtificialPlayer[] aiCaller) {
-        /* Perchè se checkCallerIdenty fallisce non arriva qui.... 
+        boolean checkCallerIdentityPassed = true;
+        /* Perchè se checkCallerIdenty fallisce gli restituisce false.... 
         boh perché non usare checkCallerIdentity? non ho voglia di pensarci.............*/
-        return true;
+        return checkCallerIdentityPassed;
     }
 
 
-
     private void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
-        notifyArmiesChange(buildCountryInfo(defenderCountry));
-        notifyArmiesChange(buildCountryInfo(attackerCountry));
+        notifyArmiesChange(InfoFactory.buildCountryInfo(defenderCountry, map));
+        notifyArmiesChange(InfoFactory.buildCountryInfo(attackerCountry, map));
     }
 
     @Override
@@ -853,7 +854,6 @@ public class Game extends Observable implements GameProxy {
             player.addBonusArmies(activePlayer.getBonusArmies());
             player.setConqueredACountry(activePlayer.hasConqueredACountry());
 
-            //activePlayer = player;
             int position = -1;
             for (Player entry : players) {
                 if (entry.getName().equals(activePlayer.getName())) {
@@ -867,81 +867,5 @@ public class Game extends Observable implements GameProxy {
             this.addObserver((ArtificialPlayer) players.get(position));
             new Thread((ArtificialPlayer) player).start();
         }
-    }
-
-    //-------------------------------- Build info -----------------------------//
-    /**
-     * ... non ho voglia
-     *
-     * @return
-     */
-    private AttackResultInfo buildAttackResultInfo() {
-        FightPhase fight = getFightPhase();
-        return new AttackResultInfo(buildFightingCountriesInfo(), fight.getDice(), fight.hasConquered(), fight.checkContinentConquest());
-    }
-
-    /**
-     * Builds an array of 2 elements of <code>CountryInfo</code>. The element at
-     * index 0 represent the attacker, the one at index 1 the defender.
-     *
-     * @return
-     */
-    private CountryInfo[] buildFightingCountriesInfo() {
-        CountryInfo attackerCountryInfo = buildCountryInfo(true);
-        attackerCountryInfo.canAttackFromHere(map.canAttackFromCountry(getFightPhase().getAttackerCountry()));
-        CountryInfo defenderCountryInfo = buildCountryInfo(false);
-        return new CountryInfo[]{attackerCountryInfo, defenderCountryInfo};
-    }
-
-    /**
-     * Builds an object <code>CountryInfo</code> which contains the info about
-     * the attacker/defender.
-     *
-     * @param isAttacker
-     * @return
-     */
-    private CountryInfo buildCountryInfo(boolean isAttacker) {
-        Country country = (isAttacker) ? getFightPhase().getAttackerCountry() : getFightPhase().getDefenderCountry();
-        Player player = map.getPlayerByCountry(country);
-        return new CountryInfo(country.toString(), map.getMaxArmies(country, isAttacker), buildPlayerInfo(player));
-    }
-
-    /**
-     * Builds an object <code>CountryInfo</code> from an object of type
-     * <code>Country</code>.
-     *
-     * @param country
-     * @return
-     */
-    private CountryInfo buildCountryInfo(Country country) {
-        return new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.toString(), country.getArmies());
-    }
-
-    /**
-     * Builds an object <code>PlayerInfo</code> which containts the info about a
-     * certain player.
-     *
-     * @param player
-     * @return
-     */
-    private PlayerInfo buildPlayerInfo(Player player) {
-        return new PlayerInfo(player.toString(), player.getColor(), player.getBonusArmies(), player instanceof ArtificialPlayer);
-    }
-
-    /**
-     * Builds an array of CountryInfo, containing the info about every country
-     * on the map.
-     *
-     * @return
-     */
-    private CountryInfo[] buildAllCountryInfo() {
-        Country country;
-        List<Country> countries = map.getCountriesList();
-        CountryInfo[] countriesInfo = new CountryInfo[countries.size()];
-        for (int i = 0; i < countriesInfo.length; i++) {
-            country = countries.get(i);
-            countriesInfo[i] = new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.getName(), country.getArmies());
-        }
-        return countriesInfo;
     }
 }
