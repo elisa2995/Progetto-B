@@ -483,7 +483,6 @@ public class RisikoMapTest {
         }
 
     }
-//xxxxxxxxxxxxxxxxx
 
     /**
      * Test of getMaxArmies method, of class RisikoMap.

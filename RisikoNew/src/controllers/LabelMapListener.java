@@ -15,12 +15,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
 import gui.PlayAudio;
-import java.util.HashMap;
 import java.awt.Rectangle;
 import risiko.game.GameProxy;
 
 /**
- * Listens to the movement and the click of the mouse and it processes it
+ * Listens to the movement and the click of the mouse and processes it
  * dependending on the current phase.
  */
 public class LabelMapListener extends MouseInputAdapter {
@@ -159,7 +158,7 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * Resets all the original settings
+     * Resets to the original settings
      */
     private void reset() {
         PlayAudio.play("src/resources/sounds/clickOff.wav");
@@ -204,65 +203,107 @@ public class LabelMapListener extends MouseInputAdapter {
                 setDefaultCursor(e.getComponent(), label);
                 break;
             case "REINFORCE":
-                if (cache.controlReinforce(country)) {
-                    //Ho ancora bonus armies e sono su un mio territorio
-                    setHandCursor(e.getComponent(), label);
-                    cache.save(country, true);
-
-                } else {
-                    //Non ho più bonusArmies oppure non sono sul mio territorio
-                    setDefaultCursor(e.getComponent(), label);
-                    cache.save(country, false);
-                }
+                checkReinforce(country, e.getComponent(), label);
                 break;
             case "FIGHT":
                 drawCone(e);
-                if (cache.controlAttack(country)) {
-
-                    //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
-                    setHandCursor(e.getComponent(), label);
-                    cache.save(country, true);
-                    break;
-                }
-                if (cache.controlDefense(country)) {
-
-                    //Devo scegliere il difensore, sono su un territorio confinante attaccabile
-                    setHandCursor(e.getComponent(), label);
-                    cache.save(country, true);
-                    break;
-                }
-                //Sono su un territorio non valido per attaccare nè per difendere
-                setDefaultCursor(e.getComponent(), label);
-                cache.save(country, false);
+                checkFight(country, e.getComponent(), label);
                 break;
             case "MOVE":
-                if (cache.controlMoveFromCountry(country)) {
-
-                    //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
-                    setHandCursor(e.getComponent(), label);
-                    cache.save(country, true);
-                    break;
-                }
-                if (cache.controlMoveToCountry(country)) {
-
-                    //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
-                    setHandCursor(e.getComponent(), label);
-                    cache.save(country, true);
-                    break;
-                }
-                //Sono su un territorio non valido per spostarmi
-                setDefaultCursor(e.getComponent(), label);
-                cache.save(country, false);
+                checkMove(country, e.getComponent(), label);
                 break;
         }
     }
 
     /**
-     * Ritirna il nome della Country a cui appartiene il pixel su cui si è
-     * cliccato. (null se il pixel non appartiene a nessuna Country). In
-     * particolare: Prende le coordinate del click, trova il Color di quel pixel
-     * dall'immagine, e restituisce la stringa che corrisponde al nome della
-     * Country corrispondente mappata in ColorNameCountry.
+     * Checks if the country can be reinforced; if this can be done it sets the
+     * cursor to hand cursor. It saves the country and wheter it can bereinforcd
+     * in the cache.
+     *
+     * @param country
+     * @param component
+     * @param label
+     */
+    private void checkReinforce(String country, Component component, JLabel label) {
+        if (cache.controlReinforce(country)) {
+            //Ho ancora bonus armies e sono su un mio territorio
+            setHandCursor(component, label);
+            cache.save(country, true);
+            return;
+        }
+        //Non ho più bonusArmies oppure non sono sul mio territorio
+        setDefaultCursor(component, label);
+        cache.save(country, false);
+
+    }
+
+    /**
+     * Checks if the country can be choosen as attacker/defender(depending on
+     * the moment of the fight in which the game is); if this can be done it
+     * sets the hand cursor. It saves the country and wheter it can bereinforcd
+     * in the cache.
+     *
+     * @param country
+     * @param component
+     * @param label
+     */
+    private void checkFight(String country, Component component, JLabel label) {
+        if (cache.controlAttack(country)) {
+
+            //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
+            setHandCursor(component, label);
+            cache.save(country, true);
+            return;
+        }
+        if (cache.controlDefense(country)) {
+
+            //Devo scegliere il difensore, sono su un territorio confinante attaccabile
+            setHandCursor(component, label);
+            cache.save(country, true);
+            return;
+        }
+        //Sono su un territorio non valido per attaccare nè per difendere
+        setDefaultCursor(component, label);
+        cache.save(country, false);
+    }
+
+    /**
+     * Checks if the country can be choosen as country from/to which the
+     * movement take place(depending on the moment of the movement in which the
+     * game is); if this can be done it sets the hand cursor. It saves the
+     * country and wheter it can bereinforcd in the cache.
+     *
+     * @param country
+     * @param component
+     * @param label
+     */
+    private void checkMove(String country, Component component, JLabel label) {
+        if (cache.controlMoveFromCountry(country)) {
+
+            //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
+            setHandCursor(component, label);
+            cache.save(country, true);
+            return;
+        }
+        if (cache.controlMoveToCountry(country)) {
+
+            //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
+            setHandCursor(component, label);
+            cache.save(country, true);
+            return;
+        }
+        //Sono su un territorio non valido per spostarmi
+        setDefaultCursor(component, label);
+        cache.save(country, false);
+
+    }
+
+    /**
+     * Returns the name of the country that ows the clicked pixel. Returns null
+     * if no country ows the pixel. In particular, it takes the coordinates of
+     * the pixel, retrieves the <code>Color</code> of that pixel from the image
+     * and returns the country name that corresponds to that color in
+     * ColorNameCountry.
      *
      * @param e
      * @return
@@ -274,8 +315,7 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * Metodo necessario per convertire la labelMap in una bufferedMap a causa
-     * della GUI che è stata creata con DESIGN
+     * Converts the icon in labelMap in a buffered image
      *
      * @param labelMap
      * @return
@@ -291,7 +331,7 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * Setta il cursore a "manina".
+     * Sets the hand cursor
      *
      * @param component
      * @param label
@@ -302,7 +342,7 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * Setta il cursore a freccia.
+     * Sets the default cursor
      *
      * @param component
      * @param label
@@ -312,10 +352,19 @@ public class LabelMapListener extends MouseInputAdapter {
         label.setCursor(Cursor.getDefaultCursor());
     }
 
+    /**
+     * Resets the content of the cache.
+     */
     public void resetCache() {
         cache.resetCache();
     }
 
+    /**
+     * Draws a cone that starts from the selected country and arrives to the
+     * position of the cursor.
+     *
+     * @param e
+     */
     public void drawCone(MouseEvent e) {
         if (game.getAttackerCountryName() != null) {
             //imposto il cono di luce dall'attackerCountry alla posizione del Mouse
