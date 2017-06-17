@@ -11,7 +11,7 @@ public class ReinforcePhase extends Phase {
     }
 
     public void reinforce(Country country) {
-        map.reinforce(country);
+        country.reinforce();
     }
 
     @Override
