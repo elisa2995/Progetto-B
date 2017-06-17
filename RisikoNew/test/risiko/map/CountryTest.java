@@ -22,23 +22,17 @@ import risiko.players.Player;
 public class CountryTest {
 
     private List<Player> players;
+    private String NAME_INSTANCE = "instance";
     private Country instance;
+    List<Country> neighbors;
 
     public CountryTest() {
         players = new ArrayList<>();
-        players.add(new Player("player0", "RED"));
-        players.add(new Player("player1", "GREEN"));
+        players.add(new Player("playerInstance", "BLUE"));
 
-        List<Country> neighbors = new ArrayList<>();
-        neighbors.add(new Country("CountryOfPlayer0"));
-        neighbors.get(0).addArmies(3);
-        neighbors.get(0).setOwner(players.get(0));
-        neighbors.add(new Country("CountryOfPlayer1"));
-        neighbors.get(1).addArmies(3);
-        neighbors.get(1).setOwner(players.get(1));
+        neighbors = new ArrayList<>();
 
-        instance = new Country("instance");
-        instance.addArmies(3);
+        instance = new Country(NAME_INSTANCE);
         instance.setOwner(players.get(0));
         instance.setNeighbors(neighbors);
     }
@@ -65,12 +59,7 @@ public class CountryTest {
     @Test
     public void testGetNeighbors() {
         System.out.println("getNeighbors");
-        Country instance = null;
-        List<Country> expResult = null;
-        List<Country> result = instance.getNeighbors();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertNotNull(instance.getNeighbors());
     }
 
     /**
@@ -79,11 +68,14 @@ public class CountryTest {
     @Test
     public void testSetNeighbors() {
         System.out.println("setNeighbors");
-        List<Country> neighbors = null;
-        Country instance = null;
+        instance.setNeighbors(null);
+        assertNull(instance.getNeighbors());
+
+        neighbors = new ArrayList<>();
+        neighbors.add(new Country("Country0"));
+        neighbors.add(new Country("Country1"));
         instance.setNeighbors(neighbors);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertNotNull(instance.getNeighbors());
     }
 
     /**
@@ -92,12 +84,7 @@ public class CountryTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        Country instance = null;
-        String expResult = "";
-        String result = instance.getName();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertNotNull(instance.getName());
     }
 
     /**
@@ -106,11 +93,8 @@ public class CountryTest {
     @Test
     public void testSetArmies() {
         System.out.println("setArmies");
-        int armies = 0;
-        Country instance = null;
-        instance.setArmies(armies);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.setArmies(5);
+        assertEquals(instance.getArmies(), 5);
     }
 
     /**
@@ -119,12 +103,8 @@ public class CountryTest {
     @Test
     public void testGetArmies() {
         System.out.println("getArmies");
-        Country instance = null;
-        int expResult = 0;
-        int result = instance.getArmies();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.setArmies(3);
+        assertEquals(instance.getArmies(), 3);
     }
 
     /**
@@ -133,11 +113,9 @@ public class CountryTest {
     @Test
     public void testRemoveArmies() {
         System.out.println("removeArmies");
-        int armies = 0;
-        Country instance = null;
-        instance.removeArmies(armies);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int nArmies = instance.getArmies();
+        instance.removeArmies(nArmies);
+        assertEquals(instance.getArmies(), 0);
     }
 
     /**
@@ -146,23 +124,9 @@ public class CountryTest {
     @Test
     public void testAddArmies() {
         System.out.println("addArmies");
-        int armies = 0;
-        Country instance = null;
-        instance.addArmies(armies);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of incrementArmies method, of class Country.
-     */
-    @Test
-    public void testIncrementArmies() {
-        System.out.println("incrementArmies");
-        Country instance = null;
-        instance.incrementArmies();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.setArmies(2);
+        instance.addArmies(5);
+        assertEquals(instance.getArmies(), 7);
     }
 
     /**
@@ -171,12 +135,10 @@ public class CountryTest {
     @Test
     public void testIsConquered() {
         System.out.println("isConquered");
-        Country instance = null;
-        boolean expResult = false;
-        boolean result = instance.isConquered();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.setArmies(0);
+        assertTrue(instance.isConquered());
+        instance.setArmies(2);
+        assertFalse(instance.isConquered());
     }
 
     /**
@@ -185,13 +147,17 @@ public class CountryTest {
     @Test
     public void testCompareTo() {
         System.out.println("compareTo");
-        Country o = null;
-        Country instance = null;
-        int expResult = 0;
-        int result = instance.compareTo(o);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.setArmies(10);
+        neighbors.add(new Country("countryRND"));
+        Country neighbor0 = instance.getNeighbors().get(0);
+        neighbor0.setArmies(5);
+        assertTrue(instance.compareTo(neighbor0) > 0);
+
+        neighbor0.setArmies(10);
+        assertTrue(instance.compareTo(neighbor0) == 0);
+
+        neighbor0.setArmies(50);
+        assertTrue(instance.compareTo(neighbor0) < 0);
     }
 
     /**
@@ -200,12 +166,7 @@ public class CountryTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-        Country instance = null;
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(instance.getName(), NAME_INSTANCE);
     }
 
     /**
@@ -214,15 +175,12 @@ public class CountryTest {
     @Test
     public void testGetMaxArmies() {
         System.out.println("getMaxArmies");
-        boolean isAttacker = true;
-        int expResult0 = 2;
-        int result0 = instance.getMaxArmies(isAttacker);
-        assertEquals(expResult0, result0);
+        instance.setArmies(3);
+        int result0 = instance.getMaxArmies(true);
+        assertEquals(2, result0);
 
-        int expResult1 = 3;
-        isAttacker = false;
-        int result1 = instance.getMaxArmies(isAttacker);
-        assertEquals(expResult1, result1);
+        int result1 = instance.getMaxArmies(false);
+        assertEquals(3, result1);
     }
 
     /**
@@ -231,12 +189,9 @@ public class CountryTest {
     @Test
     public void testGetOwner() {
         System.out.println("getOwner");
-        Country instance = null;
-        Player expResult = null;
-        Player result = instance.getOwner();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player owner = new Player("PlayerInstance", "BLUE");
+        instance.setOwner(owner);
+        assertEquals(owner, instance.getOwner());
     }
 
     /**
@@ -245,11 +200,9 @@ public class CountryTest {
     @Test
     public void testSetOwner() {
         System.out.println("setOwner");
-        Player owner = null;
-        Country instance = null;
+        Player owner = new Player("PlayerInstance", "BLUE");
         instance.setOwner(owner);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertNotNull(instance.getOwner());
     }
 
     /**
@@ -258,170 +211,133 @@ public class CountryTest {
     @Test
     public void testReinforce() {
         System.out.println("reinforce");
-        Country instance = null;
+        instance.setArmies(0);
+        Player owner = instance.getOwner();
+        owner.addBonusArmies(1);
         instance.reinforce();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(instance.getArmies() == 1);
     }
 
-//    /**
-//     * Test of controlMovement method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testControlMovement() {
-//        System.out.println("controlMovement");
-//        Country fromCountry = null;
-//        Country toCountry = null;
-//        Player player = null;
-//        boolean expResult = false;
-//        boolean result = instance.controlMovement(toCountry);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+    /**
+     * Test of controlMovement method, of class RisikoMap.
+     */
+    @Test
+    public void testControlMovement() {
+        System.out.println("controlMovement");
+        Player owner = instance.getOwner();
+        Country toCountry = new Country("toCountry");
+        assertFalse(instance.controlMovement(toCountry));
+        toCountry.setOwner(owner);
+        assertFalse(instance.controlMovement(toCountry));
+        neighbors.add(toCountry);
+        assertTrue(instance.controlMovement(toCountry));
+    }
 
-//    /**
-//     * Test of controlPlayer method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testControlPlayer() {
-//        System.out.println("controlPlayer");
-//        Player player0 = players.get(0);
-//        boolean expResult = player0Countries.contains(country);
-//        boolean result = instance.controlPlayer(player0);
-//        assertEquals(expResult, result);
-//    }
+    /**
+     * Test of controlPlayer method, of class RisikoMap.
+     */
+    @Test
+    public void testControlPlayer() {
+        System.out.println("controlPlayer");
+        Player owner = new Player("playerTmp", "BLUE");
+        assertFalse(instance.controlPlayer(owner));
+        instance.setOwner(owner);
+        assertTrue(instance.controlPlayer(owner));
+    }
 
-//    /**
-//     * Test of controlDefender method, of class RisikoMap. FAILED :(
-//     */
-//    @Test
-//    public void testControlDefender() {
-//        System.out.println("controlDefender");
-//        for (int i = 0; i < 1000; i++) {
-//            Country alaska = instance.getCountryByName("Alaska");
-//            Country alberta = instance.getCountryByName("Alberta");
-//            Country mongolia = instance.getCountryByName("Mongolia");
-//            Player alaskaPlayer = alaska.getOwner();
-//            Player albertaPlayer = alberta.getOwner();
-//
-//            if (alaskaPlayer.equals(albertaPlayer)) {
-//                assertFalse(instance.controlDefender(alaska, alberta));
-//            } else {
-//                assertTrue(instance.controlDefender(alaska, alberta));
-//            }
-//            assertFalse(instance.controlDefender(alaska, mongolia));
-//        }
-//    }
+    /**
+     * Test of controlDefender method, of class RisikoMap. FAILED :(
+     */
+    @Test
+    public void testControlDefender() {
+        System.out.println("controlDefender");
+        Player theSameOwner = instance.getOwner();
+        Country defender = new Country("defender");
+        defender.setOwner(theSameOwner);
+        assertFalse(instance.controlDefender(defender));
 
-//    /**
-//     * Test of updateOnConquer method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testUpdateOnConquer() {
-//        System.out.println("updateOnConquer");
-//        instance.initGame(players);
-//        instance.updateOnConquer(defenderCountry);
-//        Player player0 = attackerCountry.getOwner();
-//        Player player1 = defenderCountry.getOwner();
-//        assertEquals(player0, player1);
-//    }
+        neighbors.add(defender);
+        assertFalse(instance.controlDefender(defender));
 
-//    /**
-//     * Test of controlAttacker method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testControlAttacker() {
-//        System.out.println("controlAttacker");
-//        instance.initGame(players);
-//        Player player0 = players.get(0);
-//        Player player1 = players.get(1);
-//        for (int i = 0; i < instance.getMyCountries(player0).size(); i++) {
-//            Country countryOfPlayer0 = instance.getMyCountries(player0).get(i);
-//            countryOfPlayer0.setArmies(3);
-//            assertTrue(instance.controlAttacker(countryOfPlayer0, player0));
-//        }
-//        for (int i = 0; i < instance.getMyCountries(player0).size(); i++) {
-//            Country countryOfPlayer0 = instance.getMyCountries(player0).get(i);
-//            countryOfPlayer0.setArmies(3);
-//            assertFalse(instance.controlAttacker(countryOfPlayer0, player1));
-//        }
-//        for (int i = 0; i < instance.getMyCountries(player0).size(); i++) {
-//            Country countryOfPlayer0 = instance.getMyCountries(player0).get(i);
-//            countryOfPlayer0.setArmies(1);
-//            assertFalse(instance.controlAttacker(countryOfPlayer0, player0));
-//        }
-//        for (int i = 0; i < instance.getMyCountries(player0).size(); i++) {
-//            Country countryOfPlayer0 = instance.getMyCountries(player0).get(i);
-//            countryOfPlayer0.setArmies(1);
-//            assertFalse(instance.controlAttacker(countryOfPlayer0, player1));
-//        }
-//    }
+        defender.setOwner(new Player("notTheSamePlayer", "BLUE"));
+        assertTrue(instance.controlDefender(defender));
+    }
 
-//    /**
-//     * Test of controlFromCountryPlayer method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testControlFromCountryPlayer() {//qualcosa non torna
-//        System.out.println("controlFromCountryPlayer");
-//        instance.initGame(players);
-//        Country country = instance.getCountryByName("Alaska");
-//        Player player0 = players.get(0);
-//
-//        boolean expResult = false;
-//        Player subjectPlayer = country.getOwner();
-//        for (Country neighbor : country.getNeighbors()) {
-//            Player neighborPlayer = neighbor.getOwner();
-//            if (neighborPlayer.equals(subjectPlayer)) {
-//                expResult = true;
-//            }
-//        }
-//        expResult = country.getArmies() > 1 && subjectPlayer.equals(player0);
-//        boolean result = instance.controlFromCountryPlayer(country, player0);
-//        assertEquals(expResult, result);
-//    }
+    /**
+     * Test of updateOnConquer method, of class RisikoMap.
+     */
+    @Test
+    public void testUpdateOnConquer() {
+        System.out.println("updateOnConquer");
+        Country defender = new Country("defender");
+        Player owner = instance.getOwner();
+        assertFalse(owner.hasConqueredACountry());
+        assertNotEquals(owner, defender.getOwner());
 
-//    /**
-//     * Test of canAttackFromCountry method, of class RisikoMap.
-//     */
-//    @Test
-//    public void testCanAttackFromCountry() {
-//        System.out.println("canAttackFromCountry");
-//        boolean result;
-//        for (Country country : instance.getCountriesList()) {
-//            Player player = country.getOwner();
-//            if (instance.getMyCountries(player).containsAll(country.getNeighbors())) {
-//                result = instance.canAttackFromCountry(country);
-//                assertFalse(result);
-//                break;
-//            }
-//            for (Country c : country.getNeighbors()) {
-//                The neighbor is not a country of the player
-//                's
-//                if (c.getOwner() != player) {
-//                    result = instance.canAttackFromCountry(country);
-//                    assertTrue(result);
-//                    The country has only 1 army country
-//                    .removeArmies(country.getArmies() - 1);
-//                    result = instance.canAttackFromCountry(country);
-//                    assertFalse(result);
-//                    break;
-//                }
-//
-//            }
-//
-//            for (Country c : country.getNeighbors()) {
-//                The neighbor is a country of the player
-//                's
-//                if (c.getOwner() == country.getOwner()     {
-//                    result = instance.canAttackFromCountry(country);
-//                    assertFalse(result);
-//                    break;
-//                }
-//
-//            }
-//        }
-//
-//    }
-//
+        instance.updateOnConquer(defender);
+        assertTrue(owner.hasConqueredACountry());
+        assertEquals(owner, defender.getOwner());
+    }
+
+    /**
+     * Test of controlAttacker method, of class RisikoMap.
+     */
+    @Test
+    public void testControlAttacker() {
+        System.out.println("controlAttacker");
+        Player random = new Player("random", "BLUE");
+        Player owner = instance.getOwner();
+
+        instance.setArmies(1);
+        assertFalse(instance.controlAttacker(random));
+        assertFalse(instance.controlAttacker(owner));
+        instance.setArmies(2);
+        assertFalse(instance.controlAttacker(random));
+        assertTrue(instance.controlAttacker(owner));
+    }
+
+    /**
+     * Test of controlFromCountryPlayer method, of class RisikoMap.
+     */
+    @Test
+    public void testControlFromCountryPlayer() {//qualcosa non torna
+        System.out.println("controlFromCountryPlayer");
+        Player random = new Player("random", "BLUE");
+        Player owner = instance.getOwner();
+        Country neighbor = new Country("neighbor");
+        neighbor.setOwner(random);
+
+        instance.setArmies(1);
+        assertFalse(instance.controlFromCountryPlayer(random));
+        assertFalse(instance.controlFromCountryPlayer(owner));
+        instance.setArmies(2);
+        assertFalse(instance.controlFromCountryPlayer(random));
+        assertFalse(instance.controlFromCountryPlayer(owner));
+        neighbors.add(neighbor);
+        assertFalse(instance.controlFromCountryPlayer(random));
+        assertFalse(instance.controlFromCountryPlayer(owner));
+        neighbor.setOwner(owner);
+        assertFalse(instance.controlFromCountryPlayer(random));
+        assertTrue(instance.controlFromCountryPlayer(owner));
+    }
+
+    /**
+     * Test of canAttackFromCountry method, of class RisikoMap.
+     */
+    @Test
+    public void testCanAttackFromCountry() {
+        System.out.println("canAttackFromCountry");
+        Player random = new Player("random", "BLUE");
+        Player owner = instance.getOwner();
+        Country neighbor = new Country("neighbor");
+        neighbor.setOwner(owner);
+        neighbors.add(neighbor);
+
+        instance.setArmies(1);
+        assertFalse(instance.canAttackFromCountry());
+        instance.setArmies(2);
+        assertFalse(instance.canAttackFromCountry());
+        neighbor.setOwner(random);
+        assertTrue(instance.canAttackFromCountry());
+    }
 }
