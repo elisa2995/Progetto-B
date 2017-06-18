@@ -18,19 +18,34 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 /**
+ * Depending on the chosen selected type of player it changes the
+ * <code>nameField</code> of the <code>PlayerInfoRow</code> accordingly. If the
+ * player wants to login it open a dedicated dialog.
  *
- * @author Elisa
  */
 public class SelectTypeListener implements ActionListener {
 
     private List<PlayerInfoRow> players;
     private StartGameGUI gui;
 
-    public SelectTypeListener(StartGameGUI gui,List<PlayerInfoRow> players) {
+    /**
+     * Creates a new SelectTypeListener
+     *
+     * @param gui
+     * @param players
+     */
+    public SelectTypeListener(StartGameGUI gui, List<PlayerInfoRow> players) {
         this.players = players;
         this.gui = gui;
     }
 
+    /**
+     * If the player of the player row is already logged it asks if the user
+     * wants to logout; if he does the logout or the player wasn't logged, it
+     * changes the player row accordingly to the new type.
+     *
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -45,7 +60,17 @@ public class SelectTypeListener implements ActionListener {
                 return;
             }
         }
+        changePlayerRow(player, type);
 
+    }
+
+    /**
+     * Changes the <code>PlayerInfoRow</code> player accordingly to the type.
+     *
+     * @param player
+     * @param type
+     */
+    private void changePlayerRow(PlayerInfoRow player, String type) {
         switch (type) {
             case "normale":
                 player.resetPlayerName();
@@ -62,9 +87,15 @@ public class SelectTypeListener implements ActionListener {
                 break;
 
         }
-        // }
     }
 
+    /**
+     * Opens a new <code>JOptionPane</code> that asks for the logout of the
+     * player.
+     *
+     * @param player
+     * @throws LogoutException
+     */
     private void askLogout(PlayerInfoRow player) throws LogoutException {
 
         int decision = JOptionPane.showConfirmDialog(gui, "Logout di " + player.getPlayerName());
@@ -76,6 +107,11 @@ public class SelectTypeListener implements ActionListener {
 
     }
 
+    /**
+     * Opens the <code>UserDialog</code> to do the login
+     *
+     * @param index
+     */
     private void showLogin(int index) {
         UserDialog userDialog = new UserDialog(gui, players, false);
         userDialog.setIndex(index);
@@ -84,6 +120,13 @@ public class SelectTypeListener implements ActionListener {
         gui.setEnabled(false);
     }
 
+    /**
+     * Returns the <code>PlayerInfoRow</code> that contains
+     * <code>JComboBox</code> type.
+     *
+     * @param type
+     * @return
+     */
     private PlayerInfoRow getSelectedRow(JComboBox type) {
         for (PlayerInfoRow info : players) {
             if (info.getTypeComboBox().equals(type)) {
@@ -93,6 +136,12 @@ public class SelectTypeListener implements ActionListener {
         return null; // Non dovrebbe mai arrivarci
     }
 
+    /**
+     * Returns a valid name for an artificial player, depending on the number of
+     * artificial players already in the game.
+     *
+     * @return
+     */
     private String getAIName() {
 
         String name;
@@ -105,6 +154,10 @@ public class SelectTypeListener implements ActionListener {
         return null; // Non dovrebbe mai arrivarci
     }
 
+    /**
+     * Returns all the names of the artificial players 
+     * @return 
+     */
     private List<String> getAllAINames() {
 
         List<String> names = new ArrayList<>();
@@ -117,7 +170,7 @@ public class SelectTypeListener implements ActionListener {
     }
 
     /**
-     * Ritorna la lista dei giocatori già loggati
+     * Returns the list of all the logged players
      *
      * @return
      */

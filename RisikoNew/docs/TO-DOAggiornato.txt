@@ -12,7 +12,7 @@
 - Sistemare i tasti per i giocatori artificiali 
 - Tasto visualizza regolamento che apre una finestra con il regolamento
 - Cambiare lettura resources (vedi Cusano - Hangman - Dictionary)
-- Classe per buildinfo
+x Classe per buildinfo
 
 DIVISIONE TEST(4 a testa): 
 -andrea

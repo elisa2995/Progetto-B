@@ -1,6 +1,7 @@
 package risiko.players;
 
 import exceptions.PendingOperationsException;
+import java.awt.EventQueue;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
@@ -93,7 +94,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             if (max > 0) {
                 int nArmies = new Random().nextInt(max);
                 if (nArmies != 0) {
-                    game.move(myCountries[from].toString(), myCountries[to].toString(), nArmies, this);
+                    game.move(myCountries[from], myCountries[to], nArmies, this);
                 }
             }
         }
@@ -189,7 +190,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * let the artificial player defend itself from an attack
+     * Lets the artificial player defend itself from an attack. It sets the
+     * number of armies with which the artificial player defends and confim the
+     * attack.
      */
     private synchronized void defend() {
         synchronized (maxArmiesLock) {
@@ -209,7 +212,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * contains the loop for the artificial player to act
+     * Contains the loop for the artificial player to act
      */
     @Override
     public void run() {
