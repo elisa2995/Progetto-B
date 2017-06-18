@@ -824,6 +824,7 @@ public class Game extends Observable implements GameProxy {
             player.addBonusArmies(activePlayer.getBonusArmies());
             player.setConqueredACountry(activePlayer.hasConqueredACountry());
 
+            ((FightPhase)phases[2]).resetFightingCountries();
             int position = -1;
             for (Player entry : players) {
                 if (entry.getName().equals(activePlayer.getName())) {
