@@ -15,9 +15,9 @@ public interface Stringify {
         return strings;
     }
 
-    public static <T> Map<String[], Integer> toString(Map<T[], Integer> map) {
-        Map<String[], Integer> strings = new HashMap<>();
-        for (Map.Entry<T[], Integer> row : map.entrySet()) {
+    public static <T1,T2> Map<String[], T2> toString(Map<T1[], T2> map) {
+        Map<String[], T2> strings = new HashMap<>();
+        for (Map.Entry<T1[], T2> row : map.entrySet()) {
             strings.put(toString(row.getKey()), row.getValue());
         }
         return strings;

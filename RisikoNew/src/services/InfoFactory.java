@@ -26,7 +26,7 @@ public interface InfoFactory {
      */
     public static CountryInfo[] buildFightingCountriesInfo(FightPhase fightPhase) {
         CountryInfo attackerCountryInfo = buildCountryInfo(true, fightPhase);
-        attackerCountryInfo.canAttackFromHere(fightPhase.getAttackerCountry().canAttackFromCountry());
+        attackerCountryInfo.canAttackFromHere(fightPhase.getAttackerCountry().canAttack());
         CountryInfo defenderCountryInfo = buildCountryInfo(false, fightPhase);
         return new CountryInfo[]{attackerCountryInfo, defenderCountryInfo};
     }

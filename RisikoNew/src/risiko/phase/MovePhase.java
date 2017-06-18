@@ -55,11 +55,11 @@ public class MovePhase extends Phase {
     }
 
     public boolean controlMovement() {
-        return fromCountry.controlMovement(toCountry);
+        return fromCountry.canMoveTo(toCountry);
     }
     
     public boolean controlMovement(Country toCountry){
-        return fromCountry.controlMovement(toCountry);
+        return fromCountry.canMoveTo(toCountry);
     }
 
 }

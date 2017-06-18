@@ -197,7 +197,7 @@ public class FightPhase extends Phase {
      */
     private void checkCountryConquest() {
         if (map.isConquered(defenderCountry)) {
-            attackerCountry.updateOnConquer(defenderCountry);
+            attackerCountry.conquer(defenderCountry);
         }
     }
 

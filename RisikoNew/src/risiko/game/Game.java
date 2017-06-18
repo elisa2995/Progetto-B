@@ -704,8 +704,8 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public boolean controlFromCountryPlayer(String countryName, ArtificialPlayer... aiCaller) {
-        return map.getCountryByName(countryName).controlFromCountryPlayer(activePlayer);
+    public boolean canMoveFromHere(String countryName, ArtificialPlayer... aiCaller) {
+        return map.getCountryByName(countryName).canMove(activePlayer);
     }
 
     /**
@@ -716,8 +716,8 @@ public class Game extends Observable implements GameProxy {
      * @return true se la country è dell'active player, false altrimenti.
      */
     @Override
-    public boolean controlPlayer(String countryName, ArtificialPlayer... aiCaller) {
-        return map.getCountryByName(countryName).controlPlayer(activePlayer);
+    public boolean isCountryOwner(String countryName, ArtificialPlayer... aiCaller) {
+        return map.getCountryByName(countryName).isMyOwner(activePlayer);
     }
 
     /**
@@ -729,7 +729,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public boolean canAttackFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
-        return map.getCountryByName(attackerCountryName).canAttackFromCountry();
+        return map.getCountryByName(attackerCountryName).canAttack();
     }
 
 // </editor-fold>

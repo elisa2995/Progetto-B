@@ -107,7 +107,7 @@ public class RisikoMapTest {
         Continent continent = instance.getContinentByCountry(country);
         for (Country c : continent.getCountries()) {
             if (c.getOwner() != player) {
-                country.updateOnConquer(c);
+                country.conquer(c);
             }
         }
 
@@ -118,7 +118,7 @@ public class RisikoMapTest {
 
         for (Country c : continent.getCountries()) {
             if (c != country) {
-                otherCountry.updateOnConquer(c);
+                otherCountry.conquer(c);
                 break;
             }
         }
@@ -213,7 +213,7 @@ public class RisikoMapTest {
         Country attackerCountry = instance.getMyCountries(otherPlayer).get(0);
         for (Country country : instance.getCountriesList()) {
             if (country.getOwner() == player) {
-                attackerCountry.updateOnConquer(country);
+                attackerCountry.conquer(country);
             }
         }
         boolean result = instance.hasLost(player);

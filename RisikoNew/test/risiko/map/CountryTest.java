@@ -226,23 +226,23 @@ public class CountryTest {
         System.out.println("controlMovement");
         Player owner = instance.getOwner();
         Country toCountry = new Country("toCountry");
-        assertFalse(instance.controlMovement(toCountry));
+        assertFalse(instance.canMoveTo(toCountry));
         toCountry.setOwner(owner);
-        assertFalse(instance.controlMovement(toCountry));
+        assertFalse(instance.canMoveTo(toCountry));
         neighbors.add(toCountry);
-        assertTrue(instance.controlMovement(toCountry));
+        assertTrue(instance.canMoveTo(toCountry));
     }
 
     /**
      * Test of controlPlayer method, of class RisikoMap.
      */
     @Test
-    public void testControlPlayer() {
-        System.out.println("controlPlayer");
+    public void testIsMyOwner() {
+        System.out.println("isMyOwner");
         Player owner = new Player("playerTmp", "BLUE");
-        assertFalse(instance.controlPlayer(owner));
+        assertFalse(instance.isMyOwner(owner));
         instance.setOwner(owner);
-        assertTrue(instance.controlPlayer(owner));
+        assertTrue(instance.isMyOwner(owner));
     }
 
     /**
@@ -267,14 +267,14 @@ public class CountryTest {
      * Test of updateOnConquer method, of class RisikoMap.
      */
     @Test
-    public void testUpdateOnConquer() {
-        System.out.println("updateOnConquer");
+    public void testConquer() {
+        System.out.println("conquer");
         Country defender = new Country("defender");
         Player owner = instance.getOwner();
         assertFalse(owner.hasConqueredACountry());
         assertNotEquals(owner, defender.getOwner());
 
-        instance.updateOnConquer(defender);
+        instance.conquer(defender);
         assertTrue(owner.hasConqueredACountry());
         assertEquals(owner, defender.getOwner());
     }
@@ -300,33 +300,33 @@ public class CountryTest {
      * Test of controlFromCountryPlayer method, of class RisikoMap.
      */
     @Test
-    public void testControlFromCountryPlayer() {//qualcosa non torna
-        System.out.println("controlFromCountryPlayer");
+    public void testCanMove() {//qualcosa non torna
+        System.out.println("canMove");
         Player random = new Player("random", "BLUE");
         Player owner = instance.getOwner();
         Country neighbor = new Country("neighbor");
         neighbor.setOwner(random);
 
         instance.setArmies(1);
-        assertFalse(instance.controlFromCountryPlayer(random));
-        assertFalse(instance.controlFromCountryPlayer(owner));
+        assertFalse(instance.canMove(random));
+        assertFalse(instance.canMove(owner));
         instance.setArmies(2);
-        assertFalse(instance.controlFromCountryPlayer(random));
-        assertFalse(instance.controlFromCountryPlayer(owner));
+        assertFalse(instance.canMove(random));
+        assertFalse(instance.canMove(owner));
         neighbors.add(neighbor);
-        assertFalse(instance.controlFromCountryPlayer(random));
-        assertFalse(instance.controlFromCountryPlayer(owner));
+        assertFalse(instance.canMove(random));
+        assertFalse(instance.canMove(owner));
         neighbor.setOwner(owner);
-        assertFalse(instance.controlFromCountryPlayer(random));
-        assertTrue(instance.controlFromCountryPlayer(owner));
+        assertFalse(instance.canMove(random));
+        assertTrue(instance.canMove(owner));
     }
 
     /**
      * Test of canAttackFromCountry method, of class RisikoMap.
      */
     @Test
-    public void testCanAttackFromCountry() {
-        System.out.println("canAttackFromCountry");
+    public void testCanAttack() {
+        System.out.println("canAttack");
         Player random = new Player("random", "BLUE");
         Player owner = instance.getOwner();
         Country neighbor = new Country("neighbor");
@@ -334,10 +334,10 @@ public class CountryTest {
         neighbors.add(neighbor);
 
         instance.setArmies(1);
-        assertFalse(instance.canAttackFromCountry());
+        assertFalse(instance.canAttack());
         instance.setArmies(2);
-        assertFalse(instance.canAttackFromCountry());
+        assertFalse(instance.canAttack());
         neighbor.setOwner(random);
-        assertTrue(instance.canAttackFromCountry());
+        assertTrue(instance.canAttack());
     }
 }

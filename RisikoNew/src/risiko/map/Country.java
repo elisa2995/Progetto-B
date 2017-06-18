@@ -92,18 +92,18 @@ public class Country implements Comparable<Country> {
      * dell'fromCountry
      */
     // Nome da rivedere
-    public boolean controlMovement(Country toCountry) {
+    public boolean canMoveTo(Country toCountry) {
         boolean sameOwner = owner.equals(toCountry.getOwner());
         return sameOwner && neighbors.contains(toCountry);
     }
 
     // Nome da rivedere. isRightAsOwner?
-    public boolean controlPlayer(Player player) {
+    public boolean isMyOwner(Player player) {
         return owner.equals(player);
     }
 
     /**
-     * Checks if attacker and defender don't belong to the same player and
+     * Checks if attacker and defender countries don't belong to the same player and
      * they're neighbors.
      */
     // Nome da rivedere. isRightAsDefender?
@@ -117,7 +117,7 @@ public class Country implements Comparable<Country> {
      * (countryPlayer)
      */
     // Nome da rivedere. 
-    public void updateOnConquer(Country defenderCountry) {
+    public void conquer(Country defenderCountry) {
         owner.setConqueredACountry(true);
         defenderCountry.setOwner(owner);
     }
@@ -136,7 +136,7 @@ public class Country implements Comparable<Country> {
      * abbia territori vicini in cui spostare le armate
      */
     // Nome da rivedere. canMove?
-    public boolean controlFromCountryPlayer(Player player) {
+    public boolean canMove(Player player) {
         boolean canMove = false;
         for (Country neighbor : neighbors) {
             if (neighbor.getOwner().equals(owner)) {
@@ -147,7 +147,7 @@ public class Country implements Comparable<Country> {
     }
 
     // Nome da rivedere. canAttackOneNeighbors?
-    public boolean canAttackFromCountry() {
+    public boolean canAttack() {
         boolean canAttack = false;
         for (Country c : neighbors) {
             canAttack = canAttack || (c.getOwner() != owner);
