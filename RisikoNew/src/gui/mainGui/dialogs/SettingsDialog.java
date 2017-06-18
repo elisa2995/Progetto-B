@@ -110,7 +110,7 @@ public class SettingsDialog extends javax.swing.JDialog {
 
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
         ArtificialPlayerSettings aps = new ArtificialPlayerSettings();
-        aps.setBaseAttack((int) this.baseAttack.getValue());
+        
         aps.setAttackDeclarationDelay((int) this.declareDelay.getValue());
         aps.setReinforceDelay((int) this.reinforceDelay.getValue());
         aps.setAttackDelay((int) this.attackDelay.getValue());
