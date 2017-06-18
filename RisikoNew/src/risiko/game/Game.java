@@ -410,6 +410,7 @@ public class Game extends Observable implements GameProxy {
         try {
             getFightPhase().confirmAttack(nrD, aiCaller);
         } catch (WrongCallerException ex) {
+            System.out.println("wrong caller");
             return;
         }
         checkLostAndWon();

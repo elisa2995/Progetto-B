@@ -9,20 +9,33 @@ import javax.swing.JLabel;
 import javax.swing.event.MouseInputAdapter;
 import risiko.game.GameProxy;
 
+/**
+ *
+ */
 public class CardListener extends MouseInputAdapter {
 
-    private final String PLAY_CARDS="PLAY_CARDS";
+    private final String PLAY_CARDS = "PLAY_CARDS";
     private CardPanel cardPanel;
     private GameProxy game;
     private static final int CHOSEN_OFFSET = 670;
     private static final int LOW_Y = 20;
     private static final int HIGH_Y = 15;
 
+    /**
+     * Creates a new CardListener
+     *
+     * @param cardPanel
+     * @param game
+     */
     public CardListener(CardPanel cardPanel, GameProxy game) {
         this.cardPanel = cardPanel;
         this.game = game;
     }
 
+    /**
+     *
+     * @param e
+     */
     @Override
     public void mouseEntered(MouseEvent e) {
         if (game.getPhase().equals(PLAY_CARDS)) {
@@ -37,6 +50,10 @@ public class CardListener extends MouseInputAdapter {
         }
     }
 
+    /**
+     *
+     * @param e
+     */
     @Override
     public void mouseExited(MouseEvent e) {
         if (game.getPhase().equals(PLAY_CARDS)) {
@@ -51,6 +68,10 @@ public class CardListener extends MouseInputAdapter {
         }
     }
 
+    /**
+     *
+     * @param e
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         if (game.getPhase().equals(PLAY_CARDS)) {
@@ -75,6 +96,11 @@ public class CardListener extends MouseInputAdapter {
         }
     }
 
+    /**
+     *
+     * @param label
+     * @return
+     */
     private int getToX(JLabel label) {
         if ((boolean) label.getClientProperty("chosen")) {
             return 10 + 50 * cardPanel.getNrCards();
