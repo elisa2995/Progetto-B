@@ -11,21 +11,23 @@ import shared.CountryInfo;
 import shared.PlayerInfo;
 
 /**
- * Useful class for the communication between the model and the view. Builds
+ * Class used for the communication between the model and the view. Builds
  * shared.info objects from model's ones.
  */
-public class InfoFactory {
+public interface InfoFactory {
 
     /**
      * Builds an array of 2 elements of <code>CountryInfo</code>. The element at
      * index 0 represent the attacker, the one at index 1 the defender.
      *
+     * @param fightPhase
+     * @param map
      * @return
      */
-    public static CountryInfo[] buildFightingCountriesInfo(FightPhase fightPhase, RisikoMap map) {
-        CountryInfo attackerCountryInfo = buildCountryInfo(true, fightPhase, map);
-        attackerCountryInfo.canAttackFromHere(map.canAttackFromCountry(fightPhase.getAttackerCountry()));
-        CountryInfo defenderCountryInfo = buildCountryInfo(false, fightPhase, map);
+    public static CountryInfo[] buildFightingCountriesInfo(FightPhase fightPhase) {
+        CountryInfo attackerCountryInfo = buildCountryInfo(true, fightPhase);
+        attackerCountryInfo.canAttackFromHere(fightPhase.getAttackerCountry().canAttack());
+        CountryInfo defenderCountryInfo = buildCountryInfo(false, fightPhase);
         return new CountryInfo[]{attackerCountryInfo, defenderCountryInfo};
     }
 
@@ -38,10 +40,10 @@ public class InfoFactory {
      * @param map
      * @return
      */
-    public static CountryInfo buildCountryInfo(boolean isAttacker, FightPhase fightPhase, RisikoMap map) {
+    public static CountryInfo buildCountryInfo(boolean isAttacker, FightPhase fightPhase) {
         Country country = (isAttacker) ? fightPhase.getAttackerCountry() : fightPhase.getDefenderCountry();
-        Player player = map.getPlayerByCountry(country);
-        return new CountryInfo(country.toString(), map.getMaxArmies(country, isAttacker), buildPlayerInfo(player));
+        Player player = country.getOwner();
+        return new CountryInfo(country.toString(), country.getMaxArmies(isAttacker), buildPlayerInfo(player));
     }
 
     /**
@@ -49,11 +51,10 @@ public class InfoFactory {
      * <code>Country</code>.
      *
      * @param country
-     * @param map
      * @return
      */
-    public static CountryInfo buildCountryInfo(Country country, RisikoMap map) {
-        return new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.toString(), country.getArmies());
+    public static CountryInfo buildCountryInfo(Country country) {
+        return new CountryInfo(buildPlayerInfo(country.getOwner()), country.toString(), country.getArmies());
     }
 
     /**
@@ -80,7 +81,7 @@ public class InfoFactory {
         CountryInfo[] countriesInfo = new CountryInfo[countries.size()];
         for (int i = 0; i < countriesInfo.length; i++) {
             country = countries.get(i);
-            countriesInfo[i] = new CountryInfo(buildPlayerInfo(map.getPlayerByCountry(country)), country.getName(), country.getArmies());
+            countriesInfo[i] = new CountryInfo(buildPlayerInfo(country.getOwner()), country.getName(), country.getArmies());
         }
         return countriesInfo;
     }
@@ -91,7 +92,7 @@ public class InfoFactory {
      * @return
      */
     public static AttackResultInfo buildAttackResultInfo(FightPhase fightPhase, RisikoMap map) {
-        return new AttackResultInfo(buildFightingCountriesInfo(fightPhase, map), fightPhase.getDice(), fightPhase.hasConquered(), fightPhase.checkContinentConquest());
+        return new AttackResultInfo(buildFightingCountriesInfo(fightPhase), fightPhase.getDice(), fightPhase.hasConquered(), fightPhase.checkContinentConquest());
     }
 
 }

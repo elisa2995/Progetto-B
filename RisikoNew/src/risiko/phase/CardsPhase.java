@@ -28,7 +28,6 @@ public class CardsPhase extends Phase {
         if (cards == null) {
             return;
         }
-        // ... de stringify
         activePlayer.playTris(deck.getCardsByNames(cards), deck.getBonusForTris(deck.getCardsByNames(cards)));
     }
 
@@ -47,8 +46,8 @@ public class CardsPhase extends Phase {
      * @param cards
      * @return
      */
-    public int getBonusForTris(Card[] cards) {
-        return deck.getBonusForTris(cards);
+    public int getBonusForTris(String[] cards) {
+        return deck.getBonusForTris(deck.getCardsByNames(cards));
     }
 
     /**
@@ -68,7 +67,7 @@ public class CardsPhase extends Phase {
      * @param chosenCards
      * @return
      */
-    public boolean isAValidTris(Card[] chosenCards) {
+    public boolean isAValidTris(String[] chosenCards) {
         for (Card[] validCardArray : deck.getTris().keySet()) {
             boolean success = true;
             for (Card card : validCardArray) {
@@ -77,7 +76,7 @@ public class CardsPhase extends Phase {
                  * number of times in <code>chosenCards</code> as it does in
                  * <code>validCardArray</code>.
                  */
-                success = success && (Collections.frequency(Arrays.asList(chosenCards), card)) == (Collections.frequency(Arrays.asList(validCardArray), card));
+                success = success && (Collections.frequency(Arrays.asList(deck.getCardsByNames(chosenCards)), card)) == (Collections.frequency(Arrays.asList(validCardArray), card));
             }
             if (success) {
                 return success;

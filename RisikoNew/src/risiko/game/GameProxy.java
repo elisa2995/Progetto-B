@@ -203,7 +203,7 @@ public interface GameProxy {
      * @param aiCaller
      * @return true se è possibile compiere uno spostamento da quel territorio
      */
-    public boolean controlFromCountryPlayer(String countryName, ArtificialPlayer... aiCaller);
+    public boolean canMoveFromHere(String countryName, ArtificialPlayer... aiCaller);
 
     /**
      * Controlla che country sia dell'activePlayer. (Previo controllo sul caller
@@ -213,7 +213,7 @@ public interface GameProxy {
      * @param aiCaller l'eventuale artificialPlayer caller del metodo.
      * @return true se la country è dell'active player, false altrimenti.
      */
-    public boolean controlPlayer(String countryName, ArtificialPlayer... aiCaller);
+    public boolean isCountryOwner(String countryName, ArtificialPlayer... aiCaller);
 
     /**
      * Controlla che il territorio non sia dell'active player e che sia un

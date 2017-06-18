@@ -16,7 +16,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import utils.Observable;
 import utils.GameObserver;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,8 +24,7 @@ import risiko.map.Country;
 import risiko.map.RisikoMap;
 import risiko.players.ArtificialPlayerSettings;
 import risiko.players.LoggedPlayer;
-import shared.AttackResultInfo;
-import shared.CountryInfo;
+import services.Stringify;
 import shared.PlayerInfo;
 import utils.BasicObservable;
 
@@ -192,12 +190,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public synchronized List<String> getCardsNames(ArtificialPlayer... aiCaller) {
-        // STRINGIFY
-        List<String> bonusCardsNames = new ArrayList<>();
-        for (Card card : activePlayer.getBonusCards()) {
-            bonusCardsNames.add(card.name());
-        }
-        return bonusCardsNames;
+        return Stringify.toString(activePlayer.getBonusCards());
     }
 
     /**
@@ -208,12 +201,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller) {
-        // De - stringify
-        Card[] cards = new Card[3];
-        for (int i = 0; i < cardNames.length; i++) {
-            cards[i] = Card.valueOf(cardNames[i]);
-        }
-        return getCardsPhase().getBonusForTris(cards);
+        return getCardsPhase().getBonusForTris(cardNames);
     }
 
     /**
@@ -225,16 +213,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public synchronized Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller) {
-        // STRINGIFY
-
-        Map<Card[], Integer> tris = getCardsPhase().getPlayableTris(activePlayer);
-        Map<String[], Integer> playableTrisNames = new HashMap<>();
-        for (Map.Entry<Card[], Integer> entry : tris.entrySet()) {
-            Card[] cards = entry.getKey();
-            String[] names = {cards[0].name(), cards[1].name(), cards[2].name()};
-            playableTrisNames.put(names, entry.getValue());
-        }
-        return playableTrisNames;
+        return Stringify.toString(getCardsPhase().getPlayableTris(activePlayer));
     }
 
     /**
@@ -245,15 +224,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public boolean isAValidTris(String[] cardNames, ArtificialPlayer... aiCaller) {
-
-        // DE-STRINGIFY
-        Card[] cards = new Card[3];
-
-        for (int i = 0; i < cardNames.length; i++) {
-            cards[i] = Card.valueOf(cardNames[i].toUpperCase());
-        }
-        return getCardsPhase().isAValidTris(cards);
-
+        return getCardsPhase().isAValidTris(cardNames);
     }
 
     /**
@@ -264,7 +235,6 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void playTris(String[] cardsNames, ArtificialPlayer... aiCaller) {
-        // DE-STRINGIFY....
         getCardsPhase().playTris(cardsNames, activePlayer);
 
         notifyPlayedTris();
@@ -310,7 +280,7 @@ public class Game extends Observable implements GameProxy {
             }
         }
 
-        notifyArmiesChange(InfoFactory.buildCountryInfo(map.getCountryByName(countryName), map));
+        notifyArmiesChange(InfoFactory.buildCountryInfo(map.getCountryByName(countryName)));
     }
 
     /**
@@ -345,7 +315,7 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
         getFightPhase().setAttackerCountry(attackerCountryName);
-        notifySetAttacker(InfoFactory.buildCountryInfo(true, getFightPhase(), map));
+        notifySetAttacker(InfoFactory.buildCountryInfo(true, getFightPhase()));
     }
 
     /**
@@ -357,7 +327,7 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller) {
         getFightPhase().setDefenderCountry(defenderCountryName);
-        ((BasicObservable) this).notifySetDefender(InfoFactory.buildFightingCountriesInfo(getFightPhase(), map), getFightPhase().reattack());
+        ((BasicObservable) this).notifySetDefender(InfoFactory.buildFightingCountriesInfo(getFightPhase()), getFightPhase().reattack());
     }
 
     /**
@@ -425,7 +395,7 @@ public class Game extends Observable implements GameProxy {
     public void declareAttack(ArtificialPlayer... aiCaller) {
         getFightPhase().declareAttack();
         //if (getFightPhase().getAttackerArmies() > 0) { // perché?
-        notifyDefender(InfoFactory.buildCountryInfo(false, getFightPhase(), map));
+        notifyDefender(InfoFactory.buildCountryInfo(false, getFightPhase()));
         //}
     }
 
@@ -440,6 +410,7 @@ public class Game extends Observable implements GameProxy {
         try {
             getFightPhase().confirmAttack(nrD, aiCaller);
         } catch (WrongCallerException ex) {
+            System.out.println("wrong caller");
             return;
         }
         checkLostAndWon();
@@ -458,8 +429,8 @@ public class Game extends Observable implements GameProxy {
         if (hasWon()) {
             recordGainedPoints();
         }
-        if (hasLost(map.getPlayerByCountry(getDefenderCountry()))) {
-            players.remove(map.getPlayerByCountry(getDefenderCountry()));
+        if (hasLost(getDefenderCountry().getOwner())) {
+            players.remove(getDefenderCountry().getOwner());
         }
     }
 
@@ -604,8 +575,8 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void move(String fromCountryName, String toCountryName, Integer nrArmies, ArtificialPlayer... aiCaller) {
         getMovePhase().move(map.getCountryByName(fromCountryName), map.getCountryByName(toCountryName), nrArmies);
-        notifyArmiesChange(InfoFactory.buildCountryInfo(getMovePhase().getToCountry(), map));
-        notifyArmiesChange(InfoFactory.buildCountryInfo(getMovePhase().getFromCountry(), map)); 
+        notifyArmiesChange(InfoFactory.buildCountryInfo(getMovePhase().getToCountry()));
+        notifyArmiesChange(InfoFactory.buildCountryInfo(getMovePhase().getFromCountry())); 
 
         if (getPhase().equals("MOVE")) {
             try {
@@ -723,7 +694,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public boolean controlAttacker(String countryName, ArtificialPlayer... aiCaller) {
-        return map.controlAttacker(map.getCountryByName(countryName), activePlayer);
+        return map.getCountryByName(countryName).controlAttacker(activePlayer);
     }
 
     /**
@@ -734,8 +705,8 @@ public class Game extends Observable implements GameProxy {
      * @return
      */
     @Override
-    public boolean controlFromCountryPlayer(String countryName, ArtificialPlayer... aiCaller) {
-        return map.controlFromCountryPlayer(map.getCountryByName(countryName), activePlayer);
+    public boolean canMoveFromHere(String countryName, ArtificialPlayer... aiCaller) {
+        return map.getCountryByName(countryName).canMove(activePlayer);
     }
 
     /**
@@ -746,8 +717,8 @@ public class Game extends Observable implements GameProxy {
      * @return true se la country è dell'active player, false altrimenti.
      */
     @Override
-    public boolean controlPlayer(String countryName, ArtificialPlayer... aiCaller) {
-        return map.controlPlayer(map.getCountryByName(countryName), activePlayer);
+    public boolean isCountryOwner(String countryName, ArtificialPlayer... aiCaller) {
+        return map.getCountryByName(countryName).isMyOwner(activePlayer);
     }
 
     /**
@@ -759,7 +730,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public boolean canAttackFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller) {
-        return map.canAttackFromCountry(map.getCountryByName(attackerCountryName));
+        return map.getCountryByName(attackerCountryName).canAttack();
     }
 
 // </editor-fold>
@@ -798,7 +769,7 @@ public class Game extends Observable implements GameProxy {
     public synchronized String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller) {
         String[] defenders = map.getNeighbors(map.getCountryByName(attacker)).stream().filter(element
                 -> {
-            return map.controlDefender(map.getCountryByName(attacker), element);
+            return map.getCountryByName(attacker).controlDefender(element);
         }).map(element -> element.getName()).toArray(size -> new String[size]);
         
         return defenders;
@@ -831,8 +802,8 @@ public class Game extends Observable implements GameProxy {
 
 
     private void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
-        notifyArmiesChange(InfoFactory.buildCountryInfo(defenderCountry, map));
-        notifyArmiesChange(InfoFactory.buildCountryInfo(attackerCountry, map));
+        notifyArmiesChange(InfoFactory.buildCountryInfo(defenderCountry));
+        notifyArmiesChange(InfoFactory.buildCountryInfo(attackerCountry));
     }
 
     @Override

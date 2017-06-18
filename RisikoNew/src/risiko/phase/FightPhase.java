@@ -79,8 +79,8 @@ public class FightPhase extends Phase {
      */
     private void fight() {
         int lostArmies[] = computeLostArmies();
-        map.removeArmies(attackerCountry, lostArmies[0]);
-        map.removeArmies(defenderCountry, lostArmies[1]);
+        attackerCountry.removeArmies(lostArmies[0]);
+        defenderCountry.removeArmies(lostArmies[1]);
     }
 
     /**
@@ -115,7 +115,7 @@ public class FightPhase extends Phase {
         }
 
         if (nrD == -1) {
-            this.nrD = map.getMaxArmies(defenderCountry, false);
+            this.nrD = defenderCountry.getMaxArmies(false);
         } else {
             this.nrD = nrD;
         }
@@ -129,7 +129,7 @@ public class FightPhase extends Phase {
      */
     public void setAttackerArmies(int nrA) {
         if (nrA == -1) {
-            this.nrA = map.getMaxArmies(attackerCountry, true);
+            this.nrA = attackerCountry.getMaxArmies( true);
         } else {
             this.nrA = nrA;
         }
@@ -187,8 +187,8 @@ public class FightPhase extends Phase {
      * @return true if it has the right to call confirmAttack, false otherwise.
      */
     private boolean canCallDefenseMethods(ArtificialPlayer... aiCaller) {
-        boolean artificialDefender = map.getPlayerByCountry(defenderCountry) instanceof ArtificialPlayer;
-        boolean rightCaller = (aiCaller.length == 0) ? !artificialDefender : artificialDefender && aiCaller[0].equals(map.getPlayerByCountry(defenderCountry));;
+        boolean artificialDefender = defenderCountry.getOwner() instanceof ArtificialPlayer;
+        boolean rightCaller = (aiCaller.length == 0) ? !artificialDefender : artificialDefender && aiCaller[0].equals(defenderCountry.getOwner());;
         return attackInProgress && rightCaller;
     }
 
@@ -197,7 +197,7 @@ public class FightPhase extends Phase {
      */
     private void checkCountryConquest() {
         if (map.isConquered(defenderCountry)) {
-            map.updateOnConquer(attackerCountry, defenderCountry);
+            attackerCountry.conquer(defenderCountry);
         }
     }
 
@@ -242,7 +242,7 @@ public class FightPhase extends Phase {
      * @return
      */
     public boolean controlDefender(String defenderCountryName) {
-        return map.controlDefender(attackerCountry, map.getCountryByName(defenderCountryName));
+        return attackerCountry.controlDefender(map.getCountryByName(defenderCountryName));
     }
 
     public boolean reattack() {
@@ -250,7 +250,7 @@ public class FightPhase extends Phase {
     }
 
     public int getMaxArmies(Country country, boolean isAttacker) {
-        return map.getMaxArmies(country, isAttacker);
+        return country.getMaxArmies(isAttacker);
     }
 
     @Override

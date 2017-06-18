@@ -4,7 +4,6 @@ import risiko.players.Player;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -16,14 +15,10 @@ public class RisikoMap {
 
     private final int DEFAULT_ARMIES = 3;
     private final List<Mission> missions;
-    private final Map<Country, Player> countryPlayer;
     private final List<Continent> continents;
-    private final List<Country> countries;
 
     public RisikoMap() {
-        this.countries = new ArrayList<>();
         this.continents = new ArrayList<>();
-        this.countryPlayer = new HashMap<>();
         this.missions = new ArrayList<>();
         init();
     }
@@ -35,47 +30,9 @@ public class RisikoMap {
      * @throws qualche eccezione relativa alla lettura del file
      */
     private void init() {
-        buildCountryPlayer();
-        buildCountries();
         buildContinent();
+        setAllCountries();
         buildMissions();
-    }
-
-    /**
-     * Costruisce le countries, la mappa countryPlayer (player è inizializzato a
-     * null) e l'HashMap nameCountry.
-     *
-     * @author Elisa
-     * @throws qualche eccezione legata alla lettura del file
-     */
-    private void buildCountryPlayer() {
-        for (String countryName : FileManager.getInstance().getCountries()) {
-            Country country = new Country(countryName);
-            country.setArmies(DEFAULT_ARMIES);
-            countryPlayer.put(country, null);
-            countries.add(country);
-        }
-    }
-
-    /**
-     * Traduce la Map <code>countryNeighborsNames</code> (Map di String - nomi
-     * dei territori) nella mappa <Country, List<Country>> corrispondente,
-     * recuperando dal nome del territorio l'oggetto Country corrispondente.
-     *
-     * @author Elisa
-     */
-    private void buildCountries() {
-        Map<String, List<String>> countryNeighborsNames = FileManager.getInstance().getCountryNeighbors();
-        for (Map.Entry<String, List<String>> row : countryNeighborsNames.entrySet()) {
-
-            List<Country> neighbors = new ArrayList<>();
-            for (String neighbor : row.getValue()) {
-                neighbors.add(getCountryByName(neighbor));
-            }
-
-            Country country = getCountryByName(row.getKey());
-            country.setNeighbors(neighbors);    //Setto i neighbors ai Countries contenuti in countryNeighbors
-        }
     }
 
     /**
@@ -87,13 +44,35 @@ public class RisikoMap {
 
             List<Country> countriesOfThatContinent = new ArrayList<>();
             for (String countryName : (List<String>) tmpContinent.get("countries")) {
-                countriesOfThatContinent.add(getCountryByName(countryName));
+                countriesOfThatContinent.add(new Country(countryName));
             }
 
-            String continentName = (String) tmpContinent.get("name");  //Prendo il nome del continente
-            Integer bonus = (Integer) tmpContinent.get("bonus");
-            Continent continent = new Continent(continentName, countriesOfThatContinent, bonus);
+            String    continentName = (String)  tmpContinent.get("name");  //Prendo il nome del continente
+            Integer   bonus         = (Integer) tmpContinent.get("bonus");
+            Continent continent     = new       Continent(continentName, countriesOfThatContinent, bonus);
             continents.add(continent);
+        }
+    }
+
+    /**
+     * Traduce la Map <code>countryNeighborsNames</code> (Map di String - nomi
+     * dei territori) nella mappa <Country, List<Country>> corrispondente,
+     * recuperando dal nome del territorio l'oggetto Country corrispondente.
+     *
+     * @author Elisa
+     */
+    private void setAllCountries() {
+        Map<String, List<String>> countryNeighborsNames = FileManager.getInstance().getCountryNeighbors();
+        for (Map.Entry<String, List<String>> row : countryNeighborsNames.entrySet()) {
+
+            List<Country> neighbors = new ArrayList<>();
+            for (String neighbor : row.getValue()) {
+                neighbors.add(getCountryByName(neighbor));
+            }
+
+            Country country = getCountryByName(row.getKey());
+            country.setArmies(DEFAULT_ARMIES);
+            country.setNeighbors(neighbors);    //Setto i neighbors ai Countries contenuti in countryNeighbors
         }
     }
 
@@ -156,23 +135,16 @@ public class RisikoMap {
     public void assignCountriesToPlayers(List<Player> players) {
         List<Country> countries = getCountriesList();
         Collections.shuffle(countries);
-        int nCountries = this.countryPlayer.size();
         int round = 0;
-        while (nCountries != 0) {
-            this.countryPlayer.put(countries.get(round), nextPlayer(players, round));
-            round++;
-            nCountries--;
+        for (Country country : countries) {
+            country.setOwner(nextPlayer(players, round++));
         }
     }
 
     /**
      * Ritorna il giocatore successivo nella lista dei players a quello che si
      * passa; se il giocatore è l'ultimo della lista ritorna il primo.
-     *
-     * @param players
-     * @param round
-     * @return Player
-     * @author Elisa
+
      */
     private Player nextPlayer(List<Player> players, int round) {
         return players.get(round % (players.size()));
@@ -186,17 +158,13 @@ public class RisikoMap {
      * @author Elisa
      */
     public List<Country> getCountriesList() {
-        return new ArrayList<>(countryPlayer.keySet());
-    }
-
-    /**
-     * Ritorna il giocatore a cui appartiene quel territorio
-     *
-     * @param country
-     * @return
-     */
-    public Player getPlayerByCountry(Country country) {
-        return countryPlayer.get(country);
+        List<Country> countries = new ArrayList<>();
+        for (Continent continent : continents) {
+            for (Country country : continent.getCountries()) {
+                countries.add(country);
+            }
+        }
+        return countries;
     }
 
     /**
@@ -234,15 +202,13 @@ public class RisikoMap {
     /**
      * Ritorna true se il player dopo la conquiesta della Country
      * <code>justConqueredCountry</code> possiede l'intero continente.
-     *
-     * @param player
-     * @param justConqueredCountry
+
      * @return
      */
     public boolean hasConqueredContinent(Country conqueredCountry) {
-        Player player = getPlayerByCountry(conqueredCountry);
+        Player player = conqueredCountry.getOwner();
         Continent continent = getContinentByCountry(conqueredCountry);
-        return getMyCountries(player).containsAll(continent.getCountries());
+        return ownsContinent(player, continent);
     }
 
     /**
@@ -252,14 +218,12 @@ public class RisikoMap {
      * @return
      */
     public Continent getContinentByCountry(Country country) {
-
         for (Continent continent : continents) {
             if (continent.containsCountry(country)) {
                 return continent;
             }
         }
         return null; //non dovrebbe mai arrivarci
-
     }
 
     /**
@@ -271,8 +235,8 @@ public class RisikoMap {
      */
     public List<Country> getMyCountries(Player player) {
         List<Country> myCountries = new ArrayList<>();
-        for (Country country : countries) {
-            if (countryPlayer.get(country).equals(player)) {
+        for (Country country : getCountriesList()) {
+            if (country.getOwner().equals(player)) {
                 myCountries.add(country);
             }
         }
@@ -308,86 +272,6 @@ public class RisikoMap {
     }
 
     /**
-     * Controlla che il territorio sia dell'active player e che si legale
-     * attaccare
-     */
-    public boolean controlAttacker(Country country, Player player) {
-        return this.countryPlayer.get(country).equals(player) && country.getArmies() > 1;
-    }
-
-    /**
-     * Controlla che il territorio sia dell'attaccante, abbia più di un armata e
-     * abbia territori vicini in cui spostare le armate
-     *
-     * @param country
-     * @param player
-     * @return
-     */
-    public boolean controlFromCountryPlayer(Country country, Player player) {
-        List<Country> neighbors = getNeighbors(country);
-        boolean canMove = false;
-        for (Country c : neighbors) {
-            if (this.getPlayerByCountry(c).equals(getPlayerByCountry(country))) {
-                canMove = true;
-            }
-        }
-        return controlAttacker(country, player) && canMove;
-    }
-
-    public boolean controlPlayer(Country country, Player player) {
-        return this.countryPlayer.get(country).equals(player);
-    }
-
-    /**
-     * Checks if attacker and defender don't belong to the same player and
-     * they're neighbors.
-     * @param attacker
-     * @param defender
-     * @return true if the defender is valid, false otherwise.
-     */
-    public boolean controlDefender(Country attacker, Country defender) {
-        return !this.countryPlayer.get(defender).equals(getPlayerByCountry(attacker)) && this.getNeighbors(attacker).contains(defender);
-    }
-
-    /**
-     * Controlla che toCountry sia dell'active player e che sia un confinante
-     * dell'fromCountry
-     * @param fromCountry
-     * @param toCountry
-     */
-    public boolean controlMovement(Country fromCountry, Country toCountry) {
-        boolean sameOwner = getPlayerByCountry(fromCountry).equals(getPlayerByCountry(toCountry));
-        return sameOwner && fromCountry.getNeighbors().contains(toCountry);
-    }
-
-    /*
-        Ridà il massimo numero di armate per lo spinner rispetto al tipo di country
-     */
-    public int getMaxArmies(Country country, boolean isAttacker) {
-        if (isAttacker) {
-            return Math.min(3, country.getArmies() - 1);
-        }
-        return Math.min(3, country.getArmies());
-    }
-
-    /**
-     * Metodo chiamato nel caso in cui un giocatore abbia conquistato un
-     * territorio. Setta il nuovo proprietario del territorio appena conquistato
-     * (countryPlayer) e muove tante armate quante sono quelle con cui è stato
-     * eseguito l'attacco dal territorio attaccante a quello conquistato.
-     *
-     * @author Alessandro
-     * @param attackerCountry
-     * @param defenderCountry
-     */
-    public void updateOnConquer(Country attackerCountry, Country defenderCountry) {
-        Player attacker = this.countryPlayer.get(attackerCountry);
-        attacker.setConqueredACountry(true);
-        
-        this.countryPlayer.put(defenderCountry, attacker);
-    }
-
-    /**
      * Metodo chiamato nel caso in cui un giocatore abbia conquistato un
      * territorio. La mappa controlla se ha raggiunto il suo obbiettivo.
      *
@@ -415,35 +299,8 @@ public class RisikoMap {
         return getMyCountries(defenderPlayer).isEmpty();
     }
 
-    public void addArmies(Country country, int nArmies) {
-        country.addArmies(nArmies);
-    }
-
-    public void removeArmies(Country country, int nArmies) {
-        country.removeArmies(nArmies);
-    }
-    
-    public void reinforce(Country country){
-        country.incrementArmies();
-        getPlayerByCountry(country).decrementBonusArmies();
-        
-    }
-
-    public boolean canAttackFromCountry(Country country) {
-        boolean canAttack = false;
-        for (Country c : country.getNeighbors()) {
-//            if (countryPlayer.get(c) != countryPlayer.get(country)) {
-//                System.out.println(countryPlayer.get(c) != countryPlayer.get(country));
-//                System.out.println(country.getArmies());
-//            }
-
-            canAttack = canAttack || countryPlayer.get(c) != countryPlayer.get(country);
-        }
-        return canAttack & country.getArmies() > 1;
-    }
-
     public Country getCountryByName(String countryName) {
-        for (Country country : countries) {
+        for (Country country : getCountriesList()) {
             if (country.getName().equals(countryName)) {
                 return country;
             }
@@ -451,9 +308,7 @@ public class RisikoMap {
         return null;
     }
 
-    public String getPlayerColorByCountry(Country country) {
-        return getPlayerByCountry(country).getColor();
-    }
+
 
     /**
      * Assigns the countries of a player to another
@@ -462,9 +317,9 @@ public class RisikoMap {
      * @param newOwner new owner of the territories
      */
     public void changeOwner(Player oldOwner, Player newOwner) {
-        for (Map.Entry<Country, Player> entry : countryPlayer.entrySet()) {
-            if (entry.getValue().equals(oldOwner)) {
-                entry.setValue(newOwner);
+        for (Country country : getCountriesList()) {
+            if (country.getOwner().equals(oldOwner)) {
+                country.setOwner(newOwner);
             }
         }
     }

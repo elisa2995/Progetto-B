@@ -97,7 +97,7 @@ public class Cache {
      * @return
      */
     public boolean controlReinforce(String country) {
-        return canBeChosen(country) || game.controlPlayer(country) && game.canReinforce();
+        return canBeChosen(country) || game.isCountryOwner(country) && game.canReinforce();
     }
 
     /**
@@ -133,7 +133,7 @@ public class Cache {
      * @return
      */
     public boolean controlMoveFromCountry(String country) {
-        return canBeChosen(country) || game.getFromCountryName() == null && game.controlFromCountryPlayer(country);
+        return canBeChosen(country) || game.getFromCountryName() == null && game.canMoveFromHere(country);
     }
 
     /**
