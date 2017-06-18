@@ -11,7 +11,7 @@ import shared.CountryInfo;
 import shared.PlayerInfo;
 
 /**
- * Useful class for the communication between the model and the view. Builds
+ * Class used for the communication between the model and the view. Builds
  * shared.info objects from model's ones.
  */
 public interface InfoFactory {
