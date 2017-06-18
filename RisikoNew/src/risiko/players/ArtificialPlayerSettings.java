@@ -15,8 +15,8 @@ public class ArtificialPlayerSettings {
     private int reinforceDelay;
     private int attackDeclarationDelay;
 
-    public ArtificialPlayerSettings(int baseAttack, int attackDelay, int reinforceDelay, int attackDeclarationDelay, int reinforceDistribution) {
-        this.baseAttack = baseAttack;
+    public ArtificialPlayerSettings(int attackDelay, int reinforceDelay, int attackDeclarationDelay, int reinforceDistribution) {
+        this.baseAttack = 10;
         this.attackDelay = attackDelay;
         this.reinforceDelay = reinforceDelay;
         this.attackDeclarationDelay = attackDeclarationDelay;
