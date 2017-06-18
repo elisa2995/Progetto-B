@@ -16,7 +16,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import utils.Observable;
 import utils.GameObserver;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,8 +24,7 @@ import risiko.map.Country;
 import risiko.map.RisikoMap;
 import risiko.players.ArtificialPlayerSettings;
 import risiko.players.LoggedPlayer;
-import shared.AttackResultInfo;
-import shared.CountryInfo;
+import services.Stringify;
 import shared.PlayerInfo;
 import utils.BasicObservable;
 
@@ -192,12 +190,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public synchronized List<String> getCardsNames(ArtificialPlayer... aiCaller) {
-        // STRINGIFY
-        List<String> bonusCardsNames = new ArrayList<>();
-        for (Card card : activePlayer.getBonusCards()) {
-            bonusCardsNames.add(card.name());
-        }
-        return bonusCardsNames;
+        return Stringify.toString(activePlayer.getBonusCards());
     }
 
     /**
@@ -208,12 +201,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller) {
-        // De - stringify
-        Card[] cards = new Card[3];
-        for (int i = 0; i < cardNames.length; i++) {
-            cards[i] = Card.valueOf(cardNames[i]);
-        }
-        return getCardsPhase().getBonusForTris(cards);
+        return getCardsPhase().getBonusForTris(cardNames);
     }
 
     /**
@@ -225,16 +213,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public synchronized Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller) {
-        // STRINGIFY
-
-        Map<Card[], Integer> tris = getCardsPhase().getPlayableTris(activePlayer);
-        Map<String[], Integer> playableTrisNames = new HashMap<>();
-        for (Map.Entry<Card[], Integer> entry : tris.entrySet()) {
-            Card[] cards = entry.getKey();
-            String[] names = {cards[0].name(), cards[1].name(), cards[2].name()};
-            playableTrisNames.put(names, entry.getValue());
-        }
-        return playableTrisNames;
+        return Stringify.toString(getCardsPhase().getPlayableTris(activePlayer));
     }
 
     /**
@@ -245,15 +224,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public boolean isAValidTris(String[] cardNames, ArtificialPlayer... aiCaller) {
-
-        // DE-STRINGIFY
-        Card[] cards = new Card[3];
-
-        for (int i = 0; i < cardNames.length; i++) {
-            cards[i] = Card.valueOf(cardNames[i].toUpperCase());
-        }
-        return getCardsPhase().isAValidTris(cards);
-
+        return getCardsPhase().isAValidTris(cardNames);
     }
 
     /**
@@ -264,7 +235,6 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void playTris(String[] cardsNames, ArtificialPlayer... aiCaller) {
-        // DE-STRINGIFY....
         getCardsPhase().playTris(cardsNames, activePlayer);
 
         notifyPlayedTris();

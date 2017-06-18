@@ -14,12 +14,14 @@ import shared.PlayerInfo;
  * Useful class for the communication between the model and the view. Builds
  * shared.info objects from model's ones.
  */
-public class InfoFactory {
+public interface InfoFactory {
 
     /**
      * Builds an array of 2 elements of <code>CountryInfo</code>. The element at
      * index 0 represent the attacker, the one at index 1 the defender.
      *
+     * @param fightPhase
+     * @param map
      * @return
      */
     public static CountryInfo[] buildFightingCountriesInfo(FightPhase fightPhase, RisikoMap map) {
