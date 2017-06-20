@@ -15,8 +15,9 @@ import javax.swing.JLabel;
 import javax.swing.Timer;
 
 /**
- * JLabel in which is displayed an image that fades out. The process of fading out
- * is done thanks to a timer that updates the value of trasparency of the image.
+ * JLabel in which is displayed an image that fades out. The process of fading
+ * out is done thanks to a timer that updates the value of trasparency of the
+ * image.
  */
 public class FadeOutLabel extends JLabel {
 
@@ -97,22 +98,14 @@ public class FadeOutLabel extends JLabel {
 
     /**
      * Starts the fade out of the FadeOutLabel
-     */
-    public void startFadeOut() {
-        alpha = 1f;
-        timer.start();
-        this.setOpaque(false);
-
-    }
-
-    /**
-     * Sets the image that will be displayed.
-     *
      * @param url
      */
-    public void setImage(String url) {
+    public void startFadeOut(String url) {
         try {
             outImage = ImageIO.read(new File(url));
+            alpha = 1f;
+            timer.start();
+            this.setOpaque(false);
         } catch (IOException exp) {
             System.out.println(url + " not found");
         }

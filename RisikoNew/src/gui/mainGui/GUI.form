@@ -71,6 +71,7 @@
                               <Component id="buttonShowMission" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
                               <Component id="buttonNextPhase" alignment="1" min="-2" pref="149" max="-2" attributes="0"/>
                               <Component id="showCardButton" alignment="1" min="-2" pref="149" max="-2" attributes="0"/>
+                              <Component id="leaveGameButton" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -122,15 +123,20 @@
                           </Group>
                           <Component id="buttonNextPhase" min="-2" pref="44" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                               <Component id="labelPlayer5" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                               <Component id="labelPlayer6" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="showCardButton" min="-2" pref="50" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="leaveGameButton" min="-2" pref="44" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="showCardButton" min="-2" pref="50" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace pref="27" max="32767" attributes="0"/>
@@ -283,6 +289,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="jLabel6"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="leaveGameButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Abbandona la partita"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="leaveGameButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
