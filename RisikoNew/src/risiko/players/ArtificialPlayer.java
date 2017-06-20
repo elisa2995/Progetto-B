@@ -219,7 +219,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                         case "MOVE":
                             moveArmies();
                             synchronized (this) {
-                                this.wait(100);
+                                this.wait(3000);
                             }
                             break;
                     }

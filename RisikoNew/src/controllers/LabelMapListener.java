@@ -185,7 +185,6 @@ public class LabelMapListener extends MouseInputAdapter {
      */
     @Override
     public void mouseMoved(MouseEvent e) {
-        // Checks if it is the turn of an artificial player
         if (!game.checkMyIdentity()) {
             return;
         }

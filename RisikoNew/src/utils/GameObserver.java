@@ -46,10 +46,10 @@ public interface GameObserver extends BasicGameObserver {
     public void updateOnArmiesChange(CountryInfo country);
 
     /**
-     * Updates the observer when the activePlayer passes its turn.
+     * Updates the observer when the activePlayer can play its cards.
      * @param cards
      */
-    public void updateOnNextTurn(List<String> cards);
+    public void updateOnPlayCards(List<String> cards);
     
     /**
      * Updates the observer when the activePlayer plays a tris.

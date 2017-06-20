@@ -3,3 +3,4 @@ REINFORCE = Clicca su un tuo territorio per rinforzarlo con un'armata. Hai ? arm
 FIGHT = Clicca su un tuo territorio per sceglierlo come attaccante
 MOVE = Scegli un tuo territorio da cui spostare una o piu' armate
 ASK_END = Sei sicuro di voler terminare la partita?
+ASK_LEAVING = Vuoi abbandonare la partita? Sarai sostituito da un giocatore artificiale. 

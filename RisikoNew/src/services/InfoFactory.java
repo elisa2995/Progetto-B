@@ -21,7 +21,6 @@ public interface InfoFactory {
      * index 0 represent the attacker, the one at index 1 the defender.
      *
      * @param fightPhase
-     * @param map
      * @return
      */
     public static CountryInfo[] buildFightingCountriesInfo(FightPhase fightPhase) {
@@ -37,7 +36,6 @@ public interface InfoFactory {
      *
      * @param isAttacker
      * @param fightPhase
-     * @param map
      * @return
      */
     public static CountryInfo buildCountryInfo(boolean isAttacker, FightPhase fightPhase) {
