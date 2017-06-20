@@ -1,10 +1,13 @@
 package risiko.missions;
 
 import java.util.List;
-import java.util.Map;
 import risiko.map.Continent;
 import risiko.map.Country;
 
+/**
+ * Class that represent a mission. 
+ * 
+ */
 public abstract class Mission {
 
     protected String description;
@@ -23,15 +26,16 @@ public abstract class Mission {
         return this.points;
     }
 
+    /**
+     * Checks if the mission is completed.
+     * @param countries
+     * @return 
+     */
     public abstract boolean isCompleted(List<Country> countries);
 
     /**
-     * Costruisce la targetList (contenente i country da conquistare) di una
-     * mission
-     *
-     * @param mission
-     * @author Federico
-     *
+     * Builds <code>targetList</code>.
+     * @param continents 
      */
     public abstract void buildTarget(List<Continent> continents);
 }
