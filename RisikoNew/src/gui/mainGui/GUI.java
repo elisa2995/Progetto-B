@@ -802,7 +802,7 @@ public class GUI extends JFrame implements GameObserver {
      * Shows the card panel.
      */
     @Override
-    public void updateOnNextTurn(List<String> cards) {
+    public void updateOnPlayCards(List<String> cards) {
         if (!cards.isEmpty()) {
             showCardButton.setVisible(true);
         }
