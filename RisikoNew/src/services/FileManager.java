@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -22,15 +24,14 @@ import java.util.logging.Logger;
 public class FileManager {
 
     private static volatile FileManager instance;
-    private final String PLAYERS = "src/resources/files/players.txt";
-    // url file che fa da db per le info dei giocatori
-    private final String COUNTRIES = "src/resources/files/countries.txt";
-    private final String MISSIONS = "src/resources/files/missions.txt";
-    private final String LABELS = "src/resources/files/countriesLabels.txt";
-    private final String COLORS = "src/resources/files/countriesColors.txt";
-    private final String TRIS = "src/resources/files/bonusTris.txt";
-    private final String VOCABULARY = "src/resources/files/vocabulary";
-    private final String INFO = "src/resources/files/info";
+    private final String PLAYERS = "files/players.txt";
+    private final String COUNTRIES = "resources/files/countries.txt";
+    private final String MISSIONS = "resources/files/missions.txt";
+    private final String LABELS = "resources/files/countriesLabels.txt";
+    private final String COLORS = "resources/files/countriesColors.txt";
+    private final String TRIS = "resources/files/bonusTris.txt";
+    private final String VOCABULARY = "resources/files/vocabulary";
+    private final String INFO = "resources/files/info";
 
     private FileManager() {
     }
@@ -54,37 +55,15 @@ public class FileManager {
 
     //----------------------- countries.txt ----------------------------------//
     /**
-     * Legge il file countries.txt per ricavare la lista di territori.
-     *
-     * @return una List contenente i nomi dei territori.
-     */
-    public List<String> getCountries() {
-        List<String> countries = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(COUNTRIES))) {
-            String line;
-            String countryName;
-            while ((line = br.readLine()) != null) {
-                if (!line.startsWith("-")) {
-                    countryName = line.split(",")[0];
-                    countries.add(countryName);
-                }
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return countries;
-    }
-
-    /**
      * Legge il file countries.txt per ricavare da ogni country la lista dei
      * suoi vicini.
      *
      * @return una Map che mappa un territorio con la lista dei suoi vicini.
      */
     public Map<String, List<String>> getCountryNeighbors() {
-
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(COUNTRIES);
         Map<String, List<String>> countryNeighbors = new HashMap();
-        try (BufferedReader br = new BufferedReader(new FileReader(COUNTRIES))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
             String line;
             String subject;
             String[] tokens;
@@ -110,9 +89,9 @@ public class FileManager {
      * quel continente §3 bonus -> Integer - bonusArmies
      */
     public List<Map<String, Object>> getContinents() {
-
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(COUNTRIES);
         List<Map<String, Object>> continents = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(COUNTRIES))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
             String line;
             Map<String, Object> row;
             List<String> countries = new ArrayList<>();
@@ -146,9 +125,9 @@ public class FileManager {
      * completata. §3 description -> String - descrizione
      */
     public List<Map<String, Object>> getMissions() {
-
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(MISSIONS);
         List<Map<String, Object>> missions = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(MISSIONS))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
             Map<String, Object> mission;
             String line;
             String[] tokens;
@@ -177,7 +156,6 @@ public class FileManager {
      * @param missionPoints i punti della missione completata.
      */
     public void recordGainedPoints(String username, int missionPoints) {
-
         String inputStr = readPlayersFile(username, missionPoints);
         writePlayersFile(inputStr);
 
@@ -191,13 +169,12 @@ public class FileManager {
      * @return il contenuto del file sotto forma di stringa.
      */
     private String readPlayersFile(String username, int missionPoints) {
-
         String inputStr = "";
-        try (BufferedReader file = new BufferedReader(new FileReader(PLAYERS))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(PLAYERS))) {
             String line;
             StringBuilder inputBuffer = new StringBuilder();
             int points;
-            while ((line = file.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 if (line.contains(username)) {
                     String[] tokens = line.split(";");
                     points = Integer.parseInt(tokens[2]) + missionPoints;
@@ -239,9 +216,9 @@ public class FileManager {
      * @throws FileManagerException
      */
     public int getPlayerPoints(String username) throws FileManagerException {
-        try (BufferedReader file = new BufferedReader(new FileReader(PLAYERS))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(PLAYERS))) {
             String line;
-            while ((line = file.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 if (line.contains(username)) {
                     String[] tokens = line.split(";");
                     return Integer.parseInt(tokens[2]);
@@ -279,15 +256,16 @@ public class FileManager {
         }
         return false;
     }
-    
+
     /**
      * Registra l'utente nel file players.txt.
+     *
      * @param username
-     * @param encryptedPassword 
+     * @param encryptedPassword
      */
-    public void registerUser(String username, String encryptedPassword){
-        
-        String line = username+";"+encryptedPassword+";"+"0";
+    public void registerUser(String username, String encryptedPassword) {
+
+        String line = "\n"+username + ";" + encryptedPassword + ";" + "0";
         FileOutputStream fileOut;
         try {
             fileOut = new FileOutputStream(PLAYERS, true);
@@ -315,7 +293,7 @@ public class FileManager {
                     return false;
                 }
             }
-        } catch (IOException ex) { 
+        } catch (IOException ex) {
             Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
@@ -331,8 +309,10 @@ public class FileManager {
      * @return
      */
     public List<Map<String, Object>> getLabelsProperties() {
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(LABELS);
+
         List<Map<String, Object>> labels = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(LABELS))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
             Map<String, Object> row;
             String[] tokens;
             String line;
@@ -366,9 +346,10 @@ public class FileManager {
      * rappresenta il valore di Blu nell'RGB della country
      */
     public List<Map<String, Object>> getCountriesColors() {
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(COLORS);
 
         List<Map<String, Object>> countriesColors = new ArrayList();
-        try (BufferedReader br = new BufferedReader(new FileReader(COLORS))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
             Map<String, Object> row;
             String[] tokens, RGB;
             String line;
@@ -398,9 +379,10 @@ public class FileManager {
      * per quel tris.
      */
     public List<Map<String, Object>> getTris() {
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(TRIS);
 
         List<Map<String, Object>> tris = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(TRIS))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
             String line;
             HashMap<String, Object> row;
             while ((line = br.readLine()) != null) {
@@ -416,41 +398,41 @@ public class FileManager {
         return tris;
 
     }
-    
+
     //---------------------------- vocabulary.txt --------------------------------//
-    
-    public String getWord(String word, String lang, boolean reverse) throws FileManagerException{
-        
+    public String getWord(String word, String lang, boolean reverse) throws FileManagerException {
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(VOCABULARY + lang + ".txt");
+
         String line;
-        try(BufferedReader br = new BufferedReader(new FileReader(VOCABULARY+lang+".txt"))){
-            while((line = br.readLine())!=null){
-                int index = reverse ? 1:0;
-                if(line.split("=")[index].trim().equals(word)){
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
+            while ((line = br.readLine()) != null) {
+                int index = reverse ? 1 : 0;
+                if (line.split("=")[index].trim().equals(word)) {
                     return line;
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        throw new FileManagerException("Word "+word+" not found in vocabulary"+lang+".");
-    
+        throw new FileManagerException("Word " + word + " not found in vocabulary" + lang + ".");
+
     }
-    
+
     //---------------------------------- info.txt -------------------------------//
-    
-    public String getInfoFor(String phase, String lang) throws FileManagerException{
-    
+    public String getInfoFor(String phase, String lang) throws FileManagerException {
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(INFO+lang+".txt");
+
         String line;
-        try(BufferedReader br = new BufferedReader(new FileReader(INFO+lang+".txt"))){
-            while((line = br.readLine())!=null){
-                if(line.split("=")[0].trim().equals(phase)){
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {
+            while ((line = br.readLine()) != null) {
+                if (line.split("=")[0].trim().equals(phase)) {
                     return line.split("=")[1];
                 }
             }
-        
+
         } catch (IOException ex) {
             Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        throw new FileManagerException("No info found for "+phase);
+        throw new FileManagerException("No info found for " + phase);
     }
 }
