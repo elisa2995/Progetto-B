@@ -6,8 +6,8 @@
 package exceptions;
 
 /**
- *
- * @author Elisa
+ * This expeption is thrown when the user refuse to logout when the system asks
+ * him.
  */
 public class LogoutException extends Exception {
 

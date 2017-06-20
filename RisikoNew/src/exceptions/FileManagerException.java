@@ -1,10 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package exceptions;
 
+/**
+ * Exception that is thrown when, searching in a file, <code>FileManager</code>
+ * doesn't find the content that is looking for.
+ */
 
 public class FileManagerException extends Exception {
 

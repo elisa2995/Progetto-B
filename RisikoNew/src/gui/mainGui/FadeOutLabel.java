@@ -14,11 +14,13 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
-
+/**
+ * JLabel in which is displayed an image that fades out. The process of fading out
+ * is done thanks to a timer that updates the value of trasparency of the image.
+ */
 public class FadeOutLabel extends JLabel {
 
     public static final long RUNNING_TIME = 3000;
-    public static final long WAITING_TIME=10000;
 
     private BufferedImage outImage;
     private float alpha = 0f;
@@ -26,9 +28,14 @@ public class FadeOutLabel extends JLabel {
     private final Timer timer;
     private final GUI gui;
 
+    /**
+     * Creates a new FadeOutLabel
+     *
+     * @param gui
+     */
     public FadeOutLabel(GUI gui) {
-        this.gui=gui;
-        String url="src/resources/images/REINFORCE.png";
+        this.gui = gui;
+        String url = "src/resources/images/REINFORCE.png";
         try {
             outImage = ImageIO.read(new File(url));
         } catch (IOException exp) {
@@ -39,12 +46,12 @@ public class FadeOutLabel extends JLabel {
             public synchronized void actionPerformed(ActionEvent e) {
                 if (startTime < 0) {
                     startTime = System.currentTimeMillis();
-                    
+
                 } else {
 
                     long time = System.currentTimeMillis();
                     long duration = time - startTime;
-                    
+
                     if (duration >= RUNNING_TIME) {
                         startTime = -1;
                         ((Timer) e.getSource()).stop();
@@ -60,11 +67,22 @@ public class FadeOutLabel extends JLabel {
 
     }
 
+    /**
+     * Returns the Dimension of the image setted.
+     *
+     * @return
+     */
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(outImage.getWidth(), outImage.getHeight());
     }
 
+    /**
+     * Paints the label depending on the alpha coefficient of the moment of the
+     * process of fade out.
+     *
+     * @param g
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -77,13 +95,21 @@ public class FadeOutLabel extends JLabel {
         g2d.dispose();
     }
 
+    /**
+     * Starts the fade out of the FadeOutLabel
+     */
     public void startFadeOut() {
         alpha = 1f;
         timer.start();
         this.setOpaque(false);
-        
+
     }
 
+    /**
+     * Sets the image that will be displayed.
+     *
+     * @param url
+     */
     public void setImage(String url) {
         try {
             outImage = ImageIO.read(new File(url));

@@ -39,7 +39,6 @@ public class RemovePlayerListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JButton source = (JButton) e.getSource();
         PlayerInfoRow player = getPlayerByButton(source);
-        // Elimino questa riga e aggiorno la posizione delle righe successive a questa
         players.remove(player);
         playersPanel.removePlayer(player);
     }
@@ -55,7 +54,7 @@ public class RemovePlayerListener implements ActionListener {
                 return player;
             }
         }
-        return null; // non dovrebbe mai arrivarci
+        return null; 
     }
 
 }

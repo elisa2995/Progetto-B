@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package exceptions;
 
 /**
- *
- * @author emanuela
+ * This exception is thrown when the <code>Translator</code> can't find the word
+ * that wants to translate in the file.
  */
 public class TranslationException extends Exception {
 

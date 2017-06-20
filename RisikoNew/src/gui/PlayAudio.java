@@ -13,14 +13,19 @@ import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
- * Interfaccia che permette di eseguire delle tracce audio tramite il metodo 
- * statico play(source).
- * Crea un file a partire dalla source con cui si chiama play, legge lo stream
- * audio di input da questo file e lo scrive in output sulla linea dell'audioSystem
- * opportuna.
+ * Interface that allows to execute audio tracks thanks to the static method
+ * play. It creates a file from the source from which the play method is called;
+ * it reads the input audio stream from this file and writes it in the output of
+ * the audioSystem.
  */
 public interface PlayAudio {
 
+    /**
+     * Reads the file corresponding to the source and it passes it to the
+     * audioSystem output.
+     *
+     * @param source
+     */
     static void play(String source) {
         AudioFormat audioFormat;
         AudioInputStream audioInputStream;
@@ -31,7 +36,7 @@ public interface PlayAudio {
             audioInputStream = AudioSystem.getAudioInputStream(soundFile);
             audioFormat = audioInputStream.getFormat();
             dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
-            sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo); 
+            sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
             /* AudioSystem: permettere di accedere ai mixers installati nel sistema. 
                sourceDataLine = oggetto usato per feddare l'audio negli speakers.*/
             (new Thread() {
@@ -50,7 +55,7 @@ public interface PlayAudio {
                            questo punto la linea è pronta per trasferire l'audio
                            negli speaker.*/
                         int cnt;
-                        
+
                         while ((cnt = audioInputStream.read(
                                 tempBuffer, 0, tempBuffer.length)) != -1) { // non ha raggiunto l'end of file
                             if (cnt > 0) {

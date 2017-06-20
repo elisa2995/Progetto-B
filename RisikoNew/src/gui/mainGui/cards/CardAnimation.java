@@ -4,6 +4,9 @@ import gui.PlayAudio;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+/**
+ * Animation produce on the single card.
+ */
 public class CardAnimation extends Thread {
 
     private CardPanel cardPanel;
@@ -11,6 +14,15 @@ public class CardAnimation extends Thread {
     private int x, y, toX;
     private JLabel card;
 
+    /**
+     * Creates a new CardAnimation
+     *
+     * @param cardPanel
+     * @param x
+     * @param y
+     * @param toX
+     * @param card
+     */
     public CardAnimation(CardPanel cardPanel, int x, int y, int toX, JLabel card) {
         this.cardPanel = cardPanel;
         this.x = x;
@@ -19,6 +31,10 @@ public class CardAnimation extends Thread {
         this.card = card;
     }
 
+    /**
+     * Changes the position of a card, moving it fluently from the selectable
+     * ones to the choosen ones or vice versa.
+     */
     @Override
     public void run() {
 
@@ -44,6 +60,9 @@ public class CardAnimation extends Thread {
 
     }
 
+    /**
+     * Redraws the JLabel.
+     */
     private void redraw() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override

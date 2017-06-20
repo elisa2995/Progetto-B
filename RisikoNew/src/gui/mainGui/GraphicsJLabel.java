@@ -15,6 +15,9 @@ import static java.lang.Math.sin;
 import java.util.Map;
 import javax.swing.JLabel;
 
+/**
+ * JLabel in which is displayed the number of armies that is on a country.
+ */
 public class GraphicsJLabel extends JLabel {
 
     private double[] xx;
@@ -26,6 +29,9 @@ public class GraphicsJLabel extends JLabel {
     private Path2D myPath;
     private Map<String, JLabel> countryLabel;
 
+    /**
+     * Creates a new GraphicsJLabel
+     */
     public GraphicsJLabel() {
         super();
         myPath = new Path2D.Double();

@@ -1,13 +1,19 @@
 package gui.mainGui.cards;
 
-import gui.PlayAudio;
 import javax.swing.SwingUtilities;
-
+/**
+ * Animation of the <code>cardPanel</code> that goes up and down. 
+ */
 public class PanelAnimation extends Thread {
 
     private CardPanel cardPanel;
     private int x, y, toY;
 
+    /**
+     * Creates a new PanelAnimation
+     * @param cardPanel
+     * @param toY 
+     */
     public PanelAnimation(CardPanel cardPanel, int toY) {
         this.cardPanel = cardPanel;
         this.x = cardPanel.getX();
@@ -15,6 +21,9 @@ public class PanelAnimation extends Thread {
         this.toY = toY;
     }
 
+    /**
+     * Moves the panel up or down
+     */
     @Override
     public void run() {
        
@@ -34,11 +43,13 @@ public class PanelAnimation extends Thread {
         }
     }
 
+    /**
+     * Sets the new location of the panel.
+     */
     private void redraw() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-
                 cardPanel.setLocation(x, y);
             }
         });

@@ -13,10 +13,18 @@ public class BackgroundPane extends JComponent {
 
     private final Image image;
 
+    /**
+     * Creates a new BackgrounfPane
+     * @param image 
+     */
     public BackgroundPane(Image image) {
         this.image = image;
     }
 
+    /**
+     * Add the background to the the JComponent in which it is.
+     * @param g 
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

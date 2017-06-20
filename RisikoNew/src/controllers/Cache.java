@@ -11,12 +11,6 @@ import risiko.game.GameProxy;
  */
 public class Cache {
 
-    /*Cache reset: a tutti i cambiamenti di fase, dopo ogni attacco se c'è 
-         stata una conquista oppure è rimasta solo un armata, quando setto l'attaccante,
-         (quando setto il difensore: no perchè posso sceglierne un altro quindi rimango
-         con le stesse possibilità)
-         quando resetto le fighting countries in labelMaplistener(cioè qui)
-     */
     private GameProxy game;
     private Map<String, Boolean> cacheMap;
 
