@@ -8,6 +8,10 @@ import risiko.equipment.Card;
 import risiko.map.RisikoMap;
 import risiko.players.Player;
 
+/**
+ * Class that represents the phase of the game in which the player can play its
+ * cards to gain bonus armies.
+ */
 public class CardsPhase extends Phase {
 
     private final BonusDeck deck;
@@ -52,9 +56,10 @@ public class CardsPhase extends Phase {
 
     /**
      * Returns a Map which keySet is the set of Cards[] that can be played by
-     *  <code>player</code>. Maps the tris with the number of bonus
-     * armies awarded for that specific set of cards.
+     * <code>player</code>. Maps the tris with the number of bonus armies
+     * awarded for that specific set of cards.
      *
+     * @param player
      * @return
      */
     public Map<Card[], Integer> getPlayableTris(Player player) {

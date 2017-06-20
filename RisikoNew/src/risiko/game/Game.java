@@ -18,7 +18,6 @@ import utils.GameObserver;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import risiko.equipment.Card;
 import risiko.map.Country;
 import risiko.map.RisikoMap;
 import risiko.players.ArtificialPlayerSettings;
@@ -56,7 +55,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public synchronized String getPhase(ArtificialPlayer... aiCaller) {
-        return Phase.getName(phaseIndex);
+        return phases[phaseIndex].toString();
     }
 
     /**
@@ -614,19 +613,19 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
-        if (Phase.getName(phaseIndex).equals("PLAY_CARDS")) {
+        if (getPhase().equals("PLAY_CARDS")) {
             notifyPlayedTris(); //to hide showCardButton and cardPanel
         }
 
-        if (Phase.getName(phaseIndex).equals("REINFORCE") && activePlayer.getBonusArmies() != 0) {
+        if (getPhase().equals("REINFORCE") && activePlayer.getBonusArmies() != 0) {
             throw new PendingOperationsException("Hai ancora armate da posizionare!");
         }
 
-        if (Phase.getName(phaseIndex).equals("FIGHT") && getFightPhase().isAttackInProgress()) {
+        if (getPhase().equals("FIGHT") && getFightPhase().isAttackInProgress()) {
             throw new PendingOperationsException("Attacco ancora in corso!");
         }
 
-        if (Phase.getName(phaseIndex).equals("FIGHT") && activePlayer.hasConqueredACountry()) {
+        if (getPhase().equals("FIGHT") && activePlayer.hasConqueredACountry()) {
             this.drawBonusCard();
         }
 
@@ -635,7 +634,7 @@ public class Game extends Observable implements GameProxy {
             passTurn();
         }
         phases[phaseIndex].clear();
-        notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), Phase.getName(phaseIndex));
+        notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), getPhase());
     }
 
     /**
