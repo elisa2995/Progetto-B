@@ -181,28 +181,6 @@ public class RisikoMapTest {
     }
 
     /**
-     * Test of playerCanAttack method, of class RisikoMap.
-     */
-    @Test
-    public void testPlayerCanAttack() {
-        System.out.println("playerCanAttack");
-        instance.initGame(players);
-
-        for (Country country : instance.getCountriesList()) {
-            country.setArmies(1);
-        }
-        assertFalse(instance.playerCanAttack(players.get(0)));
-        assertFalse(instance.playerCanAttack(players.get(1)));
-
-        for (Country country : instance.getCountriesList()) {
-            country.setArmies(3);
-        }
-        assertTrue(instance.playerCanAttack(players.get(0)));
-        assertTrue(instance.playerCanAttack(players.get(1)));
-
-    }
-
-    /**
      * Test of hasLost method, of class RisikoMap.
      */
     @Test
