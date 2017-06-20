@@ -120,7 +120,6 @@ public class GUI extends JFrame implements GameObserver {
         game = (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
                 new Class<?>[]{GameProxy.class},
                 new GameInvocationHandler(new Game(players, this)));
-
         labelMapListener.setGame(game);
 
         // Dialogs
@@ -534,27 +533,28 @@ public class GUI extends JFrame implements GameObserver {
     @Override
     public void updateOnPhaseChange(PlayerInfo player, String phase) {
         ((GraphicsJLabel) labelMap).resetCone();
-        fadeOutLabel.setImage("src/resources/images/" + phase + ".png");
         fadeOutLabel.setVisible(true);
         this.mapLayeredPane.moveToFront(fadeOutLabel);
-        fadeOutLabel.startFadeOut();
+        fadeOutLabel.startFadeOut("src/resources/images/" + phase + ".png");
+
         updateLabels(player, phase);
         updateTextAreaInfo(player, phase);
         labelMapListener.resetCache();
 
         switch (phase) {
             case "PLAY_CARDS":
-                buttonNextPhase.setVisible(true);
+                buttonNextPhase.setVisible(true && game.checkMyIdentity());
                 buttonNextPhase.setText("Niente Tris");
                 break;
             case "REINFORCE":
                 buttonNextPhase.setVisible(false);
                 break;
             case "FIGHT":
-                buttonNextPhase.setVisible(true);
+                buttonNextPhase.setVisible(true && game.checkMyIdentity());
                 buttonNextPhase.setText("Stop attacchi");
                 break;
             case "MOVE":
+                buttonNextPhase.setVisible(game.checkMyIdentity());
                 buttonNextPhase.setText("Passa il turno");
         }
 
