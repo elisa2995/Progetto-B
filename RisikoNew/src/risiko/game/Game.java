@@ -654,7 +654,7 @@ public class Game extends Observable implements GameProxy {
 
         activePlayer.setConqueredACountry(false);
         if (!getCardsNames().isEmpty() && !(activePlayer instanceof ArtificialPlayer)) {
-            notifyNextTurn(getCardsNames());
+            notifyPlayCards(getCardsNames());
         }
 
         phaseIndex = (getCardsNames().isEmpty()) ? 1 : 0;

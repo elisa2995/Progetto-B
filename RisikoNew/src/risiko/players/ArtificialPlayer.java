@@ -1,7 +1,6 @@
 package risiko.players;
 
 import exceptions.PendingOperationsException;
-import java.awt.EventQueue;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;

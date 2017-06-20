@@ -1,10 +1,6 @@
 package utils;
 
-import utils.GameObserver;
-import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
-import risiko.players.Player;
 import shared.CountryInfo;
 import shared.PlayerInfo;
 
@@ -17,11 +13,22 @@ public class Observable extends BasicObservable {
         super();
     }
 
-    //-------------------------- Notify-----------------------------------
     /**
-     * Notifica un cambiamento dopo la fase di rinforzo
+     * Notifies the initial country assignment.
      *
-     * @param countryName
+     * @param countriesInfo
+     */
+    public void notifyCountriesAssignment(CountryInfo[] countriesInfo) {
+        for (BasicGameObserver ob : this.obs) {
+            if (ob instanceof GameObserver) {
+                ((GameObserver) ob).updateOnCountriesAssignment(countriesInfo);
+            }
+        }
+    }
+
+    /**
+     * Notifies that the bonusArmies of the current active player have changed.
+     *
      * @param bonusArmies
      */
     public void notifyReinforce(int bonusArmies) {
@@ -34,7 +41,7 @@ public class Observable extends BasicObservable {
     }
 
     /**
-     * Notifica un cambiamento dopo che l'attaccante è stato settato
+     * Notifies that tha active player has chosen a country as attacker.
      *
      * @param attackerInfo
      */
@@ -44,11 +51,11 @@ public class Observable extends BasicObservable {
                 ((GameObserver) ob).updateOnSetAttacker(attackerInfo);
             }
         }
-
     }
 
     /**
-     * Notifica un cambiamento dopo che l'attaccante è stato settato
+     * Notifies that the active player has chosen from which country to move its
+     * armies.
      *
      * @param countryName
      */
@@ -62,11 +69,10 @@ public class Observable extends BasicObservable {
     }
 
     /**
-     * Notifica quando cambia la fase del gioco
+     * Notifies that the phase has changed.
      *
      * @param player
      * @param phase
-     * @param color
      */
     public void notifyPhaseChange(PlayerInfo player, String phase) {
         for (BasicGameObserver ob : this.obs) {
@@ -77,21 +83,7 @@ public class Observable extends BasicObservable {
     }
 
     /**
-     * Notifica un cambiamento dopo l'asseganzione dei territori
-     *
-     * @param countriesInfo
-     */
-    public void notifyCountriesAssignment(CountryInfo[] countriesInfo) {
-        for (BasicGameObserver ob : this.obs) {
-            if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnCountriesAssignment(countriesInfo);
-            }
-        }
-
-    }
-
-    /**
-     * Notifies that the number of armies of a country has changed.
+     * Notifies a change in some country's armies.
      *
      * @param countryInfo
      */
@@ -105,20 +97,23 @@ public class Observable extends BasicObservable {
     }
 
     /**
-     * Notifica all'observable che il giocatore del nuovo turno ha delle carte
-     * da giocare.
+     * Notifies the observable that the active player has some cards to play.
+     *
      * @param cards
      */
-    public void notifyNextTurn(List<String> cards) {
+    public void notifyPlayCards(List<String> cards) {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {
-                ((GameObserver) ob).updateOnNextTurn(cards);
+                ((GameObserver) ob).updateOnPlayCards(cards);
             }
         }
     }
 
     /**
-     * Notifica il............... di una carta.
+     * Notifies that the player has drawn a card.
+     *
+     * @param cardName
+     * @param isArtificialPlayer
      */
     public void notifyDrawnCard(String cardName, boolean isArtificialPlayer) {
         for (BasicGameObserver ob : this.obs) {
@@ -128,6 +123,9 @@ public class Observable extends BasicObservable {
         }
     }
 
+    /**
+     * Notifies that the player has played a tris.
+     */
     public void notifyPlayedTris() {
         for (BasicGameObserver ob : this.obs) {
             if (ob instanceof GameObserver) {

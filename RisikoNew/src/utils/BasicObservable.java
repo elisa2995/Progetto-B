@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package utils;
 
 import java.util.ArrayList;
@@ -12,10 +7,6 @@ import risiko.players.ArtificialPlayer;
 import shared.AttackResultInfo;
 import shared.CountryInfo;
 
-/**
- *
- * @author Elisa
- */
 public class BasicObservable {
 
     protected List<BasicGameObserver> obs;
@@ -27,10 +18,8 @@ public class BasicObservable {
         obs = new ArrayList<>();
     }
 
-    //------------------Notify----------------------------------------------
     /**
-     * notificha che chi viene attaccato deve scegliere con quante armate deve
-     * difendersi
+     * Notifies the defender that it's being attacked.
      *
      */
     public void notifyDefender(CountryInfo defenderCountryInfo) {
@@ -41,16 +30,9 @@ public class BasicObservable {
     }
 
     /**
-     * Notifica un cambiamento dopo un attacco
+     * Notifies the result of an attack.
      *
-     * @param attackResultInfo
-     * @param isConquered
-     * @param canAttackFromCountry
-     * @param maxArmiesAttacker
-     * @param maxArmiesDefender
-     * @param attackerDice
-     * @param defenderDice
-     * @param artificialAttack
+     * @param attackResult
      */
     public void notifyAttackResult(AttackResultInfo attackResult) {
         for (BasicGameObserver ob : this.obs) {
@@ -59,7 +41,7 @@ public class BasicObservable {
     }
 
     /**
-     * Notifica un cambiamento quando c'è la vittoria di un giocatore
+     * Notifies the victory of a player.
      *
      * @param winner
      */
@@ -83,8 +65,7 @@ public class BasicObservable {
      * Notifies the observer that the defender has chosen how many armies to use
      * for the defense.
      *
-     * @param attacker
-     * @param defender
+     * @param fightingCountries
      * @param reattack
      */
     public void notifySetDefender(CountryInfo[] fightingCountries, boolean reattack) {
@@ -92,18 +73,21 @@ public class BasicObservable {
             ob.updateOnSetDefender(fightingCountries, reattack);
         }
     }
-
-    /*public void notifySetDefender(String countryAttackerName, String countryDefenderName, String defenderPlayer, int maxArmiesAttacker, int maxArmiesDefender, boolean reattack) {
+    
+    /**
+     * Notifies the elimination of <code>defender</code>.
+     * @param defender
+     * @param artificialAttack 
+     */
+    public void notifyElimination(String defender, boolean artificialAttack) {
         for (BasicGameObserver ob : this.obs) {
-            ob.updateOnSetDefender(countryAttackerName, countryDefenderName, defenderPlayer, maxArmiesAttacker, maxArmiesDefender, reattack);
-        }
-    }*/
-    public void notifyElimination(String defenderName, boolean artificialAttack) {
-        for (BasicGameObserver ob : this.obs) {
-            ob.updateOnElimination(defenderName, artificialAttack);
+            ob.updateOnElimination(defender, artificialAttack);
         }
     }
 
+    /**
+     * Notifies the end of the game.
+     */
     public void notifyEndGame() {
         this.obs.sort(new Comparator() {
             @Override

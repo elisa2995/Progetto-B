@@ -10,8 +10,18 @@ public class PlayerInfo {
     private final String color;
     private int bonusArmies;
     private boolean artificial;
-    private String type;
+    private String type; // Artificial/Logged/Normal
 
+    /**
+     * Constructs a PlayerInfo with only its attributes <code>name</code>,
+     * <code>color</code>, <code>bonusarmies</code> and <code>artificial</code>
+     * set.
+     *
+     * @param name
+     * @param color
+     * @param bonus
+     * @param artificial
+     */
     public PlayerInfo(String name, String color, int bonus, boolean artificial) {
         this.name = name;
         this.color = color;
@@ -19,6 +29,14 @@ public class PlayerInfo {
         this.artificial = artificial;
     }
 
+    /**
+     * Constructs a PlayerInfo with only its attribute <code>name</code>,
+     * <code>color</code> and <code>type</code> set.
+     *
+     * @param name
+     * @param color
+     * @param type
+     */
     public PlayerInfo(String name, String color, String type) {
         this.name = name;
         this.color = color;
@@ -48,5 +66,4 @@ public class PlayerInfo {
     public void setType(String type) {
         this.type = type;
     }
-
 }
