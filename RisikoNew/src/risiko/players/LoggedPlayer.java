@@ -1,5 +1,8 @@
 package risiko.players;
 
+/**
+ * A logged player.
+ */
 public class LoggedPlayer extends Player {
 
     String username;

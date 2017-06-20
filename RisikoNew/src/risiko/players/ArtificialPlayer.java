@@ -1,6 +1,7 @@
 package risiko.players;
 
 import exceptions.PendingOperationsException;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
@@ -10,6 +11,9 @@ import shared.AttackResultInfo;
 import shared.CountryInfo;
 import utils.BasicGameObserver;
 
+/**
+ * An IA player.
+ */
 public class ArtificialPlayer extends Player implements Runnable, BasicGameObserver {
 
     private GameProxy game;
@@ -21,13 +25,13 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     private boolean canAttack;
     private Action currentAction;
     private ArtificialPlayerSettings setting;
-    
+
     public void setSetting(ArtificialPlayerSettings setting) {
         this.setting = setting;
     }
-    
+
     /**
-     * create a new artificial player
+     * Create a new artificial player
      *
      * @param name name of the player
      * @param color color assigned to the player
@@ -37,11 +41,11 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         super(name, color);
         this.game = game;
         currentAction = Action.NOACTION;
-        setting = new ArtificialPlayerSettings("Veloce");
+        setting = new ArtificialPlayerSettings("Lento");
     }
 
     /**
-     * tries to play a tris from the best to the worst
+     * Tries to play a tris from the best to the worst.
      */
     private synchronized void playHighestTris() {
         int max = -1;
@@ -67,25 +71,28 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * moves armies between territories
+     * Moves armies between two territories.
      */
     private synchronized void moveArmies() {
-        String[] myCountries = game.getMyCountries(this);
-        int from = new Random().nextInt(myCountries.length);
-        int to = new Random().nextInt(myCountries.length);
-        if (from != to) {
-            int max = game.getMaxArmiesForMovement(myCountries[from], this);
+        if (new Random().nextBoolean()) {
+            
+            List<String> myCountries = game.getMyCountries(this);
+            int from = new Random().nextInt(myCountries.size());
+            String fromCountry = myCountries.get(from);
+            List<String> neighbors = game.getNeighbors(this, fromCountry);
+            int to = new Random().nextInt(neighbors.size());
+            String toCountry = neighbors.get(to);
+
+            int max = game.getMaxArmiesForMovement(fromCountry, this);
             if (max > 0) {
-                int nArmies = new Random().nextInt(max);
-                if (nArmies != 0) {
-                    game.move(myCountries[from], myCountries[to], nArmies, this);
-                }
+                int nArmies = new Random().nextInt(max) + 1;
+                game.move(fromCountry, toCountry, nArmies, this);
             }
         }
     }
 
     /**
-     * add armies to the territories until the are exhausted
+     * Adds armies to the territories until the are exhausted.
      */
     private synchronized void randomReinforce() {
         if (bonusArmies == 0) {
@@ -96,10 +103,10 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             }
         }
         int index;
-        String[] myCountries = game.getMyCountries(this);
+        List<String> myCountries = game.getMyCountries(this);
         for (int i = 0; i < bonusArmies; i++) {
-            index = new Random().nextInt(myCountries.length);
-            game.reinforce(myCountries[index], this);
+            index = new Random().nextInt(myCountries.size());
+            game.reinforce(myCountries.get(index), this);
 
             try {
                 this.wait(setting.getReinforceDelay());
@@ -110,7 +117,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * executes a series of attacks
+     * Executes a series of attacks.
      */
     private synchronized void randomAttack() {
         int i = new Random().nextInt(setting.getBaseAttack());
@@ -124,7 +131,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * execute a single attack
+     * Executes a single attack.
      */
     private synchronized void randomSingleAttack() {
         setMaxArmiesSet(false);
@@ -135,31 +142,28 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         int tries = 10;
 
         do {
-            //set country attacco
+
             index = new Random().nextInt(myCountries.length);
             game.setAttackerCountry(myCountries[index], this);
 
-            //set country difesa
             opponentCountries = game.getAllDefenders(myCountries[index]);
             tries--;
         } while (opponentCountries.length == 0 && tries > 0);
-        /* Esco quando ho trovato un mio territorio con almeno un territorio
-        attaccabile come vicino */
+
         if (tries > 0) {
             defendIndex = new Random().nextInt(opponentCountries.length);
             game.setDefenderCountry(opponentCountries[defendIndex], this);
-            //aspetta la risposta da game per il settaggio di max armies
+
             try {
                 this.wait(10);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
 
-            if (maxArmiesSet) { // Perché?
+            if (maxArmiesSet) {
                 int nrA = new Random().nextInt(maxArmiesAttack) + 1;
                 game.setAttackerArmies(nrA, this);
             } else {
-                //se maxarmiesset non è true attacco con il massimo numero di armate
                 game.setAttackerArmies(-1, this);
             }
 
@@ -186,13 +190,13 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             int nrD = new Random().nextInt(this.maxArmiesDefense) + 1;
             game.confirmAttack(nrD, this);
             this.currentAction = Action.NOACTION;
-            
+
             setMaxArmiesSet(false);
         }
     }
 
     /**
-     * Contains the loop for the artificial player to act
+     * Contains the loop for the artificial player to act.
      */
     @Override
     public void run() {
@@ -223,14 +227,17 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                     this.defend();
                 }
             } catch (PendingOperationsException ex) {
-                //l'eccezione delle armate ancora da assegnare viene data quando si sovrappongono le operazioni di 2 giocatori
-                //Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
+    /**
+     * Updates maxArmiesAttack and maxArmiesDefense
+     * @param countries
+     * @param reattack 
+     */
     @Override
     public void updateOnSetDefender(CountryInfo[] countries, boolean reattack) {
         this.maxArmiesAttack = countries[0].getMaxArmies();
@@ -244,10 +251,13 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         }
     }
 
+    /**
+     * Updates currentAction. If has conquered a country moves armies from attacker to defender.
+     * @param ar 
+     */
     @Override
     public void updateOnAttackResult(AttackResultInfo ar) {
         if (this.currentAction == Action.DEFEND) {
-            // Se ero in difesa una volta ricevuto il risultato dell'attacco, passo alla fase di no-action
             this.currentAction = Action.NOACTION;
         }
         if (ar.hasConquered()) {
@@ -256,11 +266,19 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         canAttack = true;
     }
 
+    /**
+     * Updates currentAction to ENDGAME if someone wins.
+     * @param winner 
+     */
     @Override
     public void updateOnVictory(String winner) {
         this.currentAction = Action.ENDGAME;
     }
 
+    /**
+     * Updates currentAction to DEFEND when ArtificialPlayer is attacked.
+     * @param defenderCountryInfo 
+     */
     @Override
     public void updateOnDefend(CountryInfo defenderCountryInfo) {
         if (this.getName().equals(defenderCountryInfo.getPlayerName())) {
@@ -268,6 +286,11 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         }
     }
 
+    /**
+     * Updates currentAction to ENDGAME when ArtificialPlayer is eliminated.
+     * @param defenderName
+     * @param artificialAttack 
+     */
     @Override
     public void updateOnElimination(String defenderName, boolean artificialAttack) {
         if (this.getName().equals(defenderName)) {
@@ -275,6 +298,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         }
     }
 
+    /**
+     * Updates currentAction when game ends.
+     */
     @Override
     public void updateOnEndGame() {
         this.currentAction = Action.ENDGAME;

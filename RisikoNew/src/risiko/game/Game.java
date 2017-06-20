@@ -3,7 +3,6 @@ package risiko.game;
 import services.InfoFactory;
 import risiko.phase.*;
 import exceptions.FileManagerException;
-import risiko.players.PlayerType;
 import risiko.players.Player;
 import risiko.players.ArtificialPlayer;
 import exceptions.PendingOperationsException;
@@ -19,7 +18,6 @@ import utils.GameObserver;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import risiko.equipment.Card;
 import risiko.map.Country;
 import risiko.map.RisikoMap;
 import risiko.players.ArtificialPlayerSettings;
@@ -57,7 +55,7 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public synchronized String getPhase(ArtificialPlayer... aiCaller) {
-        return Phase.getName(phaseIndex);
+        return phases[phaseIndex].toString();
     }
 
     /**
@@ -124,18 +122,18 @@ public class Game extends Observable implements GameProxy {
 
         Player player;
         for (PlayerInfo info : playersInfo) {
-            switch (PlayerType.valueOf(info.getType())) {
-                case ARTIFICIAL:
+            switch (info.getType()) {
+                case "ARTIFICIAL":
                     player = new ArtificialPlayer(info.getName(), info.getColor(), (GameProxy) Proxy.newProxyInstance(GameProxy.class.getClassLoader(),
                             new Class<?>[]{GameProxy.class},
                             new GameInvocationHandler(this)));
                     this.players.add(player);
                     break;
-                case NORMAL:
+                case "NORMAL":
                     player = new Player(info.getName(), info.getColor());
                     this.players.add(player);
                     break;
-                case LOGGED:
+                case "LOGGED":
                     player = new LoggedPlayer(info.getName(), info.getColor());
                     this.players.add(player);
                     break;
@@ -615,28 +613,29 @@ public class Game extends Observable implements GameProxy {
      */
     @Override
     public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
-        if (Phase.getName(phaseIndex).equals("PLAY_CARDS")) {
+        if (getPhase().equals("PLAY_CARDS")) {
             notifyPlayedTris(); //to hide showCardButton and cardPanel
         }
 
-        if (Phase.getName(phaseIndex).equals("REINFORCE") && activePlayer.getBonusArmies() != 0) {
+        if (getPhase().equals("REINFORCE") && activePlayer.getBonusArmies() != 0) {
             throw new PendingOperationsException("Hai ancora armate da posizionare!");
         }
 
-        if (Phase.getName(phaseIndex).equals("FIGHT") && getFightPhase().isAttackInProgress()) {
+        if (getPhase().equals("FIGHT") && getFightPhase().isAttackInProgress()) {
             throw new PendingOperationsException("Attacco ancora in corso!");
         }
 
-        if (Phase.getName(phaseIndex).equals("FIGHT") && activePlayer.hasConqueredACountry()) {
+        if (getPhase().equals("FIGHT") && activePlayer.hasConqueredACountry()) {
             this.drawBonusCard();
         }
 
-        phaseIndex++;
-        if (phaseIndex == phases.length) {
+        if (phaseIndex == phases.length-1) {
             passTurn();
+            return;
         }
+        phaseIndex++;
         phases[phaseIndex].clear();
-        notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), Phase.getName(phaseIndex));
+        notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), getPhase());
     }
 
     /**
@@ -743,8 +742,19 @@ public class Game extends Observable implements GameProxy {
      * @return i territori posseduti da player
      */
     @Override
-    public synchronized String[] getMyCountries(ArtificialPlayer player, ArtificialPlayer... aiCaller) {
-        return this.map.getMyCountries(player).stream().map(element -> element.getName()).toArray(size -> new String[size]);
+    public synchronized List<String> getMyCountries(ArtificialPlayer player, ArtificialPlayer... aiCaller) {
+        return Stringify.toString(this.map.getMyCountries(player));//.stream().map(element -> element.getName()).toArray(size -> new String[size]);
+    }
+    
+    /**
+     * Returns the list of neighbors for the ArtificialPlayer's country.
+     *
+     * @param player il giocatore che fa la richiesta
+     * @return i territori posseduti da player
+     */
+    @Override
+    public synchronized List<String> getNeighbors(ArtificialPlayer player, String country, ArtificialPlayer... aiCaller) {
+        return Stringify.toString(this.map.getNeighbors(map.getCountryByName(country)));
     }
 
     /**

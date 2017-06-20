@@ -3,12 +3,14 @@ package services;
 import exceptions.FileManagerException;
 import exceptions.TranslationException;
 
+/**
+ * Class used to translate words from/to English.
+ */
 public class Translator {
 
     private static volatile Translator instance;
 
-    private Translator() {
-    }
+    private Translator() {}
 
     public static Translator getInstance() {
         if (instance == null) {
@@ -22,8 +24,8 @@ public class Translator {
     }
 
     /**
-     * Translates the word <code>source</code>. If backwards is true, it
-     * translates it from the language <code> lang</code> to English, otherwise
+     * Translates the word <code>source</code>. If reverse is true, it
+     * translates it from the language <code>lang</code> to English, otherwise
      * it translates it from English to <code>lang</code>.
      *
      * @param source

@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package risiko.players;
 
 /**
- *
- * @author alessandro
+ * Artificial players' settings.
  */
 public class ArtificialPlayerSettings {
 
@@ -15,11 +9,19 @@ public class ArtificialPlayerSettings {
     private int reinforceDelay;
     private int attackDeclarationDelay;
 
+    /**
+     * Create a new ArtificialPlayerSettings.
+     * @param speed 
+     */
     public ArtificialPlayerSettings(String speed) {
         this.baseAttack = 5;
         setSettingsForSpeed(speed);
     }
 
+    /**
+     * Sets different settings relative to the speed.
+     * @param speed 
+     */
     private void setSettingsForSpeed(String speed) {
         switch (speed) {
             case "Veloce":
@@ -53,17 +55,4 @@ public class ArtificialPlayerSettings {
     public int getAttackDeclarationDelay() {
         return attackDeclarationDelay;
     }
-
-    public void setBaseAttack(int baseAttack) {
-        this.baseAttack = baseAttack;
-    }
-
-    public void setReinforceDelay(int reinforceDelay) {
-        this.reinforceDelay = reinforceDelay;
-    }
-
-    public void setAttackDeclarationDelay(int attackDeclarationDelay) {
-        this.attackDeclarationDelay = attackDeclarationDelay;
-    }
-
 }

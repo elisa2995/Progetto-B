@@ -6,6 +6,10 @@ import risiko.map.Country;
 import risiko.map.RisikoMap;
 import risiko.players.ArtificialPlayer;
 
+/**
+ * Class that represents the phase of the game in which the active player can
+ * attack its enemies.
+ */
 public class FightPhase extends Phase {
 
     private Country attackerCountry, defenderCountry;
@@ -57,7 +61,6 @@ public class FightPhase extends Phase {
      * Sets the attribute <code>reattack</code>.
      *
      * @param reattack
-     * @param aiCaller
      */
     public void setReattack(boolean reattack) {
         this.reattack = reattack;
@@ -65,8 +68,6 @@ public class FightPhase extends Phase {
 
     /**
      * Resets the fighting countries.
-     *
-     * @param aiCaller
      */
     public void resetFightingCountries() {
         clear();
@@ -125,11 +126,10 @@ public class FightPhase extends Phase {
      * Sets the number of armies for the attack.
      *
      * @param nrA
-     * @param aiCaller
      */
     public void setAttackerArmies(int nrA) {
         if (nrA == -1) {
-            this.nrA = attackerCountry.getMaxArmies( true);
+            this.nrA = attackerCountry.getMaxArmies(true);
         } else {
             this.nrA = nrA;
         }
@@ -253,6 +253,11 @@ public class FightPhase extends Phase {
 
     public int getMaxArmies(Country country, boolean isAttacker) {
         return country.getMaxArmies(isAttacker);
+    }
+    
+    @Override
+    public String toString(){
+        return "FIGHT";
     }
 
     @Override
