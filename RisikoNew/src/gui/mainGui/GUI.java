@@ -478,6 +478,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     private void settingsItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsItemActionPerformed
         SettingsDialog settings = new SettingsDialog(this, true, game);
+        settings.setLocationRelativeTo(this);
         settings.setVisible(true);
     }//GEN-LAST:event_settingsItemActionPerformed
 

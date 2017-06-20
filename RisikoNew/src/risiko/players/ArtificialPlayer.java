@@ -22,22 +22,11 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     private boolean canAttack;
     private Action currentAction;
     private ArtificialPlayerSettings setting;
-    private int reinforceSpeed;
-    private int attacksRemaining;
-
+    
     public void setSetting(ArtificialPlayerSettings setting) {
         this.setting = setting;
     }
-
-    /**
-     * crea un delay tra successivi rinforzi di un giocatore artificiale
-     *
-     * @param reinforceSpeed tempo in ms tra un rinforzo e l'altro
-     */
-    public void setReinforceSpeed(int reinforceSpeed) {
-        this.reinforceSpeed = reinforceSpeed;
-    }
-
+    
     /**
      * create a new artificial player
      *
@@ -49,11 +38,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         super(name, color);
         this.game = game;
         currentAction = Action.NOACTION;
-        setting = new ArtificialPlayerSettings();
-        setting.setBaseAttack(5);
-        setting.setAttackDeclarationDelay(100);
-        setting.setReinforceDelay(100);
-        setting.setAttackDelay(100);
+        setting = new ArtificialPlayerSettings("Veloce");
     }
 
     /**
@@ -202,11 +187,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             int nrD = new Random().nextInt(this.maxArmiesDefense) + 1;
             game.confirmAttack(nrD, this);
             this.currentAction = Action.NOACTION;
-            try {
-                this.wait(setting.getAttackDelay());
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
+            
             setMaxArmiesSet(false);
         }
     }
