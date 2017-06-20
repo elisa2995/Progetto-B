@@ -13,6 +13,9 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import risiko.game.GameProxy;
 
+/**
+ * Panel in which the cards are displayed.
+ */
 public class CardPanel extends JPanel {
 
     private List<JLabel> cards;
@@ -22,21 +25,17 @@ public class CardPanel extends JPanel {
     private final int LOW_Y = 530;
     private final int HIGH_Y = 330;
 
-    public int getLOW_Y() {
-        return LOW_Y;
-    }
-
-    public int getHIGH_Y() {
-        return HIGH_Y;
-    }
-
+    /**
+     * Creates a new CardPanel
+     *
+     * @param game
+     */
     public CardPanel(GameProxy game) {
         this.cards = new ArrayList<>();
         this.chosenCards = new ArrayList<>();
         this.game = game;
         initComponents();
 
-        //playTrisButton
         playTris = new JButton();
         playTris.setText("Gioca il tris");
         playTris.setVisible(false);
@@ -48,6 +47,24 @@ public class CardPanel extends JPanel {
         });
         this.add(playTris);
         playTris.setBounds(1015, 100, 125, 50);
+    }
+
+    /**
+     * Returns the lowest y coordinate
+     *
+     * @return
+     */
+    public int getLOW_Y() {
+        return LOW_Y;
+    }
+
+    /**
+     * Returns the lowest x coordinate
+     *
+     * @return
+     */
+    public int getHIGH_Y() {
+        return HIGH_Y;
     }
 
     /**
@@ -88,6 +105,12 @@ public class CardPanel extends JPanel {
             .addComponent(cardsPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+    /**
+     * Playes the cards of the player, adding bonus armies to him and deleting
+     * the played card from the ones of the player.
+     *
+     * @param evt
+     */
     private void playTrisActionPerformed(java.awt.event.ActionEvent evt) {
         game.playTris(getTrisAsString(chosenCards));
         cardsPane.removeAll();
@@ -100,6 +123,11 @@ public class CardPanel extends JPanel {
     private javax.swing.JLayeredPane cardsPane;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Initializes the cards
+     *
+     * @param myCards
+     */
     public void setCards(List<String> myCards) {
 
         if (!myCards.isEmpty()) {
@@ -125,6 +153,9 @@ public class CardPanel extends JPanel {
         playTris.setVisible(false);
     }
 
+    /**
+     * Adds all the cards of the player to the panel.
+     */
     public void addCardsToPane() {
         int offset = 50;
         for (int i = 0; i < cards.size(); i++) {
@@ -134,6 +165,9 @@ public class CardPanel extends JPanel {
         }
     }
 
+    /**
+     * Adds the cards that have been choosen to the panel.
+     */
     public void addChosenCardsToPane() {
         int offset = 50;
         for (int i = 0; i < chosenCards.size(); i++) {
@@ -143,9 +177,19 @@ public class CardPanel extends JPanel {
         }
     }
 
+    /**
+     * If a card has the choosen attribute(so it is among the choosen ones) it
+     * removes it from the list of the choosen cards and it adds it to the
+     * selectable one. If the card hasn't that attribute it removes it from the
+     * selectable ones and ot adds it to the choosen one; if the choosen cards
+     * form a tris it is a valid one, it sets true the visibility of the button
+     * <code>playTris</code>.
+     *
+     * @param label
+     */
     public void switchCard(JLabel label) {
         boolean chosen = (boolean) label.getClientProperty("chosen");
-        if (chosen) { // Se era nelle chosen
+        if (chosen) {
             chosenCards.remove(label);
             cards.add(label);
             cardsPane.setLayer(label, -(getNrCards() - 1));
@@ -168,18 +212,41 @@ public class CardPanel extends JPanel {
 
     }
 
+    /**
+     * Returns the <code>cardsPane</code>
+     *
+     * @return
+     */
     public JLayeredPane getCardsPane() {
         return cardsPane;
     }
 
+    /**
+     * Returns the number of choosen cards.
+     *
+     * @return
+     */
     public int getNrChosenCards() {
         return chosenCards.size();
     }
 
+    /**
+     * Changes the location of the card.
+     *
+     * @param x
+     * @param y
+     * @param card
+     */
     public void moveCard(int x, int y, JLabel card) {
         card.setLocation(x, y);
     }
 
+    /**
+     * Returns the layer in which the JLabel is.
+     *
+     * @param label
+     * @return
+     */
     public int getLabelLayer(JLabel label) {
         if ((boolean) label.getClientProperty("chosen")) {
             return -chosenCards.indexOf(label);
@@ -187,12 +254,17 @@ public class CardPanel extends JPanel {
         return -cards.indexOf(label);
     }
 
+    /**
+     * Returns the number of selectable cards.
+     *
+     * @return
+     */
     public int getNrCards() {
         return cards.size();
     }
 
     /**
-     * Ritorna true se le carte selezionate sono un tris valido.
+     * Returns true if the <code>chosenCards</code> are a valid tris.
      *
      * @param chosenCards
      * @return
@@ -206,6 +278,13 @@ public class CardPanel extends JPanel {
         return success;
     }
 
+    /**
+     * Returns an array that contains the name of the choosen cards, depending
+     * on the chosen JLabels.
+     *
+     * @param chosenCards
+     * @return
+     */
     private String[] getTrisAsString(List<JLabel> chosenCards) {
         String[] cards = new String[3];
         for (int i = 0; i < chosenCards.size(); i++) {
@@ -215,6 +294,10 @@ public class CardPanel extends JPanel {
         return cards;
     }
 
+   /**
+    * Move the panel up and down.
+    * @param newY 
+    */
     public void moveTo(int newY) {
         PlayAudio.play("src/resources/sounds/movePanel.wav");
         PanelAnimation animation = new PanelAnimation(this, newY);

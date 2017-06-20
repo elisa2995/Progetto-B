@@ -10,7 +10,9 @@ import javax.swing.event.MouseInputAdapter;
 import risiko.game.GameProxy;
 
 /**
- *
+ * Listener for the movement of the cards. Depending on the position of the
+ * cursor it puts a card in front of the others; when a card is clicked it moves
+ * it to a destination that depends on the previous position.
  */
 public class CardListener extends MouseInputAdapter {
 
@@ -33,6 +35,8 @@ public class CardListener extends MouseInputAdapter {
     }
 
     /**
+     * When the cursor enters an image of a card, the image on which it is goes
+     * to the front.
      *
      * @param e
      */
@@ -51,6 +55,8 @@ public class CardListener extends MouseInputAdapter {
     }
 
     /**
+     * When the cursor exits an image that has been entered, the visualization
+     * of the cards return to the original one.
      *
      * @param e
      */
@@ -69,6 +75,10 @@ public class CardListener extends MouseInputAdapter {
     }
 
     /**
+     * When the image of a card is clicked it changes position depending on the
+     * previous position. If the card was among the selectable ones and the
+     * chosen cards are less than three, it goes to the chosen ones; if it was
+     * among the chosen ones it comes back to the selectable ones.
      *
      * @param e
      */
@@ -83,8 +93,6 @@ public class CardListener extends MouseInputAdapter {
                     CardAnimation animation = new CardAnimation(cardPanel, label.getX(), HIGH_Y, getToX(label), label);
                     animation.start();
                     cardPanel.updateUI();
-                } else {
-                    return;
                 }
             } else {
                 String card = (String) label.getClientProperty("name");
@@ -97,6 +105,7 @@ public class CardListener extends MouseInputAdapter {
     }
 
     /**
+     * Returns the final position to the movement of a card.
      *
      * @param label
      * @return

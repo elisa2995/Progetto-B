@@ -1,5 +1,9 @@
 package exceptions;
 
+/**
+ * This exception is thrown when the game exits the last phase of a turn, so
+ * <code>MovePhase</code>.
+ */
 public class LastPhaseException extends Exception {
 
     /**

@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package exceptions;
 
 /**
- *
- * @author emanuela
+ * This exception is thrown when an artificial player has not the right to call
+ * a method.
  */
 public class WrongCallerException extends Exception {
 

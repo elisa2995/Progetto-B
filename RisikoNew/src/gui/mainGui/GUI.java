@@ -64,6 +64,11 @@ public class GUI extends JFrame implements GameObserver {
     private final int PREFERRED_HEIGHT = 192;
     private final String LANG = "ITA";
 
+    /**
+     * Creates a new GUI
+     *
+     * @param players
+     */
     public GUI(List<PlayerInfo> players) {
         initBackground();
         initComponents();
@@ -73,6 +78,9 @@ public class GUI extends JFrame implements GameObserver {
         init(players);
     }
 
+    /**
+     * Adds the background.
+     */
     private void initBackground() {
         BufferedImage backgroundImage;
         try {
@@ -84,7 +92,7 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Inizializza la gui e il game.
+     * Initializes the GUI and it creates the game.
      */
     private void init(List<PlayerInfo> players) {
 
@@ -140,8 +148,8 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Asks if you want to end the game. If the answer is yes, it ends the game and 
-     * you come back to the initial GUI
+     * Asks if you want to end the game. If the answer is yes, it ends the game
+     * and you come back to the initial GUI
      */
     private void closeDialog() {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -157,7 +165,8 @@ public class GUI extends JFrame implements GameObserver {
 
     /**
      * Creates a legend for the players
-     * @param players 
+     *
+     * @param players
      */
     private void buildLabelPlayers(List<PlayerInfo> players) {
         JLabel[] labelPlayers = {labelPlayer1, labelPlayer2, labelPlayer3, labelPlayer4, labelPlayer5, labelPlayer6};
@@ -440,6 +449,7 @@ public class GUI extends JFrame implements GameObserver {
     //----------------------- Event controllers ------------------------------//
     /**
      *
+     * It changes the phase of the game.
      *
      * @param evt
      */
@@ -486,6 +496,12 @@ public class GUI extends JFrame implements GameObserver {
         }
     }//GEN-LAST:event_showCardButtonActionPerformed
 
+    /**
+     * Allows the player to leave the game, substituing him with an artificial
+     * player.
+     *
+     * @param evt
+     */
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         game.toArtificialPlayer();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -541,7 +557,7 @@ public class GUI extends JFrame implements GameObserver {
             case "MOVE":
                 buttonNextPhase.setText("Passa il turno");
         }
-        
+
     }
 
     /**
@@ -698,7 +714,7 @@ public class GUI extends JFrame implements GameObserver {
         if (ar.getConqueredContinent() != null) {
             info += "Ora possiedi " + ar.getConqueredContinent();
         }
-        
+
         MoveDialog moveDialog = new MoveDialog(game, ar.getAttackerCountryName(), ar.getDefenderCountryName(), info, ar.getMaxArmiesAttacker());
         moveDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
         PlayAudio.play("src/resources/sounds/conquest.wav");

@@ -11,26 +11,31 @@ import javax.swing.SpinnerNumberModel;
 import risiko.game.GameProxy;
 import services.Translator;
 
+/**
+ * JDialog in which the attacke can set the number of attacker armies.
+ *
+ */
 public class AttackerDialog extends javax.swing.JDialog {
 
     private final static String LANG = "ITA";
-    private GameProxy game;    
+    private GameProxy game;
 
     /**
-     * Crea un nuovo AttackerDialog
+     * Creates a new AttackerDialog
+     *
      * @param game
      * @param parent
      * @param modal
      */
     public AttackerDialog(GameProxy game, Frame parent, boolean modal) {
         super(parent, modal);
-        this.game = game;        
+        this.game = game;
         initComponents();
         init();
     }
 
     /**
-     * Inizializza le componenti
+     * Initialization
      */
     private void init() {
         Dimension dim = getToolkit().getScreenSize();
@@ -40,23 +45,31 @@ public class AttackerDialog extends javax.swing.JDialog {
         } catch (TranslationException ex) {
             this.setTitle("");
         }
-        
-        AttackerDialog attackerDialog=this;
-        attackerArmies.setModel(new SpinnerNumberModel(1, 1, 1, 1)); 
-                
+
+        AttackerDialog attackerDialog = this;
+        attackerArmies.setModel(new SpinnerNumberModel(1, 1, 1, 1));
+
         declare.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PlayAudio.play("src/resources/sounds/tank.wav");
                 game.setAttackerArmies((int) attackerArmies.getValue());
                 attackerDialog.setVisible(false);
-                game.declareAttack();                
+                game.declareAttack();
             }
         });
 
     }
-    
-    
+
+    /**
+     * Displays the names of the attacker and defender country, which a color
+     * that depends on the owner of that country.
+     *
+     * @param attackerCountryName
+     * @param attackerColor
+     * @param defenderCountryName
+     * @param defenderColor
+     */
     public void setFightingLabels(String attackerCountryName, String attackerColor, String defenderCountryName, String defenderColor) {
         this.attackerCountryName.setText(attackerCountryName);
         this.attackerCountryName.setForeground(DefaultColor.valueOf(attackerColor.toUpperCase()).getColor());
@@ -65,8 +78,7 @@ public class AttackerDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Setta il massimo numero di armate che attaccante e difesore possono
-     * scegliere
+     * Sets the maximun number of armies that the attacker can choose
      *
      * @param maxArmiesAttacker
      * @param maxArmiesDefender

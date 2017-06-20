@@ -88,15 +88,14 @@ public class LabelMapListener extends MouseInputAdapter {
 
     /**
      * If the country is valid to be chosen(so it has bonus armies left and the
-     * country is one of the active player's), it reinforces it.
+     * country is one of the active player's), it reinforces it; if it isn't
+     * valid it resets the cache.
      *
      * @param country
      */
     private void tryReinforce(String country) {
         if (cache.canBeChosen(country)) {
-            //Ho ancora bonus armies e sono su un mio territorio
             game.reinforce(country);
-            //reinforce chiama notify(), la gui si aggiorna
             PlayAudio.play("src/resources/sounds/clickOn.wav");
             return;
         }
@@ -112,20 +111,21 @@ public class LabelMapListener extends MouseInputAdapter {
      * @param country
      */
     private void tryFight(String country) {
+        // The player has to choose a country as attacker and he is clicking on a selectable one
         if (cache.canBeChosenAsAttacker(country)) {
-            //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
             game.setAttackerCountry(country);
             PlayAudio.play("src/resources/sounds/clickOn.wav");
             return;
         }
+
+        // The player has to choose a country as defender and he is clicking on a selectable one
         if (cache.canBeChosen(country)) {
-            //Devo scegliere il difensore, sono su un territorio confinante attaccabile
             game.setDefenderCountry(country);
             PlayAudio.play("src/resources/sounds/clickOn.wav");
             gui.setAttackerDialogVisible(true);
             return;
         }
-        //Sono su un territorio non valido per attaccare nè per difendere
+        // The player is not clicking on a selectable country 
         reset();
     }
 
@@ -138,22 +138,23 @@ public class LabelMapListener extends MouseInputAdapter {
      */
     private void tryMove(String country) {
 
+        // The player has to choose the country from which it starts to movement and he is clicking a valid one.
         if (cache.canBeChosenAsFromCountry(country)) {
 
-            //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
             game.setFromCountry(country);
             PlayAudio.play("src/resources/sounds/clickOn.wav");
             return;
         }
+
+        // The player has to choose the country in which the movement ends and he is clicking on a valid one.
         if (cache.canBeChosen(country)) {
-            //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
             MoveDialog moveDialog = new MoveDialog(game, game.getFromCountryName(), country);
             moveDialog.setVisible(true);
             PlayAudio.play("src/resources/sounds/clickOn.wav");
             game.resetMoveCountries();
             return;
         }
-        //Sono su un territorio non valido per spostarmi
+        // The player is not clicking on a selectable country
         reset();
     }
 
@@ -184,13 +185,13 @@ public class LabelMapListener extends MouseInputAdapter {
      */
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (!game.checkMyIdentity()) { //Affinchè la posizione del mouse non interferisca sui coni di luce dei giocatori artificiali
+        // Checks if it is the turn of an artificial player
+        if (!game.checkMyIdentity()) {
             return;
         }
         String country = getCountryFromClick(e);
 
         if (country == null) {
-            // Non sono su alcun territorio
             e.getComponent().setCursor(Cursor.getDefaultCursor());
             return;
         }
@@ -226,12 +227,10 @@ public class LabelMapListener extends MouseInputAdapter {
      */
     private void checkReinforce(String country, Component component, JLabel label) {
         if (cache.controlReinforce(country)) {
-            //Ho ancora bonus armies e sono su un mio territorio
             setHandCursor(component, label);
             cache.save(country, true);
             return;
         }
-        //Non ho più bonusArmies oppure non sono sul mio territorio
         setDefaultCursor(component, label);
         cache.save(country, false);
 
@@ -248,21 +247,20 @@ public class LabelMapListener extends MouseInputAdapter {
      * @param label
      */
     private void checkFight(String country, Component component, JLabel label) {
+        // The player has to choose a country as attacker and the cursor is on a selectable one        
         if (cache.controlAttack(country)) {
-
-            //Devo scegliere l'attaccante, sono su un mio territorio da cui posso attaccare
             setHandCursor(component, label);
             cache.save(country, true);
             return;
         }
+
+        // The player has to choose a country as defender and the cursor  is on a selectable one
         if (cache.controlDefense(country)) {
-
-            //Devo scegliere il difensore, sono su un territorio confinante attaccabile
             setHandCursor(component, label);
             cache.save(country, true);
             return;
         }
-        //Sono su un territorio non valido per attaccare nè per difendere
+        // The cursor is not on a selectable country
         setDefaultCursor(component, label);
         cache.save(country, false);
     }
@@ -278,21 +276,19 @@ public class LabelMapListener extends MouseInputAdapter {
      * @param label
      */
     private void checkMove(String country, Component component, JLabel label) {
+        // The player has to choose a country from which start the movement and the cursor is on a selectable one
         if (cache.controlMoveFromCountry(country)) {
-
-            //Devo scegliere territorio da cui voglio iniziare lo spostamento, sono su un mio territorio da cui posso spostarmi
             setHandCursor(component, label);
             cache.save(country, true);
             return;
         }
+        // The player has to choose a country in which the movement ends and the cursor is on a selectable one
         if (cache.controlMoveToCountry(country)) {
-
-            //Devo scegliere il terriotrio in cui spostarmi, sono su un territorio confinante in cui posso spostarmi
-            setHandCursor(component, label);
+           setHandCursor(component, label);
             cache.save(country, true);
             return;
         }
-        //Sono su un territorio non valido per spostarmi
+        // The cursor is not on a selectable country
         setDefaultCursor(component, label);
         cache.save(country, false);
 
@@ -367,7 +363,6 @@ public class LabelMapListener extends MouseInputAdapter {
      */
     public void drawCone(MouseEvent e) {
         if (game.getAttackerCountryName() != null) {
-            //imposto il cono di luce dall'attackerCountry alla posizione del Mouse
             ((GraphicsJLabel) mapLabel).drawCone(gui.getAttackerCountry(), new Rectangle(e.getX(), e.getY(), 2, 2));
         }
     }

@@ -1,5 +1,10 @@
 package exceptions;
 
+/**
+ * This exception is throw when the player tries to go to the next phase of the
+ * game but he can't because it has to finish some tasks in the curent phase.
+ *
+ */
 public class PendingOperationsException extends Exception {
 
     /**

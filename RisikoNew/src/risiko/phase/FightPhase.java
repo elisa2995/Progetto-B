@@ -149,7 +149,9 @@ public class FightPhase extends Phase {
     /**
      * Performs the attack.
      *
+     * @param nrD
      * @param aiCaller
+     * @throws exceptions.WrongCallerException
      */
     public void confirmAttack(int nrD, ArtificialPlayer... aiCaller) throws WrongCallerException {
         if (!canCallDefenseMethods(aiCaller)) {
@@ -188,7 +190,7 @@ public class FightPhase extends Phase {
      */
     private boolean canCallDefenseMethods(ArtificialPlayer... aiCaller) {
         boolean artificialDefender = defenderCountry.getOwner() instanceof ArtificialPlayer;
-        boolean rightCaller = (aiCaller.length == 0) ? !artificialDefender : artificialDefender && aiCaller[0].equals(defenderCountry.getOwner());;
+        boolean rightCaller = (aiCaller.length == 0) ? !artificialDefender : artificialDefender && aiCaller[0].equals(defenderCountry.getOwner());
         return attackInProgress && rightCaller;
     }
 
