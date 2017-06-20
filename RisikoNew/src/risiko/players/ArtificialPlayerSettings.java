@@ -10,28 +10,40 @@ package risiko.players;
  * @author alessandro
  */
 public class ArtificialPlayerSettings {
+
     private int baseAttack;
-    private int attackDelay;
     private int reinforceDelay;
     private int attackDeclarationDelay;
 
-    public ArtificialPlayerSettings(int attackDelay, int reinforceDelay, int attackDeclarationDelay, int reinforceDistribution) {
-        this.baseAttack = 10;
-        this.attackDelay = attackDelay;
-        this.reinforceDelay = reinforceDelay;
-        this.attackDeclarationDelay = attackDeclarationDelay;
+    public ArtificialPlayerSettings(String speed) {
+        this.baseAttack = 5;
+        setSettingsForSpeed(speed);
     }
 
-    public ArtificialPlayerSettings() {
-        
+    private void setSettingsForSpeed(String speed) {
+        switch (speed) {
+            case "Veloce":
+                
+                this.reinforceDelay = 100;
+                this.attackDeclarationDelay = 100;
+                break;
+
+            case "Normale":
+                
+                this.reinforceDelay = 300;
+                this.attackDeclarationDelay = 500;
+                break;
+                
+            case "Lento":
+                
+                this.reinforceDelay = 800;
+                this.attackDeclarationDelay = 2000;
+                break;
+        }
     }
-    
+
     public int getBaseAttack() {
         return baseAttack;
-    }
-
-    public int getAttackDelay() {
-        return attackDelay;
     }
 
     public int getReinforceDelay() {
@@ -46,10 +58,6 @@ public class ArtificialPlayerSettings {
         this.baseAttack = baseAttack;
     }
 
-    public void setAttackDelay(int attackDelay) {
-        this.attackDelay = attackDelay;
-    }
-
     public void setReinforceDelay(int reinforceDelay) {
         this.reinforceDelay = reinforceDelay;
     }
@@ -57,5 +65,5 @@ public class ArtificialPlayerSettings {
     public void setAttackDeclarationDelay(int attackDeclarationDelay) {
         this.attackDeclarationDelay = attackDeclarationDelay;
     }
-   
+
 }
