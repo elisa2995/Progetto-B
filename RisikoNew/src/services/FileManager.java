@@ -16,14 +16,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Classe che si occupa di gestire tutte le letture/scritture da/su file.
- * Implementato secondo il pattern singleton con una lazy initialization.
+ * Class used to write to/read from files.
  */
 public class FileManager {
 
     private static volatile FileManager instance;
     private final String PLAYERS = "src/resources/files/players.txt";
-    // url file che fa da db per le info dei giocatori
     private final String COUNTRIES = "src/resources/files/countries.txt";
     private final String MISSIONS = "src/resources/files/missions.txt";
     private final String LABELS = "src/resources/files/countriesLabels.txt";
@@ -36,8 +34,8 @@ public class FileManager {
     }
 
     /**
-     * Ritorna l'istanza di FileManager. (Se non è ancora stata creata, la crea
-     * - lazy initialization)
+     * Returns an instance of FileManager. (If the instance hasn't been
+     * initialized yet, it creates it. - lazy initialization)
      *
      * @return
      */
@@ -52,9 +50,9 @@ public class FileManager {
         return instance;
     }
 
-    //----------------------- countries.txt ----------------------------------//
+    //----------------------- COUNTRIES ----------------------------------//
     /**
-     * Legge il file countries.txt per ricavare la lista di territori.
+     * Reads Legge il file countries.txt per ricavare la lista di territori.
      *
      * @return una List contenente i nomi dei territori.
      */
@@ -261,7 +259,7 @@ public class FileManager {
      * @return true se sono corrette, false altrimenti.
      */
     public boolean checkCredentials(String username, String password) {
-        
+
         try (BufferedReader br = new BufferedReader(new FileReader(PLAYERS))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -279,15 +277,16 @@ public class FileManager {
         }
         return false;
     }
-    
+
     /**
      * Registra l'utente nel file players.txt.
+     *
      * @param username
-     * @param encryptedPassword 
+     * @param encryptedPassword
      */
-    public void registerUser(String username, String encryptedPassword){
-        
-        String line = username+";"+encryptedPassword+";"+"0";
+    public void registerUser(String username, String encryptedPassword) {
+
+        String line = username + ";" + encryptedPassword + ";" + "0";
         FileOutputStream fileOut;
         try {
             fileOut = new FileOutputStream(PLAYERS, true);
@@ -315,7 +314,7 @@ public class FileManager {
                     return false;
                 }
             }
-        } catch (IOException ex) { 
+        } catch (IOException ex) {
             Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
@@ -416,41 +415,39 @@ public class FileManager {
         return tris;
 
     }
-    
+
     //---------------------------- vocabulary.txt --------------------------------//
-    
-    public String getWord(String word, String lang, boolean reverse) throws FileManagerException{
-        
+    public String getWord(String word, String lang, boolean reverse) throws FileManagerException {
+
         String line;
-        try(BufferedReader br = new BufferedReader(new FileReader(VOCABULARY+lang+".txt"))){
-            while((line = br.readLine())!=null){
-                int index = reverse ? 1:0;
-                if(line.split("=")[index].trim().equals(word)){
+        try (BufferedReader br = new BufferedReader(new FileReader(VOCABULARY + lang + ".txt"))) {
+            while ((line = br.readLine()) != null) {
+                int index = reverse ? 1 : 0;
+                if (line.split("=")[index].trim().equals(word)) {
                     return line;
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        throw new FileManagerException("Word "+word+" not found in vocabulary"+lang+".");
-    
+        throw new FileManagerException("Word " + word + " not found in vocabulary" + lang + ".");
+
     }
-    
+
     //---------------------------------- info.txt -------------------------------//
-    
-    public String getInfoFor(String phase, String lang) throws FileManagerException{
-    
+    public String getInfoFor(String phase, String lang) throws FileManagerException {
+
         String line;
-        try(BufferedReader br = new BufferedReader(new FileReader(INFO+lang+".txt"))){
-            while((line = br.readLine())!=null){
-                if(line.split("=")[0].trim().equals(phase)){
+        try (BufferedReader br = new BufferedReader(new FileReader(INFO + lang + ".txt"))) {
+            while ((line = br.readLine()) != null) {
+                if (line.split("=")[0].trim().equals(phase)) {
                     return line.split("=")[1];
                 }
             }
-        
+
         } catch (IOException ex) {
             Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        throw new FileManagerException("No info found for "+phase);
+        throw new FileManagerException("No info found for " + phase);
     }
 }
