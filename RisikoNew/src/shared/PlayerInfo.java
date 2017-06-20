@@ -4,7 +4,7 @@ package shared;
  * Class used to communicate between the model and the view the info of a
  * certain player.
  */
-public class PlayerInfo {
+public class PlayerInfo implements Comparable<PlayerInfo>{
 
     private final String name;
     private String color;
@@ -81,5 +81,10 @@ public class PlayerInfo {
     
     public int getPoints(){
         return points;
+    }
+
+    @Override
+    public int compareTo(PlayerInfo other) {
+        return -(this.points-other.points);
     }
 }
