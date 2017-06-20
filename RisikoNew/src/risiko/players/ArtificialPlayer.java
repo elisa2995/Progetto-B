@@ -75,7 +75,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
      */
     private synchronized void moveArmies() {
         if (new Random().nextBoolean()) {
-            System.out.println("yes");
+            
             List<String> myCountries = game.getMyCountries(this);
             int from = new Random().nextInt(myCountries.size());
             String fromCountry = myCountries.get(from);
@@ -219,7 +219,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                         case "MOVE":
                             moveArmies();
                             synchronized (this) {
-                                this.wait(3000);
+                                this.wait(100);
                             }
                             break;
                     }

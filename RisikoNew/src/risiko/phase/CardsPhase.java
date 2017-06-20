@@ -1,13 +1,20 @@
 package risiko.phase;
 
+import exceptions.TrisNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import risiko.equipment.BonusDeck;
 import risiko.equipment.Card;
 import risiko.map.RisikoMap;
 import risiko.players.Player;
 
+/**
+ * Class that represents the phase of the game in which the player can play its
+ * cards to gain bonus armies.
+ */
 public class CardsPhase extends Phase {
 
     private final BonusDeck deck;
@@ -28,7 +35,10 @@ public class CardsPhase extends Phase {
         if (cards == null) {
             return;
         }
-        activePlayer.playTris(deck.getCardsByNames(cards), deck.getBonusForTris(deck.getCardsByNames(cards)));
+        try {
+            activePlayer.playTris(deck.getCardsByNames(cards), deck.getBonusForTris(deck.getCardsByNames(cards)));
+        } catch (TrisNotFoundException ex) {
+        }
     }
 
     /**
@@ -47,14 +57,19 @@ public class CardsPhase extends Phase {
      * @return
      */
     public int getBonusForTris(String[] cards) {
-        return deck.getBonusForTris(deck.getCardsByNames(cards));
+        try {
+            return deck.getBonusForTris(deck.getCardsByNames(cards));
+        } catch (TrisNotFoundException ex) {
+            return 0;
+        }
     }
 
     /**
      * Returns a Map which keySet is the set of Cards[] that can be played by
-     *  <code>player</code>. Maps the tris with the number of bonus
-     * armies awarded for that specific set of cards.
+     * <code>player</code>. Maps the tris with the number of bonus armies
+     * awarded for that specific set of cards.
      *
+     * @param player
      * @return
      */
     public Map<Card[], Integer> getPlayableTris(Player player) {

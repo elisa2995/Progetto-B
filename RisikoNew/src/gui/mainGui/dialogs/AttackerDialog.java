@@ -12,7 +12,8 @@ import risiko.game.GameProxy;
 import services.Translator;
 
 /**
- * JDialog in which the attacke can set the number of attacker armies.
+ * JDialog in which the attacker can set the number of armies with which he
+ * wants to attack.
  *
  */
 public class AttackerDialog extends javax.swing.JDialog {
@@ -41,7 +42,7 @@ public class AttackerDialog extends javax.swing.JDialog {
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
         try {
-            this.setTitle(Translator.getInstance().translate("Attack", LANG, false));
+            this.setTitle(Translator.translate("Attack", LANG, false));
         } catch (TranslationException ex) {
             this.setTitle("");
         }

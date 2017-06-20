@@ -274,7 +274,6 @@ public class GUI extends JFrame implements GameObserver {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         settingsItem = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -371,14 +370,6 @@ public class GUI extends JFrame implements GameObserver {
         });
         jMenu1.add(settingsItem);
 
-        jMenuItem1.setText("abbandona");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem1);
-
         jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
@@ -466,10 +457,15 @@ public class GUI extends JFrame implements GameObserver {
      * @param evt
      */
     private void buttonNextPhaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextPhaseActionPerformed
+
         try {
             game.nextPhase();
         } catch (PendingOperationsException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            try {
+                JOptionPane.showMessageDialog(null, Translator.translate(ex.getMessage(), LANG, false));
+            } catch (TranslationException ex1) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
         }
     }//GEN-LAST:event_buttonNextPhaseActionPerformed
 
@@ -508,16 +504,12 @@ public class GUI extends JFrame implements GameObserver {
         }
     }//GEN-LAST:event_showCardButtonActionPerformed
 
-    /**
+        /**
      * Allows the player to leave the game, substituing him with an artificial
      * player.
      *
      * @param evt
      */
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        game.toArtificialPlayer();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
     private void leaveGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaveGameButtonActionPerformed
         try {
             if (JOptionPane.showConfirmDialog(this, FileManager.getInstance().getInfoFor("ASK_LEAVING", LANG)) == 0) {
@@ -571,17 +563,17 @@ public class GUI extends JFrame implements GameObserver {
                 leaveGameButton.setVisible(game.checkMyIdentity());
                 break;
             case "REINFORCE":
-                buttonNextPhase.setVisible(false);                
-                leaveGameButton.setVisible(game==null || game.checkMyIdentity());
+                buttonNextPhase.setVisible(false);
+                leaveGameButton.setVisible(game == null || game.checkMyIdentity());
                 break;
             case "FIGHT":
                 buttonNextPhase.setVisible(true && game.checkMyIdentity());
-                buttonNextPhase.setText("Stop attacchi");                
+                buttonNextPhase.setText("Stop attacchi");
                 leaveGameButton.setVisible(game.checkMyIdentity());
                 break;
             case "MOVE":
                 buttonNextPhase.setVisible(game.checkMyIdentity());
-                buttonNextPhase.setText("Passa il turno");                
+                buttonNextPhase.setText("Passa il turno");
                 leaveGameButton.setVisible(game.checkMyIdentity());
         }
 
@@ -596,7 +588,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     private void updateLabels(PlayerInfo player, String phase) {
         try {
-            this.phaseLabel.setText(Translator.getInstance().translate("phase", LANG, false) + " " + getFormattedPhase(phase));
+            this.phaseLabel.setText(Translator.translate("phase", LANG, false) + " " + getFormattedPhase(phase));
         } catch (TranslationException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -899,7 +891,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     private String getFormattedPhase(String phase) {
         try {
-            return Translator.getInstance().translate(phase, LANG, false);
+            return Translator.translate(phase, LANG, false);
         } catch (TranslationException ex) {
             return "";
         }
@@ -923,7 +915,6 @@ public class GUI extends JFrame implements GameObserver {
     private javax.swing.JButton buttonShowMission;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelMap;
     private javax.swing.JLabel labelPlayer1;

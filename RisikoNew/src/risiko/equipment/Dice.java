@@ -2,11 +2,18 @@ package risiko.equipment;
 
 import java.util.Arrays;
 import java.util.Random;
-
+/**
+ * Class that represents the roll of the dice
+ */
 public class Dice {
 
     private int[] attackerDice, defenderDice;
 
+    /**
+     * Rolls the attacker's dice and the defeder's ones
+     * @param nrA
+     * @param nrD 
+     */
     public void rollAllDice(int nrA, int nrD) {
         attackerDice = rollDice(nrA);
         defenderDice = rollDice(nrD);

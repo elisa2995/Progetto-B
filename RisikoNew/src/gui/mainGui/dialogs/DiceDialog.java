@@ -9,6 +9,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import risiko.game.GameProxy;
 
+/**
+ * JDialog that show the result of the the thrown of the dice * 
+ */
 public class DiceDialog extends javax.swing.JDialog {
 
     private GameProxy game;
@@ -38,7 +41,7 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Inizializza le componenti
+     * Initialization
      */
     private void init() {
         diceR = new JLabel[]{dice1R, dice2R, dice3R};
@@ -48,7 +51,7 @@ public class DiceDialog extends javax.swing.JDialog {
         defenderDice = new int[]{};
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
-        
+
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -59,8 +62,8 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Setta i territori che prendono parte nel combattimento e il risultato dei
-     * dadi
+     * Sets the countries that are involved into the fight and the result of the
+     * dice
      */
     public void showDice() {
         String imagePath = "src/resources/images/dice/";
@@ -90,7 +93,7 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Resetta le icone dei dadi e i coni
+     * Resets the labels of the dice
      */
     private void resetLabels() {
         for (int i = 0; i < diceR.length; i++) {
@@ -102,7 +105,7 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Setta se il territorio difensore è stato conquistato
+     * Sets if the defender country has been conquered
      *
      * @param isConquered
      */
@@ -111,8 +114,9 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Setta se l'attacante può continuare ad attaccare dal territorio dal quale
-     * ha già attaccato
+     * Sets if the attacker can keep attacking from the same country of the
+     * previous attack
+     *
      *
      * @param canAttackFromCountry
      */
@@ -121,8 +125,8 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Setta il risultato del lancio dei dadi
-     *
+     * Sets the result of thrown of the dice
+     *      
      * @param attackerDice
      * @param defenderDice
      */
@@ -131,7 +135,14 @@ public class DiceDialog extends javax.swing.JDialog {
         this.defenderDice = defenderDice;
     }
 
-
+    /** 
+     * Shows the attacker and defender country names colored with the color of their owner
+     * 
+     * @param attackerCountryName
+     * @param attackerColor
+     * @param defenderCountryName
+     * @param defenderColor 
+     */
     public void setFightingLabels(String attackerCountryName, String attackerColor, String defenderCountryName, String defenderColor) {
         this.attackerCountryLabel.setText(attackerCountryName);
         this.attackerCountryLabel.setForeground(DefaultColor.valueOf(attackerColor.toUpperCase()).getColor());
@@ -140,8 +151,8 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Setta se l'attaccante è un giocatore artificiale
-     *
+     * Sets if the attacker is an artificial player
+     * 
      * @param artificialAttacker
      */
     public void setArtificialAttacker(boolean artificialAttacker) {
@@ -274,10 +285,18 @@ public class DiceDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Exits the dialog
+     * @param evt 
+     */
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         closeDialog();
     }//GEN-LAST:event_exitActionPerformed
 
+    /**
+     * Starts a new attack between the countries of the previous attack
+     * @param evt 
+     */
     private void reattackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reattackActionPerformed
         this.setVisible(false);
         game.setAttackerCountry(attackerCountryLabel.getText());
@@ -286,15 +305,15 @@ public class DiceDialog extends javax.swing.JDialog {
         game.setReattack(false);
     }//GEN-LAST:event_reattackActionPerformed
 
-    private void closeDialog(){
+    /**
+     * Closes the dialog
+     */
+    private void closeDialog() {
         game.resetFightingCountries();
         gui.resetAfterAttack();
         this.setVisible(false);
     }
-    /**
-     * @param args the command line arguments
-     */
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel attackerCountryLabel;
     private javax.swing.JLabel cone1;

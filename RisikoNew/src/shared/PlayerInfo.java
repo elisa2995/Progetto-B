@@ -4,13 +4,14 @@ package shared;
  * Class used to communicate between the model and the view the info of a
  * certain player.
  */
-public class PlayerInfo {
+public class PlayerInfo implements Comparable<PlayerInfo>{
 
     private final String name;
-    private final String color;
+    private String color;
     private int bonusArmies;
     private boolean artificial;
     private String type; // Artificial/Logged/Normal
+    private int points;
 
     /**
      * Constructs a PlayerInfo with only its attributes <code>name</code>,
@@ -42,6 +43,17 @@ public class PlayerInfo {
         this.color = color;
         this.type = type;
     }
+    
+    /**
+     * Constructs a PlayerInfo with only its attribute <code>name</code>,
+     * <code>points</code>
+     * @param name
+     * @param points 
+     */
+    public PlayerInfo(String name, int points){
+        this.name=name;
+        this.points=points;
+    }
 
     public String getName() {
         return name;
@@ -65,5 +77,14 @@ public class PlayerInfo {
 
     public void setType(String type) {
         this.type = type;
+    }
+    
+    public int getPoints(){
+        return points;
+    }
+
+    @Override
+    public int compareTo(PlayerInfo other) {
+        return -(this.points-other.points);
     }
 }

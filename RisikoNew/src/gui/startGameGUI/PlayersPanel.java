@@ -7,10 +7,7 @@ import exceptions.TranslationException;
 import gui.DefaultColor;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import services.Translator;
@@ -193,7 +190,7 @@ public class PlayersPanel extends JPanel {
      */
     private String getFormattedType(String type) {
         try {
-            return Translator.getInstance().translate(type, LANG, true);
+            return Translator.translate(type, LANG, true);
         } catch (TranslationException ex) {
             return "";
         }

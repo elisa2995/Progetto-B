@@ -11,11 +11,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import shared.PlayerInfo;
 
 /**
  * Class used to write to/read from files.
@@ -298,6 +300,30 @@ public class FileManager {
             Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
+    }
+
+    /**
+     * Returns the ranking of the players (the first ten ones or the maximum
+     * number of players that have more than zero points)
+     *
+     * @return
+     */
+    public List<PlayerInfo> getRanking() {
+        List<PlayerInfo> players = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(USERS))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] tmp = line.split(";");
+                if (Integer.parseInt(tmp[2]) > 0) {
+                    players.add(new PlayerInfo(tmp[0], Integer.parseInt(tmp[2])));
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Collections.sort(players);
+
+        return players.subList(0, Math.min(10, players.size()));
     }
 
     //---------------------------- COUNTRIES -----------------------------//
