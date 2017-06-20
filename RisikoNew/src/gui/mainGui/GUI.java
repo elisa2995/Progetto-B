@@ -270,6 +270,7 @@ public class GUI extends JFrame implements GameObserver {
         labelPlayer3 = new javax.swing.JLabel();
         labelPlayer2 = new javax.swing.JLabel();
         labelPlayer1 = new javax.swing.JLabel();
+        leaveGameButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         settingsItem = new javax.swing.JMenuItem();
@@ -353,6 +354,13 @@ public class GUI extends JFrame implements GameObserver {
 
         labelPlayer1.setText("jLabel6");
 
+        leaveGameButton.setText("Abbandona la partita");
+        leaveGameButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                leaveGameButtonActionPerformed(evt);
+            }
+        });
+
         jMenu1.setText("Settings");
 
         settingsItem.setText("AISettings");
@@ -392,7 +400,8 @@ public class GUI extends JFrame implements GameObserver {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(buttonShowMission, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(buttonNextPhase, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(showCardButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(showCardButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(leaveGameButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -431,14 +440,18 @@ public class GUI extends JFrame implements GameObserver {
                                 .addGap(12, 12, 12)
                                 .addComponent(labelPlayer4, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(buttonNextPhase, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
                                 .addComponent(labelPlayer5)
                                 .addGap(16, 16, 16)
                                 .addComponent(labelPlayer6))
-                            .addComponent(showCardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(23, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(leaveGameButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(showCardButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         pack();
@@ -505,6 +518,16 @@ public class GUI extends JFrame implements GameObserver {
         game.toArtificialPlayer();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void leaveGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaveGameButtonActionPerformed
+        try {
+            if (JOptionPane.showConfirmDialog(this, FileManager.getInstance().getInfoFor("ASK_LEAVING", LANG)) == 0) {
+                game.toArtificialPlayer();
+            }
+        } catch (FileManagerException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_leaveGameButtonActionPerformed
+
 //----------------------------- Update ---------------------------------------//
     /**
      * Updates <code> textAreaInfo</code> right after a country has been
@@ -545,17 +568,21 @@ public class GUI extends JFrame implements GameObserver {
             case "PLAY_CARDS":
                 buttonNextPhase.setVisible(true && game.checkMyIdentity());
                 buttonNextPhase.setText("Niente Tris");
+                leaveGameButton.setVisible(game.checkMyIdentity());
                 break;
             case "REINFORCE":
-                buttonNextPhase.setVisible(false);
+                buttonNextPhase.setVisible(false);                
+                leaveGameButton.setVisible(game==null || game.checkMyIdentity());
                 break;
             case "FIGHT":
                 buttonNextPhase.setVisible(true && game.checkMyIdentity());
-                buttonNextPhase.setText("Stop attacchi");
+                buttonNextPhase.setText("Stop attacchi");                
+                leaveGameButton.setVisible(game.checkMyIdentity());
                 break;
             case "MOVE":
                 buttonNextPhase.setVisible(game.checkMyIdentity());
-                buttonNextPhase.setText("Passa il turno");
+                buttonNextPhase.setText("Passa il turno");                
+                leaveGameButton.setVisible(game.checkMyIdentity());
         }
 
     }
@@ -905,6 +932,7 @@ public class GUI extends JFrame implements GameObserver {
     private javax.swing.JLabel labelPlayer4;
     private javax.swing.JLabel labelPlayer5;
     private javax.swing.JLabel labelPlayer6;
+    private javax.swing.JButton leaveGameButton;
     private javax.swing.JLayeredPane mapLayeredPane;
     private javax.swing.JLabel phaseLabel;
     private javax.swing.JLabel playerLabel;

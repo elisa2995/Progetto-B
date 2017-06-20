@@ -1,17 +1,8 @@
 ﻿Urgenti: 
-x uscita dal gioco -> da giocatore normale ad artificiale (ALESSANDRO?) mettere a posto e mettere in bottone sulla gui
 - DOCUMENTAZIONE (javaDoc) (possiamo spartirci le classi da documentare..?)
-x testare qualche classe (tipo player e map ... o qualsiasi altra cosa - se nessuno ha voglia di farlo possiamo spartirci i metodi).
 - Visualizzazione della classifica
 - cono bianco per spostamento
-x settings giocatore artificiale da mettere a posto
 - nel move del giocatore artificiale mettere che può spostare solo da country confinanti
-- sistemare textInfo nella fase delle carte
-- non far vedere il nome della fase se giocatore artificiale
-- Sistemare i tasti per i giocatori artificiali 
-- Tasto visualizza regolamento che apre una finestra con il regolamento
-x Cambiare lettura resources (vedi Cusano - Hangman - Dictionary)
-x Classe per buildinfo
 - togliere enum player e fare con traduzione dall'italino all'inglese
 
 DIVISIONE TEST(4 a testa): 
@@ -60,3 +51,9 @@ x mettere la la x del diceDialog
 x mettere la funzionalità di termina partina nella x della gui
 x immagine per cambio fase che appare e scompare (servono solo le immagini, il codice lo abbiamo)
 x rendere tutto non resizable
+x sistemare textInfo nella fase delle carte
+x Cambiare lettura resources (vedi Cusano - Hangman - Dictionary)
+x Classe per buildinfo
+x settings giocatore artificiale da mettere a posto
+x testare qualche classe (tipo player e map ... o qualsiasi altra cosa - se nessuno ha voglia di farlo possiamo spartirci i metodi).
+x uscita dal gioco -> da giocatore normale ad artificiale (ALESSANDRO?) mettere a posto e mettere in bottone sulla gui
