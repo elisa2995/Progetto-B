@@ -1,5 +1,5 @@
-elisa;ZWxpc2E=;0
-pippo;cGlwcG8;0
+elisa;ZWxpc2E=;10
+pippo;cGlwcG8;2
 pluto;cGx1dG8=;0
 fe;ZmU=;0
 gt;Z3Q=;0

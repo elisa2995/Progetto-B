@@ -11,11 +11,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import shared.PlayerInfo;
 
 /**
  * Classe che si occupa di gestire tutte le letture/scritture da/su file.
@@ -238,7 +241,7 @@ public class FileManager {
      * @return true se sono corrette, false altrimenti.
      */
     public boolean checkCredentials(String username, String password) {
-        
+
         try (BufferedReader br = new BufferedReader(new FileReader(PLAYERS))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -265,7 +268,7 @@ public class FileManager {
      */
     public void registerUser(String username, String encryptedPassword) {
 
-        String line = "\n"+username + ";" + encryptedPassword + ";" + "0";
+        String line = "\n" + username + ";" + encryptedPassword + ";" + "0";
         FileOutputStream fileOut;
         try {
             fileOut = new FileOutputStream(PLAYERS, true);
@@ -297,6 +300,30 @@ public class FileManager {
             Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
+    }
+
+    public List<PlayerInfo> getRanking() {
+        List<PlayerInfo> players = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(PLAYERS))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] tmp = line.split(";");
+                if (Integer.parseInt(tmp[2]) > 0) {
+                    players.add(new PlayerInfo(tmp[0], Integer.parseInt(tmp[2])));
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Collections.sort(players, new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                return ((PlayerInfo) o2).getPoints() - ((PlayerInfo) o1).getPoints();
+            }
+
+        });
+
+        return players.subList(0, Math.min(10, players.size()));
     }
 
     //----------------------------- countriesLabels.txt-------------------------//
@@ -420,7 +447,7 @@ public class FileManager {
 
     //---------------------------------- info.txt -------------------------------//
     public String getInfoFor(String phase, String lang) throws FileManagerException {
-        InputStream stream = getClass().getClassLoader().getResourceAsStream(INFO+lang+".txt");
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(INFO + lang + ".txt");
 
         String line;
         try (BufferedReader br = new BufferedReader(new InputStreamReader(stream))) {

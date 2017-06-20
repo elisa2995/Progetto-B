@@ -7,10 +7,11 @@ package shared;
 public class PlayerInfo {
 
     private final String name;
-    private final String color;
+    private String color;
     private int bonusArmies;
     private boolean artificial;
     private String type; // Artificial/Logged/Normal
+    private int points;
 
     /**
      * Constructs a PlayerInfo with only its attributes <code>name</code>,
@@ -42,6 +43,11 @@ public class PlayerInfo {
         this.color = color;
         this.type = type;
     }
+    
+    public PlayerInfo(String name, int points){
+        this.name=name;
+        this.points=points;
+    }
 
     public String getName() {
         return name;
@@ -65,5 +71,9 @@ public class PlayerInfo {
 
     public void setType(String type) {
         this.type = type;
+    }
+    
+    public int getPoints(){
+        return points;
     }
 }

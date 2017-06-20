@@ -4,17 +4,15 @@
 - cono bianco per spostamento
 - nel move del giocatore artificiale mettere che può spostare solo da country confinanti
 - togliere enum player e fare con traduzione dall'italino all'inglese
+- scrivere in architettura come è l'architettura
+- diagramma delle classi 
+- modello di dominio
+- mettere con quante armate ci stanno attaccando nel defend dialog
 
-DIVISIONE TEST(4 a testa): 
--andrea
--alessandro
--federico
--elisa
--carolina
 
 
 In un'altra vita : 
-- fare una classe che si occupi di trasformare in stringhe gli oggetti e viceversa (per la comunicazione game-gui)
+x fare una classe che si occupi di trasformare in stringhe gli oggetti e viceversa (per la comunicazione game-gui)
 - rendere il tutto proporzionale alla dimmensione dello schermo
 - ombre continenti 
 - controllare il resetCone
