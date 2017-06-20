@@ -1,8 +1,6 @@
 package risiko.equipment;
 
-import risiko.equipment.Card;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import exceptions.TrisNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,11 +9,17 @@ import java.util.List;
 import java.util.Map;
 import services.FileManager;
 
+/**
+ * Class that represents the card deck
+ */
 public class BonusDeck {
 
     private List<Card> cards;
     private Map<Card[], Integer> tris;
 
+    /**
+     * Creates a new BonusDeck
+     */
     public BonusDeck() {
         cards = new ArrayList<>();
         tris = new HashMap<>();
@@ -24,7 +28,7 @@ public class BonusDeck {
     }
 
     /**
-     * Crea il mazzo di carte.
+     * Builds the deck.
      */
     private void buildDeck() {
 
@@ -35,7 +39,8 @@ public class BonusDeck {
     }
 
     /**
-     * Crea le carte di un determinato tipo (fante/cavalleria/cannone/jolly).
+     * Creates the cards of a determinated category(infantry, cavalry, wild,
+     * artillery).
      *
      * @param card
      */
@@ -46,7 +51,8 @@ public class BonusDeck {
     }
 
     /**
-     * Costruisce una mappa con i tris giocabili e i corrispettivi bonus.
+     * Builds a map with the playable tris and the correspondant bonus.
+     *
      */
     private void buildTris() {
 
@@ -63,7 +69,7 @@ public class BonusDeck {
     }
 
     /**
-     * Restituisce una carta del mazzo. Se il mazzo è finito, lo ricrea.
+     * Returns a card from the deck. If the deck is empty it recreates it.
      *
      * @return
      */
@@ -75,14 +81,14 @@ public class BonusDeck {
     }
 
     /**
-     * Dato un array contentente i nomi delle carte, ritorna l'array di carte
-     * con i nomi corrisponenti.
+     * Taking as input an array that contains the names of the cards, it returns
+     * an array with the correspondant cards.
      *
      * @param names
      * @return
      */
     public Card[] getCardsByNames(String[] names) {
-        if(names == null){
+        if (names == null) {
             return null;
         }
         Card[] set = new Card[names.length];
@@ -93,7 +99,7 @@ public class BonusDeck {
     }
 
     /**
-     * Ritorna la carta con nome <code>name</code>.
+     * Returns the card with the name <code>name</code>.
      *
      * @param name
      * @return
@@ -103,8 +109,8 @@ public class BonusDeck {
     }
 
     /**
-     * Ritorna una mappa con le combinazioni di carte giocabili e i rispettivi
-     * bonus.
+     * Returns an HashMap with the possible combinations and the correspondant
+     * bonus
      *
      * @return
      */
@@ -112,18 +118,25 @@ public class BonusDeck {
         return this.tris;
     }
 
-    public int getBonusForTris(Card[] cards) {
+    /**
+     * Given a tris of cards it returns the correspondant bonus; if it doesn't
+     * find the tris it throws an excption.
+     *
+     * @param cards
+     * @return
+     */
+    public int getBonusForTris(Card[] cards) throws TrisNotFoundException {
 
         for (Card[] set : tris.keySet()) {
             boolean success = true;
             for (Card card : set) {
                 success = success && (Collections.frequency(Arrays.asList(set), card)) == (Collections.frequency(Arrays.asList(cards), card));
             }
-            if(success){
+            if (success) {
                 return tris.get(set);
             }
         }
-        return 0; // non dovrebbe mai arrivarci
+        throw new TrisNotFoundException();
     }
 
 }

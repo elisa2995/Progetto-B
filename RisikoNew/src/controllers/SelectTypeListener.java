@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import exceptions.FileManagerException;
 import exceptions.LogoutException;
 import gui.startGameGUI.PlayerInfoRow;
 import gui.startGameGUI.PlayersPanel;
@@ -14,8 +15,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import services.FileManager;
 
 /**
  * Depending on the chosen selected type of player it changes the
@@ -26,8 +30,8 @@ import javax.swing.JOptionPane;
 public class SelectTypeListener implements ActionListener {
 
     private List<PlayerInfoRow> players;
-    private StartGameGUI gui;
-
+    private StartGameGUI gui;    
+    private final String LANG = "ITA";
     /**
      * Creates a new SelectTypeListener
      *
@@ -98,12 +102,16 @@ public class SelectTypeListener implements ActionListener {
      */
     private void askLogout(PlayerInfoRow player) throws LogoutException {
 
-        int decision = JOptionPane.showConfirmDialog(gui, "Logout di " + player.getPlayerName());
-        if (decision != 0) { // Non vuole sloggarsi
-            player.setType("Loggato");
-            throw new LogoutException("Player doesn't want to logout");
+        try {
+            int decision = JOptionPane.showConfirmDialog(gui,FileManager.getInstance().getInfoFor("ASK_LOGOUT", LANG) + player.getPlayerName());
+            if (decision != 0) { // Non vuole sloggarsi
+                player.setType("Loggato");
+                throw new LogoutException("Player doesn't want to logout");
+            }
+            player.setLogged(false);
+        } catch (FileManagerException ex) {
+            Logger.getLogger(SelectTypeListener.class.getName()).log(Level.SEVERE, null, ex);
         }
-        player.setLogged(false);
 
     }
 

@@ -646,10 +646,11 @@ public class Game extends Observable implements GameProxy {
             this.drawBonusCard();
         }
 
-        phaseIndex++;
-        if (phaseIndex == phases.length) {
+        if (phaseIndex == phases.length-1) {
             passTurn();
+            return;
         }
+        phaseIndex++;
         phases[phaseIndex].clear();
         notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), getPhase());
     }

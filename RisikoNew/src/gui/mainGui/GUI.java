@@ -274,7 +274,6 @@ public class GUI extends JFrame implements GameObserver {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         settingsItem = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -370,14 +369,6 @@ public class GUI extends JFrame implements GameObserver {
             }
         });
         jMenu1.add(settingsItem);
-
-        jMenuItem1.setText("abbandona");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem1);
 
         jMenuBar1.add(jMenu1);
 
@@ -513,16 +504,12 @@ public class GUI extends JFrame implements GameObserver {
         }
     }//GEN-LAST:event_showCardButtonActionPerformed
 
-    /**
+        /**
      * Allows the player to leave the game, substituing him with an artificial
      * player.
      *
      * @param evt
      */
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        game.toArtificialPlayer();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
     private void leaveGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaveGameButtonActionPerformed
         try {
             if (JOptionPane.showConfirmDialog(this, FileManager.getInstance().getInfoFor("ASK_LEAVING", LANG)) == 0) {
@@ -928,7 +915,6 @@ public class GUI extends JFrame implements GameObserver {
     private javax.swing.JButton buttonShowMission;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelMap;
     private javax.swing.JLabel labelPlayer1;

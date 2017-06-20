@@ -1,8 +1,11 @@
 package risiko.phase;
 
+import exceptions.TrisNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import risiko.equipment.BonusDeck;
 import risiko.equipment.Card;
 import risiko.map.RisikoMap;
@@ -32,7 +35,10 @@ public class CardsPhase extends Phase {
         if (cards == null) {
             return;
         }
-        activePlayer.playTris(deck.getCardsByNames(cards), deck.getBonusForTris(deck.getCardsByNames(cards)));
+        try {
+            activePlayer.playTris(deck.getCardsByNames(cards), deck.getBonusForTris(deck.getCardsByNames(cards)));
+        } catch (TrisNotFoundException ex) {
+        }
     }
 
     /**
@@ -51,7 +57,11 @@ public class CardsPhase extends Phase {
      * @return
      */
     public int getBonusForTris(String[] cards) {
-        return deck.getBonusForTris(deck.getCardsByNames(cards));
+        try {
+            return deck.getBonusForTris(deck.getCardsByNames(cards));
+        } catch (TrisNotFoundException ex) {
+            return 0;
+        }
     }
 
     /**

@@ -106,16 +106,15 @@ public class PlayerInfoRow extends JComponent {
         ImageIcon[] icons = new ImageIcon[colors.length];
         String[] colorNames = new String[colors.length];
 
-        // Creo un array di icons (una per colore)
+        
         for (int i = 0; i < icons.length; i++) {
             colorNames[i] = colors[i].toStringLC();
             icons[i] = new ImageIcon("src/resources/images/" + colors[i].toStringLC() + ".png");
         }
 
-        // Setto i colorBoxes
         colorComboBox.setModel(new DefaultComboBoxModel(colorNames));
         colorComboBox.setSelectedItem(colorListener.getAvailableColor());
-        //colorComboBox.setSelectedItem(colorNames[index]);
+        
         ComboBoxRenderer renderer = new ComboBoxRenderer(icons, colorNames);
         renderer.setPreferredSize(new Dimension(icons[0].getIconWidth(), icons[0].getIconHeight()));
         colorComboBox.setRenderer(renderer);

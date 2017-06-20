@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import javax.swing.SpinnerNumberModel;
 import risiko.game.GameProxy;
 
+/**
+ * JDialog that allows to move armies across two adjacent countries 
+ */
 public class MoveDialog extends javax.swing.JDialog {
 
     private GameProxy game;
@@ -12,10 +15,11 @@ public class MoveDialog extends javax.swing.JDialog {
     private String fromCountryName;
 
     /**
-     * Initialization.
+     * Creates a new MoveDialog for the movement phase.
      *
      * @param game
-     * @param countryName
+     * @param fromCountryName
+     * @param toCountryName
      */
     public MoveDialog(GameProxy game, String fromCountryName, String toCountryName) {
         initComponents();
@@ -25,6 +29,14 @@ public class MoveDialog extends javax.swing.JDialog {
         movementArmies.setModel(new SpinnerNumberModel(maxArmies, 1, maxArmies, 1));
     }
 
+    /**
+     * Creates a new MoveDialog for the movement after the attack.
+     * @param game
+     * @param fromCountryName
+     * @param toCountryName
+     * @param info
+     * @param minArmies 
+     */
     public MoveDialog(GameProxy game, String fromCountryName, String toCountryName, String info, int minArmies) {
         initComponents();
         init(game, fromCountryName, toCountryName);
@@ -37,6 +49,12 @@ public class MoveDialog extends javax.swing.JDialog {
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     }
 
+    /**
+     * Initialization
+     * @param game
+     * @param fromCountryName
+     * @param toCountryName 
+     */
     private void init(GameProxy game, String fromCountryName, String toCountryName) {
         this.game = game;
         this.fromCountryName = fromCountryName;
@@ -106,6 +124,10 @@ public class MoveDialog extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Moves the number of armies choosen between the countries
+     * @param evt 
+     */
     private void executeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeActionPerformed
         game.move(fromCountryName, toCountryName, (Integer) movementArmies.getValue());
         MoveDialog.this.dispose();
