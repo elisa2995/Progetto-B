@@ -11,8 +11,8 @@ import services.FileManager;
 import shared.PlayerInfo;
 
 /**
+ *  JDialog that shows the ranking of the players
  *
- * @author Elisa
  */
 public class RankingDialog extends javax.swing.JDialog {
 
@@ -22,16 +22,24 @@ public class RankingDialog extends javax.swing.JDialog {
     public RankingDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        init();
         showRankings();  
-        setSettings();
+        
     }
-    private void setSettings(){
+    
+    /**
+     * Initialization
+     */     
+    private void init(){
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
         this.setResizable(false);
         rankingInfo.setEditable(false);
     }
     
+    /**
+     * Retrieves the rankings and it shows in <code>rankingInfo</code> 
+     */
     private void showRankings() {
         String ranking="";
         List<PlayerInfo> players=FileManager.getInstance().getRanking();

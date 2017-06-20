@@ -9,8 +9,8 @@ import javax.swing.ListCellRenderer;
 import static javax.swing.SwingConstants.CENTER;
 
 /**
- * Componente che può essere usato per fare il rendering delle icone nelle celle
- * dei JList.
+ * JLabel that is used to show the color icons in a list of colors.
+ *
  */
 class ComboBoxRenderer extends JLabel
         implements ListCellRenderer {
@@ -18,10 +18,23 @@ class ComboBoxRenderer extends JLabel
     private ImageIcon[] icons;
     private String[] names;
 
+    /**
+     * Creates a new ComboBoxRenderer
+     *
+     * @param icons
+     * @param names
+     */
     public ComboBoxRenderer(ImageIcon[] icons, String[] names) {
         super();
         this.icons = icons;
         this.names = names;
+        init();
+    }
+
+    /**
+     * Initialization
+     */
+    private void init() {
         setBorder(null);
         setOpaque(true);
         setHorizontalAlignment(CENTER);
@@ -29,8 +42,9 @@ class ComboBoxRenderer extends JLabel
     }
 
     /**
-     * Trova l'immagine che corrisponde al valore selezionato, e ritorna la
-     * JLabel pronta per mostrare l'icona.
+     * Finds the image that corresponds to the selected value and returns a
+     * JLabel that shows the icon
+     *
      */
     @Override
     public Component getListCellRendererComponent(
@@ -40,7 +54,6 @@ class ComboBoxRenderer extends JLabel
             boolean isSelected,
             boolean cellHasFocus) {
 
-        // Getta l'indice selezionato
         int selectedIndex = Arrays.asList(names).indexOf((String) value);
 
         if (isSelected) {
@@ -51,7 +64,6 @@ class ComboBoxRenderer extends JLabel
             setForeground(list.getForeground());
         }
 
-        //Setta l'icona
         ImageIcon icon = icons[selectedIndex];
         setIcon(icon);
         return this;

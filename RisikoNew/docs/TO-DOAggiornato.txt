@@ -1,13 +1,10 @@
 ﻿Urgenti: 
-- DOCUMENTAZIONE (javaDoc) (possiamo spartirci le classi da documentare..?)
-- Visualizzazione della classifica
-- cono bianco per spostamento
-- nel move del giocatore artificiale mettere che può spostare solo da country confinanti
-- togliere enum player e fare con traduzione dall'italino all'inglese
-- scrivere in architettura come è l'architettura
-- diagramma delle classi 
-- modello di dominio
-- mettere con quante armate ci stanno attaccando nel defend dialog
+- DOCUMENTAZIONE (javaDoc) FINITA? qualcuno controlli e se si aggiungono  metodi commentateli :)
+- cono bianco per spostamento ANDREA
+- scrivere in architettura come è l'architettura ELI CARO
+- diagramma delle classi ANDREA
+- modello di dominio ANDREA
+(- mettere con quante armate ci stanno attaccando nel defend dialog)
 
 
 
@@ -55,3 +52,6 @@ x Classe per buildinfo
 x settings giocatore artificiale da mettere a posto
 x testare qualche classe (tipo player e map ... o qualsiasi altra cosa - se nessuno ha voglia di farlo possiamo spartirci i metodi).
 x uscita dal gioco -> da giocatore normale ad artificiale (ALESSANDRO?) mettere a posto e mettere in bottone sulla gui
+x Visualizzazione della classifica
+x nel move del giocatore artificiale mettere che può spostare solo da country confinanti
+x togliere enum player e fare con traduzione dall'italino all'inglese

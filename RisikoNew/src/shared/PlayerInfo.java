@@ -44,6 +44,12 @@ public class PlayerInfo {
         this.type = type;
     }
     
+    /**
+     * Constructs a PlayerInfo with only its attribute <code>name</code>,
+     * <code>points</code>
+     * @param name
+     * @param points 
+     */
     public PlayerInfo(String name, int points){
         this.name=name;
         this.points=points;

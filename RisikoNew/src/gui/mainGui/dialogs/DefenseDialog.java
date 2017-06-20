@@ -27,6 +27,9 @@ public class DefenseDialog extends JDialog {
         init();
     }
 
+    /**
+     * Initialization
+     */
     private void init() {
         try {
             this.setTitle(Translator.getInstance().translate("Defense", LANG, false));
@@ -39,6 +42,10 @@ public class DefenseDialog extends JDialog {
 
     }
 
+    /**
+     * Sets the maximum number of armies with which the defendr can defend
+     * @param maxArmiesDefender 
+     */
     public void setMaxArmies(int maxArmiesDefender) {
         defenderArmies.setModel(new SpinnerNumberModel(maxArmiesDefender, 1, maxArmiesDefender, 1));
     }
@@ -119,13 +126,23 @@ public class DefenseDialog extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Starts the attack
+     * @param evt 
+     */
     private void confirmAttackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmAttackButtonActionPerformed
         PlayAudio.play("src/resources/sounds/tank.wav");
-        //game.setDefenderArmies();
         this.setVisible(false);
         game.confirmAttack((int) this.defenderArmies.getValue());
     }//GEN-LAST:event_confirmAttackButtonActionPerformed
 
+    /**
+     * Shows the attacker and defender country name colored with the color of their owner
+     * @param attackerCountryName
+     * @param attackerColor
+     * @param defenderCountryName
+     * @param defenderColor 
+     */
     public void setFightingLabels(String attackerCountryName, String attackerColor, String defenderCountryName, String defenderColor) {
         this.attackerCountryName.setText(attackerCountryName);
         this.attackerCountryName.setForeground(DefaultColor.valueOf(attackerColor.toUpperCase()).getColor());

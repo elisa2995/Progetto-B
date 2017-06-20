@@ -302,6 +302,12 @@ public class FileManager {
         return true;
     }
 
+    /**
+     * Returns the ranking of the players (the first ten ones or the maximum
+     * number of players that have more than zero points)
+     *
+     * @return
+     */
     public List<PlayerInfo> getRanking() {
         List<PlayerInfo> players = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(PLAYERS))) {
