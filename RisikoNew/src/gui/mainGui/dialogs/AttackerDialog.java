@@ -41,7 +41,7 @@ public class AttackerDialog extends javax.swing.JDialog {
         Dimension dim = getToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getWidth() / 2, dim.height / 2 - this.getHeight() / 2);
         try {
-            this.setTitle(Translator.getInstance().translate("Attack", LANG, false));
+            this.setTitle(Translator.translate("Attack", LANG, false));
         } catch (TranslationException ex) {
             this.setTitle("");
         }

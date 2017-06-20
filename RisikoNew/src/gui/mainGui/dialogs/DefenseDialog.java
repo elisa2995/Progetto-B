@@ -29,7 +29,7 @@ public class DefenseDialog extends JDialog {
 
     private void init() {
         try {
-            this.setTitle(Translator.getInstance().translate("Defense", LANG, false));
+            this.setTitle(Translator.translate("Defense", LANG, false));
         } catch (TranslationException ex) {
             Logger.getLogger(DefenseDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
