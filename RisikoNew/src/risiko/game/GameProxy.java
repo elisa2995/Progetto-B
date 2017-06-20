@@ -3,7 +3,6 @@ package risiko.game;
 import exceptions.PendingOperationsException;
 import java.util.List;
 import java.util.Map;
-import risiko.equipment.Card;
 import risiko.players.ArtificialPlayer;
 import risiko.players.ArtificialPlayerSettings;
 
@@ -15,96 +14,74 @@ public interface GameProxy {
 
     public void setPlayerSettings(ArtificialPlayerSettings aps, ArtificialPlayer... aiCaller);
 
-    //------------------------  Attacco  ------------------------------------//
+    //------------------------  Fight  ------------------------------------//
     /**
-     * Setta l'attacker.
+     * Sets the attacker.
      *
      * @param attackerCountryName
-     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
+     * @param aiCaller 
      */
     public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller);
 
     /**
-     * Setta il defender.
+     * Sets the defender.
      *
      * @param defenderCountryName
-     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
+     * @param aiCaller 
      */
     public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller);
 
     public void setReattack(boolean reattack, ArtificialPlayer... aiCaller);
 
     /**
-     * Resetta le countries dell'attacco. (Previo controllo sul caller del
-     * metodo).
+     * Resets the countries selected for the fight. 
      *
      * @param aiCaller
      */
     public void resetFightingCountries(ArtificialPlayer... aiCaller);
 
+    /**
+     * Resets the countries selected for the movement. 
+     *
+     * @param aiCaller
+     */
     public void resetMoveCountries(ArtificialPlayer... aiCaller);
 
     /**
-     * Simula l'attacco tra {@code this.attackerCountry} e
-     * {@code this.defenderCountry}, con rispettivamente nrA e nrD armate.
-     * (Previo controllo sul caller del metodo). Gestisce anche la conquista del
-     * territorio, chiamando i metodi appositi. genera un nuovo oggetto
-     * {@code AttackResult}.
+     * Sets the number of armies with which the player wants to attack.
      *
-     * @param nrA
-     * @param nrD
-     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
-     */
-    //public void attack(int nrA, int nrD, ArtificialPlayer... aiCaller);
-    /**
-     * setta il numero di armate con il quale si vuole difenders
-     *
-     * @param nrD numero di armate, se il valore è -1 allore verrà settato il
-     * numero di armate massimo
+     * @param nrA 
      * @param aiCaller
      */
-    //public void setDefenderArmies(int nrD, ArtificialPlayer... aiCaller);
-
     public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller);
 
     /**
-     * dichiara un attacco che parte da attacker al territorio defender con nrA
-     * numero di armate l'attacco non viene portato a termine finchè il
-     * difensore non ha scelto con quante armate difendersi
+     * Declars an attack.
      *
-     * @param attacker territorio attaccante
-     * @param defender territorio difensore
-     * @param nrA numero di armate in attacco
      * @param aiCaller
      */
     public void declareAttack(ArtificialPlayer... aiCaller);
 
     /**
-     * dopo che un attacco viene dichiarato viene chiamato questo metodo per
-     * eseguirlo aggiungendo il numero di armate del difensore
+     * Executes a fight between attacker and defender.
      *
      * @param nrD
      * @param aiCaller
      */
     public void confirmAttack(int nrD, ArtificialPlayer... aiCaller);
 
-    // ----------------------- Rinforzo ------------------------------------
+    // ----------------------- Reinforce ------------------------------------
     /**
-     * Controlla e aggiunge le armate al territorio. Queste vengono prese dal
-     * campo bonusArmies del giocatore fino ad esaurimento.
+     * Adds an army to the country.
      *
      * @param countryName
-     * @param nArmies numero di armate da aggiungere
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
      */
     public void reinforce(String countryName, ArtificialPlayer... aiCaller);
 
     /**
-     * Controlla se il giocatore può rinforzare del numero di armate
-     * selezionato. (Previo controllo sul caller del metodo). (prima ci facevamo
-     * passare CountryName, perché??)
+     * Check if the player can reinforce.
      *
-     * @param nArmies
      * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo
      * @return
      */
@@ -112,45 +89,39 @@ public interface GameProxy {
 
     //--------------------- Gestione fasi / turni --------------------------//
     /**
-     * Cambia la fase. (Previo controllo sul caller del metodo) - 1 Controlla
-     * che non ci siano operazioni in sospeso relative alla corrente fase del
-     * gioco: > REINFORCE : activePlayer non deve avere bonus armies
+     * Change the phase
      *
-     * - 2 SE è l'ultima fase chiama passTurn()
-     *
-     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
-     * @throws PendingOperationsException se non è possibile passare alla fase
-     * successiva perché ci sono operazioni in sospeso.
-     * @author Carolina
+     * @param aiCaller 
+     * @throws PendingOperationsException 
      */
     public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException;
 
-    //-------------------- Carte / spostamento finale ----------------//
+    //-------------------- Cards/Movement ----------------//
     /**
-     * Ritorna il nome dell'ultima carta pescata dal giocatore di turno.
+     * Returns the name of the last card drawn.
      *
      * @return
      */
     public String getLastCardDrawn(ArtificialPlayer... aiCaller);
 
     /**
-     * Ritorna un'arrayList contentente i nomi delle carte dell'active player.
-     *
+     * Returns an ArrayList containing the names of <code>activePlayer</code>'s
+     * cards.
      * @return
      */
     public List<String> getCardsNames(ArtificialPlayer... aiCaller);
 
     /**
-     * Ritorna una mappa che ha come key i nomi delle carte che compongono i
-     * tris giocabili dall'activePlayer, e come value le armate bonus
-     * corrisponenti.
+     * Returns a Map which keySet is the set of Cards[] that can be played by
+     * the <code>activePlayer</code>. Maps the tris with the number of bonus
+     * armies awarded for that specific set of cards.
      *
      * @return
      */
     public Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller);
 
     /**
-     * Gioca il tris.
+     * Play the tris.
      *
      * @param cardsNames
      * @param bonusArmiesTris
@@ -277,8 +248,16 @@ public interface GameProxy {
      * @param player il giocatore che fa la richiesta
      * @return i territori posseduti da player
      */
-    public String[] getMyCountries(ArtificialPlayer player, ArtificialPlayer... aiCaller);
+    public List<String> getMyCountries(ArtificialPlayer player, ArtificialPlayer... aiCaller);
 
+    /**
+     * questo metodo serve per i giocatori artificiali per determinare quali
+     * sono i  territori confinanti
+     *
+     * @param player il giocatore che fa la richiesta
+     * @return i territori posseduti da player
+     */
+    public List<String> getNeighbors(ArtificialPlayer player, String country, ArtificialPlayer... aiCaller);
     /**
      * questo metodo serve per i giocatori artificiali per determinare da quali
      * territori puo attaccare

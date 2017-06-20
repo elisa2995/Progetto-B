@@ -1,23 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui.mainGui.dialogs;
 
 import risiko.players.ArtificialPlayerSettings;
 import risiko.game.GameProxy;
 
 /**
- *
- * @author alessandro
+ * A JDialog to set artificial players' settings.
  */
 public class SettingsDialog extends javax.swing.JDialog {
 
     GameProxy game;
 
     /**
-     * Creates new form SettingsDialog
+     * Creates new form SettingsDialog.
      */
     public SettingsDialog(java.awt.Frame parent, boolean modal, GameProxy game) {
         super(parent, modal);
@@ -80,6 +74,10 @@ public class SettingsDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Saves artificial players' settings in the game.
+     * @param evt 
+     */
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
         String speed = (String) IAspeed.getSelectedItem();
         ArtificialPlayerSettings aps = new ArtificialPlayerSettings(speed);

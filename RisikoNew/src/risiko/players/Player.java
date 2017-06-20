@@ -11,6 +11,9 @@ import risiko.equipment.Card;
 import risiko.map.Country;
 import risiko.missions.Mission;
 
+/**
+ * Player. 
+ */
 public class Player {
 
     private Mission mission;
@@ -111,6 +114,10 @@ public class Player {
         return playable;
     }
 
+    /**
+     * Adds a card to the player's cards.
+     * @param card 
+     */
     public void addCard(Card card) {
         bonusCards.add(card);
     }
@@ -123,6 +130,11 @@ public class Player {
         return mission.getDescription();
     }
 
+    /**
+     * Checks if the player's mission is completed.
+     * @param myCountries
+     * @return 
+     */
     public boolean checkIfWinner(List<Country> myCountries) {
         return mission.isCompleted(myCountries);
     }
@@ -141,6 +153,10 @@ public class Player {
         return name;
     }
 
+    /**
+     * Draws a card from the deck.
+     * @param deck 
+     */
     public void drawCard(BonusDeck deck) {
         this.addCard(deck.drawCard());
     }
