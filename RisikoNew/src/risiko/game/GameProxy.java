@@ -6,71 +6,93 @@ import java.util.Map;
 import risiko.players.ArtificialPlayer;
 import risiko.players.ArtificialPlayerSettings;
 
+/**
+ * Interface that declares all the methods of Game that can be called by the
+ * View (or by an artificial player). The last parameter of each methods is a
+ * variable number of ArtificialPlayers: in case the method is called from the
+ * view, no ArtificialPlayer shall be passed to the method (the "caller" is
+ * human), on the other hand, if the method is called by an artificial player,
+ * it has to pass itself as last parameter of the method. This parameter is used
+ * to grant the permit to perform some actions only to the active player.
+ */
 public interface GameProxy {
 
+    /**
+     * Returns the current phase.
+     *
+     * @param aiCaller
+     * @return
+     */
     public String getPhase(ArtificialPlayer... aiCaller);
 
+    /**
+     * Returns the active player's mission.
+     *
+     * @return
+     */
     public String getActivePlayerMission(ArtificialPlayer... aiCaller);
 
+    /**
+     * Sets artificial players' settings.
+     *
+     * @param aps
+     * @param aiCaller
+     */
     public void setPlayerSettings(ArtificialPlayerSettings aps, ArtificialPlayer... aiCaller);
 
-    //------------------------  Fight  ------------------------------------//
+    //------------------------ CardsPhase ---------------------------------//
     /**
-     * Sets the attacker.
+     * Returns the name of the last card drawn.
      *
-     * @param attackerCountryName
-     * @param aiCaller 
+     * @return
      */
-    public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller);
+    public String getLastCardDrawn(ArtificialPlayer... aiCaller);
 
     /**
-     * Sets the defender.
+     * Returns an ArrayList containing the names of <code>activePlayer</code>'s
+     * cards.
      *
-     * @param defenderCountryName
-     * @param aiCaller 
+     * @return
      */
-    public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller);
-
-    public void setReattack(boolean reattack, ArtificialPlayer... aiCaller);
+    public List<String> getCardsNames(ArtificialPlayer... aiCaller);
 
     /**
-     * Resets the countries selected for the fight. 
+     * Returns the bonus awarded for the tris.
+     *
+     * @param cardNames
+     * @param aiCaller
+     * @return
+     */
+    public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller);
+
+    /**
+     * Returns a Map which keySet is the set of Cards[] that can be played by
+     * the <code>activePlayer</code>. Maps the tris with the number of bonus
+     * armies awarded for that specific set of cards.
      *
      * @param aiCaller
+     * @return
      */
-    public void resetFightingCountries(ArtificialPlayer... aiCaller);
+    public Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller);
 
     /**
-     * Resets the countries selected for the movement. 
+     * Checks if <code>chosenCards</code> is a valid tris.
      *
+     * @param cardNames
      * @param aiCaller
+     * @return
      */
-    public void resetMoveCountries(ArtificialPlayer... aiCaller);
+    public boolean isAValidTris(String[] cardNames, ArtificialPlayer... aiCaller);
 
     /**
-     * Sets the number of armies with which the player wants to attack.
+     * Plays the tris.
      *
-     * @param nrA 
+     * @param cardsNames
      * @param aiCaller
      */
-    public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller);
+    public void playTris(String[] cardsNames, ArtificialPlayer... aiCaller);
 
-    /**
-     * Declars an attack.
-     *
-     * @param aiCaller
-     */
-    public void declareAttack(ArtificialPlayer... aiCaller);
-
-    /**
-     * Executes a fight between attacker and defender.
-     *
-     * @param nrD
-     * @param aiCaller
-     */
-    public void confirmAttack(int nrD, ArtificialPlayer... aiCaller);
-
-    // ----------------------- Reinforce ------------------------------------
+    //---------------------  ReinforcePhase  -----------------------------//
     /**
      * Adds an army to the country.
      *
@@ -87,139 +109,48 @@ public interface GameProxy {
      */
     public boolean canReinforce(ArtificialPlayer... aiCaller);
 
-    //--------------------- Gestione fasi / turni --------------------------//
+    //---------------------- FightPhase -----------------------------------//
     /**
-     * Change the phase
-     *
-     * @param aiCaller 
-     * @throws PendingOperationsException 
-     */
-    public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException;
-
-    //-------------------- Cards/Movement ----------------//
-    /**
-     * Returns the name of the last card drawn.
-     *
-     * @return
-     */
-    public String getLastCardDrawn(ArtificialPlayer... aiCaller);
-
-    /**
-     * Returns an ArrayList containing the names of <code>activePlayer</code>'s
-     * cards.
-     * @return
-     */
-    public List<String> getCardsNames(ArtificialPlayer... aiCaller);
-
-    /**
-     * Returns a Map which keySet is the set of Cards[] that can be played by
-     * the <code>activePlayer</code>. Maps the tris with the number of bonus
-     * armies awarded for that specific set of cards.
-     *
-     * @return
-     */
-    public Map<String[], Integer> getPlayableTris(ArtificialPlayer... aiCaller);
-
-    /**
-     * Play the tris.
-     *
-     * @param cardsNames
-     * @param bonusArmiesTris
-     * @param aiCaller
-     */
-    public void playTris(String[] cardsNames, ArtificialPlayer... aiCaller);
-
-    /**
-     * Ritorna il massimo numero di armate per lo spostamento finale.
-     *
-     * @param aiCaller
-     * @return
-     */
-    public int getMaxArmiesForMovement(String fromCountryName, ArtificialPlayer... aiCaller);
-
-    /**
-     * Setta il territorio da cui effettuare lo spostamento.
+     * Sets the attacker.
      *
      * @param attackerCountryName
      * @param aiCaller
      */
-    public void setFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller);
+    public void setAttackerCountry(String attackerCountryName, ArtificialPlayer... aiCaller);
 
     /**
-     * Sposta il numero di armate <code>i</code> da <code>attackerCountry</code>
-     * alla country con name <code>toCountryName</code>
-     *
-     * @param fromCountry
-     * @param toCountryName
-     * @param i
-     * @param aiCaller
-     */
-    public void move(String fromCountry,String toCountryName, Integer i, ArtificialPlayer... aiCaller);
-
-    /**
-     * Controlla che country sia dell'activePlayer e che si legale attaccare.
-     * (Previo controllo sul caller del metodo).
-     *
-     * @param countryName
-     * @param aiCaller l'eventuale ArtificialPlayer che chiama il metodo
-     * @return true se l'attacco è legale, false altrimenti.
-     */
-    public boolean controlAttacker(String countryName, ArtificialPlayer... aiCaller);
-
-    /**
-     * Controlla che il territorio sia dell'attaccante, abbia più di un armata e
-     * abbia territori vicini in cui spostare le armate
-     *
-     * @param countryName
-     * @param aiCaller
-     * @return true se è possibile compiere uno spostamento da quel territorio
-     */
-    public boolean canMoveFromHere(String countryName, ArtificialPlayer... aiCaller);
-
-    /**
-     * Controlla che country sia dell'activePlayer. (Previo controllo sul caller
-     * del metodo). // mmh
-     *
-     * @param countryName
-     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
-     * @return true se la country è dell'active player, false altrimenti.
-     */
-    public boolean isCountryOwner(String countryName, ArtificialPlayer... aiCaller);
-
-    /**
-     * Controlla che il territorio non sia dell'active player e che sia un
-     * confinante dell'attacker.
+     * Sets the defender.
      *
      * @param defenderCountryName
-     * @param aiCaller l'eventuale artificialPlayer caller del metodo.
-     * @return
-     */
-    public boolean controlDefender(String defenderCountryName, ArtificialPlayer... aiCaller);
-
-    /**
-     * Controlla che l'active player possa effettuare uno spostamento da
-     * <code> attackerCountry</code> al territorio con nome
-     * <code>toCountryName</code>
-     *
-     * @param toCountryName
-     * @return
-     */
-    public boolean controlMovement(ArtificialPlayer... aiCaller);
-
-    public boolean controlMovement(String toCountry, ArtificialPlayer... aiCaller);
-
-    //  M E T O D I   P E R   D A R E   I N F O
-    /**
-     * Controlla se la Country ha armate sufficienti per attaccare (>=2).
-     *
-     * @param attackerCountryName
      * @param aiCaller
-     * @return
      */
-    public boolean canAttackFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller);
+    public void setDefenderCountry(String defenderCountryName, ArtificialPlayer... aiCaller);
 
     /**
-     * Ritorna il nome della Country che sta attaccando.
+     * Sets the attribute <code>reattack</code> to the fightPhase.
+     *
+     * @param reattack
+     * @param aiCaller
+     */
+    public void setReattack(boolean reattack, ArtificialPlayer... aiCaller);
+
+    /**
+     * Resets the fighting countries.
+     *
+     * @param aiCaller
+     */
+    public void resetFightingCountries(ArtificialPlayer... aiCaller);
+
+    /**
+     * Sets the number of armies for the attack.
+     *
+     * @param nrA
+     * @param aiCaller
+     */
+    public void setAttackerArmies(int nrA, ArtificialPlayer... aiCaller);
+
+    /**
+     * Returns the name of the attacker country.
      *
      * @param aiCaller
      * @return
@@ -227,23 +158,184 @@ public interface GameProxy {
     public String getAttackerCountryName(ArtificialPlayer... aiCaller);
 
     /**
-     * Ritorna il nome della Country in difesa.
+     * Returns the name of the defender country.
      *
      * @return
      */
     public String getDefenderCountryName(ArtificialPlayer... aiCaller);
 
     /**
-     * Dice se game ha i parametri settati per fare un combattimento.
+     * Declares an attack from <code>attackerCountry</code> to
+     * <code>defenderCountry</code>. Notifies the defender so that it can choose
+     * the number of armies for the defense.
      *
-     * @return true se sono stati settati tutti i parametri, false altrimenti.
-     * @author Carolina
+     * @param aiCaller
+     */
+    public void declareAttack(ArtificialPlayer... aiCaller);
+
+    /**
+     * Performs the attack.
+     *
+     * @param aiCaller
+     */
+    public void confirmAttack(int nrD, ArtificialPlayer... aiCaller);
+
+    /**
+     * Returns true <code>FightPhase</code> has all the parameters set to start
+     * a battle.
+     *
+     * @param aiCaller
+     * @return
      */
     public boolean isReadyToFight(ArtificialPlayer... aiCaller);
 
     /**
-     * questo metodo serve per i giocatori artificiali per determinare quali
-     * sono i suoi territori
+     * Returns true if <code>defenderCountryName</code> is a valid defender.
+     *
+     * @param defenderCountryName
+     * @param aiCaller
+     * @return
+     */
+    public boolean controlDefender(String defenderCountryName, ArtificialPlayer... aiCaller);
+
+    /**
+     * Returns the maximum number of armies that can be used either to attack or
+     * to defend.
+     *
+     * @param countryName
+     * @param isAttacker
+     * @param aiCaller
+     * @return
+     */
+    public int getMaxArmies(String countryName, boolean isAttacker, ArtificialPlayer... aiCaller);
+
+    // ------------------------ MovePhase -----------------------------------//
+    /**
+     * Return the maximum number of armies that can be moved from the country
+     * which name is <code>fromCountryName</code>.
+     *
+     * @param fromCountryName
+     * @return
+     */
+    public int getMaxArmiesForMovement(String fromCountryName, ArtificialPlayer... aiCaller);
+
+    /**
+     * Resets the countries selected for the movement.
+     *
+     * @param aiCaller
+     */
+    public void resetMoveCountries(ArtificialPlayer... aiCaller);
+
+    /**
+     * Returns the name of the country from which the player wants to move or
+     * <code>null</code> if it hasn't been chosen yet.
+     *
+     * @param aiCaller
+     * @return
+     */
+    public String getFromCountryName(ArtificialPlayer... aiCaller);
+
+    /**
+     * Sets the country from which the player will move its armies.
+     *
+     * @param fromCountryName
+     * @param aiCaller
+     */
+    public void setFromCountry(String fromCountryName, ArtificialPlayer... aiCaller);
+
+    /**
+     * Sets the country to which the player will move its armies.
+     *
+     * @param toCountryName
+     * @param aiCaller
+     */
+    public void setToCountry(String toCountryName, ArtificialPlayer... aiCaller);
+
+    /**
+     * Moves <code>nrArmies</code> armies from the country which name is
+     * <code>fromCountryName</code> to the one which name is
+     * <code>toCountryName</code>. If this is the final movement, changes the
+     * phase.
+     *
+     * @param fromCountry
+     * @param toCountryName
+     * @param nrArmies
+     * @param aiCaller
+     */
+    public void move(String fromCountry, String toCountryName, Integer nrArmies, ArtificialPlayer... aiCaller);
+
+    /**
+     * Checks if the active Player can move its armies across the previously
+     * selected countries.
+     *
+     * @param aiCaller
+     * @return
+     */
+    public boolean controlMovement(ArtificialPlayer... aiCaller);
+
+    /**
+     * Checks if the active Player can move its armies from the country he has
+     * selected previously to the country which name is
+     * <code>toCountryName</code>.
+     *
+     * @param toCountryName
+     * @param aiCaller
+     * @return
+     */
+    public boolean controlMovement(String toCountryName, ArtificialPlayer... aiCaller);
+
+    //----------------------------- Turns -----------------------------------//
+    /**
+     * Changes the phase. If it's the last one, passes the turn.
+     *
+     * @param aiCaller
+     * @throws PendingOperationsException
+     */
+    public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException;
+
+    //-------------------- Methods delegated to RisikoMap ----------------//
+    /**
+     * Checks if the country can be chosen by the active player to launch an
+     * attack.
+     *
+     * @param countryName
+     * @param aiCaller
+     * @return
+     */
+    public boolean controlAttacker(String countryName, ArtificialPlayer... aiCaller);
+
+    /**
+     * Checks if the active player can move from the country which name is
+     * <code>countryName</code>.
+     *
+     * @param countryName
+     * @param aiCaller
+     * @return
+     */
+    public boolean canMoveFromHere(String countryName, ArtificialPlayer... aiCaller);
+
+    /**
+     * Checks if the active player owns the country.
+     *
+     * @param countryName
+     * @param aiCaller
+     * @return
+     */
+    public boolean isCountryOwner(String countryName, ArtificialPlayer... aiCaller);
+
+    /**
+     * Check if the country has enough armies to launch an attack.
+     *
+     * @param attackerCountryName
+     * @param aiCaller
+     * @return
+     */
+    public boolean canAttackFromCountry(String attackerCountryName, ArtificialPlayer... aiCaller);
+
+    //------------- Methods called by artificial players ------------------//
+    /**
+     * Returns the list of countries held by the
+     * <code>ArtificialPlayer player</code>.
      *
      * @param player il giocatore che fa la richiesta
      * @return i territori posseduti da player
@@ -251,46 +343,48 @@ public interface GameProxy {
     public List<String> getMyCountries(ArtificialPlayer player, ArtificialPlayer... aiCaller);
 
     /**
-     * questo metodo serve per i giocatori artificiali per determinare quali
-     * sono i  territori confinanti
+     * Returns the list of neighbors for the ArtificialPlayer's country.
      *
      * @param player il giocatore che fa la richiesta
      * @return i territori posseduti da player
      */
     public List<String> getNeighbors(ArtificialPlayer player, String country, ArtificialPlayer... aiCaller);
+
     /**
-     * questo metodo serve per i giocatori artificiali per determinare da quali
-     * territori puo attaccare
+     * Returns the list of countries held by the
+     * <code>ArtificialPlayer player</code>, from which it can launch an attack.
      *
-     * @param player il giocatore che fa la richiesta
-     * @param aiCaller
-     * @return i territori posseduti da player
+     * @param player
+     * @return
      */
     public String[] getAllAttackers(ArtificialPlayer player, ArtificialPlayer... aiCaller);
 
     /**
-     * restituisce tutti i territori che possono essere attaccati dal territorio
-     * attacker
+     * Returns the territories that can be attacked from <code>attacker</code>
      *
-     * @param attacker
+     * @param attacker the name of the attacker country.
      * @return
      */
     public String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller);
 
-    public int getMaxArmies(String countryName, boolean isAttacker, ArtificialPlayer... aiCaller);
+    
+    //------------------------ General purpose methods ---------------------//
+    /**
+     * Returns true if the caller is the active player.
+     *
+     * @param aiCaller
+     * @return
+     */
+    public boolean checkMyIdentity(ArtificialPlayer... aiCaller);
 
-    public boolean isAValidTris(String[] cardNames, ArtificialPlayer... aiCaller);
-
-    public int getBonusForTris(String[] cardNames, ArtificialPlayer... aiCaller);
-
+    /**
+     * Ends the game.
+     */
     public void endGame();
 
+    /**
+     * Turns the activePlayer into an artificial one and starts its thread.
+     */
     public void toArtificialPlayer();
-
-    public String getFromCountryName(ArtificialPlayer... aiCaller);
-
-    public void setToCountry(String country, ArtificialPlayer... aiCaller);
-
-    public boolean checkMyIdentity(ArtificialPlayer... aiCalle);
 
 }

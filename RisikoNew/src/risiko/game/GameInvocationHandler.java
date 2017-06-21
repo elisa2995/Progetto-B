@@ -1,6 +1,5 @@
 package risiko.game;
 
-import risiko.game.Game;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import risiko.players.ArtificialPlayer;
@@ -15,34 +14,37 @@ public class GameInvocationHandler implements InvocationHandler {
     }
 
     /**
-     * Metodo che intercetta tutte le chiamate ai metodi boolean e void di game. 
-     * Nel caso tali metodi siano dichiarati in GameProxy e non siano metodi
-     * di difesa, viene controllato il caller del metodo. Se il caller è il 
-     * giocatore di turno, viene invocato il metodo di game. 
+     * Method that incercepts and filters the call to any method of game. If the
+     * method called returns a boolean or is a void method, the call is
+     * forwarded to game only if the caller is the active player. An exception
+     * is made for those methods that can be called by the defender, and for
+     * generic purpose methods like the ones called in case a human player wants
+     * to quit the game or change the speed of the artificial players. These
+     * methods are forwarded to game in any case (the controls on these methods
+     * are implemented in game).
+     *
      * @param proxy
      * @param method
      * @param args
      * @return
      * @throws Throwable
-     * @throws Exception 
+     * @throws Exception
      */
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable, Exception {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         boolean isDefenseMethod = method.getName().equals("confirmAttack") || method.getName().equals("setDefenderArmies");
-        boolean isEndGame= method.getName().equals("endGame");
-        boolean istoArtificialPlayer = method.getName().equals("toArtificialPlayer") || method.getName().equals("setPlayerSettings");     
+        boolean isEndGame = method.getName().equals("endGame");
+        boolean istoArtificialPlayer = method.getName().equals("toArtificialPlayer") || method.getName().equals("setPlayerSettings");
         if (method.getDeclaringClass() == GameProxy.class && !isDefenseMethod && !istoArtificialPlayer && !isEndGame && (method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Void.TYPE))) {
             ArtificialPlayer[] player = (ArtificialPlayer[]) args[args.length - 1];
             if (!this.game.checkCallerIdentity(player)) {
-                
                 return false;
             }
         }
         try {
             return method.invoke(this.game, args);
-        } catch (InvocationTargetException e) { 
-            throw e.getCause();// Per esempio PendingOperationsException
+        } catch (InvocationTargetException e) {
+            throw e.getCause();
         }
     }
 }
-

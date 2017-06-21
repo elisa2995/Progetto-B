@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -322,13 +321,7 @@ public class FileManager {
         } catch (IOException ex) {
             Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Collections.sort(players, new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                return ((PlayerInfo) o2).getPoints() - ((PlayerInfo) o1).getPoints();
-            }
-
-        });
+        Collections.sort(players);
 
         return players.subList(0, Math.min(10, players.size()));
     }

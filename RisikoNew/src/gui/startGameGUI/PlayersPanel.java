@@ -190,7 +190,7 @@ public class PlayersPanel extends JPanel {
      */
     private String getFormattedType(String type) {
         try {
-            return Translator.getInstance().translate(type, LANG, true);
+            return Translator.translate(type, LANG, true);
         } catch (TranslationException ex) {
             return "";
         }

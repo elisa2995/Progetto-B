@@ -3,7 +3,7 @@ package risiko.map;
 import java.util.List;
 
 /**
- * @author andrea
+ * Class that represents a continent.
  */
 public class Continent {
 
@@ -41,6 +41,11 @@ public class Continent {
         this.name = name;
     }
 
+    /**
+     * Checks if country is contained in continent.
+     * @param country
+     * @return 
+     */
     public boolean containsCountry(Country country) {
         return this.getCountries().contains(country);
     }
