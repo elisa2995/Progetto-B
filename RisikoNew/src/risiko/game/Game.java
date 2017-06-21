@@ -1,6 +1,6 @@
 package risiko.game;
 
-import services.InfoFactory;
+import shared.InfoFactory;
 import risiko.phase.*;
 import exceptions.FileManagerException;
 import risiko.players.Player;
