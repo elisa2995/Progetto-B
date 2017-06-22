@@ -139,9 +139,7 @@ public class Game extends Observable implements GameProxy {
                 default:
                     player = new Player("", "");
             }
-            for (int j = 0; j < 4; j++) {
-                getCardsPhase().drawCard(player);
-            }
+            
         }
     }
 
