@@ -59,7 +59,7 @@ public class LabelMapListener extends MouseInputAdapter {
     /**
      *
      * If the click is on a country it calls the actions related to the current
-     * phase; if the click is not on a country it resets all.
+     * phase; otherwise it resets all.
      *
      * @param e
      */
@@ -87,9 +87,8 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * If the country is valid to be chosen(so it has bonus armies left and the
-     * country is one of the active player's), it reinforces it; if it isn't
-     * valid it resets the cache.
+     * If the country can be chosen, it reinforces it; otherwise it resets the
+     * cache.
      *
      * @param country
      */
@@ -104,41 +103,37 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * If the attacker/defender country has to be set, it controls if the
-     * country is valid to be chosen; if it is it sets the country as the
-     * attacker/defender.
+     * Sets the attacker/defender (if the chosen country is valid).
      *
      * @param country
      */
     private void tryFight(String country) {
-        // The player has to choose a country as attacker and he is clicking on a selectable one
+        // The player has to choose a country as attacker and is clicking on a valid one
         if (cache.canBeChosenAsAttacker(country)) {
             game.setAttackerCountry(country);
             PlayAudio.play("src/resources/sounds/clickOn.wav");
             return;
         }
 
-        // The player has to choose a country as defender and he is clicking on a selectable one
+        // The player has to choose a country as defender and is clicking on a valid one
         if (cache.canBeChosen(country)) {
             game.setDefenderCountry(country);
             PlayAudio.play("src/resources/sounds/clickOn.wav");
             gui.setAttackerDialogVisible(true);
             return;
         }
-        // The player is not clicking on a selectable country 
+        // The country is not valid
         reset();
     }
 
     /**
-     * If the country from/to which the movement has to take place has to be
-     * set, it controls if the country is valid to be chosen; if it is it sets
-     * the country as the fromCountry/toCountry.
+     * Sets the country from/to which to move the armies (if it is valid).
      *
      * @param country
      */
     private void tryMove(String country) {
 
-        // The player has to choose the country from which it starts to movement and he is clicking a valid one.
+        // The player has to set the country from which to move its armies, and the country is a valid one.
         if (cache.canBeChosenAsFromCountry(country)) {
 
             game.setFromCountry(country);
@@ -146,7 +141,7 @@ public class LabelMapListener extends MouseInputAdapter {
             return;
         }
 
-        // The player has to choose the country in which the movement ends and he is clicking on a valid one.
+        // The player has to set the country to which to move its armies, and the country is a valid one.
         if (cache.canBeChosen(country)) {
             MoveDialog moveDialog = new MoveDialog(game, game.getFromCountryName(), country);
             moveDialog.setVisible(true);
@@ -154,7 +149,7 @@ public class LabelMapListener extends MouseInputAdapter {
             game.resetMoveCountries();
             return;
         }
-        // The player is not clicking on a selectable country
+        // The country is not valid.
         reset();
     }
 
@@ -177,9 +172,8 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * If the country on which the mouse is situated is valid on the current
-     * phase of the game, it sets the hand cursor; if not it sets the default
-     * cursor.
+     * If the country can be chosen in the current phase of the game, it sets
+     * the hand cursor, otherwise sets the default cursor.
      *
      * @param e
      */
@@ -216,9 +210,8 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * Checks if the country can be reinforced; if this can be done it sets the
-     * cursor to hand cursor. It saves the country and wheter it can bereinforcd
-     * in the cache.
+     * If the country can be reinforced, sets the hand cursor, otherwises sets
+     * the default cursor. It then saves this info into the cache.
      *
      * @param country
      * @param component
@@ -236,39 +229,37 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * Checks if the country can be choosen as attacker/defender(depending on
-     * the moment of the fight in which the game is); if this can be done it
-     * sets the hand cursor. It saves the country and wheter it can bereinforcd
-     * in the cache.
+     * If the country can be chosen as attacker/defender, sets the hand cursor,
+     * otherwise sets the default cursor. It then saves this info into the
+     * cache.
      *
      * @param country
      * @param component
      * @param label
      */
     private void checkFight(String country, Component component, JLabel label) {
-        // The player has to choose a country as attacker and the cursor is on a selectable one        
+        // The player has to choose a country as attacker and the cursor is on a valid one        
         if (cache.controlAttack(country)) {
             setHandCursor(component, label);
             cache.save(country, true);
             return;
         }
 
-        // The player has to choose a country as defender and the cursor  is on a selectable one
+        // The player has to choose a country as defender and the cursor  is on a valid one
         if (cache.controlDefense(country)) {
             setHandCursor(component, label);
             cache.save(country, true);
             return;
         }
-        // The cursor is not on a selectable country
+        // The country is not valid
         setDefaultCursor(component, label);
         cache.save(country, false);
     }
 
     /**
-     * Checks if the country can be choosen as country from/to which the
-     * movement take place(depending on the moment of the movement in which the
-     * game is); if this can be done it sets the hand cursor. It saves the
-     * country and wheter it can bereinforcd in the cache.
+     * If the player can choose this country as country from/to which to move
+     * its armies, sets the hand cursor, otherwise sets the default cursor.It
+     * saves this info into the cache.
      *
      * @param country
      * @param component
@@ -283,7 +274,7 @@ public class LabelMapListener extends MouseInputAdapter {
         }
         // The player has to choose a country in which the movement ends and the cursor is on a selectable one
         if (cache.controlMoveToCountry(country)) {
-           setHandCursor(component, label);
+            setHandCursor(component, label);
             cache.save(country, true);
             return;
         }
@@ -294,11 +285,10 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * Returns the name of the country that ows the clicked pixel. Returns null
-     * if no country ows the pixel. In particular, it takes the coordinates of
-     * the pixel, retrieves the <code>Color</code> of that pixel from the image
-     * and returns the country name that corresponds to that color in
-     * ColorNameCountry.
+     * Returns the name of the country that corresponds to the pixel pointed by
+     * the cursor. In particular, it takes the coordinates of the pixel,
+     * retrieves the <code>Color</code> of that pixel from the image and returns
+     * the name of the country mapped to that color in <code>ColorNameCountry</code>.
      *
      * @param e
      * @return
@@ -310,7 +300,7 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * Converts the icon in labelMap in a buffered image
+     * Converts the icon in labelMap in a buffered image.
      *
      * @param labelMap
      * @return
@@ -326,7 +316,7 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * Sets the hand cursor
+     * Sets the hand cursor.
      *
      * @param component
      * @param label
@@ -337,7 +327,7 @@ public class LabelMapListener extends MouseInputAdapter {
     }
 
     /**
-     * Sets the default cursor
+     * Sets the default cursor.
      *
      * @param component
      * @param label

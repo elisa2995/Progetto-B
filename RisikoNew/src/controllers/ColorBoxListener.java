@@ -8,8 +8,7 @@ import java.util.List;
 import javax.swing.JComboBox;
 
 /**
- * Process the events of the JComboBoxes in which the user can choose the color
- * of the armies.
+ * Processes the events of the JComboBoxes for the choice of the armies' color.
  */
 public class ColorBoxListener implements ActionListener {
 

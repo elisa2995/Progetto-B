@@ -10,9 +10,10 @@ import javax.swing.event.MouseInputAdapter;
 import risiko.game.GameProxy;
 
 /**
- * Listener for the movement of the cards. Depending on the position of the
- * cursor it puts a card in front of the others; when a card is clicked it moves
- * it to a destination that depends on the previous position.
+ * Listener for the movement of the cards. When the mouse hovers over a card,
+ * the card is moved in front of the others; when the user clicks on a card, it
+ * is moved to the set of chosen cards, or back to the set of the player's
+ * cards.
  */
 public class CardListener extends MouseInputAdapter {
 
@@ -20,8 +21,8 @@ public class CardListener extends MouseInputAdapter {
     private CardPanel cardPanel;
     private GameProxy game;
     private static final int CHOSEN_OFFSET = 670;
-    private static final int LOW_Y = 20;
-    private static final int HIGH_Y = 15;
+    private static final int LOW_Y = 20, HIGH_Y = 15;
+    private static final int X_OFFSET=10, HOR_OVERLAP=50;
 
     /**
      * Creates a new CardListener
@@ -35,8 +36,7 @@ public class CardListener extends MouseInputAdapter {
     }
 
     /**
-     * When the cursor enters an image of a card, the image on which it is goes
-     * to the front.
+     * When the cursor hovers over a card, the card is moved to the front.
      *
      * @param e
      */
@@ -55,8 +55,8 @@ public class CardListener extends MouseInputAdapter {
     }
 
     /**
-     * When the cursor exits an image that has been entered, the visualization
-     * of the cards return to the original one.
+     * When the cursor exits a card, the card is moved back to its original
+     * depth.
      *
      * @param e
      */
@@ -75,11 +75,8 @@ public class CardListener extends MouseInputAdapter {
     }
 
     /**
-     * When the image of a card is clicked it changes position depending on the
-     * previous position. If the card was among the selectable ones and the
-     * chosen cards are less than three, it goes to the chosen ones; if it was
-     * among the chosen ones it comes back to the selectable ones.
-     *
+     * Toggles the position of a card between the two sets of card on the board
+     * (not selected/selected). 
      * @param e
      */
     @Override
@@ -105,16 +102,16 @@ public class CardListener extends MouseInputAdapter {
     }
 
     /**
-     * Returns the final position to the movement of a card.
+     * Returns the final position for the movement of a card.
      *
      * @param label
      * @return
      */
     private int getToX(JLabel label) {
         if ((boolean) label.getClientProperty("chosen")) {
-            return 10 + 50 * cardPanel.getNrCards();
+            return X_OFFSET + HOR_OVERLAP * cardPanel.getNrCards();
         }
-        return CHOSEN_OFFSET + cardPanel.getNrChosenCards() * 50;
+        return CHOSEN_OFFSET + cardPanel.getNrChosenCards() * HOR_OVERLAP;
 
     }
 }

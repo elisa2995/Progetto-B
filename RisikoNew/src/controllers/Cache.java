@@ -5,8 +5,8 @@ import java.util.Map;
 import risiko.game.GameProxy;
 
 /**
- * Contains the countries in which the mouse has passed and wheter they can be
- * choosen in the curreunt phase.
+ * Memorizes wether a country is clickable or not in that specific phase of the
+ * game.
  *
  */
 public class Cache {
@@ -31,8 +31,7 @@ public class Cache {
     }
 
     /**
-     * Resets the cache that contains all the countries wheter they can be
-     * chosen in the current phase.
+     * Resets the cache.
      */
     public void resetCache() {
         this.cacheMap = new HashMap<>();
@@ -51,7 +50,7 @@ public class Cache {
 
     /**
      * Checks in the cache wheter the <code>country</code> can be chosen in the
-     * current phase as attacker
+     * current phase as attacker.
      *
      * @param country
      * @return
@@ -62,7 +61,7 @@ public class Cache {
 
     /**
      * Checks in the cache wheter the <code>country</code> can be chosen in the
-     * current phase as country from which the movement starts
+     * current phase as country from which to move the armies.
      *
      * @param country
      * @return
@@ -72,8 +71,8 @@ public class Cache {
     }
 
     /**
-     * Saves the country and wheter the <code>country</code> can be chosen in
-     * the current phase.
+     * Saves the country and if the <code>country</code> can be chosen in the
+     * current phase.
      *
      * @param country
      * @param canBechosen
@@ -83,9 +82,9 @@ public class Cache {
     }
 
     /**
-     * If the country is already in the cache it returns wheter it can be chosen
-     * in the reinforce phase; if the country has not been saved yet it asks the
-     * <code>GameProxy</code> wheter it can be chosen.
+     * Returns wheter the country can be reinforced by the player or not. If the
+     * county is already in the cache, returns the value in the cache, otherwise
+     * it asks it to <code>GameProxy</code>.
      *
      * @param country
      * @return
@@ -95,9 +94,9 @@ public class Cache {
     }
 
     /**
-     * If the country is already in the cache it returns wheter it can be chosen
-     * as attacker; if the country has not been saved yet it asks the
-     * <code>GameProxy</code> wheter it can be chosen.
+     * Returns wheter the country can be chosen as attacker by the player or
+     * not. If the country is already in the cache, returns the value in the
+     * cache, otherwise it asks it to <code>GameProxy</code>.
      *
      * @param country
      * @return
@@ -107,9 +106,9 @@ public class Cache {
     }
 
     /**
-     * If the country is already in the cache it returns wheter it can be chosen
-     * as defender; if the country has not been saved yet it asks the
-     * <code>GameProxy</code> wheter it can be chosen.
+     * Returns wheter the country can be chosen as defender by the player or
+     * not. If the country is already in the cache, returns the value in the
+     * cache, otherwise it asks it to <code>GameProxy</code>.
      *
      * @param country
      * @return
@@ -119,9 +118,9 @@ public class Cache {
     }
 
     /**
-     * If the country is already in the cache it returns wheter it can be chosen
-     * as country from which the movement starts; if the country has not been
-     * saved yet it asks the <code>GameProxy</code> wheter it can be chosen.
+     * Returns wheter the country can be chosen as coutry from which to move
+     * armies. If the country is already in the cache, returns the value in the
+     * cache, otherwise it asks it to <code>GameProxy</code>.
      *
      * @param country
      * @return
@@ -131,9 +130,9 @@ public class Cache {
     }
 
     /**
-     * If the country is already in the cache it returns wheter it can be chosen
-     * as country to which the movement ends; if the country has not been saved
-     * yet it asks the <code>GameProxy</code> wheter it can be chosen.
+     * Returns wheter the country can be chosen as coutry to which to move
+     * armies. If the country is already in the cache, returns the value in the
+     * cache, otherwise it asks it to <code>GameProxy</code>.
      *
      * @param country
      * @return

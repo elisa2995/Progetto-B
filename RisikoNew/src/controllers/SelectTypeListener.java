@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllers;
 
 import exceptions.FileManagerException;
@@ -22,18 +17,18 @@ import javax.swing.JOptionPane;
 import services.FileManager;
 
 /**
- * Depending on the chosen selected type of player it changes the
- * <code>nameField</code> of the <code>PlayerInfoRow</code> accordingly. If the
- * player wants to login it open a dedicated dialog.
+ * Changes the default name assigned to the player accordingly to the chosen
+ * type of player. If the player wants to login it opens a dedicated dialog.
  *
  */
 public class SelectTypeListener implements ActionListener {
 
     private List<PlayerInfoRow> players;
-    private StartGameGUI gui;    
+    private StartGameGUI gui;
     private final String LANG = "ITA";
+
     /**
-     * Creates a new SelectTypeListener
+     * Creates a new SelectTypeListener.
      *
      * @param gui
      * @param players
@@ -44,9 +39,8 @@ public class SelectTypeListener implements ActionListener {
     }
 
     /**
-     * If the player of the player row is already logged it asks if the user
-     * wants to logout; if he does the logout or the player wasn't logged, it
-     * changes the player row accordingly to the new type.
+     * Changes the type of player for the selected row. If the player previously
+     * chosen for that row was logged in, asks him to logout.
      *
      * @param e
      */
@@ -69,7 +63,8 @@ public class SelectTypeListener implements ActionListener {
     }
 
     /**
-     * Changes the <code>PlayerInfoRow</code> player accordingly to the type.
+     * Changes the <code>PlayerInfoRow</code> player accordingly to the type of
+     * player.
      *
      * @param player
      * @param type
@@ -103,7 +98,7 @@ public class SelectTypeListener implements ActionListener {
     private void askLogout(PlayerInfoRow player) throws LogoutException {
 
         try {
-            int decision = JOptionPane.showConfirmDialog(gui,FileManager.getInstance().getInfoFor("ASK_LOGOUT", LANG) + player.getPlayerName());
+            int decision = JOptionPane.showConfirmDialog(gui, FileManager.getInstance().getInfoFor("ASK_LOGOUT", LANG) + player.getPlayerName());
             if (decision != 0) { // Non vuole sloggarsi
                 player.setType("Loggato");
                 throw new LogoutException("Player doesn't want to logout");
@@ -116,7 +111,7 @@ public class SelectTypeListener implements ActionListener {
     }
 
     /**
-     * Opens the <code>UserDialog</code> to do the login
+     * Opens the <code>UserDialog</code> to log in.
      *
      * @param index
      */
@@ -163,8 +158,9 @@ public class SelectTypeListener implements ActionListener {
     }
 
     /**
-     * Returns all the names of the artificial players 
-     * @return 
+     * Returns all the names of the artificial players.
+     *
+     * @return
      */
     private List<String> getAllAINames() {
 
@@ -178,7 +174,7 @@ public class SelectTypeListener implements ActionListener {
     }
 
     /**
-     * Returns the list of all the logged players
+     * Returns the list of all the logged players.
      *
      * @return
      */
