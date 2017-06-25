@@ -14,7 +14,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * Interface that allows to execute audio tracks thanks to the static method
- * play. It creates a file from the source from which the play method is called;
+ * play. It creates a file from the source for which the play method is called;
  * it reads the input audio stream from this file and writes it in the output of
  * the audioSystem.
  */
@@ -32,7 +32,7 @@ public interface PlayAudio {
             AudioFormat audioFormat = audioInputStream.getFormat();
             DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, audioFormat);
             SourceDataLine sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
-            /* AudioSystem: allowds querying and accessing the mixers that are installed on the system 
+            /* AudioSystem: allows querying and accessing the mixers that are installed on the system 
             sourceDataLine: feeds the audio into the mixers.*/
             (new Thread() {
                 @Override

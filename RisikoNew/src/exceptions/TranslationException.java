@@ -1,8 +1,7 @@
 package exceptions;
 
 /**
- * This exception is thrown when the <code>Translator</code> can't find the word
- * that wants to translate in the file.
+ * Thrown when the <code>Translator</code> can't find a word in the vocabulary.
  */
 public class TranslationException extends Exception {
 

@@ -1,8 +1,8 @@
 package exceptions;
 
 /**
- * This exception is thrown when an artificial player has not the right to call
- * a method.
+ * Thrown when defense methods are called by a player that doesn't have the
+ * right to do it.
  */
 public class WrongCallerException extends Exception {
 

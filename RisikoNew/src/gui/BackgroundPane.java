@@ -22,7 +22,7 @@ public class BackgroundPane extends JComponent {
     }
 
     /**
-     * Add the background to the the JComponent in which it is.
+     * Paints the component.
      * @param g 
      */
     @Override

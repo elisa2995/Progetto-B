@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package exceptions;
 
 /**
- * This expeption is thrown when the user refuse to logout when the system asks
- * him.
+ * Thrown when the user refuses to logout after being asked to.
  */
 public class LogoutException extends Exception {
 

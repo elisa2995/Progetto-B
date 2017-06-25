@@ -1,8 +1,8 @@
 package exceptions;
 
 /**
- * This exception is thrown when the bonus deck doesn't found the tris that is
- * passed to it among the playable ones.
+ * This exception is thrown when the system is looking for the bonus awarded for
+ * a tris that is not valid.
  */
 public class TrisNotFoundException extends Exception {
 

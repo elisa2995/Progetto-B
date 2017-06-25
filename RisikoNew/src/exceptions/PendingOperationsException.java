@@ -1,8 +1,8 @@
 package exceptions;
 
 /**
- * This exception is throw when the player tries to go to the next phase of the
- * game but he can't because it has to finish some tasks in the curent phase.
+ * Thrown when the player tries to change the phase of the game even if there
+ * still are some tasks to do to complete the current one.
  *
  */
 public class PendingOperationsException extends Exception {
