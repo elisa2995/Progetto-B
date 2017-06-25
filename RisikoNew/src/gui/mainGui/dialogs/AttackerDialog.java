@@ -36,7 +36,7 @@ public class AttackerDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Initialization
+     * Initialization.
      */
     private void init() {
         Dimension dim = getToolkit().getScreenSize();
@@ -63,8 +63,8 @@ public class AttackerDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Displays the names of the attacker and defender country, which a color
-     * that depends on the owner of that country.
+     * Displays the names of the attacker and defender country, which color
+     * depends on the owner of that country.
      *
      * @param attackerCountryName
      * @param attackerColor
@@ -82,7 +82,6 @@ public class AttackerDialog extends javax.swing.JDialog {
      * Sets the maximun number of armies that the attacker can choose
      *
      * @param maxArmiesAttacker
-     * @param maxArmiesDefender
      */
     public void setMaxArmies(int maxArmiesAttacker) {
         attackerArmies.setModel(new SpinnerNumberModel(maxArmiesAttacker, 1, maxArmiesAttacker, 1));

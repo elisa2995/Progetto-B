@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import risiko.game.GameProxy;
 
 /**
- * JDialog that show the result of the the thrown of the dice * 
+ * JDialog that shows the dice that have just been rolled.
  */
 public class DiceDialog extends javax.swing.JDialog {
 
@@ -41,7 +41,7 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Initialization
+     * Initialization.
      */
     private void init() {
         diceR = new JLabel[]{dice1R, dice2R, dice3R};
@@ -62,8 +62,8 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Sets the countries that are involved into the fight and the result of the
-     * dice
+     * Shows the 2 sets of dice. For each couple of dice it also shows a
+     * triangle with its base towards the winner.
      */
     public void showDice() {
         String imagePath = "src/resources/images/dice/";
@@ -93,7 +93,7 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Resets the labels of the dice
+     * Resets the labels of the dice.
      */
     private void resetLabels() {
         for (int i = 0; i < diceR.length; i++) {
@@ -105,7 +105,7 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Sets if the defender country has been conquered
+     * Sets if the defender country has been conquered.
      *
      * @param isConquered
      */
@@ -115,7 +115,7 @@ public class DiceDialog extends javax.swing.JDialog {
 
     /**
      * Sets if the attacker can keep attacking from the same country of the
-     * previous attack
+     * previous attack.
      *
      *
      * @param canAttackFromCountry
@@ -125,8 +125,8 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Sets the result of thrown of the dice
-     *      
+     * Sets the values of the dice that have just been rolled.
+     *
      * @param attackerDice
      * @param defenderDice
      */
@@ -135,13 +135,13 @@ public class DiceDialog extends javax.swing.JDialog {
         this.defenderDice = defenderDice;
     }
 
-    /** 
-     * Shows the attacker and defender country names colored with the color of their owner
-     * 
+    /**
+     * Shows the attacker and defender country names in their owner's color.
+     *
      * @param attackerCountryName
      * @param attackerColor
      * @param defenderCountryName
-     * @param defenderColor 
+     * @param defenderColor
      */
     public void setFightingLabels(String attackerCountryName, String attackerColor, String defenderCountryName, String defenderColor) {
         this.attackerCountryLabel.setText(attackerCountryName);
@@ -151,8 +151,8 @@ public class DiceDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Sets if the attacker is an artificial player
-     * 
+     * Sets if the attacker is an artificial player.
+     *
      * @param artificialAttacker
      */
     public void setArtificialAttacker(boolean artificialAttacker) {
@@ -286,16 +286,18 @@ public class DiceDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Exits the dialog
-     * @param evt 
+     * Exits the dialog.
+     *
+     * @param evt
      */
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         closeDialog();
     }//GEN-LAST:event_exitActionPerformed
 
     /**
-     * Starts a new attack between the countries of the previous attack
-     * @param evt 
+     * Starts a new attack between the countries of the previous attack.
+     *
+     * @param evt
      */
     private void reattackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reattackActionPerformed
         this.setVisible(false);
@@ -306,14 +308,14 @@ public class DiceDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_reattackActionPerformed
 
     /**
-     * Closes the dialog
+     * Closes the dialog.
      */
     private void closeDialog() {
         game.resetFightingCountries();
         gui.resetAfterAttack();
         this.setVisible(false);
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel attackerCountryLabel;
     private javax.swing.JLabel cone1;

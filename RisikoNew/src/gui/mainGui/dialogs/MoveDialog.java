@@ -6,7 +6,8 @@ import javax.swing.SpinnerNumberModel;
 import risiko.game.GameProxy;
 
 /**
- * JDialog that allows to move armies across two adjacent countries 
+ * JDialog that allows to specify the number of armies to move across two
+ * adjacent countries.
  */
 public class MoveDialog extends javax.swing.JDialog {
 
@@ -24,23 +25,24 @@ public class MoveDialog extends javax.swing.JDialog {
     public MoveDialog(GameProxy game, String fromCountryName, String toCountryName) {
         initComponents();
         init(game, fromCountryName, toCountryName);
-        labelInfo.setText("Da "+fromCountryName+" a "+toCountryName);
+        labelInfo.setText("Da " + fromCountryName + " a " + toCountryName);
         int maxArmies = game.getMaxArmiesForMovement(fromCountryName);
         movementArmies.setModel(new SpinnerNumberModel(maxArmies, 1, maxArmies, 1));
     }
 
     /**
      * Creates a new MoveDialog for the movement after the attack.
+     *
      * @param game
      * @param fromCountryName
      * @param toCountryName
      * @param info
-     * @param minArmies 
+     * @param minArmies
      */
     public MoveDialog(GameProxy game, String fromCountryName, String toCountryName, String info, int minArmies) {
         initComponents();
         init(game, fromCountryName, toCountryName);
-        
+
         this.fromCountryName = fromCountryName;
         this.toCountryName = toCountryName;
         int maxArmies = game.getMaxArmiesForMovement(fromCountryName);
@@ -50,10 +52,11 @@ public class MoveDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Initialization
+     * Initialization.
+     *
      * @param game
      * @param fromCountryName
-     * @param toCountryName 
+     * @param toCountryName
      */
     private void init(GameProxy game, String fromCountryName, String toCountryName) {
         this.game = game;
@@ -126,7 +129,8 @@ public class MoveDialog extends javax.swing.JDialog {
 
     /**
      * Moves the number of armies choosen between the countries
-     * @param evt 
+     *
+     * @param evt
      */
     private void executeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeActionPerformed
         game.move(fromCountryName, toCountryName, (Integer) movementArmies.getValue());

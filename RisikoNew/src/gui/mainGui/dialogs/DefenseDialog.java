@@ -12,8 +12,8 @@ import risiko.game.GameProxy;
 import services.Translator;
 
 /**
- * JDialog that allows the defender player to introduce the number of armies
- * with which it want to defend.
+ * JDialog that allows the defender to introduce the number of armies with which
+ * it want to defend.
  */
 public class DefenseDialog extends JDialog {
 
@@ -43,8 +43,9 @@ public class DefenseDialog extends JDialog {
     }
 
     /**
-     * Sets the maximum number of armies with which the defendr can defend
-     * @param maxArmiesDefender 
+     * Sets the maximum number of armies with which the defendr can defend.
+     *
+     * @param maxArmiesDefender
      */
     public void setMaxArmies(int maxArmiesDefender) {
         defenderArmies.setModel(new SpinnerNumberModel(maxArmiesDefender, 1, maxArmiesDefender, 1));
@@ -127,8 +128,9 @@ public class DefenseDialog extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Starts the attack
-     * @param evt 
+     * Starts the attack.
+     *
+     * @param evt
      */
     private void confirmAttackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmAttackButtonActionPerformed
         PlayAudio.play("src/resources/sounds/tank.wav");
@@ -137,11 +139,13 @@ public class DefenseDialog extends JDialog {
     }//GEN-LAST:event_confirmAttackButtonActionPerformed
 
     /**
-     * Shows the attacker and defender country name colored with the color of their owner
+     * Shows the attacker and defender country name colored with the color of
+     * their owner.
+     *
      * @param attackerCountryName
      * @param attackerColor
      * @param defenderCountryName
-     * @param defenderColor 
+     * @param defenderColor
      */
     public void setFightingLabels(String attackerCountryName, String attackerColor, String defenderCountryName, String defenderColor) {
         this.attackerCountryName.setText(attackerCountryName);
