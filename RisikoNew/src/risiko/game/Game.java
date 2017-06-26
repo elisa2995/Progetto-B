@@ -10,6 +10,7 @@ import exceptions.PendingOperationsException;
 import exceptions.WrongCallerException;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import services.FileManager;
 import java.util.ListIterator;
@@ -80,8 +81,9 @@ public class Game extends Observable implements GameProxy {
         buildPlayers(playersInfo);
         map.initGame(players);
         notifyCountriesAssignment(InfoFactory.buildAllCountryInfo(map));
-        activePlayer = players.get(new Random().nextInt(players.size()));
+        activePlayer = players.get(0);
         map.computeBonusArmies(activePlayer);
+        notifyPlayersOrder(InfoFactory.buildPlayersInfo(players));
         notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), phases[phaseIndex].toString());
         startArtificialPlayersThreads();
     }
@@ -138,8 +140,8 @@ public class Game extends Observable implements GameProxy {
                 default:
                 //
             }
-
         }
+        Collections.shuffle(players);
     }
 
 // </editor-fold>
@@ -408,6 +410,7 @@ public class Game extends Observable implements GameProxy {
         } catch (PlayerLossException ex) {
             if (map.hasLost(getPlayerByName(ex.getLoserPlayer()))) {
                 players.remove(getPlayerByName(ex.getLoserPlayer()));
+                notifyPlayersOrder(InfoFactory.buildPlayersInfo(players));
             }
         }
         checkWon();
@@ -652,7 +655,7 @@ public class Game extends Observable implements GameProxy {
         }
 
         if (getPhase().equals("REINFORCE") && activePlayer.getBonusArmies() != 0) {
-            throw new PendingOperationsException("You still have some bonus army to place!");
+            throw new PendingOperationsException("You still have some bonus armies to place!");
         }
 
         if (getPhase().equals("FIGHT") && getFightPhase().isAttackInProgress()) {
@@ -690,9 +693,8 @@ public class Game extends Observable implements GameProxy {
         if (!getCardsNames().isEmpty() && !(activePlayer instanceof ArtificialPlayer)) {
             notifyPlayCards(getCardsNames());
         }
-
-        phaseIndex = (getCardsNames().isEmpty()) ? 1 : 0;
         map.computeBonusArmies(activePlayer);
+        phaseIndex = (!getCardsNames().isEmpty())? Phase.CARD_INDEX:Phase.REINFORCE_INDEX;
         notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), getPhase());
     }
 

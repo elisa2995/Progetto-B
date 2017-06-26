@@ -1,5 +1,6 @@
 package shared;
 
+import java.util.ArrayList;
 import java.util.List;
 import risiko.map.Country;
 import risiko.map.RisikoMap;
@@ -50,6 +51,19 @@ public interface InfoFactory {
      */
     public static CountryInfo buildCountryInfo(Country country) {
         return new CountryInfo(buildPlayerInfo(country.getOwner()), country.toString(), country.getArmies());
+    }
+    
+    /**
+     * Builds a list of playerInfo from a list of players. 
+     * @param players
+     * @return 
+     */
+    public static List<PlayerInfo> buildPlayersInfo(List<Player> players){
+        List<PlayerInfo> playerInfos = new ArrayList<>();
+        for(Player player : players){
+            playerInfos.add(buildPlayerInfo(player));
+        }
+        return playerInfos;
     }
 
     /**

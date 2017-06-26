@@ -107,7 +107,7 @@ public class GUI extends JFrame implements GameObserver {
         textAreaInfo.setText("Clicca su un tuo territorio per rinforzarlo con 1 armata");
         playerLabel.setFont(new Font("Calibri", Font.BOLD, 24));
         phaseLabel.setFont(new Font("Calibri", Font.BOLD, 24));
-        buildLabelPlayers(players);
+        updatePlayersOrder(players);
 
         // Mouse Listeners
         labelMapListener = new LabelMapListener(labelMap, colorCountryNameMap, this);
@@ -157,24 +157,6 @@ public class GUI extends JFrame implements GameObserver {
         } catch (FileManagerException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
 
-        }
-    }
-
-    /**
-     * Creates a legend for the players.
-     *
-     * @param players
-     */
-    private void buildLabelPlayers(List<PlayerInfo> players) {
-        JLabel[] labelPlayers = {labelPlayer1, labelPlayer2, labelPlayer3, labelPlayer4, labelPlayer5, labelPlayer6};
-        for (int i = 0; i < labelPlayers.length; i++) {
-            if (i < players.size()) {
-                labelPlayers[i].setFont(new Font("Serif", Font.BOLD, 18));
-                labelPlayers[i].setText(players.get(i).getName());
-                labelPlayers[i].setForeground(DefaultColor.valueOf(players.get(i).getColor().toUpperCase()).getColor());
-            } else {
-                labelPlayers[i].setVisible(false);
-            }
         }
     }
 
@@ -558,17 +540,18 @@ public class GUI extends JFrame implements GameObserver {
 
         switch (phase) {
             case "PLAY_CARDS":
-                buttonNextPhase.setVisible(true && game.checkMyIdentity());
-                buttonNextPhase.setText("Niente Tris");
+                buttonNextPhase.setVisible(game.checkMyIdentity());
+                buttonNextPhase.setText("Vai al rinforzo");
                 leaveGameButton.setVisible(game.checkMyIdentity());
                 break;
             case "REINFORCE":
-                buttonNextPhase.setVisible(false);
+                buttonNextPhase.setText("Passa all'attacco");
+                buttonNextPhase.setVisible(game == null || game.checkMyIdentity());
                 leaveGameButton.setVisible(game == null || game.checkMyIdentity());
                 break;
             case "FIGHT":
-                buttonNextPhase.setVisible(true && game.checkMyIdentity());
-                buttonNextPhase.setText("Stop attacchi");
+                buttonNextPhase.setVisible(game.checkMyIdentity());
+                buttonNextPhase.setText("Passa allo spostamento");
                 leaveGameButton.setVisible(game.checkMyIdentity());
                 break;
             case "MOVE":
@@ -777,6 +760,7 @@ public class GUI extends JFrame implements GameObserver {
     /**
      * Updates the JLabel that belongs to <code>countryInfo</code> with the new
      * number of armies on that country.
+     *
      * @param countryInfo
      */
     @Override
@@ -906,6 +890,24 @@ public class GUI extends JFrame implements GameObserver {
     private void repaint(Component... components) {
         for (Component c : components) {
             c.repaint();
+        }
+    }
+
+    /**
+     * Updates the legend showing the names of the players.
+     * @param players 
+     */
+    @Override
+    public void updatePlayersOrder(List<PlayerInfo> players) {
+        JLabel[] labelPlayers = {labelPlayer1, labelPlayer2, labelPlayer3, labelPlayer4, labelPlayer5, labelPlayer6};
+        for (int i = 0; i < labelPlayers.length; i++) {
+            if (i < players.size()) {
+                labelPlayers[i].setFont(new Font("Serif", Font.BOLD, 18));
+                labelPlayers[i].setText(players.get(i).getName());
+                labelPlayers[i].setForeground(DefaultColor.valueOf(players.get(i).getColor().toUpperCase()).getColor());
+            } else {
+                labelPlayers[i].setVisible(false);
+            }
         }
     }
 

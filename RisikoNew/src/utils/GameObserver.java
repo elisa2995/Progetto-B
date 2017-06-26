@@ -70,4 +70,9 @@ public interface GameObserver extends BasicGameObserver {
      */
     public void updateOnDrawnCard(String card, boolean isArtificialPlayer);
 
+    /**
+     * Tells the observers the order of the players.
+     * @param players 
+     */
+    public void updatePlayersOrder(List<PlayerInfo> players);
 }

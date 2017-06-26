@@ -133,4 +133,16 @@ public class Observable extends BasicObservable {
             }
         }
     }
+
+    /**
+     * Notifies that the order of the players has changed.
+     * @param players
+     */
+    public void notifyPlayersOrder(List<PlayerInfo> players) {
+        for (BasicGameObserver ob : this.obs) {
+            if (ob instanceof GameObserver) {
+                ((GameObserver) ob).updatePlayersOrder(players);
+            }
+        }
+    }
 }

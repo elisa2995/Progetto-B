@@ -8,5 +8,5 @@ NORMAL=normale
 ARTIFICIAL=artificiale
 Attack=Attacco
 Defense=Difesa
-You still have some bonus army to place!=Hai ancora armate da posizionare!
+You still have some bonus armies to place!=Hai ancora armate da posizionare!
 Attack still in progress!=Attacco ancora in corso!

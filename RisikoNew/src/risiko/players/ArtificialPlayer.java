@@ -92,7 +92,6 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         try {
             game.nextPhase(this);
         } catch (PendingOperationsException ex) {
-            Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -105,7 +104,6 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             try {
                 game.nextPhase(this);
             } catch (PendingOperationsException ex) {
-                //Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         int index;
