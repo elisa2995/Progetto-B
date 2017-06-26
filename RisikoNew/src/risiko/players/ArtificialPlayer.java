@@ -18,6 +18,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
     private GameProxy game;
 
+    private static final int DEFAULT_DELAY = 10, LOOP_DELAY = 100;
     private final Object maxArmiesLock = new Object();
     private int maxArmiesAttack;
     private int maxArmiesDefense;
@@ -62,11 +63,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         if (trisToPlay != null) {
             game.playTris(trisToPlay, this);
         } else {
-            try {
-                game.nextPhase(this);
-            } catch (PendingOperationsException ex) {
-                Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            tryNextPhase();
         }
 
     }
@@ -89,10 +86,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
                 return;
             }
         }
-        try {
-            game.nextPhase(this);
-        } catch (PendingOperationsException ex) {
-        }
+        tryNextPhase();
     }
 
     /**
@@ -101,22 +95,13 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
      */
     private synchronized void randomReinforce() {
         if (bonusArmies == 0) {
-            try {
-                game.nextPhase(this);
-            } catch (PendingOperationsException ex) {
-            }
+            tryNextPhase();
+            return;
         }
-        int index;
         List<String> myCountries = game.getMyCountries(this);
         for (int i = 0; i < bonusArmies; i++) {
-            index = new Random().nextInt(myCountries.size());
-            game.reinforce(myCountries.get(index), this);
-
-            try {
-                this.wait(setting.getReinforceDelay());
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
+            game.reinforce(myCountries.get(new Random().nextInt(myCountries.size())), this);
+            waitMs(setting.getReinforceDelay());
         }
     }
 
@@ -142,42 +127,26 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         String[] myCountries = game.getAllAttackers(this);
         String[] opponentCountries;
         int index, defendIndex;
-        int tries = 10;
 
-        do {
+        index = new Random().nextInt(myCountries.length);
+        game.setAttackerCountry(myCountries[index], this);
+        opponentCountries = game.getAllDefenders(myCountries[index]);
 
-            index = new Random().nextInt(myCountries.length);
-            game.setAttackerCountry(myCountries[index], this);
+        defendIndex = new Random().nextInt(opponentCountries.length);
+        game.setDefenderCountry(opponentCountries[defendIndex], this);
 
-            opponentCountries = game.getAllDefenders(myCountries[index]);
-            tries--;
-        } while (opponentCountries.length == 0 && tries > 0);
+        waitMs(DEFAULT_DELAY);
 
-        if (tries > 0) {
-            defendIndex = new Random().nextInt(opponentCountries.length);
-            game.setDefenderCountry(opponentCountries[defendIndex], this);
-
-            try {
-                this.wait(10);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-
-            if (maxArmiesSet) {
-                int nrA = new Random().nextInt(maxArmiesAttack) + 1;
-                game.setAttackerArmies(nrA, this);
-            } else {
-                game.setAttackerArmies(-1, this);
-            }
-
-            game.declareAttack(this);
-
-            try {
-                this.wait(setting.getAttackDeclarationDelay());
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
+        if (maxArmiesSet) {
+            int nrA = new Random().nextInt(maxArmiesAttack) + 1;
+            game.setAttackerArmies(nrA, this);
+        } else {
+            game.setAttackerArmies(-1, this);
         }
+
+        game.declareAttack(this);
+
+        waitMs(setting.getAttackDeclarationDelay());
     }
 
     /**
@@ -204,41 +173,31 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     @Override
     public void run() {
         synchronized (this) {
-            try {
-                this.wait(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            waitMs(LOOP_DELAY);
         }
         while (currentAction != Action.ENDGAME) {
-
-            try {
-                if (game.checkMyIdentity(this)) {
-                    switch (game.getPhase()) {
-                        case "PLAY_CARDS":
-                            playHighestTris();
-                            break;
-                        case "REINFORCE":
-                            randomReinforce();
-                            break;
-                        case "FIGHT":
-                            canAttack = true;
-                            this.randomAttack();
-                            game.nextPhase(this);
-                            break;
-                        case "MOVE":
-                            moveArmies();
-                            synchronized (this) {
-                                this.wait(100);
-                            }
-                            break;
-                    }
-                } else if (this.currentAction == Action.DEFEND) {
-                    this.defend();
+            if (game.checkMyIdentity(this)) {
+                switch (game.getPhase()) {
+                    case "PLAY_CARDS":
+                        playHighestTris();
+                        break;
+                    case "REINFORCE":
+                        randomReinforce();
+                        break;
+                    case "FIGHT":
+                        canAttack = true;
+                        this.randomAttack();
+                        tryNextPhase();
+                        break;
+                    case "MOVE":
+                        moveArmies();
+                        synchronized (this) {
+                            waitMs(LOOP_DELAY);
+                        }
+                        break;
                 }
-            } catch (PendingOperationsException ex) {
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
+            } else if (this.currentAction == Action.DEFEND) {
+                this.defend();
             }
         }
     }
@@ -322,6 +281,28 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     @Override
     public void updateOnEndGame() {
         this.currentAction = Action.ENDGAME;
+    }
+
+    /**
+     * Tries to change the phase.
+     */
+    private void tryNextPhase() {
+        try {
+            game.nextPhase(this);
+        } catch (PendingOperationsException ex) {
+        }
+    }
+
+    /**
+     * Waits <code>ms</code> milliseconds.
+     *
+     * @param ms
+     */
+    private void waitMs(int ms) {
+        try {
+            this.wait(ms);
+        } catch (InterruptedException ex) {
+        }
     }
 
 }
