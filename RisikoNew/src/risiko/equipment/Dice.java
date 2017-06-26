@@ -2,17 +2,20 @@ package risiko.equipment;
 
 import java.util.Arrays;
 import java.util.Random;
+
 /**
- * Class that represents the roll of the dice
+ * Class that rapresents the 2 sets of dice. It can roll them and return their
+ * values.
  */
 public class Dice {
 
     private int[] attackerDice, defenderDice;
 
     /**
-     * Rolls the attacker's dice and the defeder's ones
+     * Rolls the attacker's dice and the defeder's ones.
+     *
      * @param nrA
-     * @param nrD 
+     * @param nrD
      */
     public void rollAllDice(int nrA, int nrD) {
         attackerDice = rollDice(nrA);
@@ -50,7 +53,7 @@ public class Dice {
     }
 
     /**
-     * Returns both the set of attackDice and defenseDice.
+     * Returns both the set of attackerDice and defenderDice.
      *
      * @return
      */

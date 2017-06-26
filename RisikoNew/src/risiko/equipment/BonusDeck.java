@@ -10,7 +10,7 @@ import java.util.Map;
 import services.FileManager;
 
 /**
- * Class that represents the card deck
+ * Class that represents the deck containing the bonus cards.
  */
 public class BonusDeck {
 
@@ -18,7 +18,7 @@ public class BonusDeck {
     private Map<Card[], Integer> tris;
 
     /**
-     * Creates a new BonusDeck
+     * Creates a new BonusDeck.
      */
     public BonusDeck() {
         cards = new ArrayList<>();
@@ -28,7 +28,9 @@ public class BonusDeck {
     }
 
     /**
-     * Builds the deck.
+     * Builds the deck. It puts a proper amount of card of each type into the
+     * deck. The amount is specified as an attribute of the enumeration class
+     * Card.
      */
     private void buildDeck() {
 
@@ -39,8 +41,7 @@ public class BonusDeck {
     }
 
     /**
-     * Creates the cards of a determinated category(infantry, cavalry, wild,
-     * artillery).
+     * Creates <code>card.amount</code> of cards of the specified card type.
      *
      * @param card
      */
@@ -51,7 +52,7 @@ public class BonusDeck {
     }
 
     /**
-     * Builds a map with the playable tris and the correspondant bonus.
+     * Builds a map with the playable tris and the corrisponing bonus.
      *
      */
     private void buildTris() {
@@ -82,7 +83,7 @@ public class BonusDeck {
 
     /**
      * Taking as input an array that contains the names of the cards, it returns
-     * an array with the correspondant cards.
+     * an array with the corresponing cards.
      *
      * @param names
      * @return
@@ -109,8 +110,8 @@ public class BonusDeck {
     }
 
     /**
-     * Returns an HashMap with the possible combinations and the correspondant
-     * bonus
+     * Returns an HashMap with the possible combinations of cards and the
+     * corresponding bonus awarded to the player in case it plays the tris.
      *
      * @return
      */
@@ -119,7 +120,7 @@ public class BonusDeck {
     }
 
     /**
-     * Given a tris of cards it returns the correspondant bonus; if it doesn't
+     * Given a tris of cards it returns the corresponding bonus; if it doesn't
      * find the tris it throws an excption.
      *
      * @param cards

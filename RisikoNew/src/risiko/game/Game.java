@@ -48,7 +48,7 @@ public class Game extends Observable implements GameProxy {
 
     // <editor-fold defaultstate="collapsed" desc=" Getters ">
     /**
-     * Returns the current phase.
+     * Returns the current phase (as a String).
      *
      * @param aiCaller
      * @return
@@ -59,7 +59,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Returns the active player's mission.
+     * Returns the active player's mission description.
      *
      * @return
      */

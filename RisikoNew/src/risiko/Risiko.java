@@ -29,8 +29,6 @@ public class Risiko {
 
         StartGameGUI start = new StartGameGUI();
         start.setVisible(true);
-        /* GUI gui = new GUI();
-        gui.setVisible(true);*/
     }
 
 }
