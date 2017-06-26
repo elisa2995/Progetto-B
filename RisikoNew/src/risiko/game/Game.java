@@ -434,7 +434,7 @@ public class Game extends Observable implements GameProxy {
      */
     private void checkWon() {
         if (hasWon()) {
-            recordGainedPoints();
+            recordEarnedPoints();
         }
         /*if (hasLost(getDefenderCountry().getOwner())) {
             players.remove(getDefenderCountry().getOwner());
@@ -498,15 +498,15 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Records the points gained by the player that has completed its mission
+     * Records the points earned by the player that has completed its mission
      * and notifies the victory.
      */
-    private void recordGainedPoints() {
+    private void recordEarnedPoints() {
 
         String winMessage = "Complimenti " + activePlayer.getName() + " hai vinto!\n";
         if (activePlayer instanceof LoggedPlayer) {
             String username = ((LoggedPlayer) activePlayer).getUsername();
-            FileManager.getInstance().recordGainedPoints(username, activePlayer.getMission().getPoints());
+            FileManager.getInstance().recordEarnedPoints(username, activePlayer.getMission().getPoints());
             try {
                 winMessage += "Punti : " + FileManager.getInstance().getPlayerPoints(username);
             } catch (FileManagerException ex) {

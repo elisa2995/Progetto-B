@@ -160,7 +160,7 @@ public class FileManager {
      * @param username the username of the user that won the game.
      * @param missionPoints the points awarded to the player.
      */
-    public void recordGainedPoints(String username, int missionPoints) {
+    public void recordEarnedPoints(String username, int missionPoints) {
         String inputStr = readPlayersFile(username, missionPoints);
         writePlayersFile(inputStr);
 

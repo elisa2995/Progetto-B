@@ -1,7 +1,6 @@
 package risiko.missions;
 
 import java.util.List;
-import java.util.Map;
 import risiko.map.Continent;
 import risiko.map.Country;
 
@@ -23,9 +22,10 @@ public class CountriesMission extends Mission {
     }
 
     /**
-     * Checks if the mission is completed.
-     * @param myCountries
-     * @return 
+     * Checks if the mission is completed, i.e. if <code>countries</code>
+     * contains at least <code> nrCountriesToConquer</code> countries.
+     *
+     * @return
      */
     @Override
     public boolean isCompleted(List<Country> countries) {
@@ -34,7 +34,8 @@ public class CountriesMission extends Mission {
 
     /**
      * Builds <code>targetList</code>.
-     * @param continents 
+     *
+     * @param continents
      */
     @Override
     public void buildTarget(List<Continent> continents) {

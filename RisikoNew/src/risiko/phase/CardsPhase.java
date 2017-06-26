@@ -4,8 +4,6 @@ import exceptions.TrisNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import risiko.equipment.BonusDeck;
 import risiko.equipment.Card;
 import risiko.map.RisikoMap;
@@ -13,7 +11,7 @@ import risiko.players.Player;
 
 /**
  * Class that represents the phase of the game in which the player can play its
- * cards to gain bonus armies.
+ * cards to earn bonus armies.
  */
 public class CardsPhase extends Phase {
 

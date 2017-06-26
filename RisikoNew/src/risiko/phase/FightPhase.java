@@ -221,7 +221,7 @@ public class FightPhase extends Phase {
     }
 
     /**
-     * Returns true if the current game phase is fightPhase and if both
+     * Returns true if the current phase of the game is fightPhase and if both
      * attackerCountry and defenderCountry have been set.
      *
      * @param index
@@ -232,7 +232,7 @@ public class FightPhase extends Phase {
     }
 
     /**
-     * Returns <code>attackInProgress</code>
+     * Returns <code>attackInProgress</code>.
      *
      * @return
      */
