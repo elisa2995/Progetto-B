@@ -6,8 +6,8 @@ import risiko.map.Continent;
 import risiko.map.Country;
 
 /**
- * Missione in cui bisogna conquistare <code>nrCountriesToConquer</code>
- * territori.
+ * A mission which consits in conquering <code>nrCountriesToConquer</code>
+ * countries.
  *
  */
 public class CountriesMission extends Mission {
@@ -22,11 +22,20 @@ public class CountriesMission extends Mission {
         return this.nrCountriesToConquer;
     }
 
+    /**
+     * Checks if the mission is completed.
+     * @param myCountries
+     * @return 
+     */
     @Override
     public boolean isCompleted(List<Country> countries) {
         return countries.size() >= nrCountriesToConquer;
     }
 
+    /**
+     * Builds <code>targetList</code>.
+     * @param continents 
+     */
     @Override
     public void buildTarget(List<Continent> continents) {
         this.nrCountriesToConquer = Integer.parseInt(description.split(" ")[1]);

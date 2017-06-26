@@ -11,6 +11,9 @@ import java.util.logging.Logger;
 import services.FileManager;
 import risiko.missions.Mission;
 
+/**
+ * Class that init the game and builds continent, country and missions.
+ */
 public class RisikoMap {
 
     private final int DEFAULT_ARMIES = 3;
@@ -24,10 +27,8 @@ public class RisikoMap {
     }
 
     /**
-     * Inizializza la mappa leggendo il file specificato in urlCountries (in
-     * countryPlayer il player è inizializzato a null).
+     * Inits the map. 
      *
-     * @throws qualche eccezione relativa alla lettura del file
      */
     private void init() {
         buildContinent();
@@ -36,10 +37,10 @@ public class RisikoMap {
     }
 
     /**
-     * Builda le Map ContinentCountries e continentBonus.
+     * Builds the list of continents.
      */
     private void buildContinent() {
-        //Itero su ogni continente
+        
         for (Map<String, Object> tmpContinent : FileManager.getInstance().getContinents()) {
 
             List<Country> countriesOfThatContinent = new ArrayList<>();
@@ -47,9 +48,9 @@ public class RisikoMap {
                 countriesOfThatContinent.add(new Country(countryName));
             }
 
-            String    continentName = (String)  tmpContinent.get("name");  //Prendo il nome del continente
-            Integer   bonus         = (Integer) tmpContinent.get("bonus");
-            Continent continent     = new       Continent(continentName, countriesOfThatContinent, bonus);
+            String continentName = (String) tmpContinent.get("name");  
+            Integer bonus = (Integer) tmpContinent.get("bonus");
+            Continent continent = new Continent(continentName, countriesOfThatContinent, bonus);
             continents.add(continent);
         }
     }
@@ -77,11 +78,8 @@ public class RisikoMap {
     }
 
     /**
-     * Traduce la List di Map <code>fileManager.getMissions()</code>, in cui
-     * ogni elemento corrispone a una missione, negli oggetti Mission
-     * corrisponenti.
+     * Builds the list of missions.
      *
-     * @author Federico
      */
     private void buildMissions() {
         Constructor constructor;
@@ -114,10 +112,9 @@ public class RisikoMap {
     }
 
     /**
-     * Effettua l'assegnazione degli obiettivi ai giocatori.
+     * Assigns randomly a mission to each player.
      *
      * @param players
-     * @author Federico
      */
     public void assignMissionToPlayers(List<Player> players) {
         Collections.shuffle(this.missions);
@@ -127,10 +124,9 @@ public class RisikoMap {
     }
 
     /**
-     * Effettua l'assegnazione iniziale dei territori ai giocatori (random).
+     * Assigns randomly countries to each player.
      *
      * @param players
-     * @author Elisa
      */
     public void assignCountriesToPlayers(List<Player> players) {
         List<Country> countries = getCountriesList();
@@ -142,20 +138,17 @@ public class RisikoMap {
     }
 
     /**
-     * Ritorna il giocatore successivo nella lista dei players a quello che si
-     * passa; se il giocatore è l'ultimo della lista ritorna il primo.
-
+     * Returns next player in the list of players.
+     *
      */
     private Player nextPlayer(List<Player> players, int round) {
         return players.get(round % (players.size()));
     }
 
     /**
-     * Ritorna una lista con tutti i countries
+     * Returns a list containing all the countries.
      *
-     *
-     * @return List
-     * @author Elisa
+     * @return 
      */
     public List<Country> getCountriesList() {
         List<Country> countries = new ArrayList<>();
@@ -168,12 +161,9 @@ public class RisikoMap {
     }
 
     /**
-     * Esegue la fase di rinforzo di inizio turno. Nr armate bonus =
-     * ceil(nrTerritoriGiocatore/3) e le distribuisce a caso sui territori del
-     * giocatore
+     * Computes the number of player's bonus armies due.
      *
-     * @param player il giocatore di turno
-     * @author Elisa
+     * @param player 
      */
     public void computeBonusArmies(Player player) {
 
@@ -189,7 +179,7 @@ public class RisikoMap {
     }
 
     /**
-     * Ritorna true se il player possiede il continente.
+     * Returns true if the player owns the continent.
      *
      * @param player
      * @param continent
@@ -200,9 +190,11 @@ public class RisikoMap {
     }
 
     /**
-     * Ritorna true se il player dopo la conquiesta della Country
-     * <code>justConqueredCountry</code> possiede l'intero continente.
-
+     * Returns true if the player, after the conquest of a Country
+     * <code>conqueredCountry</code> owns the entire continent
+     * relative to the Country.
+     *
+     * @param conqueredCountry
      * @return
      */
     public boolean hasConqueredContinent(Country conqueredCountry) {
@@ -212,7 +204,7 @@ public class RisikoMap {
     }
 
     /**
-     * Ritorna il continente a cui appartiene una country.
+     * Returns the continent whom country belongs.
      *
      * @param country
      * @return
@@ -223,15 +215,14 @@ public class RisikoMap {
                 return continent;
             }
         }
-        return null; //non dovrebbe mai arrivarci
+        return null;
     }
 
     /**
-     * Ritorna una lista dei territori del giocatore
+     * Returns the list of player's countries.
      *
      * @param player
      * @return
-     * @author Alessandro
      */
     public List<Country> getMyCountries(Player player) {
         List<Country> myCountries = new ArrayList<>();
@@ -244,61 +235,52 @@ public class RisikoMap {
     }
 
     /**
-     * Ritorna la lista dei vicini di un territorio.
+     * Returns the list of country's neighbors.
      *
      * @param country
+     * @return 
      */
     public List<Country> getNeighbors(Country country) {
         return country.getNeighbors();
     }
 
-    /**
-     * Controlla se il giocatore può ancora attaccare da uno dei suoi territori.
-     *
-     * @return true nel caso in cui almeno uno dei territori di ActivePlayer
-     * abbia più di un'armata, false in caso contrario.
-     * @author Alessandro QUESTIONE: forse dovremmo controllare che la country
-     * eventualmente trovata con più di un'armata, abbia dei vicini attaccabili
-     * (non suoi)
-     */
-    public boolean playerCanAttack(Player player) {
-        List<Country> availableCountries = this.getMyCountries(player);
-        for (Country c : availableCountries) {
-            if (c.getArmies() > 1) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     /**
-     * Metodo chiamato nel caso in cui un giocatore abbia conquistato un
-     * territorio. La mappa controlla se ha raggiunto il suo obbiettivo.
+     * Check if player has just won.
      *
-     * @param player il giocatore di turno
-     * @return true se il giocatore ha vinto, false altrimenti.
-     * @author Federico
+     * @param player
+     * @return
      */
     public boolean checkIfWinner(Player player) {
         return player.checkIfWinner(getMyCountries(player));
     }
 
     /**
-     * Controlla se il territorio è stato conquistato
+     * Check if country is conquered.
      *
-     * @return true se non ha armate
+     * @param country
+     * @return 
      */
     public boolean isConquered(Country country) {
         return country.isConquered();
     }
 
     /**
-     * controlla se il difensore non ha più territori
+     * Check if the defender player has lost every countries
+     * and so if he has lost.
+     * @param defenderPlayer
+     * @return 
      */
     public boolean hasLost(Player defenderPlayer) {
         return getMyCountries(defenderPlayer).isEmpty();
     }
 
+    /**
+     * Returns the Country by its name <code>countryName</code>.
+     * 
+     * @param countryName
+     * @return 
+     */
     public Country getCountryByName(String countryName) {
         for (Country country : getCountriesList()) {
             if (country.getName().equals(countryName)) {
@@ -308,10 +290,8 @@ public class RisikoMap {
         return null;
     }
 
-
-
     /**
-     * Assigns the countries of a player to another
+     * Assigns the countries of a player to another.
      *
      * @param oldOwner previous owner of the territories
      * @param newOwner new owner of the territories

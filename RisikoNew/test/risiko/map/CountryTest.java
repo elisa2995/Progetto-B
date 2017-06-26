@@ -300,7 +300,7 @@ public class CountryTest {
      * Test of controlFromCountryPlayer method, of class RisikoMap.
      */
     @Test
-    public void testCanMove() {//qualcosa non torna
+    public void testCanMove() {
         System.out.println("canMove");
         Player random = new Player("random", "BLUE");
         Player owner = instance.getOwner();

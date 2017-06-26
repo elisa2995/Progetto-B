@@ -75,7 +75,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
      */
     private synchronized void moveArmies() {
         if (new Random().nextBoolean()) {
-            
+
             List<String> myCountries = game.getMyCountries(this);
             int from = new Random().nextInt(myCountries.size());
             String fromCountry = myCountries.get(from);
@@ -87,7 +87,13 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
             if (max > 0) {
                 int nArmies = new Random().nextInt(max) + 1;
                 game.move(fromCountry, toCountry, nArmies, this);
+                return;
             }
+        }
+        try {
+            game.nextPhase(this);
+        } catch (PendingOperationsException ex) {
+            Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -200,10 +206,18 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
      */
     @Override
     public void run() {
+        synchronized (this) {
+            try {
+                this.wait(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ArtificialPlayer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         while (currentAction != Action.ENDGAME) {
 
             try {
                 if (game.checkMyIdentity(this)) {
+                    //System.out.println(game.getPhase()+" "+this.getName());
                     switch (game.getPhase()) {
                         case "PLAY_CARDS":
                             playHighestTris();
@@ -235,8 +249,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
     /**
      * Updates maxArmiesAttack and maxArmiesDefense
+     *
      * @param countries
-     * @param reattack 
+     * @param reattack
      */
     @Override
     public void updateOnSetDefender(CountryInfo[] countries, boolean reattack) {
@@ -252,8 +267,10 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Updates currentAction. If has conquered a country moves armies from attacker to defender.
-     * @param ar 
+     * Updates currentAction. If has conquered a country moves armies from
+     * attacker to defender.
+     *
+     * @param ar
      */
     @Override
     public void updateOnAttackResult(AttackResultInfo ar) {
@@ -268,7 +285,8 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
     /**
      * Updates currentAction to ENDGAME if someone wins.
-     * @param winner 
+     *
+     * @param winner
      */
     @Override
     public void updateOnVictory(String winner) {
@@ -277,7 +295,8 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
     /**
      * Updates currentAction to DEFEND when ArtificialPlayer is attacked.
-     * @param defenderCountryInfo 
+     *
+     * @param defenderCountryInfo
      */
     @Override
     public void updateOnDefend(CountryInfo defenderCountryInfo) {
@@ -288,8 +307,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
     /**
      * Updates currentAction to ENDGAME when ArtificialPlayer is eliminated.
+     *
      * @param defenderName
-     * @param artificialAttack 
+     * @param artificialAttack
      */
     @Override
     public void updateOnElimination(String defenderName, boolean artificialAttack) {

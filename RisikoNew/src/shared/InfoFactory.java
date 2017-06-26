@@ -1,4 +1,4 @@
-package services;
+package shared;
 
 import java.util.List;
 import risiko.map.Country;

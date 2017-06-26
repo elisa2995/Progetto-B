@@ -1,6 +1,7 @@
 package risiko.game;
 
-import services.InfoFactory;
+import exceptions.PlayerLossException;
+import shared.InfoFactory;
 import risiko.phase.*;
 import exceptions.FileManagerException;
 import risiko.players.Player;
@@ -139,9 +140,7 @@ public class Game extends Observable implements GameProxy {
                 default:
                     player = new Player("", "");
             }
-            for (int j = 0; j < 4; j++) {
-                getCardsPhase().drawCard(player);
-            }
+            
         }
     }
 
@@ -397,6 +396,7 @@ public class Game extends Observable implements GameProxy {
     /**
      * Performs the attack.
      *
+     * @param nrD
      * @param aiCaller
      */
     @Override
@@ -407,23 +407,38 @@ public class Game extends Observable implements GameProxy {
         } catch (WrongCallerException ex) {
             System.out.println("wrong caller");
             return;
+        } catch (PlayerLossException ex) {
+            players.remove(getPlayerByName(ex.getLoserPlayer()));            
         }
-        checkLostAndWon();
+        checkWon();
         notifyArmiesChangeAfterAttack(getAttackerCountry(), getDefenderCountry());
         notifyAttackResult(InfoFactory.buildAttackResultInfo(getFightPhase(), map));
     }
 
     /**
-     * Checks if <code>activePlayer</code> has won or the defender has lost and
+     * Returns the Player that corresponds to <code>name</code>
+     * @param name
+     * @return 
+     */
+    private Player getPlayerByName(String name){
+        for(Player p: players){
+            if(p.getName().equals(name)){
+                return p;
+            }
+        }
+        return null;
+    }
+    /**
+     * Checks if <code>activePlayer</code> has won and
      * acts accordingly.
      */
-    private void checkLostAndWon() {
+    private void checkWon() {
         if (hasWon()) {
             recordGainedPoints();
         }
-        if (hasLost(getDefenderCountry().getOwner())) {
+        /*if (hasLost(getDefenderCountry().getOwner())) {
             players.remove(getDefenderCountry().getOwner());
-        }
+        }*/
     }
 
     /**
@@ -579,6 +594,7 @@ public class Game extends Observable implements GameProxy {
      * <code>toCountryName</code>. If this is the final movement, changes the
      * phase.
      *
+     * @param fromCountryName
      * @param nrArmies
      */
     @Override

@@ -1,5 +1,6 @@
 package risiko.phase;
 
+import exceptions.PlayerLossException;
 import exceptions.WrongCallerException;
 import risiko.equipment.Dice;
 import risiko.map.Country;
@@ -153,7 +154,7 @@ public class FightPhase extends Phase {
      * @param aiCaller
      * @throws exceptions.WrongCallerException
      */
-    public void confirmAttack(int nrD, ArtificialPlayer... aiCaller) throws WrongCallerException {
+    public void confirmAttack(int nrD, ArtificialPlayer... aiCaller) throws WrongCallerException, PlayerLossException {
         if (!canCallDefenseMethods(aiCaller)) {
             throw new WrongCallerException();
         }
@@ -197,9 +198,11 @@ public class FightPhase extends Phase {
     /**
      * Checks if the country in defense has been conquered and acts accordingly.
      */
-    private void checkCountryConquest() {
+    private void checkCountryConquest() throws PlayerLossException {
         if (map.isConquered(defenderCountry)) {
+            String defender=defenderCountry.getOwner().toString();            
             attackerCountry.conquer(defenderCountry);
+            throw new PlayerLossException(defender);
         }
     }
 
