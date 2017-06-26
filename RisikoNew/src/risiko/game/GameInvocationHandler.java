@@ -5,6 +5,11 @@ import java.lang.reflect.Method;
 import risiko.players.ArtificialPlayer;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Class used to handle the invocations to the methods declared by GameProxy.
+ * The calls to those methods are filtered, only the valid ones are forwarded to
+ * game. Each call to a method is executed in a different thread.
+ */
 public class GameInvocationHandler implements InvocationHandler {
 
     private Game game;
@@ -28,7 +33,6 @@ public class GameInvocationHandler implements InvocationHandler {
      * @param args
      * @return
      * @throws Throwable
-     * @throws Exception
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

@@ -5,8 +5,10 @@ import java.util.List;
 import risiko.players.Player;
 
 /**
- * Class that represents a country.
- * 
+ * Class that represents a country. The country is represented by its name, the
+ * number of armies that are currently occupying it, the player that owns those
+ * armies and a list of its neighbors.
+ *
  */
 public class Country implements Comparable<Country> {
 
@@ -64,8 +66,9 @@ public class Country implements Comparable<Country> {
 
     /**
      * Returns the maximum number of armies available.
+     *
      * @param isAttacker
-     * @return 
+     * @return
      */
     public int getMaxArmies(boolean isAttacker) {
         if (isAttacker) {
@@ -91,10 +94,11 @@ public class Country implements Comparable<Country> {
     }
 
     /**
-     * Check if toCountry belong to active player and if it's next to
-     * country of departure.
+     * Checks if toCountry belongs to this country's owner and if this country
+     * and <code>toCountry</code> are neighbors.
+     *
      * @param toCountry
-     * @return 
+     * @return
      */
     public boolean canMoveTo(Country toCountry) {
         boolean sameOwner = owner.equals(toCountry.getOwner());
@@ -102,28 +106,32 @@ public class Country implements Comparable<Country> {
     }
 
     /**
-     * Check if player is the owner of this country. 
+     * Checks if <code>player</code> is the owner of this country.
+     *
      * @param player
-     * @return 
+     * @return
      */
     public boolean isMyOwner(Player player) {
         return owner.equals(player);
     }
 
     /**
-     * Checks if attacker and defender countries don't belong to the same player and
-     * they're neighbors.
+     * Checks if <code>defender</code> and this country belong to different
+     * players and if they're neighbors. Used to check if this country can
+     * attack <code>defender</code>.
+     *
      * @param defender
-     * @return 
+     * @return
      */
     public boolean controlDefender(Country defender) {
         return !defender.getOwner().equals(owner) && neighbors.contains(defender);
     }
 
     /**
-     * Called if a country is just conquered,
-     * sets new owner of defenderCountry.
-     * 
+     * Called if <code>defenderCountry</code> has just been conquered by this
+     * country : changes the owner of the conquered country to the owner of this
+     * country.
+     *
      * @param defenderCountry
      */
     public void conquer(Country defenderCountry) {
@@ -132,19 +140,23 @@ public class Country implements Comparable<Country> {
     }
 
     /**
-     * Checks if the country belongs to player and its armies are more than 1.
+     * Checks if the country belongs to <code>player</code> and it's occupied by
+     * more than 1 army.
+     *
      * @param player
-     * @return 
+     * @return
      */
     public boolean controlAttacker(Player player) {
         return owner.equals(player) && armies > 1;
     }
 
     /**
-     * Checks if the country belongs to player, if its armies are more than 1
-     * and if it has valid neighbors for the movement.
+     * Checks if the country belongs to <code>player</code>, if it's occupied by
+     * more than 1 army and if those armies can be moved to some of its
+     * neighbors.
+     *
      * @param player
-     * @return 
+     * @return
      */
     public boolean canMove(Player player) {
         boolean canMove = false;
@@ -157,9 +169,10 @@ public class Country implements Comparable<Country> {
     }
 
     /**
-     * Check if country has at least one valid neighbor to attack
-     * and more than one armies.
-     * @return 
+     * Check if the country has at least one valid neighbor to attack and is
+     * occupied by more than one army.
+     *
+     * @return
      */
     public boolean canAttack() {
         boolean canAttack = false;

@@ -130,17 +130,15 @@ public class Game extends Observable implements GameProxy {
                     this.players.add(player);
                     break;
                 case "NORMAL":
-                    player = new Player(info.getName(), info.getColor());
-                    this.players.add(player);
+                    this.players.add(new Player(info.getName(), info.getColor()));
                     break;
                 case "LOGGED":
-                    player = new LoggedPlayer(info.getName(), info.getColor());
-                    this.players.add(player);
+                    this.players.add(new LoggedPlayer(info.getName(), info.getColor()));
                     break;
                 default:
-                    player = new Player("", "");
+                //
             }
-            
+
         }
     }
 
@@ -168,7 +166,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Draws a card from the deck and gives it to <code>activePlayer</code>
+     * Draws a card from the deck and gives it to <code>activePlayer</code>.
      *
      * @param aiCaller
      */
@@ -280,7 +278,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Checks wheter the active player has at least 1 bonus army.
+     * Checks if the active player has at least 1 bonus army.
      *
      * @param aiCaller
      * @return
@@ -360,7 +358,8 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Returns the name of the attacker country.
+     * Returns the name of the attacker country. Or null if it's not been set
+     * yet.
      *
      * @param aiCaller
      * @return
@@ -408,7 +407,7 @@ public class Game extends Observable implements GameProxy {
             System.out.println("wrong caller");
             return;
         } catch (PlayerLossException ex) {
-            players.remove(getPlayerByName(ex.getLoserPlayer()));            
+            players.remove(getPlayerByName(ex.getLoserPlayer()));
         }
         checkWon();
         notifyArmiesChangeAfterAttack(getAttackerCountry(), getDefenderCountry());
@@ -416,21 +415,22 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Returns the Player that corresponds to <code>name</code>
+     * Returns the Player whose name is <code>name</code>.
+     *
      * @param name
-     * @return 
+     * @return
      */
-    private Player getPlayerByName(String name){
-        for(Player p: players){
-            if(p.getName().equals(name)){
+    private Player getPlayerByName(String name) {
+        for (Player p : players) {
+            if (p.getName().equals(name)) {
                 return p;
             }
         }
         return null;
     }
+
     /**
-     * Checks if <code>activePlayer</code> has won and
-     * acts accordingly.
+     * Checks if <code>activePlayer</code> has won and acts accordingly.
      */
     private void checkWon() {
         if (hasWon()) {
@@ -531,7 +531,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Return the maximum number of armies that can be moved from the country
+     * Returns the maximum number of armies that can be moved from the country
      * which name is <code>fromCountryName</code>.
      *
      * @param fromCountryName
@@ -623,9 +623,8 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Checks if the active Player can move its armies from the country he has
-     * selected previously to the country which name is
-     * <code>toCountryName</code>.
+     * Checks if the active Player can move its armies from the previously
+     * selected country to the country which name is <code>toCountryName</code>.
      *
      * @param toCountryName
      * @return
@@ -642,7 +641,8 @@ public class Game extends Observable implements GameProxy {
      * Changes the phase. If it's the last one, passes the turn.
      *
      * @param aiCaller
-     * @throws PendingOperationsException
+     * @throws PendingOperationsException if the phase can't be changed due to
+     * some pending operations.
      */
     @Override
     public void nextPhase(ArtificialPlayer... aiCaller) throws PendingOperationsException {
@@ -662,7 +662,7 @@ public class Game extends Observable implements GameProxy {
             this.drawBonusCard();
         }
 
-        if (phaseIndex == phases.length-1) {
+        if (phaseIndex == phases.length - 1) {
             passTurn();
             return;
         }
@@ -672,7 +672,8 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Passes the turn.
+     * Passes the turn. If the active player has some cards to play, it goes to
+     * the cards phase, otherwise to the reinforcement one.
      *
      */
     private void passTurn() {
@@ -804,7 +805,7 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Returns the territories that can be attacked from <code>attacker</code>
+     * Returns the territories that can be attacked from <code>attacker</code>.
      *
      * @param attacker the name of the attacker country.
      * @return
@@ -827,11 +828,11 @@ public class Game extends Observable implements GameProxy {
      * active player is an artificial one, the caller has to be .equal to the
      * active player.
      *
-     * (If aiCaller is an empty array, the method is called from the GUI and
-     * therefore it will return true only if the active player is not an
-     * artificial one. On the other hand, if aiCaller is not empty it means that
-     * the method was called by an artificial Player, and it will return true
-     * only if that artificial player is the activePlayer).
+     * (In other words : if aiCaller is an empty array, the method is called
+     * from the GUI and therefore it will return true only if the active player
+     * is not an artificial one. On the other hand, if aiCaller is not empty it
+     * means that the method was called by an artificial Player, and it will
+     * return true only if that artificial player is the activePlayer).
      *
      * @param aiCaller
      * @return
@@ -859,6 +860,7 @@ public class Game extends Observable implements GameProxy {
 
     /**
      * Returns the country which name is countryName.
+     *
      * @param countryName
      * @return
      */
@@ -867,9 +869,11 @@ public class Game extends Observable implements GameProxy {
     }
 
     /**
-     * Notifies the change of both the attacker country and the defender country.
+     * Notifies the change of both the attacker country and the defender
+     * country.
+     *
      * @param attackerCountry
-     * @param defenderCountry 
+     * @param defenderCountry
      */
     private void notifyArmiesChangeAfterAttack(Country attackerCountry, Country defenderCountry) {
         notifyArmiesChange(InfoFactory.buildCountryInfo(defenderCountry));

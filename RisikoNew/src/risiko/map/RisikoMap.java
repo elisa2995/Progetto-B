@@ -12,7 +12,8 @@ import services.FileManager;
 import risiko.missions.Mission;
 
 /**
- * Class that init the game and builds continent, country and missions.
+ * Class that initializes the game and handles continents, countries and
+ * missions.
  */
 public class RisikoMap {
 
@@ -27,7 +28,7 @@ public class RisikoMap {
     }
 
     /**
-     * Inits the map. 
+     * Initializes the map.
      *
      */
     private void init() {
@@ -40,7 +41,7 @@ public class RisikoMap {
      * Builds the list of continents.
      */
     private void buildContinent() {
-        
+
         for (Map<String, Object> tmpContinent : FileManager.getInstance().getContinents()) {
 
             List<Country> countriesOfThatContinent = new ArrayList<>();
@@ -48,7 +49,7 @@ public class RisikoMap {
                 countriesOfThatContinent.add(new Country(countryName));
             }
 
-            String continentName = (String) tmpContinent.get("name");  
+            String continentName = (String) tmpContinent.get("name");
             Integer bonus = (Integer) tmpContinent.get("bonus");
             Continent continent = new Continent(continentName, countriesOfThatContinent, bonus);
             continents.add(continent);
@@ -56,11 +57,10 @@ public class RisikoMap {
     }
 
     /**
-     * Traduce la Map <code>countryNeighborsNames</code> (Map di String - nomi
-     * dei territori) nella mappa <Country, List<Country>> corrispondente,
-     * recuperando dal nome del territorio l'oggetto Country corrispondente.
+     * Asks the FileManager the list of countries and their neighbors
+     * (represented by their names), and turns it into an HashMap that maps a
+     * Country to its list of neighbors.
      *
-     * @author Elisa
      */
     private void setAllCountries() {
         Map<String, List<String>> countryNeighborsNames = FileManager.getInstance().getCountryNeighbors();
@@ -73,7 +73,7 @@ public class RisikoMap {
 
             Country country = getCountryByName(row.getKey());
             country.setArmies(DEFAULT_ARMIES);
-            country.setNeighbors(neighbors);    //Setto i neighbors ai Countries contenuti in countryNeighbors
+            country.setNeighbors(neighbors);
         }
     }
 
@@ -112,7 +112,7 @@ public class RisikoMap {
     }
 
     /**
-     * Assigns randomly a mission to each player.
+     * Assigns a mission to each player randomly.
      *
      * @param players
      */
@@ -124,7 +124,7 @@ public class RisikoMap {
     }
 
     /**
-     * Assigns randomly countries to each player.
+     * Assigns some countries to each player randomly.
      *
      * @param players
      */
@@ -138,7 +138,7 @@ public class RisikoMap {
     }
 
     /**
-     * Returns next player in the list of players.
+     * Returns the next player in the list of players.
      *
      */
     private Player nextPlayer(List<Player> players, int round) {
@@ -148,7 +148,7 @@ public class RisikoMap {
     /**
      * Returns a list containing all the countries.
      *
-     * @return 
+     * @return
      */
     public List<Country> getCountriesList() {
         List<Country> countries = new ArrayList<>();
@@ -161,9 +161,10 @@ public class RisikoMap {
     }
 
     /**
-     * Computes the number of player's bonus armies due.
+     * Computes the number of bonus armies awarded to <code>player</code> for
+     * owning its countries.
      *
-     * @param player 
+     * @param player
      */
     public void computeBonusArmies(Player player) {
 
@@ -179,7 +180,8 @@ public class RisikoMap {
     }
 
     /**
-     * Returns true if the player owns the continent.
+     * Returns true if the player <code> player</code> owns the continent
+     * <code>continent</code>.
      *
      * @param player
      * @param continent
@@ -191,8 +193,7 @@ public class RisikoMap {
 
     /**
      * Returns true if the player, after the conquest of a Country
-     * <code>conqueredCountry</code> owns the entire continent
-     * relative to the Country.
+     * <code>conqueredCountry</code> owns the entire continent of that Country.
      *
      * @param conqueredCountry
      * @return
@@ -204,7 +205,7 @@ public class RisikoMap {
     }
 
     /**
-     * Returns the continent whom country belongs.
+     * Returns the continent to which the Country <code>country</code> belongs.
      *
      * @param country
      * @return
@@ -238,15 +239,14 @@ public class RisikoMap {
      * Returns the list of country's neighbors.
      *
      * @param country
-     * @return 
+     * @return
      */
     public List<Country> getNeighbors(Country country) {
         return country.getNeighbors();
     }
 
-
     /**
-     * Check if player has just won.
+     * Checks if player has just won.
      *
      * @param player
      * @return
@@ -256,20 +256,20 @@ public class RisikoMap {
     }
 
     /**
-     * Check if country is conquered.
+     * Checks if country is conquered.
      *
      * @param country
-     * @return 
+     * @return
      */
     public boolean isConquered(Country country) {
         return country.isConquered();
     }
 
     /**
-     * Check if the defender player has lost every countries
-     * and so if he has lost.
+     * Checks if the player <code>defenderPlayer</code> has no more countries.
+     *
      * @param defenderPlayer
-     * @return 
+     * @return
      */
     public boolean hasLost(Player defenderPlayer) {
         return getMyCountries(defenderPlayer).isEmpty();
@@ -277,9 +277,9 @@ public class RisikoMap {
 
     /**
      * Returns the Country by its name <code>countryName</code>.
-     * 
+     *
      * @param countryName
-     * @return 
+     * @return
      */
     public Country getCountryByName(String countryName) {
         for (Country country : getCountriesList()) {
@@ -291,7 +291,8 @@ public class RisikoMap {
     }
 
     /**
-     * Assigns the countries of a player to another.
+     * Assigns the countries that belonged to<code>oldOwner</code> to
+     * <code>newOwner</code>.
      *
      * @param oldOwner previous owner of the territories
      * @param newOwner new owner of the territories

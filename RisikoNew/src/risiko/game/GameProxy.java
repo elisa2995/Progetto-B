@@ -26,7 +26,7 @@ public interface GameProxy {
     public String getPhase(ArtificialPlayer... aiCaller);
 
     /**
-     * Returns the active player's mission.
+     * Returns the active player's mission description.
      *
      * @return
      */
@@ -42,7 +42,7 @@ public interface GameProxy {
 
     //------------------------ CardsPhase ---------------------------------//
     /**
-     * Returns the name of the last card drawn.
+     * Returns the name of the last card drawn by the active player.
      *
      * @return
      */
@@ -94,17 +94,17 @@ public interface GameProxy {
 
     //---------------------  ReinforcePhase  -----------------------------//
     /**
-     * Adds an army to the country.
+     * Adds an army to the country which name is <code>countryName</code>.
      *
      * @param countryName
-     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo.
+     * @param aiCaller
      */
     public void reinforce(String countryName, ArtificialPlayer... aiCaller);
 
     /**
-     * Check if the player can reinforce.
+     * Checks if the player can reinforce.
      *
-     * @param aiCaller l'eventuale giocatore artificiale che chiama il metodo
+     * @param aiCaller
      * @return
      */
     public boolean canReinforce(ArtificialPlayer... aiCaller);
@@ -211,7 +211,7 @@ public interface GameProxy {
 
     // ------------------------ MovePhase -----------------------------------//
     /**
-     * Return the maximum number of armies that can be moved from the country
+     * Returns the maximum number of armies that can be moved from the country
      * which name is <code>fromCountryName</code>.
      *
      * @param fromCountryName
@@ -274,9 +274,8 @@ public interface GameProxy {
     public boolean controlMovement(ArtificialPlayer... aiCaller);
 
     /**
-     * Checks if the active Player can move its armies from the country he has
-     * selected previously to the country which name is
-     * <code>toCountryName</code>.
+     * Checks if the active Player can move its armies from the previously
+     * selected country to the country which name is <code>toCountryName</code>.
      *
      * @param toCountryName
      * @param aiCaller
@@ -367,7 +366,6 @@ public interface GameProxy {
      */
     public String[] getAllDefenders(String attacker, ArtificialPlayer... aiCaller);
 
-    
     //------------------------ General purpose methods ---------------------//
     /**
      * Returns true if the caller is the active player.

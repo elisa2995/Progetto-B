@@ -3,7 +3,9 @@ package risiko.map;
 import java.util.List;
 
 /**
- * Class that represents a continent.
+ * Class that represents a continent. The continent is described by its name,
+ * its countries and the number of bonus armies awarded to a player in case it
+ * helds all its countries.
  */
 public class Continent {
 
@@ -42,16 +44,17 @@ public class Continent {
     }
 
     /**
-     * Checks if country is contained in continent.
+     * Checks if country is contained in the continent.
+     *
      * @param country
-     * @return 
+     * @return
      */
     public boolean containsCountry(Country country) {
         return this.getCountries().contains(country);
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return this.name;
     }
 
