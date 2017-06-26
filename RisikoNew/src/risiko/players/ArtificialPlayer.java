@@ -26,10 +26,6 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     private Action currentAction;
     private ArtificialPlayerSettings setting;
 
-    public void setSetting(ArtificialPlayerSettings setting) {
-        this.setting = setting;
-    }
-
     /**
      * Create a new artificial player.
      *
@@ -42,6 +38,10 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
         this.game = game;
         currentAction = Action.NOACTION;
         setting = new ArtificialPlayerSettings("Lento");
+    }
+
+    public synchronized void setSetting(ArtificialPlayerSettings setting) {
+        this.setting = setting;
     }
 
     /**
@@ -292,7 +292,8 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Updates currentAction to <code>DEFEND</code> when ArtificialPlayer is attacked.
+     * Updates currentAction to <code>DEFEND</code> when ArtificialPlayer is
+     * attacked.
      *
      * @param defenderCountryInfo
      */
@@ -304,7 +305,8 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Updates currentAction to <code>ENDGAME</code> when ArtificialPlayer is eliminated.
+     * Updates currentAction to <code>ENDGAME</code> when ArtificialPlayer is
+     * eliminated.
      *
      * @param defenderName
      * @param artificialAttack

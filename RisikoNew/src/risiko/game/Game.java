@@ -404,10 +404,11 @@ public class Game extends Observable implements GameProxy {
         try {
             getFightPhase().confirmAttack(nrD, aiCaller);
         } catch (WrongCallerException ex) {
-            System.out.println("wrong caller");
             return;
         } catch (PlayerLossException ex) {
-            players.remove(getPlayerByName(ex.getLoserPlayer()));
+            if (map.hasLost(getPlayerByName(ex.getLoserPlayer()))) {
+                players.remove(getPlayerByName(ex.getLoserPlayer()));
+            }
         }
         checkWon();
         notifyArmiesChangeAfterAttack(getAttackerCountry(), getDefenderCountry());
@@ -692,7 +693,7 @@ public class Game extends Observable implements GameProxy {
 
         phaseIndex = (getCardsNames().isEmpty()) ? 1 : 0;
         map.computeBonusArmies(activePlayer);
-
+        notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), getPhase());
     }
 
 // </editor-fold>

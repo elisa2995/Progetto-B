@@ -153,15 +153,16 @@ public class FightPhase extends Phase {
      * @param nrD
      * @param aiCaller
      * @throws exceptions.WrongCallerException
+     * @throws exceptions.PlayerLossException
      */
     public void confirmAttack(int nrD, ArtificialPlayer... aiCaller) throws WrongCallerException, PlayerLossException {
         if (!canCallDefenseMethods(aiCaller)) {
             throw new WrongCallerException();
         }
+        attackInProgress = false;
         this.nrD = nrD;
         fight();
         checkCountryConquest();
-        attackInProgress = false;
     }
 
     /**
@@ -200,7 +201,7 @@ public class FightPhase extends Phase {
      */
     private void checkCountryConquest() throws PlayerLossException {
         if (map.isConquered(defenderCountry)) {
-            String defender=defenderCountry.getOwner().toString();            
+            String defender = defenderCountry.getOwner().toString();
             attackerCountry.conquer(defenderCountry);
             throw new PlayerLossException(defender);
         }
@@ -257,9 +258,9 @@ public class FightPhase extends Phase {
     public int getMaxArmies(Country country, boolean isAttacker) {
         return country.getMaxArmies(isAttacker);
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return "FIGHT";
     }
 
