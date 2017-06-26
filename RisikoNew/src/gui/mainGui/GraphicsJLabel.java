@@ -23,9 +23,7 @@ public class GraphicsJLabel extends JLabel {
 
     private double[] xx;
     private double[] yy;
-    private static final Color COLOR_1 = new Color(0, 0, 0, 225); // opaque black
-    private static final Color COLOR_2 = new Color(0, 0, 0, 120); // semi-transparent black
-    private static final Paint GRADIENT_PAINT = new GradientPaint(0, 0, COLOR_1, 20, 20, COLOR_2);
+    private static Paint GRADIENT_PAINT;
     private static final int DEFAULT_WIDTH = 15;
     private Path2D myPath;
     private Map<String, JLabel> countryLabel;
@@ -132,6 +130,9 @@ public class GraphicsJLabel extends JLabel {
                 label.updateUI();
             }
         });
+    }
 
+    public static void setGradientPaint(Color color1, Color color2) {
+        GRADIENT_PAINT = new GradientPaint(0, 0, color1, 20, 20, color2);
     }
 }

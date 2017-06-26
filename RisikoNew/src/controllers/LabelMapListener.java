@@ -200,10 +200,15 @@ public class LabelMapListener extends MouseInputAdapter {
                 checkReinforce(country, e.getComponent(), label);
                 break;
             case "FIGHT":
-                drawCone(e);
+                //setto il GRADIENT_PAINT a nero opaco
+                GraphicsJLabel.setGradientPaint(new Color(0, 0, 0, 225), new Color(0, 0, 0, 120));
+                drawCone(e, game.getAttackerCountryName());
                 checkFight(country, e.getComponent(), label);
                 break;
             case "MOVE":
+                //setto il GRADIENT_PAINT a bianco opaco
+                GraphicsJLabel.setGradientPaint(new Color(225, 225, 225, 225), new Color(200, 200, 200, 200));
+                drawCone(e, game.getFromCountryName());
                 checkMove(country, e.getComponent(), label);
                 break;
         }
@@ -288,7 +293,8 @@ public class LabelMapListener extends MouseInputAdapter {
      * Returns the name of the country that corresponds to the pixel pointed by
      * the cursor. In particular, it takes the coordinates of the pixel,
      * retrieves the <code>Color</code> of that pixel from the image and returns
-     * the name of the country mapped to that color in <code>ColorNameCountry</code>.
+     * the name of the country mapped to that color in
+     * <code>ColorNameCountry</code>.
      *
      * @param e
      * @return
@@ -350,10 +356,9 @@ public class LabelMapListener extends MouseInputAdapter {
      *
      * @param e
      */
-    public void drawCone(MouseEvent e) {
-        if (game.getAttackerCountryName() != null) {
-            ((GraphicsJLabel) mapLabel).drawCone(gui.getAttackerCountry(), new Rectangle(e.getX(), e.getY(), 2, 2));
+    public void drawCone(MouseEvent e, String country) {
+        if (country != null) {
+            ((GraphicsJLabel) mapLabel).drawCone(country, new Rectangle(e.getX(), e.getY(), 2, 2));
         }
     }
-
 }
