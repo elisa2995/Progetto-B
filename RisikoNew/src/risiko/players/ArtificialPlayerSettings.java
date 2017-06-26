@@ -1,16 +1,16 @@
 package risiko.players;
 
 /**
- * Artificial players' settings.
+ * Class that represents the artificial players' settings. 
  */
 public class ArtificialPlayerSettings {
 
-    private int baseAttack;
-    private int reinforceDelay;
+    private int baseAttack; // the number of attacks
+    private int reinforceDelay; 
     private int attackDeclarationDelay;
 
     /**
-     * Create a new ArtificialPlayerSettings.
+     * Creates a new ArtificialPlayerSettings.
      * @param speed 
      */
     public ArtificialPlayerSettings(String speed) {
@@ -24,20 +24,15 @@ public class ArtificialPlayerSettings {
      */
     private void setSettingsForSpeed(String speed) {
         switch (speed) {
-            case "Veloce":
-                
+            case "Veloce":             
                 this.reinforceDelay = 100;
                 this.attackDeclarationDelay = 100;
                 break;
-
             case "Normale":
-                
                 this.reinforceDelay = 300;
                 this.attackDeclarationDelay = 500;
                 break;
-                
             case "Lento":
-                
                 this.reinforceDelay = 800;
                 this.attackDeclarationDelay = 2000;
                 break;

@@ -12,7 +12,7 @@ import risiko.map.Country;
 import risiko.missions.Mission;
 
 /**
- * Player. 
+ * Class that represents a Player.
  */
 public class Player {
 
@@ -21,7 +21,7 @@ public class Player {
     private final String name;
     private final String color;
     protected int bonusArmies;
-    private boolean conqueredACountry;
+    private boolean conqueredACountry; // true if the player has conquered a country in the current turn.
 
     public Player(String name, String color) {
         this.bonusArmies = 0;
@@ -82,7 +82,7 @@ public class Player {
     }
 
     /**
-     * It tells wheter the player has enough cards to play the tris
+     * Tells wheter the player has enough cards to play the tris
      * <code>cards</code>.
      *
      * @param cards
@@ -116,7 +116,8 @@ public class Player {
 
     /**
      * Adds a card to the player's cards.
-     * @param card 
+     *
+     * @param card
      */
     public void addCard(Card card) {
         bonusCards.add(card);
@@ -132,8 +133,9 @@ public class Player {
 
     /**
      * Checks if the player's mission is completed.
+     *
      * @param myCountries
-     * @return 
+     * @return
      */
     public boolean checkIfWinner(List<Country> myCountries) {
         return mission.isCompleted(myCountries);
@@ -147,7 +149,6 @@ public class Player {
         return conqueredACountry;
     }
 
-    
     @Override
     public String toString() {
         return name;
@@ -155,7 +156,8 @@ public class Player {
 
     /**
      * Draws a card from the deck.
-     * @param deck 
+     *
+     * @param deck
      */
     public void drawCard(BonusDeck deck) {
         this.addCard(deck.drawCard());

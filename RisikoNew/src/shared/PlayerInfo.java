@@ -1,7 +1,7 @@
 package shared;
 
 /**
- * Class used to communicate between the model and the view the info of a
+ * Class used to communicate between the Model and the View the info of a
  * certain player.
  */
 public class PlayerInfo implements Comparable<PlayerInfo>{

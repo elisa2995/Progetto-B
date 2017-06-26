@@ -17,7 +17,7 @@ public interface Translator {
      * @param lang
      * @param reverse
      * @return
-     * @throws TranslationException
+     * @throws TranslationException if no translation is found 
      */
     public static String translate(String source, String lang, boolean reverse) throws TranslationException {
         try {

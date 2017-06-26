@@ -57,7 +57,8 @@ public class FileManager {
     //----------------------- COUNTRIES ----------------------------------//
     /**
      * Reads the file at url <code>COUNTRIES</code> and builds an HashMap to map
-     * each country with the list of its neighbors.
+     * each country with the list of its neighbors. Both the country and its
+     * neighbors are represented by their names.
      *
      * @return
      */
@@ -197,7 +198,7 @@ public class FileManager {
     }
 
     /**
-     * Rewrites the content of the file.
+     * Rewrites the content of the file <code> USERS </code>.
      *
      * @param urlFile
      */
@@ -304,7 +305,7 @@ public class FileManager {
 
     /**
      * Returns the ranking of the players (the first ten ones or the maximum
-     * number of players that have more than zero points)
+     * number of players that have more than zero points).
      *
      * @return
      */
@@ -458,10 +459,11 @@ public class FileManager {
     //---------------------------------- INFO -------------------------------//
     /**
      * Looks for the info corresponding to the phase <code>phase</code>.
+     *
      * @param phase
      * @param lang
      * @return
-     * @throws FileManagerException 
+     * @throws FileManagerException
      */
     public String getInfoFor(String phase, String lang) throws FileManagerException {
         InputStream stream = getClass().getClassLoader().getResourceAsStream(INFO + lang + ".txt");

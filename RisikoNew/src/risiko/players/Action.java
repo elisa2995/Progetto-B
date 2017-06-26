@@ -1,7 +1,7 @@
 package risiko.players;
 
 /**
- * Artificial players' actions
+ * Artificial players' actions.
  */
 public enum Action {
     DEFEND, NOACTION, ENDGAME;

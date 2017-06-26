@@ -6,9 +6,6 @@ import risiko.map.RisikoMap;
 import risiko.phase.FightPhase;
 import risiko.players.ArtificialPlayer;
 import risiko.players.Player;
-import shared.AttackResultInfo;
-import shared.CountryInfo;
-import shared.PlayerInfo;
 
 /**
  * Class used for the communication between the model and the view. Builds

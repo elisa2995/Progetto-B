@@ -31,7 +31,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Create a new artificial player
+     * Create a new artificial player.
      *
      * @param name name of the player
      * @param color color assigned to the player
@@ -45,7 +45,8 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Tries to play a tris from the best to the worst.
+     * Plays a tris. In case the player can play more than one tris, it chooses
+     * the best one (the one that awards more armies).
      */
     private synchronized void playHighestTris() {
         int max = -1;
@@ -71,17 +72,15 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Moves armies between two territories.
+     * Moves armies between two adjacent territories.
      */
     private synchronized void moveArmies() {
         if (new Random().nextBoolean()) {
 
             List<String> myCountries = game.getMyCountries(this);
-            int from = new Random().nextInt(myCountries.size());
-            String fromCountry = myCountries.get(from);
+            String fromCountry = myCountries.get(new Random().nextInt(myCountries.size()));
             List<String> neighbors = game.getNeighbors(this, fromCountry);
-            int to = new Random().nextInt(neighbors.size());
-            String toCountry = neighbors.get(to);
+            String toCountry = neighbors.get(new Random().nextInt(neighbors.size()));
 
             int max = game.getMaxArmiesForMovement(fromCountry, this);
             if (max > 0) {
@@ -98,7 +97,8 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Adds armies to the territories until the are exhausted.
+     * Uses its bonusArmies to reinforce random territories. If the player runs
+     * out of bonus armies, it changes the phase.
      */
     private synchronized void randomReinforce() {
         if (bonusArmies == 0) {
@@ -123,15 +123,14 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Executes a series of attacks.
+     * Executes a series of random attacks.
      */
     private synchronized void randomAttack() {
-        int i = new Random().nextInt(setting.getBaseAttack());
-        i++;
-        while (i > 0 && game.getAllAttackers(this).length != 0) {
+        int nrAttacks = new Random().nextInt(setting.getBaseAttack()) + 1;
+        while (nrAttacks > 0 && game.getAllAttackers(this).length != 0) {
             if (canAttack) {
                 randomSingleAttack();
-                i--;
+                nrAttacks--;
             }
         }
     }
@@ -184,9 +183,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Lets the artificial player defend itself from an attack. It sets the
-     * number of armies with which the artificial player defends and confim the
-     * attack.
+     * Chooses the number of armies for the defense and confirms the attack.
      */
     private synchronized void defend() {
         synchronized (maxArmiesLock) {
@@ -202,7 +199,9 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Contains the loop for the artificial player to act.
+     * Contains the loop for the artificial player to act. The player keeps
+     * checking if it's its turn and in case acts accodingly to the phase of the
+     * game.
      */
     @Override
     public void run() {
@@ -217,7 +216,6 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
 
             try {
                 if (game.checkMyIdentity(this)) {
-                    //System.out.println(game.getPhase()+" "+this.getName());
                     switch (game.getPhase()) {
                         case "PLAY_CARDS":
                             playHighestTris();
@@ -248,7 +246,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Updates maxArmiesAttack and maxArmiesDefense
+     * Updates maxArmiesAttack and maxArmiesDefense.
      *
      * @param countries
      * @param reattack
@@ -267,8 +265,8 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Updates currentAction. If has conquered a country moves armies from
-     * attacker to defender.
+     * Updates currentAction. If it has conquered a country moves some armies
+     * from attacker to defender.
      *
      * @param ar
      */
@@ -284,7 +282,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Updates currentAction to ENDGAME if someone wins.
+     * Updates currentAction to <code>ENDGAME</code> if someone wins.
      *
      * @param winner
      */
@@ -294,7 +292,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Updates currentAction to DEFEND when ArtificialPlayer is attacked.
+     * Updates currentAction to <code>DEFEND</code> when ArtificialPlayer is attacked.
      *
      * @param defenderCountryInfo
      */
@@ -306,7 +304,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Updates currentAction to ENDGAME when ArtificialPlayer is eliminated.
+     * Updates currentAction to <code>ENDGAME</code> when ArtificialPlayer is eliminated.
      *
      * @param defenderName
      * @param artificialAttack
@@ -319,7 +317,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
     }
 
     /**
-     * Updates currentAction when game ends.
+     * Updates currentAction when the game ends.
      */
     @Override
     public void updateOnEndGame() {
