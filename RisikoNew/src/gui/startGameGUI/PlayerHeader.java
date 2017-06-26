@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui.startGameGUI;
 
 import java.awt.GridLayout;
@@ -10,7 +5,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 
 /**
- * Header of the table contained in <code>playersPanel</code>
+ * Header of the table contained in <code>playersPanel</code>.
  */
 public class PlayerHeader extends JComponent {
 
@@ -19,7 +14,7 @@ public class PlayerHeader extends JComponent {
     private final JLabel playerColor;
 
     /**
-     * It creates a new PlayerHeader
+     * Creates a new PlayerHeader.
      */
     public PlayerHeader() {
         playerName = new JLabel("Giocatore");
@@ -29,7 +24,7 @@ public class PlayerHeader extends JComponent {
     }
 
     /**
-     * Initialization of the layout and addiction of the JComponents
+     * Initialization of the layout and stting of the JComponents.
      */
     private void initLayout() {
         this.setLayout(new GridLayout(1, 4));

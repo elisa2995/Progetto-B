@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui.startGameGUI;
 
 import java.awt.Dimension;
@@ -11,7 +6,7 @@ import services.FileManager;
 import shared.PlayerInfo;
 
 /**
- *  JDialog that shows the ranking of the players
+ *  JDialog that shows the ranking of the players.
  *
  */
 public class RankingDialog extends javax.swing.JDialog {
@@ -28,7 +23,7 @@ public class RankingDialog extends javax.swing.JDialog {
     }
     
     /**
-     * Initialization
+     * Initialization.
      */     
     private void init(){
         Dimension dim = getToolkit().getScreenSize();
@@ -38,7 +33,7 @@ public class RankingDialog extends javax.swing.JDialog {
     }
     
     /**
-     * Retrieves the rankings and it shows in <code>rankingInfo</code> 
+     * Retrieves the rankings and shows them in <code>rankingInfo</code>.
      */
     private void showRankings() {
         String ranking="";

@@ -14,9 +14,9 @@ import javax.swing.*;
 import shared.PlayerInfo;
 
 /**
- * Initial GUI. It let you set the number of players, their type(normal,
- * artificial, logged) and the color of their troops It let you register a new
- * loggable player
+ * Initial GUI. It lets the user set the info for a new game: the number of
+ * players, their type(normal, artificial, logged) and the color of their troops
+ * From this GUI is also possible to register new users.
  *
  */
 public class StartGameGUI extends JFrame {
@@ -24,8 +24,7 @@ public class StartGameGUI extends JFrame {
     private PlayersPanel playersPanel;
 
     /**
-     * It creates a new form startGame; it calls all the initializazion
-     * functions
+     * Creates a new form startGame; it calls all the initializazion functions.
      */
     public StartGameGUI() {
         initBackground();
@@ -34,8 +33,8 @@ public class StartGameGUI extends JFrame {
     }
 
     /**
-     * Setting of dimension of the dialog and add of <code>playerPanel</code>,
-     * that allows to insert the information about the players
+     * Sets the dimension of the dialog and adds <code>playerPanel</code> to the
+     * JFrame.
      */
     private void init() {
 
@@ -47,7 +46,7 @@ public class StartGameGUI extends JFrame {
     }
 
     /**
-     * It adds <code>playerPanel</code> to the dialog
+     * Adds <code>playerPanel</code> to the dialog.
      */
     private void addPlayersPanel() {
         playersPanel = new PlayersPanel(this);
@@ -57,7 +56,7 @@ public class StartGameGUI extends JFrame {
     }
 
     /**
-     * It sets the background to the dialog
+     * Sets the background to the dialog.
      */
     private void initBackground() {
         BufferedImage backgroundImage;
@@ -70,7 +69,7 @@ public class StartGameGUI extends JFrame {
     }
 
     /**
-     * Setting of all the JComponents
+     * Setting of all the JComponents.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -168,7 +167,7 @@ public class StartGameGUI extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * It adds a player to the <code>playerPanel</code>
+     * Adds a player to the <code>playerPanel</code>.
      *
      * @param evt
      */
@@ -177,8 +176,8 @@ public class StartGameGUI extends JFrame {
     }//GEN-LAST:event_addButtonActionPerformed
 
     /**
-     * It create the GUI of the game if all the field are filled and the choosen
-     * names for the players are different among each other
+     * Creates the GUI of the game if all the field are filled and the chosen
+     * names for the players are different among each other.
      *
      * @param evt
      */
@@ -204,7 +203,8 @@ public class StartGameGUI extends JFrame {
     }//GEN-LAST:event_startButtonActionPerformed
 
     /**
-     * It checks there are empty fields
+     * It checks if there are empty fields and eventually shows a warning
+     * message.
      *
      * @param playerNames
      * @return true if there are empty fields
@@ -222,8 +222,8 @@ public class StartGameGUI extends JFrame {
     }
 
     /**
-     * It opens a <code>userDialog</code> in the registration mode, allowing to
-     * register a new user
+     * Opens a <code>userDialog</code> in the registration mode, allowing to
+     * register a new user.
      *
      * @param evt
      */
@@ -234,16 +234,17 @@ public class StartGameGUI extends JFrame {
     }//GEN-LAST:event_registrationButtonActionPerformed
 
     /**
-     * Shows the ranking of the logged players.
-     * @param evt 
+     * Shows the rankings of the logged players.
+     *
+     * @param evt
      */
     private void rankingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rankingButtonActionPerformed
-        RankingDialog rankingDialog=new RankingDialog(this, true);
-        rankingDialog.setVisible(true);       
+        RankingDialog rankingDialog = new RankingDialog(this, true);
+        rankingDialog.setVisible(true);
     }//GEN-LAST:event_rankingButtonActionPerformed
 
     /**
-     * It checks if there are equal usernames among the inserted ones
+     * Checks if the names of the players are different from each other.
      *
      * @param players
      * @return true if there are at least two equal usernames
@@ -262,10 +263,8 @@ public class StartGameGUI extends JFrame {
         return false;
     }
 
-
-
     /**
-     * It sets the visibility of <code>addButton</code>
+     * Sets the visibility of <code>addButton</code>.
      *
      * @param visible
      */

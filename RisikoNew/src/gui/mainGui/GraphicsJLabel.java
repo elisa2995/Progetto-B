@@ -16,7 +16,8 @@ import java.util.Map;
 import javax.swing.JLabel;
 
 /**
- * JLabel in which is displayed the number of armies that is on a country.
+ * JLabel on which colored cones are shown depending on the interaction of the
+ * user with it.
  */
 public class GraphicsJLabel extends JLabel {
 
@@ -41,7 +42,8 @@ public class GraphicsJLabel extends JLabel {
 
     /**
      * Sets countryLabel.
-     * @param countryLabel 
+     *
+     * @param countryLabel
      */
     public void setCountryLabel(Map<String, JLabel> countryLabel) {
         this.countryLabel = countryLabel;
@@ -49,7 +51,8 @@ public class GraphicsJLabel extends JLabel {
 
     /**
      * Paints the JLabel.
-     * @param g 
+     *
+     * @param g
      */
     @Override
     protected void paintComponent(Graphics g) {

@@ -23,7 +23,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
@@ -33,7 +32,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -147,8 +145,8 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Asks if you want to end the game. If the answer is yes, it ends the game
-     * and you come back to the initial GUI
+     * Asks the user if he wants to end the game. If the answer is yes, it ends
+     * the game and shows the initial GUI.
      */
     private void closeDialog() {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -163,13 +161,13 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Creates a legend for the players
+     * Creates a legend for the players.
      *
      * @param players
      */
     private void buildLabelPlayers(List<PlayerInfo> players) {
         JLabel[] labelPlayers = {labelPlayer1, labelPlayer2, labelPlayer3, labelPlayer4, labelPlayer5, labelPlayer6};
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < labelPlayers.length; i++) {
             if (i < players.size()) {
                 labelPlayers[i].setFont(new Font("Serif", Font.BOLD, 18));
                 labelPlayers[i].setText(players.get(i).getName());
@@ -200,7 +198,7 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Initializes the JLabels.
+     * Creates a JLabel for each country.
      *
      * @param src
      */
@@ -219,7 +217,8 @@ public class GUI extends JFrame implements GameObserver {
 
     /**
      * Creates a label for the country <code>countryName</code> and adds it to
-     * countryLabelMap.
+     * countryLabelMap. Sets its location as specified with the parameters x and
+     * y.
      *
      * @param countryName
      * @param x
@@ -452,7 +451,8 @@ public class GUI extends JFrame implements GameObserver {
     //----------------------- Event controllers ------------------------------//
     /**
      *
-     * It changes the phase of the game.
+     * Changes the phase of the game. If the phase can't be changes, shows a
+     * JDialog to inform the user.
      *
      * @param evt
      */
@@ -470,7 +470,7 @@ public class GUI extends JFrame implements GameObserver {
     }//GEN-LAST:event_buttonNextPhaseActionPerformed
 
     /**
-     * Shows active player's mission.
+     * Shows the active player's mission.
      *
      * @param evt
      */
@@ -491,7 +491,7 @@ public class GUI extends JFrame implements GameObserver {
     }//GEN-LAST:event_settingsItemActionPerformed
 
     /**
-     * Shows <code>cardPanel</code>
+     * Shows <code>cardPanel</code>.
      *
      * @param evt
      */
@@ -504,7 +504,7 @@ public class GUI extends JFrame implements GameObserver {
         }
     }//GEN-LAST:event_showCardButtonActionPerformed
 
-        /**
+    /**
      * Allows the player to leave the game, substituing him with an artificial
      * player.
      *
@@ -777,6 +777,7 @@ public class GUI extends JFrame implements GameObserver {
     /**
      * Updates the JLabel that belongs to <code>countryInfo</code> with the new
      * number of armies on that country.
+     * @param countryInfo
      */
     @Override
     public void updateOnArmiesChange(CountryInfo countryInfo) {
@@ -805,7 +806,6 @@ public class GUI extends JFrame implements GameObserver {
     /**
      * Shows a congrats message and the card that has just been drawn.
      *
-     *
      * @param cardName
      */
     @Override
@@ -827,7 +827,7 @@ public class GUI extends JFrame implements GameObserver {
 
     /**
      * Shows the dialog that asks the defender the number of armies to set in
-     * defense. (If it isn't an artificial player)
+     * defense. (If it isn't an artificial player).
      *
      * @param defenderCountryInfo
      */
@@ -840,7 +840,7 @@ public class GUI extends JFrame implements GameObserver {
 
     /**
      * Shows a message for the player that has just been removed from the game.
-     * (if it(?) isn't an artificial player)
+     * (if it isn't an artificial player).
      *
      * @param defenderName
      * @param artificialAttack
@@ -854,7 +854,7 @@ public class GUI extends JFrame implements GameObserver {
     }
 
     /**
-     * Hides the gui and shows StartGameGUI().
+     * Hides the gui and shows StartGameGUI.
      */
     @Override
     public void updateOnEndGame() {

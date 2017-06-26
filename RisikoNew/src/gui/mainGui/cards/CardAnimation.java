@@ -5,7 +5,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 /**
- * Animation produce on the single card.
+ * Thread in which a card is moved from x to toX.
  */
 public class CardAnimation extends Thread {
 
@@ -32,8 +32,8 @@ public class CardAnimation extends Thread {
     }
 
     /**
-     * Changes the position of a card, moving it fluently from the selectable
-     * ones to the choosen ones or vice versa.
+     * Changes the position of a card, moving it fluently from the set of
+     * selectable cards to the chosen one or vice versa.
      */
     @Override
     public void run() {

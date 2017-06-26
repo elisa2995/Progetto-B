@@ -9,17 +9,15 @@ import javax.swing.ListCellRenderer;
 import static javax.swing.SwingConstants.CENTER;
 
 /**
- * JLabel that is used to show the color icons in a list of colors.
- *
+ * Rendered used to show JLabels as items of a JComboBox.
  */
-class ComboBoxRenderer extends JLabel
-        implements ListCellRenderer {
+class ComboBoxRenderer extends JLabel implements ListCellRenderer {
 
     private ImageIcon[] icons;
     private String[] names;
 
     /**
-     * Creates a new ComboBoxRenderer
+     * Creates a new ComboBoxRenderer.
      *
      * @param icons
      * @param names
@@ -32,7 +30,7 @@ class ComboBoxRenderer extends JLabel
     }
 
     /**
-     * Initialization
+     * Initialization.
      */
     private void init() {
         setBorder(null);
@@ -43,7 +41,7 @@ class ComboBoxRenderer extends JLabel
 
     /**
      * Finds the image that corresponds to the selected value and returns a
-     * JLabel that shows the icon
+     * JLabel with that icon.
      *
      */
     @Override

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui.startGameGUI;
 
 import controllers.ColorBoxListener;
@@ -24,9 +19,9 @@ import javax.swing.JTextField;
  * JComponent that contains all the information about a player. It contains:
  * <code>nameField</code>(JTextField) to insert the name of the player,
  * <code>typeComboBox</code>(JComboBox) to determine the type of the player,
- * <code>colorComboBox</code>(JComboBox) to decide the color of the troops,
+ * <code>colorComboBox</code>(JComboBox) to choose the color of the troops,
  * <code>removeButton</code>(JButton) to remove the player from the
- * <code>playersPanel</code>
+ * <code>playersPanel</code>.
  */
 public class PlayerInfoRow extends JComponent {
 
@@ -43,7 +38,7 @@ public class PlayerInfoRow extends JComponent {
     private ColorBoxListener colorListener;
 
     /**
-     * It creates a new PlayerInfo
+     * Creates a new PlayerInfo.
      *
      * @param index
      * @param types
@@ -65,7 +60,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * Initialization
+     * Initialization.
      *
      * @param index
      */
@@ -77,7 +72,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It initializes the field where you can insert the name of the player
+     * Initializes the field used to enter the name of the player.
      */
     private void initPlayerName() {
         nameField.setOpaque(false);
@@ -85,7 +80,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It sets the layout and add the JComponents
+     * Sets the layout and adds the JComponents.
      */
     private void initLayout() {
         this.setLayout(new GridLayout(1, 4));
@@ -96,9 +91,9 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It initializes <code>colorComboBox</code> inserting the icons that
+     * Initializes <code>colorComboBox</code> inserting the icons that
      * display the colors and setting the selectedItem to a color that has not
-     * already been assigned
+     * been assigned yet.
      */
     private void initColorBox() {
 
@@ -123,7 +118,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It gets the <code>nameField</code>
+     * Gets the <code>nameField</code>.
      *
      * @return
      */
@@ -132,7 +127,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It gets the player's name
+     * Gets the player's name.
      *
      * @return
      */
@@ -141,7 +136,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It sets the player's name
+     * Sets the player's name.
      *
      * @param name
      */
@@ -150,7 +145,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It sets the editability of <code>nameField</code>
+     * Sets the editability of <code>nameField</code>.
      *
      * @param editable
      */
@@ -159,14 +154,14 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It resets <code>nameField</code>
+     * Resets <code>nameField</code>.
      */
     public void resetPlayerName() {
         nameField.setText("");
     }
 
     /**
-     * It gets <code>typeComboBox</code>
+     * Gets <code>typeComboBox</code>.
      *
      * @return
      */
@@ -175,7 +170,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It gets the type of the player
+     * Gets the type of the player.
      *
      * @return
      */
@@ -184,7 +179,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It sets the type of the player
+     * Sets the type of the player.
      *
      * @param type
      */
@@ -193,7 +188,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It gets <code>colorComboBox</code>
+     * Gets <code>colorComboBox</code>.
      *
      * @return
      */
@@ -202,7 +197,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It gets the selected color in <code>colorComboBox</code>
+     * Gets the selected color in <code>colorComboBox</code>.
      *
      * @return
      */
@@ -211,7 +206,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It sets the selected color in <code>colorComboBox</code>
+     * Sets the selected color in <code>colorComboBox</code>.
      *
      * @param color
      */
@@ -220,7 +215,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It gets the <code>removeButton</code>
+     * Gets the <code>removeButton</code>.
      *
      * @return
      */
@@ -229,7 +224,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It determins if the player is removable
+     * Returns if the player is removable.
      *
      * @return
      */
@@ -238,7 +233,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It sets if the player is removable
+     * Sets if the player is removable.
      *
      * @param removable
      */
@@ -248,7 +243,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It sets the visibility of all the JComponents
+     * Sets the visibility of every JComponent of this row.
      *
      * @param visible
      */
@@ -261,7 +256,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It gets the index of the player
+     * Gets the index of the player.
      *
      * @return
      */
@@ -270,7 +265,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It set the index of the player
+     * Sets the index of the player and updates its location accordingly.
      *
      * @param index
      */
@@ -280,7 +275,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It sets the location of all the JComponents
+     * Sets the location of all the JComponents according to the index of the player.
      */
     private void setLocation() {
         int y = getYPosition();
@@ -291,8 +286,8 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It retrives the vertical component of the position depending on the indx
-     * of the player
+     * Retrieves the vertical component of the position depending on the index
+     * of the player.
      *
      * @return
      */
@@ -302,7 +297,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It adds <code>ColorBoxListener</code> to the <code>colorComboBox</code>
+     * Adds a <code>ColorBoxListener</code> to the <code>colorComboBox</code>.
      *
      * @param colorListener
      */
@@ -311,7 +306,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It determines if the player is logged 
+     * Determines if the player is logged or not. 
      * @return 
      */
     public boolean isLogged() {
@@ -319,7 +314,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It sets if the player is logged
+     * Sets if the player is logged.
      * @param logged 
      */
     public void setLogged(boolean logged) {
@@ -335,7 +330,7 @@ public class PlayerInfoRow extends JComponent {
     }
 
     /**
-     * It adds <code>SelectTypeListener</code> to the <code>typeComboBox</code>
+     * It adds <code>SelectTypeListener</code> to the <code>typeComboBox</code>.
      *
      * @param typeListener
      */

@@ -14,7 +14,9 @@ import javax.swing.JPanel;
 import risiko.game.GameProxy;
 
 /**
- * Panel in which the cards are displayed.
+ * Panel in which the cards are displayed. The cards are divided into 2 sets: a
+ * set of cards that can be chosen by the user, and the set of cards that have
+ * just been chosen.
  */
 public class CardPanel extends JPanel {
 
@@ -50,7 +52,7 @@ public class CardPanel extends JPanel {
     }
 
     /**
-     * Returns the lowest y coordinate
+     * Returns the lowest y coordinate. 
      *
      * @return
      */
@@ -59,7 +61,7 @@ public class CardPanel extends JPanel {
     }
 
     /**
-     * Returns the lowest x coordinate
+     * Returns the highest y coordinate. 
      *
      * @return
      */
@@ -105,9 +107,9 @@ public class CardPanel extends JPanel {
             .addComponent(cardsPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+    
     /**
-     * Playes the cards of the player, adding bonus armies to him and deleting
-     * the played card from the ones of the player.
+     * Plays the selected set of cards and updates the view accordingly.
      *
      * @param evt
      */
@@ -294,10 +296,11 @@ public class CardPanel extends JPanel {
         return cards;
     }
 
-   /**
-    * Move the panel up and down.
-    * @param newY 
-    */
+    /**
+     * Move the panel up and down.
+     *
+     * @param newY
+     */
     public void moveTo(int newY) {
         PlayAudio.play("src/resources/sounds/movePanel.wav");
         PanelAnimation animation = new PanelAnimation(this, newY);

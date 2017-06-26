@@ -15,9 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.Timer;
 
 /**
- * JLabel in which is displayed an image that fades out. The process of fading
- * out is done thanks to a timer that updates the value of trasparency of the
- * image.
+ * Fading out JLabel. This class can be used to show images that fade out in
+ * RUNNING_TIME ms, thanks to a timer that updates its transparency.
  */
 public class FadeOutLabel extends JLabel {
 
@@ -69,7 +68,7 @@ public class FadeOutLabel extends JLabel {
     }
 
     /**
-     * Returns the Dimension of the image setted.
+     * Returns the Dimension of the setted image.
      *
      * @return
      */
@@ -79,8 +78,7 @@ public class FadeOutLabel extends JLabel {
     }
 
     /**
-     * Paints the label depending on the alpha coefficient of the moment of the
-     * process of fade out.
+     * Paints the label with the current alpha coefficient.
      *
      * @param g
      */
@@ -97,7 +95,8 @@ public class FadeOutLabel extends JLabel {
     }
 
     /**
-     * Starts the fade out of the FadeOutLabel
+     * Starts fading out of the FadeOutLabel.
+     *
      * @param url
      */
     public void startFadeOut(String url) {

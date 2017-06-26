@@ -14,9 +14,9 @@ import services.Translator;
 import shared.PlayerInfo;
 
 /**
- * Panel for the insertion of the players. It's a table with a row for each
- * player and and a column for each JComponent that sets a property to the
- * player(name, type, color of troops)
+ * Panel for player insertion. It's a table with a row for each player and and a
+ * column for each JComponent that sets a property to the player(name, type,
+ * troops color).
  *
  */
 public class PlayersPanel extends JPanel {
@@ -33,7 +33,7 @@ public class PlayersPanel extends JPanel {
     private final String LANG = "ITA";
 
     /**
-     * It creates a new PlayersPanel and initializes it
+     * Creates a new PlayersPanel and initializes it.
      *
      * @param gui
      */
@@ -44,7 +44,7 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * Initialization
+     * Initialization.
      */
     private void init() {
         this.setLayout(new GridLayout(7, 1));
@@ -54,7 +54,7 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * It sets the header of the table
+     * Sets the header of the table.
      */
     private void initHeader() {
         header = new PlayerHeader();
@@ -62,7 +62,7 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * It adds to the table as many rows as the minimun number of players
+     * Adds to the table as many rows as the minimun number of players.
      */
     private void initPlayerRows() {
         for (int i = 0; i < N_PLAYERS_MIN; i++) {
@@ -71,7 +71,7 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * It initializates the listeners
+     * Initializes the listeners.
      */
     private void initListeners() {
         DefaultColor[] colors = DefaultColor.values();
@@ -85,7 +85,7 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * It adds a JComponent to the panel
+     * Adds a JComponent to the panel.
      *
      * @param component
      */
@@ -95,7 +95,8 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * It adds a row in the table
+     * Adds a row in the table. (Only if the number of players doesn't exceed
+     * the maximum number allowed).
      */
     public void addPlayerRow() {
         if (players.size() >= N_PLAYERS_MAX) {
@@ -108,7 +109,7 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * It creates a new row and it adds it to the panel
+     * Creates a new row and adds it to the panel.
      *
      * @param index
      */
@@ -120,7 +121,7 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * It sets the visibility of the remove button of every row
+     * Sets the visibility of the remove button of every row.
      *
      * @param removable
      */
@@ -131,7 +132,7 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * It removes a row from the tables
+     * Removes a row from the table.
      *
      * @param player
      */
@@ -142,10 +143,10 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * It updates the GUI after the addiction of a new row; it sets the
-     * visibility of the <code>removeButton</code> of each row and of the
+     * Updates the GUI as soon as a new row has been added; sets the visibility
+     * of the <code>removeButton</code> of each row and of the
      * <code>addButton</code> of StartGameGUI; it also updates the indexes of
-     * the rows
+     * the rows.
      */
     private void updateGUI() {
         setRemovable(players.size() > N_PLAYERS_MIN);
@@ -170,7 +171,7 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * It gets all the information about the players
+     * Cretes a List of PlayerInfo, one for each player inserted in the game.
      *
      * @return
      */
@@ -183,7 +184,7 @@ public class PlayersPanel extends JPanel {
     }
 
     /**
-     * It formatts the type of the player.
+     * Returns the string that specifies the type of player in English.
      *
      * @param type
      * @return

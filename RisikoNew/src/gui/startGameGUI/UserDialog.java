@@ -14,7 +14,8 @@ import services.FileManager;
 
 /**
  * Dialog for registration and login. In the registration mode it allows to
- * register a new loggable player while in the login mode it allow to login
+ * register a new loggable player; in the login mode it allows a registered user
+ * to login.
  *
  */
 public class UserDialog extends javax.swing.JDialog {
@@ -26,7 +27,7 @@ public class UserDialog extends javax.swing.JDialog {
     private boolean isRegistration;
 
     /**
-     * It creates new form RegistrationDialog
+     * Creates a new form RegistrationDialog.
      *
      * @param gui
      * @param playerRows
@@ -42,8 +43,8 @@ public class UserDialog extends javax.swing.JDialog {
     }
 
     /**
-     * It sets the dimensions of the window, the background of
-     * <code>commentsText</code> and the behavior when the window is closed
+     * Sets the dimensions of the window, the background of
+     * <code>commentsText</code> and the behavior when the window is closed.
      */
     private void setWindowSettings() {
         Dimension dim = getToolkit().getScreenSize();
@@ -148,8 +149,9 @@ public class UserDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * It registers a new loggable player if all the fields are filled, the
-     * inserted passwords matched and the username choosen is not already used.
+     * Registers a new player if all the fields are filled, the inserted
+     * passwords match and the username is valid (there's no other user with the
+     * same username).
      *
      * @param evt
      */
@@ -179,9 +181,8 @@ public class UserDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_saveUserButtonActionPerformed
 
     /**
-     * It closes the dialog and makes the gui visible again; if the closing
-     * operation is done after an attempt of login, it resets the type of the
-     * player
+     * Closes the dialog and shows and enables the startGameGUI. If it was in
+     * login mode, resets the type of the player to normal.
      */
     private void closeDialog() {
         if (!isRegistration) {
@@ -193,8 +194,8 @@ public class UserDialog extends javax.swing.JDialog {
     }
 
     /**
-     * It insertes in <code>playerRow</code> a logged player if the player is
-     * not already logged and the inserted username and password are correct
+     * Insertes in <code>playerRow</code> a logged player if the player is not
+     * already logged and the inserted username and password are correct.
      *
      * @param evt
      */
@@ -218,8 +219,8 @@ public class UserDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_loginButtonActionPerformed
 
     /**
-     * It saves in the players.txt the username and the encripted password of
-     * the player
+     * Saves into the file containing the info about the users, the chosen
+     * username and password (encrypted).
      *
      * @param username
      * @param password
@@ -233,8 +234,8 @@ public class UserDialog extends javax.swing.JDialog {
     }
 
     /**
-     * it sets the dialog components depending on the purpose of the
-     * dialog(registration of a new user or login)
+     * Sets the dialog components depending on the purpose of the
+     * dialog(registration of a new user or login).
      *
      * @param isRegistration
      */
@@ -248,7 +249,7 @@ public class UserDialog extends javax.swing.JDialog {
     }
 
     /**
-     * It sets the index of the playerRow from which the login is requested
+     * Sets the index of the playerRow for which the login is requested.
      *
      * @param index
      */
@@ -257,7 +258,7 @@ public class UserDialog extends javax.swing.JDialog {
     }
 
     /**
-     * It saves the list of the already logged players
+     * Saves the list of the already logged players.
      *
      * @param list
      */
@@ -266,7 +267,8 @@ public class UserDialog extends javax.swing.JDialog {
     }
 
     /**
-     * It checks if the chosen username has already been used to login
+     * Checks if the user with username <code>username</code> is already logged
+     * in the game.
      *
      * @param username
      * @return false if the username is already used

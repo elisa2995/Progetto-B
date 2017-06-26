@@ -1,8 +1,9 @@
 package gui.mainGui.cards;
 
 import javax.swing.SwingUtilities;
+
 /**
- * Animation of the <code>cardPanel</code> that goes up and down. 
+ * Animation used to move the <code>cardPanel</code> up and down. 
  */
 public class PanelAnimation extends Thread {
 
