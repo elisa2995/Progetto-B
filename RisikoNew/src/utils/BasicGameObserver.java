@@ -33,8 +33,9 @@ public interface BasicGameObserver {
      * in a fight.
      *
      * @param defenderCountryInfo
+     * @param nrArmiesAttacker
      */
-    public void updateOnDefend(CountryInfo defenderCountryInfo);
+    public void updateOnDefend(CountryInfo defenderCountryInfo, int nrArmiesAttacker);
 
     /**
      * Method called to update the observer when a player (<code> defender</code>)

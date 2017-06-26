@@ -255,7 +255,7 @@ public class ArtificialPlayer extends Player implements Runnable, BasicGameObser
      * @param defenderCountryInfo
      */
     @Override
-    public void updateOnDefend(CountryInfo defenderCountryInfo) {
+    public void updateOnDefend(CountryInfo defenderCountryInfo, int nrArmiesAttacker) {
         if (this.getName().equals(defenderCountryInfo.getPlayerName())) {
             this.currentAction = Action.DEFEND;
         }

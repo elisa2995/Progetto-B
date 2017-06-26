@@ -391,7 +391,7 @@ public class Game extends Observable implements GameProxy {
     @Override
     public void declareAttack(ArtificialPlayer... aiCaller) {
         getFightPhase().declareAttack();
-        notifyDefender(InfoFactory.buildCountryInfo(false, getFightPhase()));
+        notifyDefender(InfoFactory.buildCountryInfo(false, getFightPhase()), getFightPhase().getAttackerArmies());
     }
 
     /**

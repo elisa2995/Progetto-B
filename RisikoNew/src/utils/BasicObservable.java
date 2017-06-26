@@ -22,9 +22,9 @@ public class BasicObservable {
      * Notifies the defender that it's being attacked.
      *
      */
-    public void notifyDefender(CountryInfo defenderCountryInfo) {
+    public void notifyDefender(CountryInfo defenderCountryInfo, int nrArmiesAttacker) {
         for (BasicGameObserver ob : this.obs) {
-            ob.updateOnDefend(defenderCountryInfo);
+            ob.updateOnDefend(defenderCountryInfo, nrArmiesAttacker);
         }
 
     }

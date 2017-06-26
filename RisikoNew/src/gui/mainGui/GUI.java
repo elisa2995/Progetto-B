@@ -816,9 +816,10 @@ public class GUI extends JFrame implements GameObserver {
      * @param defenderCountryInfo
      */
     @Override
-    public void updateOnDefend(CountryInfo defenderCountryInfo) {
+    public void updateOnDefend(CountryInfo defenderCountryInfo, int nrArmiesAttacker) {
         if (!defenderCountryInfo.hasArtificialOwner()) {
-            this.defenseDialog.setVisible(true);
+            defenseDialog.setArmiesAttacker(nrArmiesAttacker);
+            defenseDialog.setVisible(true);
         }
     }
 
