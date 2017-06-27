@@ -413,9 +413,9 @@ public class Game extends Observable implements GameProxy {
                 notifyPlayersOrder(InfoFactory.buildPlayersInfo(players));
             }
         }
-        checkWon();
         notifyArmiesChangeAfterAttack(getAttackerCountry(), getDefenderCountry());
         notifyAttackResult(InfoFactory.buildAttackResultInfo(getFightPhase(), map));
+        checkWon();
     }
 
     /**

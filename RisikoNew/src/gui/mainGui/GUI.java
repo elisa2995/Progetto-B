@@ -738,8 +738,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnVictory(String winMessage) {
-        JOptionPane.showMessageDialog(null, winMessage);
-        this.dispose();
+        JOptionPane.showMessageDialog(null, winMessage);       
         game.endGame();
     }
 
@@ -841,7 +840,7 @@ public class GUI extends JFrame implements GameObserver {
      */
     @Override
     public void updateOnEndGame() {
-        this.setVisible(false);
+        this.dispose();
         StartGameGUI startGui = new StartGameGUI();
         startGui.setVisible(true);
     }
