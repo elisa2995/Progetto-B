@@ -740,9 +740,7 @@ public class GUI extends JFrame implements GameObserver {
     public void updateOnVictory(String winMessage) {
         JOptionPane.showMessageDialog(null, winMessage);
         this.dispose();
-        System.exit(0);
-        // etc
-        // bisogna bloccare i run dei giocatori artificiali
+        game.endGame();
     }
 
     /**
