@@ -18,12 +18,10 @@ import risiko.missions.Mission;
 public class RisikoMap {
 
     private final int DEFAULT_ARMIES = 3;
-    private final List<Mission> missions;
     private final List<Continent> continents;
 
     public RisikoMap() {
         this.continents = new ArrayList<>();
-        this.missions = new ArrayList<>();
         init();
     }
 
@@ -34,7 +32,7 @@ public class RisikoMap {
     private void init() {
         buildContinent();
         setAllCountries();
-        buildMissions();
+        //buildMissions();
     }
 
     /**
@@ -81,7 +79,8 @@ public class RisikoMap {
      * Builds the list of missions.
      *
      */
-    private void buildMissions() {
+    private List<Mission> buildMissions() {
+        List<Mission> missions=new ArrayList<>();
         Constructor constructor;
         Mission m;
         String description;
@@ -93,12 +92,13 @@ public class RisikoMap {
                 description = (String) mission.get("description") + "\n (" + points + "punti)";
                 constructor = Class.forName(packagePath + (String) mission.get("type") + "Mission").getConstructor(String.class, Integer.TYPE);
                 m = (Mission) constructor.newInstance(description, points);
-                this.missions.add(m);
+                missions.add(m);
                 m.buildTarget(continents);
             } catch (Exception ex) {
                 Logger.getLogger(RisikoMap.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        return missions;
     }
 
     /**
@@ -116,8 +116,9 @@ public class RisikoMap {
      *
      * @param players
      */
-    public void assignMissionToPlayers(List<Player> players) {
-        Collections.shuffle(this.missions);
+    private void assignMissionToPlayers(List<Player> players) {
+        List<Mission> missions = buildMissions();
+        Collections.shuffle(missions);
         for (int i = 0; i < players.size(); i++) {
             players.get(i).setMission(missions.get(i));
         }
