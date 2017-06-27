@@ -43,6 +43,10 @@ public class AttackResultInfo {
     public int getMaxArmiesDefender(){
         return getDefenderInfo().getMaxArmies();
     }
+    
+    public int getAttackerArmies(){
+        return dice[0].length;
+    }
 
     public int[][] getDice() {
         return dice;

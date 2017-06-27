@@ -717,7 +717,7 @@ public class GUI extends JFrame implements GameObserver {
             info += "Ora possiedi " + ar.getConqueredContinent();
         }
 
-        MoveDialog moveDialog = new MoveDialog(game, ar.getAttackerCountryName(), ar.getDefenderCountryName(), info, ar.getMaxArmiesAttacker());
+        MoveDialog moveDialog = new MoveDialog(game, ar.getAttackerCountryName(), ar.getDefenderCountryName(), info, ar.getAttackerArmies());
         moveDialog.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT));
         PlayAudio.play("src/resources/sounds/conquest.wav");
         moveDialog.setVisible(true);
