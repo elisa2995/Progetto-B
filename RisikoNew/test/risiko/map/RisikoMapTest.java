@@ -1,7 +1,5 @@
 package risiko.map;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
@@ -41,18 +39,6 @@ public class RisikoMapTest {
 
     @After
     public void tearDown() {
-    }
-
-    /**
-     * Test of assignMissionToPlayers method, of class RisikoMap.
-     */
-    @Test
-    public void testAssignMissionToPlayers() {
-        System.out.println("assignMissionToPlayers");
-        instance.assignMissionToPlayers(players);
-        players.stream().forEach((player) -> {
-            assertNotNull(player.getMission());
-        });
     }
 
     /**
@@ -264,7 +250,7 @@ public class RisikoMapTest {
         instance.changeOwner(oldOwner, newOwner);
 
         for (Country country : countriesOfOldOwner) {
-            assertEquals(country.getOwner(),newOwner);
+            assertEquals(country.getOwner(), newOwner);
         }
     }
 }
