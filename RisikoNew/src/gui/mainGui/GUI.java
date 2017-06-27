@@ -138,7 +138,7 @@ public class GUI extends JFrame implements GameObserver {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                closeDialog();
+                closeDialog();                
             }
         });
 
