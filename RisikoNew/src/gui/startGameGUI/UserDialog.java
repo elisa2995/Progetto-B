@@ -30,10 +30,13 @@ public class UserDialog extends javax.swing.JDialog {
      * Creates a new form RegistrationDialog.
      *
      * @param gui
+     * @param parent
+     * @param modal
      * @param playerRows
      * @param isRegistration
      */
     public UserDialog(StartGameGUI gui, List<PlayerInfoRow> playerRows, boolean isRegistration) {
+        super(gui, true);
         initComponents();
         this.gui = gui;
         this.playerRows = playerRows;
@@ -189,8 +192,6 @@ public class UserDialog extends javax.swing.JDialog {
             playerRows.get(index).setType("Normale");
         }
         this.dispose();
-        gui.setVisible(true);
-        gui.setEnabled(true);
     }
 
     /**
