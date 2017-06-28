@@ -43,14 +43,12 @@ public class FileManager {
      *
      * @return
      */
-    public static FileManager getInstance() {
+    public synchronized static FileManager getInstance() {
+
         if (instance == null) {
-            synchronized (FileManager.class) {
-                if (instance == null) {
-                    instance = new FileManager();
-                }
-            }
+            instance = new FileManager();
         }
+
         return instance;
     }
 
