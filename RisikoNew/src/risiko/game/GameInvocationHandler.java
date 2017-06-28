@@ -39,7 +39,9 @@ public class GameInvocationHandler implements InvocationHandler {
         boolean isDefenseMethod = method.getName().equals("confirmAttack") || method.getName().equals("setDefenderArmies");
         boolean isEndGame = method.getName().equals("endGame");
         boolean istoArtificialPlayer = method.getName().equals("toArtificialPlayer") || method.getName().equals("setPlayerSettings");
-        if (method.getDeclaringClass() == GameProxy.class && !isDefenseMethod && !istoArtificialPlayer && !isEndGame && (method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Void.TYPE))) {
+        boolean isSpecialMethod=isDefenseMethod || isEndGame || istoArtificialPlayer;
+        boolean isVoidOrBoolean=method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Void.TYPE);
+        if (method.getDeclaringClass() == GameProxy.class && !isSpecialMethod && isVoidOrBoolean) {
             ArtificialPlayer[] player = (ArtificialPlayer[]) args[args.length - 1];
             if (!this.game.checkCallerIdentity(player)) {
                 return false;

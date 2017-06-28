@@ -1,10 +1,5 @@
 ﻿Urgenti: 
-- DOCUMENTAZIONE (javaDoc) FINITA? qualcuno controlli e se si aggiungono  metodi commentateli :)
 - cono bianco per spostamento ANDREA
-- scrivere in architettura come è l'architettura ELI CARO
-- diagramma delle classi ANDREA
-- modello di dominio ANDREA
-(- mettere con quante armate ci stanno attaccando nel defend dialog)
 
 
 
