@@ -213,7 +213,7 @@ public class UserDialog extends javax.swing.JDialog {
             }
             commentsText.setText("Nome giocatore o password errati");
         } else {
-            commentsText.setText("Giocatore giÃ  presente nel gioco");
+            commentsText.setText("Giocatore già  presente nel gioco");
         }
 
     }//GEN-LAST:event_loginButtonActionPerformed
