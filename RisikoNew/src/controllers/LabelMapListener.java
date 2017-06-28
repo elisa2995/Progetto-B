@@ -186,7 +186,7 @@ public class LabelMapListener extends MouseInputAdapter {
 
         if (country == null) {
             drawCone(e, game.getAttackerCountryName());
-            e.getComponent().setCursor(Cursor.getDefaultCursor());
+            e.getComponent().setCursor(Cursor.getDefaultCursor());            
             return;
         }
 

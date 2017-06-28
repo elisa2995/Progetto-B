@@ -670,6 +670,7 @@ public class Game extends Observable implements GameProxy {
             passTurn();
             return;
         }
+        phases[phaseIndex].clear();
         phaseIndex++;
         phases[phaseIndex].clear();
         notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), getPhase());
