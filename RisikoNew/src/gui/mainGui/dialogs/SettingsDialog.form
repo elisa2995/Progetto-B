@@ -55,12 +55,12 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Velocita&apos; IA"/>
+        <Property name="text" type="java.lang.String" value="Velocit&#xe0; IA"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="save">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Save"/>
+        <Property name="text" type="java.lang.String" value="Salva"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveActionPerformed"/>

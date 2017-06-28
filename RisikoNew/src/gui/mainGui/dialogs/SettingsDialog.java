@@ -34,9 +34,9 @@ public class SettingsDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setText("Velocita' IA");
+        jLabel1.setText("Velocità IA");
 
-        save.setText("Save");
+        save.setText("Salva");
         save.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveActionPerformed(evt);

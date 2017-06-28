@@ -6,12 +6,12 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Settings"/>
+            <Property name="text" type="java.lang.String" value="Impostazioni"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="settingsItem">
               <Properties>
-                <Property name="text" type="java.lang.String" value="AISettings"/>
+                <Property name="text" type="java.lang.String" value="Impostazioni IA"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="settingsItemActionPerformed"/>
@@ -50,38 +50,26 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace pref="14" max="32767" attributes="0"/>
               <Component id="mapLayeredPane" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="phaseLabel" min="-2" pref="320" max="-2" attributes="0"/>
                   <Component id="playerLabel" alignment="0" min="-2" pref="320" max="-2" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                      <Component id="jScrollPane1" alignment="0" min="-2" pref="312" max="-2" attributes="0"/>
-                      <Group type="102" attributes="0">
+                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="buttonShowMission" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
-                              <Component id="buttonNextPhase" alignment="1" min="-2" pref="149" max="-2" attributes="0"/>
-                              <Component id="showCardButton" alignment="1" min="-2" pref="149" max="-2" attributes="0"/>
-                              <Component id="leaveGameButton" alignment="1" min="-2" pref="151" max="-2" attributes="0"/>
+                              <Component id="buttonShowMission" max="32767" attributes="0"/>
+                              <Component id="buttonNextPhase" max="32767" attributes="0"/>
+                              <Component id="leaveGameButton" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="labelPlayer3" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="labelPlayer2" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="labelPlayer1" alignment="0" min="-2" pref="151" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                  <Component id="labelPlayer6" min="-2" pref="151" max="-2" attributes="0"/>
-                                  <Component id="labelPlayer5" min="-2" pref="151" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="labelPlayer4" min="-2" pref="151" max="-2" attributes="0"/>
-                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="jPanel1" min="-2" pref="131" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="jScrollPane1" min="-2" pref="312" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="showCardButton" alignment="0" min="-2" pref="163" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -92,46 +80,27 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="mapLayeredPane" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="phaseLabel" min="-2" pref="26" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="playerLabel" min="-2" pref="26" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                      <Component id="jScrollPane1" min="-2" pref="100" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="phaseLabel" min="-2" pref="26" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="playerLabel" min="-2" pref="26" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="jScrollPane1" min="-2" pref="100" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="labelPlayer1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Component id="labelPlayer2" min="-2" pref="18" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="buttonShowMission" min="-2" pref="44" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="labelPlayer3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Component id="labelPlayer4" min="-2" pref="18" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="buttonNextPhase" min="-2" pref="44" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Component id="labelPlayer5" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                              <Component id="labelPlayer6" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="buttonShowMission" min="-2" pref="44" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
+                              <Component id="buttonNextPhase" min="-2" pref="44" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="leaveGameButton" min="-2" pref="44" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="showCardButton" min="-2" pref="50" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="51" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -142,16 +111,22 @@
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="da" green="cf" red="e1" type="rgb"/>
         </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="SansSerif" size="24" style="0"/>
+        </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="1" green="1" red="1" type="rgb"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="phaseLabel.setFont(new Font(&quot;Calibri&quot;, Font.BOLD, 24));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="phaseLabel.setFont(new Font(&quot;SansSerif&quot;, Font.BOLD, 24));"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="buttonNextPhase">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="SansSerif" size="12" style="0"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Cambia fase"/>
       </Properties>
       <Events>
@@ -160,6 +135,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="buttonShowMission">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="SansSerif" size="12" style="0"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="La mia missione"/>
       </Properties>
       <Events>
@@ -169,8 +147,11 @@
     <Container class="javax.swing.JLayeredPane" name="mapLayeredPane">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-            <LineBorder/>
+          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder>
+              <Color PropertyName="highlight" blue="33" green="33" red="33" type="rgb"/>
+              <Color PropertyName="shadow" blue="99" green="99" red="99" type="rgb"/>
+            </EtchetBorder>
           </Border>
         </Property>
       </Properties>
@@ -207,6 +188,11 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="null"/>
+        </Property>
+      </Properties>
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
@@ -218,12 +204,18 @@
             <Property name="columns" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="18" type="code"/>
             </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="SansSerif" size="12" style="0"/>
+            </Property>
             <Property name="rows" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="3" type="code"/>
             </Property>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="null"/>
+            </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="textAreaInfo.setForeground(Color.white);&#xa;textAreaInfo.setLineWrap(true);&#xa;textAreaInfo.setWrapStyleWord(true);&#xa;textAreaInfo.setOpaque(false);&#xa;jScrollPane1.setOpaque(false);&#xa;jScrollPane1.getViewport().setOpaque(false);&#xa;textAreaInfo.setFont(new Font(&quot;Serif&quot;, Font.BOLD, 16));&#xa;textAreaInfo.setEditable(false);"/>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="textAreaInfo.setForeground(new Color(221,221,221));&#xa;textAreaInfo.setLineWrap(true);&#xa;textAreaInfo.setWrapStyleWord(true);&#xa;textAreaInfo.setOpaque(false);&#xa;jScrollPane1.setOpaque(false);&#xa;jScrollPane1.getViewport().setOpaque(false);&#xa;textAreaInfo.setFont(new Font(&quot;SansSerif&quot;, Font.BOLD, 16));&#xa;textAreaInfo.setEditable(false);"/>
           </AuxValues>
         </Component>
       </SubComponents>
@@ -233,16 +225,22 @@
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="da" green="cf" red="e1" type="rgb"/>
         </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="SansSerif" size="24" style="0"/>
+        </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="1" green="1" red="1" type="rgb"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="phaseLabel.setFont(new Font(&quot;Serif&quot;, Font.BOLD, 24));"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="phaseLabel.setFont(new Font(&quot;SansSerif&quot;, Font.BOLD, 24));"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="showCardButton">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="SansSerif" size="12" style="0"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Mostra/Nascondi carte"/>
       </Properties>
       <Events>
@@ -252,43 +250,102 @@
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="showCardButton.setVisible(false);"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JLabel" name="labelPlayer6">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel1"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="labelPlayer5">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel2"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="labelPlayer4">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel3"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="labelPlayer3">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel4"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="labelPlayer2">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel5"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="labelPlayer1">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel6"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JButton" name="leaveGameButton">
       <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="SansSerif" size="12" style="0"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Abbandona la partita"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="leaveGameButtonActionPerformed"/>
       </Events>
     </Component>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
+            <BevelBorder bevelType="1"/>
+          </Border>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="labelPlayer2" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="labelPlayer4" min="-2" pref="151" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="labelPlayer1" alignment="0" min="-2" pref="151" max="-2" attributes="0"/>
+                              <Component id="labelPlayer3" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelPlayer5" alignment="0" min="-2" pref="151" max="-2" attributes="0"/>
+                              <Component id="labelPlayer6" alignment="0" min="-2" pref="151" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="labelPlayer1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="labelPlayer2" min="-2" pref="18" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="labelPlayer3" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="labelPlayer4" min="-2" pref="18" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="labelPlayer5" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="labelPlayer6" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="labelPlayer1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabel6"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="labelPlayer2">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabel5"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="labelPlayer3">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabel4"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="labelPlayer4">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabel3"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="labelPlayer5">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabel2"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="labelPlayer6">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="jLabel1"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>

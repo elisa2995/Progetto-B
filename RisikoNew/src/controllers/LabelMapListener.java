@@ -183,9 +183,11 @@ public class LabelMapListener extends MouseInputAdapter {
             return;
         }
         String country = getCountryFromClick(e);
-
+        
         if (country == null) {
-            drawCone(e, game.getAttackerCountryName());
+            String c = (game.getAttackerCountryName()!=null)? game.getAttackerCountryName() : game.getFromCountryName();
+            System.out.println(game.getAttackerCountryName());
+            drawCone(e, c);
             e.getComponent().setCursor(Cursor.getDefaultCursor());
             return;
         }
