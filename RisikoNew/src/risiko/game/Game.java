@@ -665,7 +665,8 @@ public class Game extends Observable implements GameProxy {
         if (getPhase().equals("FIGHT") && activePlayer.hasConqueredACountry()) {
             this.drawBonusCard();
         }
-
+        
+        phases[phaseIndex].clear();
         if (phaseIndex == phases.length - 1) {
             passTurn();
             return;
@@ -695,6 +696,7 @@ public class Game extends Observable implements GameProxy {
         }
         map.computeBonusArmies(activePlayer);
         phaseIndex = (!getCardsNames().isEmpty())? Phase.CARD_INDEX:Phase.REINFORCE_INDEX;
+        phases[phaseIndex].clear();
         notifyPhaseChange(InfoFactory.buildPlayerInfo(activePlayer), getPhase());
     }
 

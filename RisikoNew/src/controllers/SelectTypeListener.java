@@ -120,7 +120,6 @@ public class SelectTypeListener implements ActionListener {
         userDialog.setIndex(index);
         userDialog.setPlayers(getAllLoggedPlayers());
         userDialog.setVisible(true);
-        gui.setEnabled(false);
     }
 
     /**

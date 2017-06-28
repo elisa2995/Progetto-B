@@ -186,7 +186,6 @@ public class LabelMapListener extends MouseInputAdapter {
         
         if (country == null) {
             String c = (game.getAttackerCountryName()!=null)? game.getAttackerCountryName() : game.getFromCountryName();
-            System.out.println(game.getAttackerCountryName());
             drawCone(e, c);
             e.getComponent().setCursor(Cursor.getDefaultCursor());
             return;
@@ -203,13 +202,11 @@ public class LabelMapListener extends MouseInputAdapter {
                 checkReinforce(country, e.getComponent(), label);
                 break;
             case "FIGHT":
-                //setto il GRADIENT_PAINT a nero opaco
                 GraphicsJLabel.setGradientPaint(new Color(0, 0, 0, 225), new Color(0, 0, 0, 120));
                 drawCone(e, game.getAttackerCountryName());
                 checkFight(country, e.getComponent(), label);
                 break;
             case "MOVE":
-                //setto il GRADIENT_PAINT a bianco opaco
                 GraphicsJLabel.setGradientPaint(new Color(225, 225, 225, 225), new Color(200, 200, 200, 200));
                 drawCone(e, game.getFromCountryName());
                 checkMove(country, e.getComponent(), label);

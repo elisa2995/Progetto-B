@@ -232,7 +232,6 @@ public class StartGameGUI extends JFrame {
     private void registrationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrationButtonActionPerformed
         UserDialog userDialog = new UserDialog(this, null, true);
         userDialog.setVisible(true);
-        this.setEnabled(false);
     }//GEN-LAST:event_registrationButtonActionPerformed
 
     /**
