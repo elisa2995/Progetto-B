@@ -134,6 +134,7 @@ public class MoveDialog extends javax.swing.JDialog {
      */
     private void executeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeActionPerformed
         game.move(fromCountryName, toCountryName, (Integer) movementArmies.getValue());
+        game.resetMoveCountries();
         MoveDialog.this.dispose();
     }//GEN-LAST:event_executeActionPerformed
 
