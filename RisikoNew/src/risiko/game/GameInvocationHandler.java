@@ -36,12 +36,8 @@ public class GameInvocationHandler implements InvocationHandler {
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        boolean isDefenseMethod = method.getName().equals("confirmAttack") || method.getName().equals("setDefenderArmies");
-        boolean isEndGame = method.getName().equals("endGame");
-        boolean istoArtificialPlayer = method.getName().equals("toArtificialPlayer") || method.getName().equals("setPlayerSettings");
-        boolean isSpecialMethod=isDefenseMethod || isEndGame || istoArtificialPlayer;
-        boolean isVoidOrBoolean=method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Void.TYPE);
-        if (method.getDeclaringClass() == GameProxy.class && !isSpecialMethod && isVoidOrBoolean) {
+
+        if (doFilter(method)) {
             ArtificialPlayer[] player = (ArtificialPlayer[]) args[args.length - 1];
             if (!this.game.checkCallerIdentity(player)) {
                 return false;
@@ -52,5 +48,19 @@ public class GameInvocationHandler implements InvocationHandler {
         } catch (InvocationTargetException e) {
             throw e.getCause();
         }
+    }
+
+    /**
+     * Returns true if the method has to be filtered.
+     * @param method
+     * @return 
+     */
+    private boolean doFilter(Method method) {
+        boolean isDefenseMethod = method.getName().equals("confirmAttack") || method.getName().equals("setDefenderArmies");
+        boolean isEndGame = method.getName().equals("endGame");
+        boolean isToArtificialPlayer = method.getName().equals("toArtificialPlayer") || method.getName().equals("setPlayerSettings");
+        boolean isSpecialMethod = isDefenseMethod || isEndGame || isToArtificialPlayer;
+        boolean isVoidOrBoolean = method.getReturnType().equals(boolean.class) || method.getReturnType().equals(Void.TYPE);
+        return method.getDeclaringClass() == GameProxy.class && !isSpecialMethod && isVoidOrBoolean;
     }
 }
